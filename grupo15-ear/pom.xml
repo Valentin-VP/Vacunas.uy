@@ -41,6 +41,12 @@
             <artifactId>grupo15-web</artifactId>
             <type>war</type>
         </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>grupo15-services</artifactId>
+            <type>war</type>
+        </dependency>
     </dependencies>
 
     <build>
