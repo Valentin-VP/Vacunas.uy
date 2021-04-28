@@ -30,6 +30,7 @@
         <module>grupo15-ejb</module>
         <module>grupo15-web</module>
         <module>grupo15-ear</module>
+        <module>grupo15-services</module>
     </modules>
 
     <properties>
