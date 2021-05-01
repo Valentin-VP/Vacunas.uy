@@ -58,3 +58,4 @@ artifacts ("grupo15-ejb.jar" and "grupo15-web.war") are already built. You can b
 the final EAR by including those files. The "maven-surefire-plugin" is executed before the JAR/WAR files
 are created, so those JAR/WAR files would have to be built in the "@Deployment" method, too. 
 Prueba push
+prueba 2
