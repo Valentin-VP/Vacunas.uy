@@ -13,6 +13,9 @@ public class DtUsuario implements Serializable {
 	private String apellido;
 	private Date fechaNac;
 	private int IdUsuario;
+	private String email;
+	private DtDireccion direccion;
+	private Sexo sexo;
 	
 	
 	public DtUsuario() {
@@ -20,13 +23,16 @@ public class DtUsuario implements Serializable {
 	}
 	
 	
-	public DtUsuario(String nombre, String apellido, Date fechaNac, int IdUsuario) {
+	public DtUsuario(String nombre, String apellido, Date fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo) {
 		super();
 	
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.IdUsuario = IdUsuario;
 		this.fechaNac = fechaNac;
+		this.email = email;
+		this.direccion = direccion;
+		this.sexo = sexo;
 	}
 	
 
@@ -91,5 +97,36 @@ public class DtUsuario implements Serializable {
 	public void setIdUsuario(int IdUsuario) {
 		this.IdUsuario = IdUsuario;
 	}
+
+
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	public DtDireccion getDireccion() {
+		return direccion;
+	}
+
+
+	public void setDireccion(DtDireccion direccion) {
+		this.direccion = direccion;
+	}
+
+
+	public Sexo getSexo() {
+		return sexo;
+	}
+
+
+	public void setSexo(Sexo sexo) {
+		this.sexo = sexo;
+	}
+	
 	
 }

@@ -6,14 +6,29 @@ import java.util.Date;
 
 import javax.ejb.Local;
 
-import Datatypes.DtUsuario;
-import Excepciones.UsuarioExistente;
+import datatypes.DtCiudadano;
+import datatypes.DtDireccion;
+import datatypes.DtUsuario;
+import datatypes.DtUsuarioInterno;
+import datatypes.DtVacunador;
+import datatypes.Rol;
+import datatypes.Sexo;
+import exceptions.UsuarioExistente;
 
 
 @Local
 public interface IUsuarioLocal {
-
-	public void agregarUsuario(int IdUsuario, String nombre, String apellido, Date fechaNac)throws UsuarioExistente;
+	
+	public void agregarUsuarioVacunador(int IdUsuario, String nombre, String apellido, Date fechaNac, String email, DtDireccion direccion, Sexo sexo) throws UsuarioExistente;
+	public void agregarUsuarioInterno(int IdUsuario, String nombre, String apellido, Date fechaNac, String email, DtDireccion direccion, Sexo sexo, String password, Rol rol) throws UsuarioExistente;
+	public void agregarUsuarioCiudadano(int IdUsuario, String nombre, String apellido, Date fechaNac, String email, DtDireccion direccion, Sexo sexo, String TipoSector, Boolean autenticado) throws UsuarioExistente;
 	public DtUsuario buscarUsuario(int IdUsuario);
-	public ArrayList<DtUsuario> listarUsuarios();
+	public ArrayList<DtCiudadano> listarCiudadanos();
+	public ArrayList<DtUsuarioInterno> listarUsuariosInternos();
+	public ArrayList<DtVacunador> listarVacunadores();
+	public void EliminarUsuario(int IdUsuario) throws UsuarioExistente;
+	public void ModificarCiudadano(DtCiudadano ciudadano) throws UsuarioExistente;
+	public void ModificarUsuarioInterno(DtUsuarioInterno usu) throws UsuarioExistente;
+	public void ModificarVacunador(DtVacunador vacunador) throws UsuarioExistente;
+
 }

@@ -89,6 +89,22 @@ public abstract class Usuario {
 	public Date getFechaNac() {
 		return fechaNac;
 	}
+
+	public void setIdUsuario(int idUsuario) {
+		IdUsuario = idUsuario;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
+	}
+
+	public void setFechaNac(Date fechaNac) {
+		this.fechaNac = fechaNac;
+	}
 	
 	
 	

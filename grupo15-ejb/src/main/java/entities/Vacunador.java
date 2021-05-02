@@ -30,7 +30,7 @@ public class Vacunador extends Usuario {
 		super();
 	}
 	
-	public Vacunador( int IdUsuario, String nombre, String apellido, Date fechaNac, String email, DtDireccion direccion, Sexo sexo, String password, Rol rol) {
+	public Vacunador( int IdUsuario, String nombre, String apellido, Date fechaNac, String email, DtDireccion direccion, Sexo sexo) {
 		super(IdUsuario, nombre, apellido, fechaNac, email, direccion, sexo);
 	
 		
