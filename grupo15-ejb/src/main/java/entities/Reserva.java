@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import datatypes.EstadoReserva;
 
@@ -25,13 +26,14 @@ public class Reserva implements Serializable{
 	private EstadoReserva estado;
 	////TODO:private Etapa etapa;
 	//private Usuario usuario;
-	//@ManyToOne
-	//private Puesto puesto;
+	@ManyToOne
+	private Puesto puesto;
 	
 	public Reserva() {
 		
 	}
 	
+	//TODO: DtPuesto
 	public Reserva(int id, String nombre, LocalDateTime fecha, EstadoReserva state) {
 		this.setIdReserva(id);
 		this.setNombreUser(nombre);
