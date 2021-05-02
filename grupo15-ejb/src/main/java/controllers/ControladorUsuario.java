@@ -41,7 +41,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal{
 			
 			
 			Query q = em.createQuery("select u from Ciudadano u");
-			List<Ciudadano> usuarios = (List<Ciudadano>) q.getResultList();
+			ArrayList<Ciudadano> usuarios = (ArrayList<Ciudadano>) q.getResultList();
 			
 			for(Ciudadano u: usuarios) {
 				Usu.add(new DtCiudadano(u.getIdUsuario(),u.getNombre(),u.getApellido(),u.getFechaNac(), u.getEmail(), u.getDireccion(), u.getSexo(), u.getTipoSector(), u.isAutenticado()));
@@ -171,7 +171,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal{
 			vac.setEmail(vacunador.getEmail());
 			vac.setFechaNac(vacunador.getFechaNac());
 			vac.setSexo(vacunador.getSexo());
-			
+			em.persist(vac);
 			
 			}
 		
@@ -193,7 +193,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal{
 			u.setEmail(usu.getEmail());
 			u.setFechaNac(usu.getFechaNac());
 			u.setSexo(usu.getSexo());
-			
+			em.persist(u);
 			
 			}
 		
@@ -215,7 +215,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal{
 	ciu.setEmail(ciudadano.getEmail());
 	ciu.setFechaNac(ciudadano.getFechaNac());
 	ciu.setSexo(ciudadano.getSexo());
-	
+	em.persist(ciu);
 	
 	}
 				

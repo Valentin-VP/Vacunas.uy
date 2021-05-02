@@ -11,13 +11,21 @@ public class Chat {
  
 	private String IdChat;
 	
-	@ManyToMany(mappedBy = "chats")
-	List<Vacunador> vacunadores = new ArrayList<>();
+	@ManyToMany(cascade = CascadeType.ALL)
+	ArrayList<Vacunador> vacunadores = new ArrayList<>();
 
 	@OneToMany(mappedBy = "chat",cascade = CascadeType.ALL)
-	private List<Mensaje> mensajes = new ArrayList<>();
+	private ArrayList<Mensaje> mensajes = new ArrayList<>();
 	
+	public Chat() {
+		super();
+	}
 	
+	public Chat(String chat) {
+		super();
+		this.IdChat = IdChat;
+	}
+
 	public String getIdChat() {
 		return IdChat;
 	}

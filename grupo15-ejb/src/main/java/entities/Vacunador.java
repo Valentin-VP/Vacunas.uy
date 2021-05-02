@@ -20,11 +20,11 @@ public class Vacunador extends Usuario {
 	@OneToMany(mappedBy = "vacunador",cascade = CascadeType.ALL)
 	private List<Mensaje> mensajes = new ArrayList<>();
 	
-	@ManyToMany(mappedBy = "vacunadores")
+	@ManyToMany(cascade = CascadeType.ALL)
 	List<Vacunatorio> vacunatorios = new ArrayList<>();
 	
-	@ManyToMany(mappedBy = "vacunador")
-	List<Etapa> etapas = new ArrayList<>();
+	//@ManyToMany(cascade = CascadeType.ALL)
+	//List<Etapa> etapas = new ArrayList<>();
 	
 	public Vacunador() {
 		super();
