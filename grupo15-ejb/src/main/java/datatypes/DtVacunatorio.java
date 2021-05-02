@@ -105,4 +105,4 @@ public class DtVacunatorio implements Serializable {
 		this.longitud = longitud;
 	}
 
-
+}
