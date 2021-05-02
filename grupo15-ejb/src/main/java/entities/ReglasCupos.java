@@ -2,12 +2,14 @@ package entities;
 
 import java.util.Date;
 
-import javax.persistence.Column;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
-import datatypes.DtDireccion;
+
 import datatypes.DtHora;
+
 
 @Entity
 public class ReglasCupos {
@@ -15,6 +17,8 @@ public class ReglasCupos {
 	private String id;
 	private Date fecha;
 	private Integer duracionTurno;
+	@ManyToOne
+	private Vacunatorio vacunatorio;
 	private DtHora horaApertura;
 	private DtHora horaCierre;
 	
@@ -24,11 +28,15 @@ public class ReglasCupos {
 
 
 
-public ReglasCupos(String id, Date fecha, Integer duracionTurno, DtHora horaApertura, DtHora horaCierre) {
+
+
+public ReglasCupos(String id, Date fecha, Integer duracionTurno, Vacunatorio vacunatorio, DtHora horaApertura,
+			DtHora horaCierre) {
 		super();
 		this.id = id;
 		this.fecha = fecha;
 		this.duracionTurno = duracionTurno;
+		this.vacunatorio = vacunatorio;
 		this.horaApertura = horaApertura;
 		this.horaCierre = horaCierre;
 	}
@@ -81,6 +89,20 @@ public Integer getDuracionTurno() {
 
 public void setDuracionTurno(Integer duracionTurno) {
 	this.duracionTurno = duracionTurno;
+}
+
+
+
+
+public Vacunatorio getVacunatorio() {
+	return vacunatorio;
+}
+
+
+
+
+public void setVacunatorio(Vacunatorio vacunatorio) {
+	this.vacunatorio = vacunatorio;
 }
 
 

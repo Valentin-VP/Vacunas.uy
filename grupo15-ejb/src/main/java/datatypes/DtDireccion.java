@@ -5,9 +5,9 @@ import java.io.Serializable;
 public class DtDireccion implements Serializable {
 
 private static final long serialVersionUID = 1L;
-String direccion;
-String barrio;
-String departamento;
+private String direccion;
+private String barrio;
+private String departamento;
 
 
 

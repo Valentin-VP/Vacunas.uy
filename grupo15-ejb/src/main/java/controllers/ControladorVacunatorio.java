@@ -79,4 +79,35 @@ throw new VacunatoriosNoCargadosException("No existen vacunatorios en el sistema
 	}
 	
 }
+
+public void modificarVacunatorio(DtVacunatorio dtVac) throws VacunatorioNoCargadoException {
+	
+	
+	Vacunatorio vac= em.find(Vacunatorio.class, dtVac.getId());
+	
+	vac.setNombre(dtVac.getNombre());
+	vac.setDtDir(dtVac.getDtDir());
+	vac.setLatitud(dtVac.getLatitud());
+	vac.setLongitud(dtVac.getLatitud());
+	vac.setTelefono(dtVac.getTelefono());
+	em.persist(vac);
+				
+	}
+
+public void eliminarVacunatorio(String id) throws VacunatorioNoCargadoException {
+	
+	
+	Vacunatorio vac= em.find(Vacunatorio.class, id);
+	
+	if (vac==null) {
+	
+	throw new VacunatorioNoCargadoException("El vacunatorio "+ id +" no existe en el sistema\n");
+		 
+	}
+	else {
+		em.remove(vac);
+	}
+	
+}
+	
 }

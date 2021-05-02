@@ -1,9 +1,14 @@
 package entities;
 
+import java.util.ArrayList;
+
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import datatypes.DtDireccion;
 
 @Entity
@@ -16,8 +21,16 @@ public class Vacunatorio {
 	private Integer telefono;
 	private Float latitud;
 	private Float longitud;
-	
-
+	@OneToMany(mappedBy = "vacunatorio",cascade = CascadeType.ALL)
+	private ArrayList<ReglasCupos> reglasCupos = new ArrayList<>();
+	@OneToMany(mappedBy = "vacunatorio",cascade = CascadeType.ALL)
+	private ArrayList<Puesto> puesto = new ArrayList<>();
+	//@ManyToMany(cascade = CascadeType.ALL)
+	//private ArrayList<Vacunador> vacunadores = new ArrayList<>();
+	//@ManyToMany(cascade = CascadeType.ALL)
+	//private ArrayList<Vacuna> vacuna = new ArrayList<>();
+	@OneToMany(mappedBy = "vacunatorio",cascade = CascadeType.ALL)
+	private ArrayList<Agenda> agenda = new ArrayList<>();
 
 
 
@@ -84,6 +97,30 @@ public Float getLongitud() {
 
 public void setLongitud(Float longitud) {
 	this.longitud = longitud;
+}
+
+public ArrayList<Vacunador> getVacunadores() {
+	return vacunadores;
+}
+
+public void setVacunadores(ArrayList<Vacunador> vacunadores) {
+	this.vacunadores = vacunadores;
+}
+
+public ArrayList<ReglasCupos> getReglasCupos() {
+	return reglasCupos;
+}
+
+public void setReglasCupos(ArrayList<ReglasCupos> reglasCupos) {
+	this.reglasCupos = reglasCupos;
+}
+
+public ArrayList<Puesto> getPuesto() {
+	return puesto;
+}
+
+public void setPuesto(ArrayList<Puesto> puesto) {
+	this.puesto = puesto;
 }
 
 
