@@ -12,6 +12,8 @@ import javax.persistence.OneToMany;
 public class Agenda {
 	
 	@Id
+	private int idAgenda;
+
 	private LocalDate fecha;
 	@OneToMany
 	private List<Cupo> cupos = new ArrayList<Cupo>();
@@ -19,11 +21,21 @@ public class Agenda {
 	public Agenda() {
 		super();
 	}
-	
-	public Agenda(LocalDate fAgenda) {
-		this.fecha = fAgenda;
+
+	public Agenda(int idAgenda, LocalDate fecha) {
+		super();
+		this.idAgenda = idAgenda;
+		this.fecha = fecha;
 	}
-	
+		
+	public int getIdAgenda() {
+		return idAgenda;
+	}
+
+	public void setIdAgenda(int idAgenda) {
+		this.idAgenda = idAgenda;
+	}
+
 	public LocalDate getFecha() {
 		return fecha;
 	}
