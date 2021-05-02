@@ -8,19 +8,19 @@ import javax.persistence.Id;
 public class Transportista {
 	
 	@Id @Column(nullable=false)
-	int id;
+	Integer id;
 
 	public Transportista() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Transportista(int id) {
+	public Transportista(Integer id) {
 		super();
 		this.id = id;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 

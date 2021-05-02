@@ -7,65 +7,113 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class DtLoteDosis implements Serializable{
 	private static final long serialVersionUID = 1L;
+	
 	private Integer idLote;
-	private Integer cantidadDosis;
-	private float temperatura;
-	private String descripcion;
+	private Integer cantidadTotal;
+	private Integer cantidadEntregada;
+	private Integer cantidadDescartada;
 	private String estadoLote;
+	private float temperatura;
+	private Integer transportista;
 	
 	public DtLoteDosis() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public DtLoteDosis(Integer idLote, Integer cantidadDosis, float temperatura, String descripcion,
-			String estadoLote) {
+	
+	public DtLoteDosis(Integer idLote, Integer cantidadTotal, Integer cantidadEntregada, Integer cantidadDescartada,
+			String estadoLote, float temperatura) {
 		super();
 		this.idLote = idLote;
-		this.cantidadDosis = cantidadDosis;
-		this.temperatura = temperatura;
-		this.descripcion = descripcion;
+		this.cantidadTotal = cantidadTotal;
+		this.cantidadEntregada = cantidadEntregada;
+		this.cantidadDescartada = cantidadDescartada;
 		this.estadoLote = estadoLote;
+		this.temperatura = temperatura;
 	}
+
+	
+	
+	public DtLoteDosis(Integer idLote, Integer cantidadTotal, Integer cantidadEntregada, Integer cantidadDescartada,
+			String estadoLote, float temperatura, Integer transportista) {
+		super();
+		this.idLote = idLote;
+		this.cantidadTotal = cantidadTotal;
+		this.cantidadEntregada = cantidadEntregada;
+		this.cantidadDescartada = cantidadDescartada;
+		this.estadoLote = estadoLote;
+		this.temperatura = temperatura;
+		this.transportista = transportista;
+	}
+
 
 	public Integer getIdLote() {
 		return idLote;
 	}
 
+
 	public void setIdLote(Integer idLote) {
 		this.idLote = idLote;
 	}
 
-	public Integer getCantidadDosis() {
-		return cantidadDosis;
+
+	public Integer getCantidadTotal() {
+		return cantidadTotal;
 	}
 
-	public void setCantidadDosis(Integer cantidadDosis) {
-		this.cantidadDosis = cantidadDosis;
+
+	public void setCantidadTotal(Integer cantidadTotal) {
+		this.cantidadTotal = cantidadTotal;
 	}
 
-	public float getTemperatura() {
-		return temperatura;
+
+	public Integer getCantidadEntregada() {
+		return cantidadEntregada;
 	}
 
-	public void setTemperatura(float temperatura) {
-		this.temperatura = temperatura;
+
+	public void setCantidadEntregada(Integer cantidadEntregada) {
+		this.cantidadEntregada = cantidadEntregada;
 	}
 
-	public String getDescripcion() {
-		return descripcion;
+
+	public Integer getCantidadDescartada() {
+		return cantidadDescartada;
 	}
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
+
+	public void setCantidadDescartada(Integer cantidadDescartada) {
+		this.cantidadDescartada = cantidadDescartada;
 	}
+
 
 	public String getEstadoLote() {
 		return estadoLote;
 	}
 
+
 	public void setEstadoLote(String estadoLote) {
 		this.estadoLote = estadoLote;
+	}
+
+
+	public float getTemperatura() {
+		return temperatura;
+	}
+
+
+	public void setTemperatura(float temperatura) {
+		this.temperatura = temperatura;
+	}
+
+
+	public Integer getTransportista() {
+		return transportista;
+	}
+
+
+	public void setTransportista(Integer transportista) {
+		this.transportista = transportista;
 	}
 	
 	

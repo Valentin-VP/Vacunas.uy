@@ -13,33 +13,41 @@ public class LoteDosis {
 	private Integer idLote;
 	
 	@Column(nullable=false)
-	private Integer cantidadDosis;
-	private float temperatura;
-	private String descripcion;
+	private Integer cantidadTotal;
+	private Integer cantidadEntregada;
+	private Integer cantidadDescartada;
 	private EstadoLote estadoLote;
+	private float temperatura;
+	private Transportista transportista;
 
 
 	public LoteDosis() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
-	public LoteDosis(Integer idLote, Integer cantidadDosis, float temperatura, String descripcion) {
+	public LoteDosis(Integer idLote, Integer cantidadTotal, Integer cantidadEntregada, Integer cantidadDescartada,
+			float temperatura) {
 		super();
 		this.idLote = idLote;
-		this.cantidadDosis = cantidadDosis;
+		this.cantidadTotal = cantidadTotal;
+		this.cantidadEntregada = cantidadEntregada;
+		this.cantidadDescartada = cantidadDescartada;
 		this.temperatura = temperatura;
-		this.descripcion = descripcion;
 		this.estadoLote = EstadoLote.SinAsignar;
+		this.transportista = null;
 	}
 
-	public LoteDosis(Integer idLote, Integer cantidadDosis, float temperatura, String descripcion, EstadoLote estadoLote) {
+	
+	public LoteDosis(Integer idLote, Integer cantidadTotal, Integer cantidadEntregada, Integer cantidadDescartada,
+			EstadoLote estadoLote, float temperatura, Transportista transportista) {
 		super();
 		this.idLote = idLote;
-		this.cantidadDosis = cantidadDosis;
-		this.temperatura = temperatura;
-		this.descripcion = descripcion;
+		this.cantidadTotal = cantidadTotal;
+		this.cantidadEntregada = cantidadEntregada;
+		this.cantidadDescartada = cantidadDescartada;
 		this.estadoLote = estadoLote;
+		this.temperatura = temperatura;
+		this.transportista = transportista;
 	}
 
 	public Integer getIdLote() {
@@ -50,12 +58,36 @@ public class LoteDosis {
 		this.idLote = idLote;
 	}
 
-	public Integer getCantidadDosis() {
-		return cantidadDosis;
+	public Integer getCantidadTotal() {
+		return cantidadTotal;
 	}
 
-	public void setCantidadDosis(Integer cantidadDosis) {
-		this.cantidadDosis = cantidadDosis;
+	public void setCantidadTotal(Integer cantidadTotal) {
+		this.cantidadTotal = cantidadTotal;
+	}
+
+	public Integer getCantidadEntregada() {
+		return cantidadEntregada;
+	}
+
+	public void setCantidadEntregada(Integer cantidadEntregada) {
+		this.cantidadEntregada = cantidadEntregada;
+	}
+
+	public Integer getCantidadDescartada() {
+		return cantidadDescartada;
+	}
+
+	public void setCantidadDescartada(Integer cantidadDescartada) {
+		this.cantidadDescartada = cantidadDescartada;
+	}
+
+	public EstadoLote getEstadoLote() {
+		return estadoLote;
+	}
+
+	public void setEstadoLote(EstadoLote estadoLote) {
+		this.estadoLote = estadoLote;
 	}
 
 	public float getTemperatura() {
@@ -66,20 +98,13 @@ public class LoteDosis {
 		this.temperatura = temperatura;
 	}
 
-	public String getDescripcion() {
-		return descripcion;
+	public Transportista getTransportista() {
+		return transportista;
 	}
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
+	public void setTransportista(Transportista transportista) {
+		this.transportista = transportista;
 	}
 
-	public EstadoLote getEstadoLote() {
-		return estadoLote;
-	}
-
-	public void setEstadoLote(EstadoLote estadoLote) {
-		this.estadoLote = estadoLote;
-	} 
 	
 }
