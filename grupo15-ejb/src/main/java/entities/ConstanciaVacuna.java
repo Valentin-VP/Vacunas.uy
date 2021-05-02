@@ -15,6 +15,8 @@ public class ConstanciaVacuna {
 	private int dosisRecibidas;
 	private LocalDate fechaUltimaDosis;
 	private String vacuna;
+	////TODO:@ManyToMany
+	//private List<LoteDosis> lote = new ArrayList<LoteDosis>();
 	
 	@OneToOne
 	private Reserva reserva;

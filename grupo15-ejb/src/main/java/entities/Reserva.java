@@ -10,6 +10,7 @@ import javax.persistence.Id;
 
 import datatypes.EstadoReserva;
 
+////TODO:Reserva es un tipo asociativo
 @Entity
 public class Reserva implements Serializable{
 	/**
@@ -22,6 +23,10 @@ public class Reserva implements Serializable{
 	private LocalDateTime fechaRegistro;
 	@Enumerated(EnumType.STRING)
 	private EstadoReserva estado;
+	////TODO:private Etapa etapa;
+	//private Usuario usuario;
+	//@ManyToOne
+	//private Puesto puesto;
 	
 	public Reserva() {
 		

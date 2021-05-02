@@ -14,6 +14,9 @@ public class DtReserva implements Serializable{
 	private Integer id;
 	private EstadoReserva estado;
 	private String usuario;
+	////TODO:private DtEtapa etapa;
+	//private DtUsuario usuario;
+	//private DtPuesto puesto;
 	private LocalDateTime fecha;
 
 	

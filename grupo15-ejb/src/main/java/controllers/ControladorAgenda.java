@@ -15,8 +15,10 @@ import javax.persistence.Query;
 
 import datatypes.DtAgenda;
 import datatypes.DtCupo;
+import datatypes.DtReserva;
 import entities.Agenda;
 import entities.Cupo;
+import entities.Reserva;
 import exceptions.AgendaInexistente;
 import exceptions.AgendaRepetida;
 import exceptions.ReservaInexistente;
@@ -37,16 +39,24 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
     public ControladorAgenda() {
         // TODO Auto-generated constructor stub
     }
-    public void agregarAgenda(int id, LocalDate fecha, List<DtCupo> cupos) throws AgendaRepetida {
+    public void agregarAgenda(int id, LocalDate fecha, List<DtCupo> cupos, List<DtReserva> reservas) throws AgendaRepetida {
     	if (getAgenda(id) == null) {
-    		//DateFormat df = new SimpleDateFormat("EEE dd MMM yyyy HH:mm:ss Z", new Locale("us"));
-    		Agenda r = new Agenda(id, fecha);
+    		if (getAgenda(id).getFecha().isEqual(fecha)) {
+    			throw new AgendaRepetida("Ya existe una agenda para ese día.");
+    		}
+    		Agenda a = new Agenda(id, fecha);
     		List<Cupo> listCupos= new ArrayList<Cupo>();
     		for (DtCupo dtc: cupos) {
     			listCupos.add(new Cupo(dtc.getIdCupo(), dtc.isOcupado()));
 			}
-    		r.setCupos(listCupos);
-    		em.persist(r);
+    		List<Reserva> listReservas= new ArrayList<Reserva>();
+    		for (DtReserva dtr: reservas) {
+    			listReservas.add(new Reserva(dtr.getId(), dtr.getUsuario(), dtr.getFecha(), dtr.getEstado()));
+			}
+    		
+    		a.setCupos(listCupos);
+    		a.setReservas(listReservas);
+    		em.persist(a);
     	}else {
     		throw new AgendaRepetida("Ya existe una agenda con ese ID.");
     	}
@@ -60,7 +70,11 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 			for (Cupo c: temp.getCupos()) {
 				dtc.add(new DtCupo(c.getIdCupo(), c.isOcupado()));
 			}
-			DtAgenda retorno = new DtAgenda(temp.getIdAgenda(), temp.getFecha(), dtc);
+			List<DtReserva> dtr= new ArrayList<DtReserva>();
+			for (Reserva r: temp.getReservas()) {
+				dtr.add(new DtReserva(r.getIdReserva(), r.getEstado(), r.getNombreUser(), r.getFechaRegistro()));
+			}
+			DtAgenda retorno = new DtAgenda(temp.getIdAgenda(), temp.getFecha(), dtc, dtr);
 
 			return retorno;
 		}else
@@ -78,7 +92,11 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 				for (Cupo c: a.getCupos()) {
 					dtc.add(new DtCupo(c.getIdCupo(), c.isOcupado()));
 				}
-				retorno.add(new DtAgenda(a.getIdAgenda(), a.getFecha(), dtc));
+				List<DtReserva> dtr= new ArrayList<DtReserva>();
+				for (Reserva r: a.getReservas()) {
+					dtr.add(new DtReserva(r.getIdReserva(), r.getEstado(), r.getNombreUser(), r.getFechaRegistro()));
+				}
+				retorno.add(new DtAgenda(a.getIdAgenda(), a.getFecha(), dtc, dtr));
 			}
 			return retorno;
 		}else {

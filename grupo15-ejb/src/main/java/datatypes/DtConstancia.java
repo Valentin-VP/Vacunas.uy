@@ -18,6 +18,7 @@ public class DtConstancia  implements Serializable{
 	private int dosisRecibidas;
 	private LocalDate fechaUltimaDosis;
 	private String vacuna;
+	////TODO:List<DtLoteDosis> lote = new ArrayList<DtLoteDosis>();
 	
 	private DtReserva reserva;
 

@@ -21,6 +21,25 @@ import exceptions.ReservaRepetida;
 /**
  * Session Bean implementation class ControladorReserva
  */
+
+//TODO:No estoy considerando Etapa y Usuario, ni Puesto (y soy un Tipo Asociativo) => TODO: cambiar nombreUser por la entidad
+/*TODO:Constancia puede modificarse a si mismo, debe agregarse 1 reserva, puede agregar (o modificar) * lotedosis.
+No puede crearse, ni destruirse (por si propio), porque dejaria huerfano a su link actual con Certificado.
+
+Agenda puede modificarse a si mismo, puede agregar (o modificar/eliminar) * reservas, puede agregar (o modificar/eliminar) * cupos.
+No puede crearse, ni destruirse (por si propio), porque dejaria huerfano a su link actual con Vacunatorio.
+[Si un Vacunatorio lo destruye, debera destruir los cupos asociados a la Agenda]
+
+Certificado no puede modificarse a si mismo, puede agregar (o modificar/eliminar) * Constancias.
+No puede crearse, ni destruirse (por si propio), porque dejaria huerfano a su link actual con Usuario.
+[Si un Usuario lo destruye, debera destruir las Constancias asociados al Certificado]
+
+Reserva no puede modificarse a si mismo, puede agregar (o modificar/eliminar) 1 puesto.
+No puede crearse, ni destruirse (por si propio), porque es un tipo asociativo.
+
+Cupo puede modificarse a si mismo.
+No puede crearse, ni destruirse (por si propio), porque dejaria huerfano a su link actual con Agenda.*/
+
 @Stateless
 @LocalBean
 public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
@@ -34,6 +53,8 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
     public ControladorReserva() {
         // TODO Auto-generated constructor stub
     }
+    
+
     public void agregarReserva(int id, String user, LocalDateTime fecha, EstadoReserva estado) throws ReservaRepetida {
     	if (getReserva(id) == null) {
     		//DateFormat df = new SimpleDateFormat("EEE dd MMM yyyy HH:mm:ss Z", new Locale("us"));
