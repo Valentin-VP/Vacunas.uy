@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import datatypes.EstadoReserva;
@@ -27,6 +28,7 @@ public class Reserva implements Serializable{
 	////TODO:private Etapa etapa;
 	//private Usuario usuario;
 	@ManyToOne
+	@JoinColumn(name="puesto_id")
 	private Puesto puesto;
 	
 	public Reserva() {
