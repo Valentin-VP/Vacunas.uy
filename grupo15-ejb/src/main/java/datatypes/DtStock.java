@@ -7,27 +7,28 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class DtStock implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	private Integer cantidad;
 	private Integer descartadas;
 	private Integer disponibles;
 	private Integer administradas;
-	
+
 	// Identidad del Stock: vacuna + vacunatorio (tipo asociativo)
 	private String vacuna;
 	private String vacunatorio;
-	
-	public DtStock() {}
 
-	public DtStock(Integer cantidad, Integer descartadas, Integer disponibles, Integer administradas, String vacuna,
-			String vacunatorio) {
+	public DtStock() {
+	}
+
+	public DtStock(String vacunatorio, String vacuna, Integer cantidad, Integer descartadas, Integer disponibles,
+			Integer administradas) {
 		super();
+		this.vacuna = vacuna;
+		this.vacunatorio = vacunatorio;
 		this.cantidad = cantidad;
 		this.descartadas = descartadas;
 		this.disponibles = disponibles;
 		this.administradas = administradas;
-		this.vacuna = vacuna;
-		this.vacunatorio = vacunatorio;
 	}
 
 	public Integer getCantidad() {

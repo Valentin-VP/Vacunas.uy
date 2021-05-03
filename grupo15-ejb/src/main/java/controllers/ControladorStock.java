@@ -1,5 +1,6 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -86,21 +87,59 @@ public class ControladorStock implements IStockLocal, IStockRemote {
 	}
 
 	@Override
-	public void eliminarStock(String idVacunatorio, String idVacuna) {
-		// TODO Auto-generated method stub
-
+	public void eliminarStock(String idVacunatorio, String idVacuna)
+			throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente {
+		Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorio);
+		if (vacunatorio == null) {
+			throw new VacunatorioNoCargadoException("No existe el vacunatorio con ID " + idVacunatorio);
+		}
+		Vacuna vacuna = em.find(Vacuna.class, idVacuna);
+		if (vacuna == null) {
+			throw new VacunaInexistente("No existe la vacuna con ID " + idVacuna);
+		}
+		for (Stock stock : vacunatorio.getStock()) {
+			if (stock.getVacuna().getNombre().equals(idVacuna)) {
+				em.remove(stock);
+				return;
+			}
+		}
+		throw new StockVacunaVacunatorioInexistente(
+				String.format("No se encontro Stock de la Vacuna %s en el Vacunatorio %s", idVacuna, idVacunatorio));
 	}
 
 	@Override
-	public DtStock obtenerStock(String idVacunatorio, String idVacuna) {
-		// TODO Auto-generated method stub
-		return null;
+	public DtStock obtenerStock(String idVacunatorio, String idVacuna)
+			throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente {
+		Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorio);
+		if (vacunatorio == null) {
+			throw new VacunatorioNoCargadoException("No existe el vacunatorio con ID " + idVacunatorio);
+		}
+		Vacuna vacuna = em.find(Vacuna.class, idVacuna);
+		if (vacuna == null) {
+			throw new VacunaInexistente("No existe la vacuna con ID " + idVacuna);
+		}
+		for (Stock stock : vacunatorio.getStock()) {
+			if (stock.getVacuna().getNombre().equals(idVacuna)) {
+				return new DtStock(stock.getVacunatorio().getNombre(), stock.getVacuna().getNombre(),
+						stock.getCantidad(), stock.getDescartadas(), stock.getDisponibles(), stock.getAdministradas());
+			}
+		}
+		throw new StockVacunaVacunatorioInexistente(
+				String.format("No se encontro Stock de la Vacuna %s en el Vacunatorio %s", idVacuna, idVacunatorio));
 	}
 
 	@Override
-	public List<DtStock> listarStock(String idVacunatorio) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<DtStock> listarStock(String idVacunatorio) throws VacunatorioNoCargadoException {
+		Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorio);
+		List<DtStock> stockVacunatorio = new ArrayList<DtStock>();
+		if (vacunatorio == null) {
+			throw new VacunatorioNoCargadoException("No existe el vacunatorio con ID " + idVacunatorio);
+		}
+		for (Stock stock : vacunatorio.getStock()) {
+			stockVacunatorio.add(new DtStock(stock.getVacunatorio().getNombre(), stock.getVacuna().getNombre(),
+						stock.getCantidad(), stock.getDescartadas(), stock.getDisponibles(), stock.getAdministradas()));
+		}
+		return stockVacunatorio;
 	}
 
 }

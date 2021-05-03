@@ -23,9 +23,11 @@ public interface IStockLocal {
 			Integer administradas, Integer disponibles)
 			throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente;
 
-	public void eliminarStock(String idVacunatorio, String idVacuna);
+	public void eliminarStock(String idVacunatorio, String idVacuna)
+			throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente;
 
-	public DtStock obtenerStock(String idVacunatorio, String idVacuna);
+	public DtStock obtenerStock(String idVacunatorio, String idVacuna)
+			throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente;
 
-	public List<DtStock> listarStock(String idVacunatorio);
+	public List<DtStock> listarStock(String idVacunatorio) throws VacunatorioNoCargadoException;
 }
