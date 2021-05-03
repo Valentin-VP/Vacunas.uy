@@ -1,6 +1,7 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,14 +22,14 @@ public class Vacunatorio {
 	private Float latitud;
 	private Float longitud;
 	@OneToMany(cascade = CascadeType.ALL)
-	private ArrayList<ReglasCupos> reglasCupos = new ArrayList<>();
+	private List<ReglasCupos> reglasCupos = new ArrayList<>();
 	@OneToMany(mappedBy = "vacunatorio", cascade = CascadeType.ALL)
-	private ArrayList<Puesto> puesto = new ArrayList<>();
+	private List<Puesto> puesto = new ArrayList<Puesto>();
 	
-	@OneToMany(mappedBy = "vacunatorio", cascade = CascadeType.ALL)
-	private ArrayList<Stock> stock = new ArrayList<Stock>();
 	@OneToMany(cascade = CascadeType.ALL)
-	private ArrayList<Agenda> agenda = new ArrayList<>();
+	private List<Stock> stock = new ArrayList<Stock>();
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Agenda> agenda = new ArrayList<Agenda>();
 
 	public Vacunatorio(String id, String nombre, DtDireccion dtDir, Integer telefono, Float latitud, Float longitud) {
 		super();
@@ -94,7 +95,7 @@ public class Vacunatorio {
 		this.longitud = longitud;
 	}
 
-	public ArrayList<ReglasCupos> getReglasCupos() {
+	public List<ReglasCupos> getReglasCupos() {
 		return reglasCupos;
 	}
 
@@ -102,7 +103,7 @@ public class Vacunatorio {
 		this.reglasCupos = reglasCupos;
 	}
 
-	public ArrayList<Puesto> getPuesto() {
+	public List<Puesto> getPuesto() {
 		return puesto;
 	}
 
@@ -110,12 +111,20 @@ public class Vacunatorio {
 		this.puesto = puesto;
 	}
 
-	public ArrayList<Stock> getStock() {
+	public List<Stock> getStock() {
 		return stock;
 	}
 
 	public void setStock(ArrayList<Stock> stock) {
 		this.stock = stock;
+	}
+
+	public List<Agenda> getAgenda() {
+		return agenda;
+	}
+
+	public void setAgenda(ArrayList<Agenda> agenda) {
+		this.agenda = agenda;
 	}
 
 }
