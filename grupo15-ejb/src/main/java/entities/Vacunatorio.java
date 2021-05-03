@@ -27,8 +27,8 @@ public class Vacunatorio {
 	private ArrayList<Puesto> puesto = new ArrayList<>();
 	@ManyToMany(cascade = CascadeType.ALL)
 	private ArrayList<Vacunador> vacunadores = new ArrayList<>();
-	//@ManyToMany(cascade = CascadeType.ALL)
-	//private ArrayList<Vacuna> vacuna = new ArrayList<>();
+	@OneToMany(mappedBy = "vacunatorio",cascade = CascadeType.ALL)
+	private ArrayList<Stock> stock = new ArrayList<Stock>();
 	@OneToMany(mappedBy = "vacunatorio",cascade = CascadeType.ALL)
 	private ArrayList<Agenda> agenda = new ArrayList<>();
 
