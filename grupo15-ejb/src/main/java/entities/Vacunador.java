@@ -21,10 +21,10 @@ public class Vacunador extends Usuario {
 	private List<Mensaje> mensajes = new ArrayList<>();
 	
 	@ManyToMany(cascade = CascadeType.ALL)
-	List<Vacunatorio> vacunatorios = new ArrayList<>();
+	private List<Vacunatorio> vacunatorios = new ArrayList<>();
 	
-	//@ManyToMany(cascade = CascadeType.ALL)
-	//List<Etapa> etapas = new ArrayList<>();
+	@ManyToMany(cascade = CascadeType.ALL)
+	List<Etapa> etapas = new ArrayList<>();
 	
 	public Vacunador() {
 		super();
