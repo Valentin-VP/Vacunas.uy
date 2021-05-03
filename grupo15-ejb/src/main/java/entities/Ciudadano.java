@@ -2,10 +2,15 @@ package entities;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import datatypes.DtDireccion;
 import datatypes.Sexo;
 
+@Entity
 public class Ciudadano extends Usuario {
+
 
 	private String TipoSector;
 	private boolean autenticado;
