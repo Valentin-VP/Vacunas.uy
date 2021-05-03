@@ -1,6 +1,7 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -18,7 +19,7 @@ public class PlanVacunacion {
 	private String nombre;
 	private String descripcion;
 	@OneToMany(mappedBy = "planVacunacion", cascade = CascadeType.ALL)
-	private ArrayList<Etapa> etapas = new ArrayList<>();
+	private List<Etapa> etapas = new ArrayList<>();
 	
 	public PlanVacunacion() {
 		super();
@@ -48,7 +49,7 @@ public class PlanVacunacion {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-	public ArrayList<Etapa> getEtapas() {
+	public List<Etapa> getEtapas() {
 		return etapas;
 	}
 	public void setEtapas(ArrayList<Etapa> etapa) {

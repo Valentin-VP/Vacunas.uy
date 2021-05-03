@@ -16,4 +16,6 @@ public interface IEnfermedadLocal {
 	public ArrayList<DtEnfermedad> listarEnfermedades() throws EnfermedadInexistente;
 
 	public DtEnfermedad obtenerLaboratorio(String nombre) throws EnfermedadInexistente;
+	
+	public void eliminarEnfermedad(String nombre) throws EnfermedadInexistente;
 }

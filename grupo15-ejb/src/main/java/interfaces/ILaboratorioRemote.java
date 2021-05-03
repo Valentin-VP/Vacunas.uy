@@ -16,4 +16,6 @@ public interface ILaboratorioRemote {
 	public ArrayList<DtLaboratorio> listarLaboratorios() throws LaboratorioInexistente;
 	
 	public DtLaboratorio obtenerLaboratorio(String nombre) throws LaboratorioInexistente;
+	
+	public void eliminarLaboratorio(String nombre) throws LaboratorioInexistente;
 }
