@@ -2,6 +2,7 @@ package entities;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -33,7 +34,7 @@ public abstract class Usuario {
 	CertificadoVacunacion certificado;
 	
 	@OneToMany(cascade = CascadeType.ALL)
-	private ArrayList<Reserva> reservas = new ArrayList<>();
+	private List<Reserva> reservas = new ArrayList<>();
 	
 	
 	public Usuario() {
