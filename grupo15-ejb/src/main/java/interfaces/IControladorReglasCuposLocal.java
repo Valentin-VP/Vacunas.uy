@@ -8,7 +8,6 @@ import javax.ejb.Local;
 
 import datatypes.DtHora;
 import datatypes.DtReglasCupos;
-import entities.Vacunatorio;
 import exceptions.ReglasCuposCargadoException;
 import exceptions.ReglasCuposNoCargadoException;
 import exceptions.ReglasCuposNoCargadosException;
@@ -16,7 +15,7 @@ import exceptions.ReglasCuposNoCargadosException;
 @Local
 public interface IControladorReglasCuposLocal {
 
-	public void agregarReglasCupos(String id, Date fecha, Integer duracionTurno, Vacunatorio vacunatorio, DtHora horaApertura,DtHora horaCierre) throws ReglasCuposCargadoException;
+	public void agregarReglasCupos(String id, Date fecha, Integer duracionTurno,  DtHora horaApertura,DtHora horaCierre) throws ReglasCuposCargadoException;
 	public DtReglasCupos obtenerReglasCupos(String id) throws ReglasCuposNoCargadoException;
 	public ArrayList<DtReglasCupos> listarReglasCupos()throws ReglasCuposNoCargadosException;
 	public void modificarReglasCupos(DtReglasCupos dtRegCup) throws ReglasCuposNoCargadoException;

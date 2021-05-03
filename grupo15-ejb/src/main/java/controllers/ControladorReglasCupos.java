@@ -25,14 +25,14 @@ public class ControladorReglasCupos implements IControladorReglasCuposLocal, ICo
 	private EntityManager em;
 	
 
-public void agregarReglasCupos(String id, Date fecha, Integer duracionTurno, Vacunatorio vacunatorio, DtHora horaApertura,
+public void agregarReglasCupos(String id, Date fecha, Integer duracionTurno, DtHora horaApertura,
 		DtHora horaCierre) throws ReglasCuposCargadoException {
 
 	
 	ReglasCupos reglas= em.find(ReglasCupos.class, id);
 	
 	if (reglas==null) {
-		ReglasCupos reglasNew= new ReglasCupos(id, fecha, duracionTurno, vacunatorio, horaApertura, horaCierre);
+		ReglasCupos reglasNew= new ReglasCupos(id, fecha, duracionTurno, horaApertura, horaCierre);
 	
 		em.persist(reglasNew);
 	
@@ -55,7 +55,7 @@ public DtReglasCupos obtenerReglasCupos(String id) throws ReglasCuposNoCargadoEx
 		 
 	}
 	else {
-		DtReglasCupos dtRegCup = new DtReglasCupos(regla.getId(), regla.getFecha(),regla.getDuracionTurno(), regla.getVacunatorio(), regla.getHoraApertura(), regla.getHoraCierre());
+		DtReglasCupos dtRegCup = new DtReglasCupos(regla.getId(), regla.getFecha(),regla.getDuracionTurno(),  regla.getHoraApertura(), regla.getHoraCierre());
 				return dtRegCup;
 	}
 	
@@ -70,7 +70,7 @@ public ArrayList<DtReglasCupos> listarReglasCupos()throws ReglasCuposNoCargadosE
 	
 	for(ReglasCupos r: aux ) {
 		
-		DtReglasCupos dtRegCup = new DtReglasCupos(r.getId(), r.getFecha(),r.getDuracionTurno(), r.getVacunatorio(), r.getHoraApertura(), r.getHoraCierre());
+		DtReglasCupos dtRegCup = new DtReglasCupos(r.getId(), r.getFecha(),r.getDuracionTurno(), r.getHoraApertura(), r.getHoraCierre());
 		reg.add(dtRegCup);
 	}
 	if(aux.isEmpty()) {
@@ -89,7 +89,6 @@ public void modificarReglasCupos(DtReglasCupos dtRegCup) throws ReglasCuposNoCar
 	ReglasCupos reg= em.find(ReglasCupos.class, dtRegCup.getId());
 	
 	reg.setFecha(dtRegCup.getFecha());
-	reg.setVacunatorio(dtRegCup.getVacunatorio());
 	reg.setDuracionTurno(dtRegCup.getDuracionTurno());
 	reg.setHoraApertura(dtRegCup.getHoraApertura());
 	reg.setHoraCierre(dtRegCup.getHoraCierre());

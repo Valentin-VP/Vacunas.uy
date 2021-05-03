@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -16,7 +17,9 @@ import javax.persistence.OneToMany;
 public class Puesto {
 	@Id
 	private String id;
+	
 	@ManyToOne
+	@JoinColumn
 	private Vacunatorio vacunatorio;
 	@OneToMany(mappedBy = "puesto",cascade = CascadeType.ALL)
 	private ArrayList<Reserva> reserva = new ArrayList<>();
