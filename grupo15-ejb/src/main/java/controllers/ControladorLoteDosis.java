@@ -31,9 +31,6 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 	@PersistenceContext(name = "test")
 	private EntityManager em;
 
-	@EJB
-	ControladorTransportista controladorTransportista;
-
 	@Override
 	public void agregarLoteDosis(Integer idLote, Integer cantidadTotal, float temperatura) throws LoteRepetido {
 		try {
@@ -77,26 +74,15 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 	public void setTransportistaToLoteDosis(Integer idTransportista, Integer idLote) throws TransportistaInexistente {
 		// Asocia un Transportista a un LoteDosis.
 		// PRE: Ya debe existir el LoteDosis y el transportista
+		// El 
 		if (existeLoteDosis(idLote)) {
 			LoteDosis lote = em.find(LoteDosis.class, idLote);
 			Transportista transportista = null;
-			/*
-			 * // >> Forma 1), pedir al ControladorTransportista
-			 * 
-			 * try { DtTransportista dtTransportista =
-			 * controladorTransportista.obtenerTransportista(idTransportista); // El
-			 * ControladorTransportista me retorna un DtTransportista, y yo preciso asociar
-			 * un Transportista // A priori no sirve porque no puedo volver a crear otro
-			 * Transportista } catch (TransportistaInexistente e) { // Transportista no
-			 * existe, arrojar excepcion }
-			 */
-			// >> Forma 2), acceder directamente con el Entity Manager
 			transportista = em.find(Transportista.class, idTransportista);
 			if (transportista != null) {
 				lote.setTransportista(transportista);
 				em.persist(lote);
 			} else {
-				// Transportista no existe, arrojar excepcion
 				throw new TransportistaInexistente("No existe el Transportista con ID " + idTransportista);
 			}
 		}

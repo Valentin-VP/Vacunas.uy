@@ -1,9 +1,13 @@
 package entities;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+@Entity
 public class Mensaje {
 
+	@Id
 	private Integer IdMensaje;
 	private String contenido;
 	

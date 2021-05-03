@@ -2,6 +2,7 @@ package controllers;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -12,9 +13,10 @@ import exceptions.TransportistaRepetido;
 import interfaces.ITransportistaDaoLocal;
 import interfaces.ITransportistaDaoRemote;
 
+@Stateless
 public class ControladorTransportista implements ITransportistaDaoLocal, ITransportistaDaoRemote {
 	
-	@PersistenceContext(name = "HermionePU")
+	@PersistenceContext(name = "test")
 	private EntityManager em;
 
 	@Override

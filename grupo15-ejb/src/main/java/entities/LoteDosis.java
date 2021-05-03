@@ -2,7 +2,10 @@ package entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import datatypes.EstadoLote;
 
@@ -16,8 +19,10 @@ public class LoteDosis {
 	private Integer cantidadTotal;
 	private Integer cantidadEntregada;
 	private Integer cantidadDescartada;
+	@Enumerated(EnumType.STRING)
 	private EstadoLote estadoLote;
 	private float temperatura;
+	@ManyToOne
 	private Transportista transportista;
 
 

@@ -1,8 +1,12 @@
 package entities;
 
+import java.util.ArrayList;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Transportista {
@@ -27,6 +31,4 @@ public class Transportista {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	
 }

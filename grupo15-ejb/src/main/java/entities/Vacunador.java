@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
@@ -12,6 +13,7 @@ import datatypes.DtDireccion;
 import datatypes.Rol;
 import datatypes.Sexo;
 
+@Entity
 public class Vacunador extends Usuario {
 
 	@ManyToMany (cascade = CascadeType.ALL)
@@ -23,8 +25,8 @@ public class Vacunador extends Usuario {
 	@ManyToMany(cascade = CascadeType.ALL)
 	private List<Vacunatorio> vacunatorios = new ArrayList<>();
 	
-	@ManyToMany(cascade = CascadeType.ALL)
-	List<Etapa> etapas = new ArrayList<>();
+	//@ManyToMany(cascade = CascadeType.ALL)
+	//List<Etapa> etapas = new ArrayList<>();
 	
 	public Vacunador() {
 		super();
