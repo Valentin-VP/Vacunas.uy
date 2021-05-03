@@ -11,6 +11,19 @@
 		<jta-data-source>java:/test</jta-data-source>
 		<class>entities.LoteDosis</class>
 		<class>entities.Transportista</class>
+		<class>entities.Agenda</class>
+		<class>entities.CertificadoVacunacion</class>
+		<class>entities.Chat</class>
+		<class>entities.ConstanciaVacuna</class>
+		<class>entities.Cupo</class>
+		<class>entities.Enfermedad</class>
+		<class>entities.Etapa</class>
+		<class>entities.Historico</class>
+		<class>entities.Laboratorio</class>
+		<class>entities.Mensaje</class>
+		<class>entities.PlanVacunacion</class>
+		<class>entities.Puesto</class>
+		<class>entities.Ciudadano</class>
 		<exclude-unlisted-classes>false</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect"
