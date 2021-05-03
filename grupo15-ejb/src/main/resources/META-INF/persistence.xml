@@ -10,6 +10,7 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<jta-data-source>java:/test</jta-data-source>
 		<class>entities.LoteDosis</class>
+		<class>entities.Transportista</class>
 		<exclude-unlisted-classes>false</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect"
