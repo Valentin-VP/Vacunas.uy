@@ -21,8 +21,8 @@ public class Puesto {
 	@ManyToOne
 	@JoinColumn
 	private Vacunatorio vacunatorio;
-	@OneToMany(mappedBy = "puesto",cascade = CascadeType.ALL)
-	private ArrayList<Reserva> reserva = new ArrayList<>();
+	
+	
 	public Puesto() {
 		super();
 		// TODO Auto-generated constructor stub
