@@ -57,4 +57,12 @@ public class ControladorEnfermedad implements IEnfermedadLocal, IEnfermedadRemot
 			throw new EnfermedadInexistente("No existe una Enfermedad con ese nombre");
 		}
 	}
+	
+	public void eliminarEnfermedad(String nombre) throws EnfermedadInexistente {
+		Enfermedad enf = em.find(Enfermedad.class, nombre);
+		if(enf != null) {
+			em.remove(enf);
+		}else
+			throw new EnfermedadInexistente("No existe una Enfermedad con ese nombre");
+	}
 }

@@ -53,8 +53,15 @@ public class ControladorLaboratorio implements ILaboratorioLocal, ILaboratorioRe
 		Laboratorio lab = em.find(Laboratorio.class, nombre);
 		if(lab != null) {
 			return new DtLaboratorio(lab.getNombre());
-		}else {
+		}else 
 			throw new LaboratorioInexistente("No existe un Laboratorio con ese nombre");
-		}
+	}
+	
+	public void eliminarLaboratorio(String nombre) throws LaboratorioInexistente {
+		Laboratorio lab = em.find(Laboratorio.class, nombre);
+		if(lab != null) {
+			em.remove(lab);
+		}else 
+			throw new LaboratorioInexistente("No existe un Laboratorio con ese nombre");
 	}
 }

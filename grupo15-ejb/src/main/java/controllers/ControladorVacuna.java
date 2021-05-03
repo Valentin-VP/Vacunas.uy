@@ -77,4 +77,24 @@ public class ControladorVacuna implements IControladorVacunaLocal, IControladorV
 			throw new VacunaInexistente("No existe una vacuna con ese nombre");
 		}
 	}
+	
+	public void eliminarVacuna(String nombre) throws VacunaInexistente {
+		Vacuna vac = em.find(Vacuna.class, nombre);
+		if(vac != null) {
+			em.remove(vac);
+		}else
+			throw new VacunaInexistente("No existe una vacuna con ese nombre");
+	}
+	
+	public void modificarVacuna(String nombre, int cantDosis, Date expira, Laboratorio laboratorio, Enfermedad enfermedad) throws VacunaInexistente {
+		Vacuna vac = em.find(Vacuna.class, nombre);
+		if(vac != null) {
+			vac.setCantDosis(cantDosis);
+			vac.setExpira(expira);
+			vac.setLaboratorio(laboratorio);
+			vac.setEnfermedad(enfermedad);
+			em.persist(vac);
+		}else
+			throw new VacunaInexistente("No existe una vacuna con ese nombre");
+	}
 }
