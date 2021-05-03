@@ -60,7 +60,7 @@ public class ControladorVacuna implements IControladorVacunaLocal, IControladorV
 		if(!vacs.isEmpty()) {
 			ArrayList<DtVacuna> dtVacs = new ArrayList<>();
 	    	for(Vacuna v: vacs) {
-	    		dtVacs.add(new DtVacuna(v.getNombre(), v.getCantDosis(), v.getExpira()));	
+	    		dtVacs.add(v.toDtVacuna());	
 	    	}
 			return dtVacs;
 		}else {
@@ -72,7 +72,7 @@ public class ControladorVacuna implements IControladorVacunaLocal, IControladorV
 	public DtVacuna obtenerVacuna(String nombre) throws VacunaInexistente{
 		Vacuna vac = em.find(Vacuna.class, nombre);
 		if(vac != null) {
-			return new DtVacuna(vac.getNombre(), vac.getCantDosis(), vac.getExpira());
+			return vac.toDtVacuna();
 		}else {
 			throw new VacunaInexistente("No existe una vacuna con ese nombre");
 		}

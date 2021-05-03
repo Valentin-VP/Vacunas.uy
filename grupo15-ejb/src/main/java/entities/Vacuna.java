@@ -6,6 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import datatypes.DtEnfermedad;
+import datatypes.DtLaboratorio;
+import datatypes.DtVacuna;
+
 
 
 @Entity
@@ -63,6 +67,21 @@ public class Vacuna{
 
 	public void setLaboratorio(Laboratorio laboratorio) {
 		this.laboratorio = laboratorio;
+	}
+
+	public Enfermedad getEnfermedad() {
+		return enfermedad;
+	}
+
+	public void setEnfermedad(Enfermedad enfermedad) {
+		this.enfermedad = enfermedad;
+	}
+	
+	public DtVacuna toDtVacuna() {
+		DtLaboratorio dtLab = new DtLaboratorio(this.getLaboratorio().getNombre());
+		DtEnfermedad dtEnf = new DtEnfermedad(this.getEnfermedad().getNombre());
+		DtVacuna dtVac = new DtVacuna(this.getNombre(), this.getCantDosis(), this.getExpira(), dtLab, dtEnf);
+		return dtVac;
 	}
 	
 }

@@ -12,16 +12,20 @@ public class DtVacuna implements Serializable {
 	private String nombre;
 	private Integer cantDosis; //cuantas veces se da la vacuna
 	private Date expira;  //fecha de expiracion
+	private DtLaboratorio dtLab;
+	private DtEnfermedad dtEnf;
 	
 	public DtVacuna() {
 		
 	}
 	
-	public DtVacuna(String nombre, Integer cantDosis, Date expira) {
+	public DtVacuna(String nombre, Integer cantDosis, Date expira, DtLaboratorio dtLab, DtEnfermedad dtEnf) {
 		super();
 		this.nombre = nombre;
 		this.cantDosis = cantDosis;
 		this.expira = expira;
+		this.dtLab = dtLab;
+		this.dtEnf = dtEnf;
 	}
 
 	public String getNombre() {
@@ -47,6 +51,21 @@ public class DtVacuna implements Serializable {
 	public void setExpira(Date expira) {
 		this.expira = expira;
 	}
-	
+
+	public DtLaboratorio getDtLab() {
+		return dtLab;
+	}
+
+	public void setDtLab(DtLaboratorio dtLab) {
+		this.dtLab = dtLab;
+	}
+
+	public DtEnfermedad getDtEnf() {
+		return dtEnf;
+	}
+
+	public void setDtEnf(DtEnfermedad dtEnf) {
+		this.dtEnf = dtEnf;
+	}
 	
 }
