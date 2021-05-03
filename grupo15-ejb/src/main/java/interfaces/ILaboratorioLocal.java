@@ -11,7 +11,7 @@ import exceptions.LaboratorioRepetido;
 @Local
 public interface ILaboratorioLocal {
 
-	public void agregarVacuna(String nombre) throws LaboratorioRepetido;
+	public void agregarLaboratorio(String nombre) throws LaboratorioRepetido;
 	
 	public ArrayList<DtLaboratorio> listarLaboratorios() throws LaboratorioInexistente;
 	

@@ -12,9 +12,9 @@ import entities.Laboratorio;
 import exceptions.LaboratorioInexistente;
 import exceptions.LaboratorioRepetido;
 import interfaces.ILaboratorioLocal;
-import interfaces.ILaboratorioRemoto;
+import interfaces.ILaboratorioRemote;
 
-public class ControladorLaboratorio implements ILaboratorioLocal, ILaboratorioRemoto{
+public class ControladorLaboratorio implements ILaboratorioLocal, ILaboratorioRemote{
 	
 	public ControladorLaboratorio() {
 		super();
@@ -23,12 +23,12 @@ public class ControladorLaboratorio implements ILaboratorioLocal, ILaboratorioRe
 	@PersistenceContext(name = "test")
 	private EntityManager em;
 	
-	public void agregarVacuna(String nombre) throws LaboratorioRepetido {
+	public void agregarLaboratorio(String nombre) throws LaboratorioRepetido {
 		if(em.find(Laboratorio.class, nombre) == null) {
 			Laboratorio lab = new Laboratorio(nombre);
 			em.persist(lab);
 		}else {
-			throw new LaboratorioRepetido("Ya existe una laboratorio con ese nombre");
+			throw new LaboratorioRepetido("Ya existe un laboratorio con ese nombre");
 		}
 	}
 	

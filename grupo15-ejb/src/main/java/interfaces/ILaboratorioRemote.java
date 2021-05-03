@@ -9,9 +9,9 @@ import exceptions.LaboratorioInexistente;
 import exceptions.LaboratorioRepetido;
 
 @Remote
-public interface ILaboratorioRemoto {
+public interface ILaboratorioRemote {
 
-public void agregarVacuna(String nombre) throws LaboratorioRepetido;
+	public void agregarLaboratorio(String nombre) throws LaboratorioRepetido;
 	
 	public ArrayList<DtLaboratorio> listarLaboratorios() throws LaboratorioInexistente;
 	

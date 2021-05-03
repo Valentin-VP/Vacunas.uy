@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 
 
@@ -14,18 +15,22 @@ public class Vacuna{
 	private String nombre;
 	private int cantDosis; //cuantas veces se da la vacuna
 	private Date expira;  //fecha de expiracion
+	@OneToOne
 	private Laboratorio laboratorio;
+	@OneToOne
+	private Enfermedad enfermedad;
 	
 	public Vacuna() {
 		super();
 	}
 
-	public Vacuna(String nombre, int cantDosis, Date expira, Laboratorio laboratorio) {
+	public Vacuna(String nombre, int cantDosis, Date expira, Laboratorio laboratorio, Enfermedad enfermedad) {
 		super();
 		this.nombre = nombre;
 		this.cantDosis = cantDosis;
 		this.expira = expira;
 		this.laboratorio = laboratorio;
+		this.enfermedad = enfermedad;
 	}
 
 	public void setNombre(String nombre) {
