@@ -4,6 +4,10 @@ import java.util.Date;
 
 public class DtUsuarioInterno extends DtUsuario {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String password;
 	private Rol rol;
 	

@@ -5,6 +5,12 @@ import java.util.Date;
 public class DtVacunador extends DtUsuario{
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
 	public DtVacunador() {
 		super();
 	}

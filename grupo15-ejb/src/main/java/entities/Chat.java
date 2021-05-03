@@ -2,10 +2,10 @@ package entities;
 
 import java.util.ArrayList;
 
-import javax.persistence.CascadeType;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+
 import javax.persistence.OneToMany;
 
 @Entity
@@ -21,7 +21,7 @@ public class Chat {
 		super();
 	}
 	
-	public Chat(String chat) {
+	public Chat(String IdChat) {
 		super();
 		this.IdChat = IdChat;
 	}

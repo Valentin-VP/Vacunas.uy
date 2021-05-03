@@ -3,7 +3,7 @@ package entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
+
 
 import datatypes.DtDireccion;
 import datatypes.Sexo;
