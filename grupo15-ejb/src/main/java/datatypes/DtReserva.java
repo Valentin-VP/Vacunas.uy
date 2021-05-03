@@ -18,8 +18,23 @@ public class DtReserva implements Serializable{
 	//private DtUsuario usuario;
 	//private DtPuesto puesto;
 	private LocalDateTime fecha;
+	private String puesto;
+	private String vacunatorio;
 
 	
+	
+
+	public DtReserva(Integer id, EstadoReserva estado, String usuario, LocalDateTime fecha, String puesto,
+			String vacunatorio) {
+		super();
+		this.id = id;
+		this.estado = estado;
+		this.usuario = usuario;
+		this.fecha = fecha;
+		this.puesto = puesto;
+		this.vacunatorio = vacunatorio;
+	}
+
 	public DtReserva(Integer id, EstadoReserva estado, String usuario, LocalDateTime fecha) {
 		super();
 		this.id = id;
@@ -63,5 +78,23 @@ public class DtReserva implements Serializable{
 	public void setFecha(LocalDateTime fecha) {
 		this.fecha = fecha;
 	}
+
+	public String getPuesto() {
+		return puesto;
+	}
+
+	public void setPuesto(String puesto) {
+		this.puesto = puesto;
+	}
+
+	public String getVacunatorio() {
+		return vacunatorio;
+	}
+
+	public void setVacunatorio(String vacunatorio) {
+		this.vacunatorio = vacunatorio;
+	}
+	
+	
 	
 }

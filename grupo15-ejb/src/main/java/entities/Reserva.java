@@ -72,4 +72,14 @@ public class Reserva implements Serializable{
 	public void setEstado(EstadoReserva estado) {
 		this.estado = estado;
 	}
+
+	public Puesto getPuesto() {
+		return puesto;
+	}
+
+	public void setPuesto(Puesto puesto) {
+		this.puesto = puesto;
+	}
+	
+	
 }

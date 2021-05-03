@@ -11,10 +11,14 @@ import datatypes.DtCupo;
 import datatypes.DtReserva;
 import exceptions.AgendaInexistente;
 import exceptions.AgendaRepetida;
+import exceptions.CupoInexistente;
+import exceptions.ReservaInexistente;
 
 @Remote
 public interface IAgendaDAORemote {
-	public void agregarAgenda(int id, LocalDate fecha, List<DtCupo> cupos, List<DtReserva> reservas) throws AgendaRepetida;
+	public void agregarAgenda(int id, LocalDate fecha, List<DtCupo> cupos, List<DtReserva> reservas) throws AgendaRepetida, CupoInexistente, ReservaInexistente;
 	public DtAgenda obtenerAgenda(int id) throws AgendaInexistente;
 	public ArrayList<DtAgenda> listarAgendas()  throws AgendaInexistente;
+	public void modificarAgenda(int id, LocalDate fecha, List<DtCupo> cupos, List<DtReserva> reservas) throws AgendaInexistente, ReservaInexistente, CupoInexistente, AgendaRepetida;
+	public void eliminarCuposAsociados(int idAgenda) throws AgendaInexistente;
 }

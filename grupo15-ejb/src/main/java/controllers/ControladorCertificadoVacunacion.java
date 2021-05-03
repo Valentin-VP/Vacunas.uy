@@ -52,11 +52,12 @@ public class ControladorCertificadoVacunacion implements ICertificadoVacunacionD
 	
 	public DtCertificadoVac obtenerCertificadoVacunacion(int id) throws CertificadoInexistente {
 		CertificadoVacunacion temp = getCertificado(id);
-		//TODO:DtReserva esta vacio, porque DtReserva esta incompleto
+		//TODO:DtReserva esta incompleto, falta Etapa
 		if (temp!=null) {
 			ArrayList<DtConstancia> dtc= new ArrayList<DtConstancia>();
 			for (ConstanciaVacuna c: temp.getConstancias()) {
-				dtc.add(new DtConstancia(c.getIdConstVac(), c.getPeriodoInmunidad(), c.getDosisRecibidas(), c.getFechaUltimaDosis(), c.getVacuna(), new DtReserva()));
+				dtc.add(new DtConstancia(c.getIdConstVac(), c.getPeriodoInmunidad(), c.getDosisRecibidas(), c.getFechaUltimaDosis(), c.getVacuna(), 
+						new DtReserva(c.getReserva().getIdReserva(), c.getReserva().getEstado(), c.getReserva().getNombreUser(), c.getReserva().getFechaRegistro())));
 			}
 			DtCertificadoVac retorno = new DtCertificadoVac(temp.getIdCert(), dtc);
 

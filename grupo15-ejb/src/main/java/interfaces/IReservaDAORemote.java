@@ -7,12 +7,15 @@ import javax.ejb.Remote;
 
 import datatypes.DtReserva;
 import datatypes.EstadoReserva;
+import exceptions.PuestoNoCargadoException;
 import exceptions.ReservaInexistente;
 import exceptions.ReservaRepetida;
 
 @Remote
 public interface IReservaDAORemote   {
-	public void agregarReserva(int id, String user, LocalDateTime fecha, EstadoReserva estado) throws ReservaRepetida;
+	public void agregarReserva(int id, String user, LocalDateTime fecha, EstadoReserva estado, int puesto) throws ReservaRepetida, PuestoNoCargadoException;
+	
+	public void modificarReserva(int id, LocalDateTime fecha, EstadoReserva estado, int puesto) throws ReservaInexistente, PuestoNoCargadoException;
 	
 	public DtReserva obtenerReserva(int id)  throws ReservaInexistente;
 	
