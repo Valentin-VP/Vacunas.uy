@@ -123,6 +123,14 @@ public void setPuesto(ArrayList<Puesto> puesto) {
 	this.puesto = puesto;
 }
 
+public ArrayList<Stock> getStock() {
+	return stock;
+}
+
+public void setStock(ArrayList<Stock> stock) {
+	this.stock = stock;
+}
+
 
 
 }

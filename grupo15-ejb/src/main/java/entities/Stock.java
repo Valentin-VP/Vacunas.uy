@@ -1,10 +1,14 @@
 package entities;
 
+import java.util.ArrayList;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import persistence.StockID;
 
@@ -33,15 +37,44 @@ public class Stock {
 	private Integer administradas;
 	private Integer disponibles;
 	
+	@OneToMany(mappedBy="stock", cascade = CascadeType.ALL)
+	private ArrayList<Historico> historicos = new ArrayList<Historico>();
+	
 	public Stock() {
 	}
 
-	public Stock(Integer cantidad, Integer descartadas, Integer administradas, Integer disponibles) {
+	public Stock(Vacunatorio vacunatorio, Vacuna vacuna, Integer cantidad, Integer descartadas, Integer administradas, Integer disponibles) {
 		super();
+		this.vacunatorio = vacunatorio;
+		this.vacuna = vacuna;
 		this.cantidad = cantidad;
 		this.descartadas = descartadas;
 		this.administradas = administradas;
 		this.disponibles = disponibles;
+	}
+
+	public Vacunatorio getVacunatorio() {
+		return vacunatorio;
+	}
+
+	public void setVacunatorio(Vacunatorio vacunatorio) {
+		this.vacunatorio = vacunatorio;
+	}
+
+	public Vacuna getVacuna() {
+		return vacuna;
+	}
+
+	public void setVacuna(Vacuna vacuna) {
+		this.vacuna = vacuna;
+	}
+
+	public ArrayList<Historico> getHistoricos() {
+		return historicos;
+	}
+
+	public void setHistoricos(ArrayList<Historico> historicos) {
+		this.historicos = historicos;
 	}
 
 	public Integer getCantidad() {
