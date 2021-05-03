@@ -14,10 +14,7 @@ public class Chat {
 	@Id
 	private String IdChat;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
-	ArrayList<Vacunador> vacunadores = new ArrayList<>();
-
-	@OneToMany(mappedBy = "chat",cascade = CascadeType.ALL)
+	@OneToMany()
 	private ArrayList<Mensaje> mensajes = new ArrayList<>();
 	
 	public Chat() {

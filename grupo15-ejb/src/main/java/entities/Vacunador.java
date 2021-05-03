@@ -19,14 +19,6 @@ public class Vacunador extends Usuario {
 	@ManyToMany (cascade = CascadeType.ALL)
 	private List<Chat> chats = new ArrayList<Chat>();
 	
-	@OneToMany(mappedBy = "vacunador",cascade = CascadeType.ALL)
-	private List<Mensaje> mensajes = new ArrayList<>();
-	
-	@ManyToMany(cascade = CascadeType.ALL)
-	private List<Vacunatorio> vacunatorios = new ArrayList<>();
-	
-	//@ManyToMany(cascade = CascadeType.ALL)
-	//List<Etapa> etapas = new ArrayList<>();
 	
 	public Vacunador() {
 		super();

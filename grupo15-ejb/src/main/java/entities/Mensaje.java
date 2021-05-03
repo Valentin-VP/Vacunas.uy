@@ -11,8 +11,6 @@ public class Mensaje {
 	private Integer IdMensaje;
 	private String contenido;
 	
-	@ManyToOne
-	private Chat chat;
 	
 	@ManyToOne
 	private Vacunador vacunador;
@@ -32,14 +30,13 @@ public class Mensaje {
 		super();
 		this.IdMensaje = IdMensaje;
 		this.contenido = contenido;
-		this.chat = chat;
+	
 	}
 	
 	public Mensaje(Integer IdMensaje, String contenido, Chat chat, Vacunador vacunador) {
 		super();
 		this.IdMensaje = IdMensaje;
 		this.contenido = contenido;
-		this.chat = chat;
 		this.vacunador = vacunador;
 	}
 	
