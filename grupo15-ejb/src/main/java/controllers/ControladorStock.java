@@ -47,7 +47,7 @@ public class ControladorStock implements IStockLocal, IStockRemote {
 			throw new VacunaInexistente("No existe la vacuna con ID " + idVacuna);
 		}
 		for (Stock vacunatorioStock : vacunatorio.getStock()) {
-			if (idVacuna == vacunatorioStock.getVacuna().getNombre()) {
+			if (vacunatorioStock.getVacuna().getNombre().equals(idVacuna)) {
 				throw new StockVacunaVacunatorioExistente(
 						String.format("Ya existe Stock de la Vacuna %s en el Vacunatorio %s", idVacuna, idVacunatorio));
 			}
@@ -70,7 +70,7 @@ public class ControladorStock implements IStockLocal, IStockRemote {
 			throw new VacunaInexistente("No existe la vacuna con ID " + idVacuna);
 		}
 		for (Stock stock : vacunatorio.getStock()) {
-			if (stock.getVacuna().getNombre() == idVacuna) {
+			if (stock.getVacuna().getNombre().equals(idVacuna)) {
 				stock.setCantidad(cantidad);
 				stock.setDescartadas(descartadas);
 				stock.setAdministradas(administradas);
