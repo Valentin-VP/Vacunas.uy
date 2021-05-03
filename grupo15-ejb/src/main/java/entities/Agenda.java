@@ -21,9 +21,6 @@ public class Agenda {
 	private List<Cupo> cupos = new ArrayList<Cupo>();
 	@OneToMany
 	private List<Reserva> reservas = new ArrayList<Reserva>();
-	@ManyToOne
-	@JoinColumn(name="vacunatorio_id")
-	private Vacunatorio vacunatorio;
 	
 	public Agenda() {
 		super();
@@ -63,6 +60,8 @@ public class Agenda {
 	public void setReservas(List<Reserva> reservas) {
 		this.reservas = reservas;
 	}
+	
+	
 	
 	
 }
