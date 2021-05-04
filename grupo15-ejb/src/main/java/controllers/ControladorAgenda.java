@@ -65,10 +65,12 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
         			Cupo c = em.find(Cupo.class, dtc.getIdCupo());
         			if (c!=null) {
         				listCupos.add(c);
+        				c.getAgenda().getCupos().remove(c);//desvinculo el cupo de la otra agenda (por el lado de Agenda)
+        				em.merge(c.getAgenda());
         				c.setAgenda(a);
         			}
         			else
-        				throw new CupoInexistente("El cupo que se intentó agregar no existe.");
+        				throw new CupoInexistente("El cupo que se intentó adicionar no existe.");
     			}
         		
         		List<Reserva> listReservas = buscarReservasUsuarioEtapa(reservas);
@@ -82,8 +84,12 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
     			}*/
         		
         		a.setCupos(listCupos);
+        		
         		a.setReservas(listReservas);
         		em.persist(a);
+        		for (Cupo c: a.getCupos())
+        			em.merge(c);
+        		
     	}else {
     		throw new VacunatorioNoCargadoException("No existe un vacunatorio con ese ID.");
     	}
@@ -109,10 +115,12 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
         			Cupo c = em.find(Cupo.class, dtc.getIdCupo());
         			if (c!=null) {
         				listCupos.add(c);
+        				c.getAgenda().getCupos().remove(c);//desvinculo el cupo de la otra agenda (por el lado de Agenda)
+        				em.merge(c.getAgenda());
         				c.setAgenda(a);
         			}
         			else
-        				throw new CupoInexistente("El cupo que se intentó agregar no existe.");
+        				throw new CupoInexistente("El cupo que se intentó adicionar no existe.");
     			}
         		
         		List<Reserva> listReservas = buscarReservasUsuarioEtapa(reservas);
@@ -128,6 +136,8 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
         		a.setCupos(listCupos);
         		a.setReservas(listReservas);
         		em.merge(a);
+        		for (Cupo c: a.getCupos())
+        			em.merge(c);
     	}else {
     		throw new VacunatorioNoCargadoException("No existe un vacunatorio con ese ID.");
     	}
@@ -139,7 +149,7 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 		if (temp!=null) {
 			List<DtCupo> dtc= new ArrayList<DtCupo>();
 			for (Cupo c: temp.getCupos()) {
-				dtc.add(new DtCupo(c.getIdCupo(), c.isOcupado()));
+				dtc.add(new DtCupo(c.getIdCupo(), c.isOcupado(), c.getAgenda().getIdAgenda()));
 			}
 			List<DtReserva> dtr= new ArrayList<DtReserva>();
 			for (Reserva r: temp.getReservas()) {
@@ -162,7 +172,7 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 			for (Agenda a: result) {
 				List<DtCupo> dtc= new ArrayList<DtCupo>();
 				for (Cupo c: a.getCupos()) {
-					dtc.add(new DtCupo(c.getIdCupo(), c.isOcupado()));
+					dtc.add(new DtCupo(c.getIdCupo(), c.isOcupado(), c.getAgenda().getIdAgenda()));
 				}
 				List<DtReserva> dtr= new ArrayList<DtReserva>();
 				for (Reserva r: a.getReservas()) {
@@ -180,6 +190,9 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 	public void eliminarCuposAsociados(int idAgenda) throws AgendaInexistente {
 		Agenda temp = em.find(Agenda.class, idAgenda);
 		if (temp!=null) {
+			for (Cupo c: temp.getCupos()) {
+				em.remove(c);
+			}
 			temp.setCupos(new ArrayList<Cupo>());
 			em.merge(temp);
 			
