@@ -1,7 +1,7 @@
 package datatypes;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DtHistoricoStock implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private LocalDate fecha;
+	private Date fecha;
 	private Integer cantidad;
 	private Integer descartadas;
 	private Integer disponibles;
@@ -21,7 +21,7 @@ public class DtHistoricoStock implements Serializable {
 	
 	public DtHistoricoStock() {}
 	
-	public DtHistoricoStock(LocalDate fecha, Integer cantidad, Integer descartadas, Integer disponibles,
+	public DtHistoricoStock(Date fecha, Integer cantidad, Integer descartadas, Integer disponibles,
 			Integer administradas, String vacuna, String vacunatorio) {
 		super();
 		this.fecha = fecha;
@@ -33,11 +33,11 @@ public class DtHistoricoStock implements Serializable {
 		this.vacunatorio = vacunatorio;
 	}
 
-	public LocalDate getFecha() {
+	public Date getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(LocalDate fecha) {
+	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
 

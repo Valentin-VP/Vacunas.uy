@@ -1,5 +1,6 @@
 package entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +16,13 @@ import persistence.StockID;
 
 @Entity
 @IdClass(StockID.class)
-public class Stock {
+public class Stock implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@ManyToOne
 	@JoinColumn(

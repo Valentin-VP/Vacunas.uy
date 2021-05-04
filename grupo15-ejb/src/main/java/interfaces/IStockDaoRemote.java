@@ -14,7 +14,7 @@ import exceptions.VacunaInexistente;
 import exceptions.VacunatorioNoCargadoException;
 
 @Remote
-public interface IStockRemote {
+public interface IStockDaoRemote {
 	public void agregarStock(String idVacunatorio, String idVacuna, Integer cantidad)
 			throws VacunatorioNoCargadoException, VacunaInexistente, CantidadNula, StockVacunaVacunatorioExistente;
 

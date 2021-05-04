@@ -16,11 +16,11 @@ import exceptions.StockVacunaVacunatorioExistente;
 import exceptions.StockVacunaVacunatorioInexistente;
 import exceptions.VacunaInexistente;
 import exceptions.VacunatorioNoCargadoException;
-import interfaces.IStockLocal;
-import interfaces.IStockRemote;
+import interfaces.IStockDaoLocal;
+import interfaces.IStockDaoRemote;
 
 @Stateless
-public class ControladorStock implements IStockLocal, IStockRemote {
+public class ControladorStock implements IStockDaoLocal, IStockDaoRemote {
 
 	@PersistenceContext(name = "test")
 	private EntityManager em;

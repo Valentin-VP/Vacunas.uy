@@ -14,7 +14,7 @@ import exceptions.VacunaInexistente;
 import exceptions.VacunatorioNoCargadoException;
 
 @Local
-public interface IStockLocal {
+public interface IStockDaoLocal {
 
 	public void agregarStock(String idVacunatorio, String idVacuna, Integer cantidad)
 			throws VacunatorioNoCargadoException, VacunaInexistente, CantidadNula, StockVacunaVacunatorioExistente;

@@ -1,22 +1,19 @@
 package entities;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Historico {
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
-	
-	private LocalDate fecha;
+	@Temporal(TemporalType.DATE)
+	private Date fecha;
 	private Integer cantidad;
 	private Integer descartadas;
 	private Integer disponibles;
@@ -30,7 +27,7 @@ public class Historico {
 	public Historico() {
 	}
 
-	public Historico(LocalDate fecha, Integer cantidad, Integer descartadas, Integer disponibles,
+	public Historico(Date fecha, Integer cantidad, Integer descartadas, Integer disponibles,
 			Integer administradas, Stock stock) {
 		super();
 		this.fecha = fecha;
@@ -41,11 +38,11 @@ public class Historico {
 		this.stock = stock;
 	}
 
-	public LocalDate getFecha() {
+	public Date getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(LocalDate fecha) {
+	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
 
