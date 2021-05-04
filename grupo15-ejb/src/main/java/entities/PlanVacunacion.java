@@ -52,8 +52,8 @@ public class PlanVacunacion {
 	public List<Etapa> getEtapas() {
 		return etapas;
 	}
-	public void setEtapas(ArrayList<Etapa> etapa) {
-		this.etapas = etapa;
+	public void setEtapas(List<Etapa> etapas) {
+		this.etapas = etapas;
 	}
 	
 	public void addEtapa(Etapa e) {

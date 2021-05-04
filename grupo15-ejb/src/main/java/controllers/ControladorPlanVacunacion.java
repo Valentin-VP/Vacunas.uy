@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import datatypes.DtPlanVacunacion;
+import entities.Etapa;
 import entities.PlanVacunacion;
 import exceptions.PlanVacunacionInexistente;
 import exceptions.PlanVacunacionRepetido;
@@ -56,4 +57,28 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 			throw new PlanVacunacionInexistente("No existe un plan de vacunacion con esa id");
 		}
 	}
+	
+	public void eliminarPlanVacunacion(int id) throws PlanVacunacionInexistente { //controlar si al eliminar un plan, elimina las etapas relacionadas a el automaticamente
+		PlanVacunacion pV = em.find(PlanVacunacion.class, id);
+		if(pV != null) {
+			List<Etapa> etapas = pV.getEtapas();
+			for(Etapa e: etapas) { //Este for elimina las etapas de la BD en el PlanVacunacion
+				em.remove(e);
+			}
+			em.remove(pV);
+		}else
+			throw new PlanVacunacionInexistente("No existe unplan vacunacion con esa id");
+		
+	}
+	
+	public void modificarPlanVacunacion(int id, String nombre, String descripcion, List<Etapa> etapas) throws PlanVacunacionInexistente {
+		PlanVacunacion pV = em.find(PlanVacunacion.class, id);
+		if(pV != null) {
+			pV.setNombre(nombre);
+			pV.setDescripcion(descripcion);
+			pV.setEtapas(etapas);
+		}else
+			throw new PlanVacunacionInexistente("No existe unplan vacunacion con esa id");
+	}
+	
 }

@@ -16,6 +16,7 @@ public class Etapa {
 	private int id;
 	private Date fechaInicio;
 	private Date fechaFin;
+	private String condicion;
 	@ManyToOne
 	@JoinColumn
 	private PlanVacunacion planVacunacion;
@@ -24,11 +25,12 @@ public class Etapa {
 		super();
 	}
 
-	public Etapa(int id, Date fechaInicio, Date fechaFin, PlanVacunacion planVacunacion) {
+	public Etapa(int id, Date fechaInicio, Date fechaFin, String condicion, PlanVacunacion planVacunacion) {
 		super();
 		this.id = id;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
+		this.condicion = condicion;
 		this.planVacunacion = planVacunacion;
 	}
 
@@ -54,6 +56,14 @@ public class Etapa {
 
 	public void setFechaFin(Date fechaFin) {
 		this.fechaFin = fechaFin;
+	}
+	
+	public String getCondicion() {
+		return condicion;
+	}
+
+	public void setCondicion(String condicion) {
+		this.condicion = condicion;
 	}
 
 	public PlanVacunacion getPlanVacunacion() {
