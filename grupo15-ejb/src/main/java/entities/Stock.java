@@ -1,6 +1,7 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -20,7 +21,8 @@ public class Stock {
 	@ManyToOne
 	@JoinColumn(
 			insertable=false,
-			updatable=false
+			updatable=false,
+			name="vacunatorio"
 	)
 	private Vacunatorio vacunatorio;
 	
@@ -28,7 +30,8 @@ public class Stock {
 	@ManyToOne
 	@JoinColumn(
 			insertable=false,
-			updatable=false
+			updatable=false,
+			name="vacuna"
 	)
 	private Vacuna vacuna;
 	
@@ -38,7 +41,7 @@ public class Stock {
 	private Integer disponibles;
 	
 	@OneToMany(mappedBy="stock", cascade = CascadeType.ALL)
-	private ArrayList<Historico> historicos = new ArrayList<Historico>();
+	private List<Historico> historicos = new ArrayList<Historico>();
 	
 	public Stock() {
 	}
@@ -69,11 +72,11 @@ public class Stock {
 		this.vacuna = vacuna;
 	}
 
-	public ArrayList<Historico> getHistoricos() {
+	public List<Historico> getHistoricos() {
 		return historicos;
 	}
 
-	public void setHistoricos(ArrayList<Historico> historicos) {
+	public void setHistoricos(List<Historico> historicos) {
 		this.historicos = historicos;
 	}
 
