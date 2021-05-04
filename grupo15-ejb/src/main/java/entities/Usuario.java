@@ -110,6 +110,22 @@ public abstract class Usuario {
 	public void setFechaNac(Date fechaNac) {
 		this.fechaNac = fechaNac;
 	}
+
+	public CertificadoVacunacion getCertificado() {
+		return certificado;
+	}
+
+	public void setCertificado(CertificadoVacunacion certificado) {
+		this.certificado = certificado;
+	}
+
+	public List<Reserva> getReservas() {
+		return reservas;
+	}
+
+	public void setReservas(List<Reserva> reservas) {
+		this.reservas = reservas;
+	}
 	
 	
 	
