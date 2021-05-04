@@ -10,14 +10,17 @@ import datatypes.EstadoReserva;
 import exceptions.PuestoNoCargadoException;
 import exceptions.ReservaInexistente;
 import exceptions.ReservaRepetida;
+import exceptions.UsuarioExistente;
 
 @Local
 public interface IReservaDAOLocal {
-	public void agregarReserva(int id, String user, LocalDateTime fecha, EstadoReserva estado, int puesto) throws ReservaRepetida, PuestoNoCargadoException;
+	public void agregarReserva(int usuario, int etapa, String puesto, LocalDateTime fecha, EstadoReserva estado) throws ReservaRepetida, PuestoNoCargadoException, ReservaInexistente, UsuarioExistente;
 	
-	public void modificarReserva(int id, LocalDateTime fecha, EstadoReserva estado, int puesto) throws ReservaInexistente, PuestoNoCargadoException;
+	public void modificarReserva(int usuario, int etapa, String puesto, LocalDateTime fecha, EstadoReserva estado) throws ReservaInexistente, PuestoNoCargadoException, UsuarioExistente;
 	
-	public DtReserva obtenerReserva(int id)  throws ReservaInexistente;
+	 public void eliminarReserva(int usuario, int etapa) throws ReservaInexistente, UsuarioExistente;
+	
+	 public DtReserva obtenerReserva(int usuario, int etapa) throws ReservaInexistente, UsuarioExistente ;
 	
 	/*public DtReserva obtenerReserva(String user);
 
@@ -25,6 +28,6 @@ public interface IReservaDAOLocal {
 	
 	public DtReserva obtenerReserva(EstadoReserva estado);*/
 	
-	public ArrayList<DtReserva> listarReservas()  throws ReservaInexistente;
+	 public ArrayList<DtReserva> listarReservasGenerales()  throws ReservaInexistente;
 }
 

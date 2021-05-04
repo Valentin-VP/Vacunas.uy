@@ -1,32 +1,37 @@
 package entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
 @Entity
 public class ConstanciaVacuna {
 	
-	@Id
+	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private int idConstVac;
 	private int periodoInmunidad;
 	private int dosisRecibidas;
 	private LocalDate fechaUltimaDosis;
 	private String vacuna;
-	////TODO:@ManyToMany
-	//private List<LoteDosis> lote = new ArrayList<LoteDosis>();
+	@ManyToMany
+	private List<LoteDosis> lote = new ArrayList<LoteDosis>();
 	
 	@OneToOne
 	private Reserva reserva;
 
 	
 	
-	public ConstanciaVacuna(int idConstVac, int periodoInmunidad, int dosisRecibidas, LocalDate fechaUltimaDosis,
+	public ConstanciaVacuna(int periodoInmunidad, int dosisRecibidas, LocalDate fechaUltimaDosis,
 			String vacuna, Reserva reserva) {
 		super();
-		this.idConstVac = idConstVac;
+		//this.idConstVac = idConstVac;
 		this.periodoInmunidad = periodoInmunidad;
 		this.dosisRecibidas = dosisRecibidas;
 		this.fechaUltimaDosis = fechaUltimaDosis;
@@ -86,6 +91,15 @@ public class ConstanciaVacuna {
 	public void setReserva(Reserva reserva) {
 		this.reserva = reserva;
 	}
+
+	public List<LoteDosis> getLote() {
+		return lote;
+	}
+
+	public void setLote(List<LoteDosis> lote) {
+		this.lote = lote;
+	}
+	
 	
 	
 }

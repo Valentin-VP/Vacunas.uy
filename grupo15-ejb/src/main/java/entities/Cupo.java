@@ -1,9 +1,14 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Cupo  implements Serializable{
@@ -14,6 +19,10 @@ public class Cupo  implements Serializable{
 	@Id
 	private int idCupo;
 	private boolean ocupado;
+	
+	@JoinColumn
+	@ManyToOne
+	private Agenda agenda;
 	
 	
 	public Cupo() {
@@ -39,5 +48,15 @@ public class Cupo  implements Serializable{
 	public void setOcupado(boolean ocupado) {
 		this.ocupado = ocupado;
 	}
+
+	public Agenda getAgenda() {
+		return agenda;
+	}
+
+	public void setAgenda(Agenda agenda) {
+		this.agenda = agenda;
+	}
+	
+	
 	
 }

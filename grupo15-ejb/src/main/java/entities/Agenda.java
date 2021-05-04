@@ -17,7 +17,7 @@ public class Agenda {
 	private int idAgenda;
 
 	private LocalDate fecha;
-	@OneToMany
+	@OneToMany(mappedBy="agenda")
 	private List<Cupo> cupos = new ArrayList<Cupo>();
 	@OneToMany
 	private List<Reserva> reservas = new ArrayList<Reserva>();

@@ -16,14 +16,19 @@ import javax.persistence.Query;
 import datatypes.DtAgenda;
 import datatypes.DtCupo;
 import datatypes.DtReserva;
+import datatypes.DtUsuario;
 import entities.Agenda;
 import entities.Cupo;
+import entities.Etapa;
 import entities.Reserva;
+import entities.Usuario;
+import entities.Vacunatorio;
 import exceptions.AgendaInexistente;
 import exceptions.AgendaRepetida;
 import exceptions.CupoInexistente;
 import exceptions.ReservaInexistente;
 import exceptions.ReservaRepetida;
+import exceptions.VacunatorioNoCargadoException;
 
 /**
  * Session Bean implementation class ControladorAgenda
@@ -42,77 +47,94 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
     }
     
     /* TODO: controlar que una reserva no esté ya en otra agenda. Lo mismo para el cupo.
-     * 
+     * buscar vac, agenda no existe => add cupos, add vac, vac.setAgenda, merge(vac), persist(agenda)
      */
-    public void agregarAgenda(int id, LocalDate fecha, List<DtCupo> cupos, List<DtReserva> reservas) throws AgendaRepetida, CupoInexistente, ReservaInexistente {
-    	if (getAgenda(id) == null) {
-    		if (getAgenda(id).getFecha().isEqual(fecha)) {
-    			throw new AgendaRepetida("Ya existe una agenda para ese día.");
-    		}
-    		Agenda a = new Agenda(id, fecha);
-    		
-    		List<Cupo> listCupos= new ArrayList<Cupo>();
-    		for (DtCupo dtc: cupos) {
-    			Cupo c = em.find(Cupo.class, dtc.getIdCupo());
-    			if (c!=null) 
-    				listCupos.add(c);
-    			else
-    				throw new CupoInexistente("El cupo que se intentó agregar no existe.");
-			}
-    		List<Reserva> listReservas= new ArrayList<Reserva>();
-    		for (DtReserva dtr: reservas) {
-    			Reserva r = em.find(Reserva.class, dtr.getId());
-    			if (r!=null) 
-    				listReservas.add(r);
-    			else
-    				throw new ReservaInexistente("La reserva que se intentó agregar no existe.");
-			}
-    		
-    		a.setCupos(listCupos);
-    		a.setReservas(listReservas);
-    		em.persist(a);
-    	}else {
+    public void agregarAgenda(int id, int vacunatorio, LocalDate fecha, ArrayList<DtCupo> cupos, ArrayList<DtReserva> reservas) throws AgendaRepetida, CupoInexistente, VacunatorioNoCargadoException {
+    	if (em.find(Agenda.class, id) != null){
     		throw new AgendaRepetida("Ya existe una agenda con ese ID.");
     	}
+    	Vacunatorio v = em.find(Vacunatorio.class, vacunatorio);
+    	if (v!=null) {
+        		if (existeAlgunaAgendaConEsaFecha(v.getAgenda(), fecha)) {
+        			throw new AgendaRepetida("Ya existe una agenda para ese día.");
+        		}
+        		Agenda a = new Agenda(id, fecha);
+        		
+        		List<Cupo> listCupos= new ArrayList<Cupo>();
+        		for (DtCupo dtc: cupos) {
+        			Cupo c = em.find(Cupo.class, dtc.getIdCupo());
+        			if (c!=null) {
+        				listCupos.add(c);
+        				c.setAgenda(a);
+        			}
+        			else
+        				throw new CupoInexistente("El cupo que se intentó agregar no existe.");
+    			}
+        		
+        		List<Reserva> listReservas = buscarReservasUsuarioEtapa(reservas);
+        		/*List<Reserva> listReservas= new ArrayList<Reserva>();
+        		for (DtReserva dtr: reservas) {
+        			Reserva r = em.find(Reserva.class, dtr.getId());
+        			if (r!=null) 
+        				listReservas.add(r);
+        			else
+        				throw new ReservaInexistente("La reserva que se intentó agregar no existe.");
+    			}*/
+        		
+        		a.setCupos(listCupos);
+        		a.setReservas(listReservas);
+        		em.persist(a);
+    	}else {
+    		throw new VacunatorioNoCargadoException("No existe un vacunatorio con ese ID.");
+    	}
+    	
     }
     
     /* TODO: controlar que una reserva no esté ya en otra agenda. Lo mismo para el cupo.
      * 
      */
-    public void modificarAgenda(int id, LocalDate fecha, List<DtCupo> cupos, List<DtReserva> reservas) throws AgendaInexistente, ReservaInexistente, CupoInexistente, AgendaRepetida {
-    	Agenda a = getAgenda(id);
-    	
-    	if (a != null) {
-    		if (a.getFecha().isEqual(fecha)) {
-    			throw new AgendaRepetida("Ya existe una agenda para ese día.");
-    		}
-    		List<Cupo> listCupos= new ArrayList<Cupo>();
-    		for (DtCupo dtc: cupos) {
-    			Cupo c = em.find(Cupo.class, dtc.getIdCupo());
-    			if (c!=null) 
-    				listCupos.add(c);
-    			else
-    				throw new CupoInexistente("El cupo que se intentó agregar no existe.");
-			}
-    		List<Reserva> listReservas= new ArrayList<Reserva>();
-    		for (DtReserva dtr: reservas) {
-    			Reserva r = em.find(Reserva.class, dtr.getId());
-    			if (r!=null) 
-    				listReservas.add(r);
-    			else
-    				throw new ReservaInexistente("La reserva que se intentó agregar no existe.");
-			}
-    		
-    		a.setCupos(listCupos);
-    		a.setReservas(listReservas);
-    		em.merge(a);
+    public void modificarAgenda(int id, int vacunatorio, LocalDate fecha, ArrayList<DtCupo> cupos, ArrayList<DtReserva> reservas) throws AgendaInexistente, CupoInexistente, AgendaRepetida, VacunatorioNoCargadoException {
+    	Agenda a = em.find(Agenda.class, id);
+    	if (a == null){
+    		throw new AgendaInexistente("No existe una agenda con ese ID.");
+    	}
+    	Vacunatorio v = em.find(Vacunatorio.class, vacunatorio);
+    	if (v!=null) {
+        		if (existeAlgunaAgendaConEsaFecha(v.getAgenda(), fecha)) {
+        			throw new AgendaRepetida("Ya existe una agenda para ese día.");
+        		}
+        		
+        		List<Cupo> listCupos= new ArrayList<Cupo>();
+        		for (DtCupo dtc: cupos) {
+        			Cupo c = em.find(Cupo.class, dtc.getIdCupo());
+        			if (c!=null) {
+        				listCupos.add(c);
+        				c.setAgenda(a);
+        			}
+        			else
+        				throw new CupoInexistente("El cupo que se intentó agregar no existe.");
+    			}
+        		
+        		List<Reserva> listReservas = buscarReservasUsuarioEtapa(reservas);
+        		/*List<Reserva> listReservas= new ArrayList<Reserva>();
+        		for (DtReserva dtr: reservas) {
+        			Reserva r = em.find(Reserva.class, dtr.getId());
+        			if (r!=null) 
+        				listReservas.add(r);
+        			else
+        				throw new ReservaInexistente("La reserva que se intentó agregar no existe.");
+    			}*/
+        		
+        		a.setCupos(listCupos);
+        		a.setReservas(listReservas);
+        		em.merge(a);
     	}else {
-    		throw new AgendaInexistente("No hay una agenda con ese ID.");
+    		throw new VacunatorioNoCargadoException("No existe un vacunatorio con ese ID.");
     	}
     }
 	
 	public DtAgenda obtenerAgenda(int id) throws AgendaInexistente {
-		Agenda temp = getAgenda(id);
+		Agenda temp = em.find(Agenda.class, id);
 		
 		if (temp!=null) {
 			List<DtCupo> dtc= new ArrayList<DtCupo>();
@@ -121,7 +143,8 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 			}
 			List<DtReserva> dtr= new ArrayList<DtReserva>();
 			for (Reserva r: temp.getReservas()) {
-				dtr.add(new DtReserva(r.getIdReserva(), r.getEstado(), r.getNombreUser(), r.getFechaRegistro()));
+				dtr.add(new DtReserva(r.getEstado(), getDtUsuario(r.getUsuario()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
+						r.getEtapa().toDtEtapa().getFechaInicio(), r.getEtapa().toDtEtapa().getFechaFin(), r.getEtapa().toDtEtapa().getDtPvac().getNombre(), r.getEtapa().getId()));
 			}
 			DtAgenda retorno = new DtAgenda(temp.getIdAgenda(), temp.getFecha(), dtc, dtr);
 
@@ -143,7 +166,8 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 				}
 				List<DtReserva> dtr= new ArrayList<DtReserva>();
 				for (Reserva r: a.getReservas()) {
-					dtr.add(new DtReserva(r.getIdReserva(), r.getEstado(), r.getNombreUser(), r.getFechaRegistro()));
+					dtr.add(new DtReserva(r.getEstado(), getDtUsuario(r.getUsuario()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
+							r.getEtapa().toDtEtapa().getFechaInicio(), r.getEtapa().toDtEtapa().getFechaFin(), r.getEtapa().toDtEtapa().getDtPvac().getNombre(), r.getEtapa().getId()));
 				}
 				retorno.add(new DtAgenda(a.getIdAgenda(), a.getFecha(), dtc, dtr));
 			}
@@ -154,7 +178,7 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 	}
 	
 	public void eliminarCuposAsociados(int idAgenda) throws AgendaInexistente {
-		Agenda temp = getAgenda(idAgenda);
+		Agenda temp = em.find(Agenda.class, idAgenda);
 		if (temp!=null) {
 			temp.setCupos(new ArrayList<Cupo>());
 			em.merge(temp);
@@ -163,8 +187,42 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 			throw new AgendaInexistente("No hay una agenda con ese ID.");
 	}
 	
-	private Agenda getAgenda(int id) {
-		Agenda r = em.find(Agenda.class, id);
-		return r;
+	private Agenda getAgendaEnVacunatorio(ArrayList<Agenda> lista, int id) {
+		for (Agenda a: lista) {
+			if (a.equals(em.find(Agenda.class, id)))
+				return a;
+		}
+		return null;
+	}
+	
+	private boolean existeAlgunaAgendaConEsaFecha(List<Agenda> lista, LocalDate fecha) {
+		for (Agenda a: lista) {
+			if (a.getFecha().isEqual(fecha))
+				return true;
+		}
+		return false;
+	}
+	
+	private ArrayList<Reserva> buscarReservasUsuarioEtapa(ArrayList<DtReserva> lista){
+		ArrayList<Reserva> retorno = null;
+		for (DtReserva dtr: lista) {
+			
+			Usuario u = em.find(Usuario.class, dtr.getUsuario().getIdUsuario());
+			if (u!=null) {
+				ArrayList<Reserva> temp = (ArrayList<Reserva>) u.getReservas();
+				for (Reserva r: temp) {
+					if (r.getEtapa().getId() == dtr.getEtapa())
+						retorno.add(r);
+				}
+			}
+		}
+		return retorno;
+	}
+	
+	private DtUsuario getDtUsuario(Usuario u) {
+		if (u!=null)
+			return new DtUsuario(u.getNombre(), u.getApellido(), u.getFechaNac(), u.getIdUsuario(), u.getEmail(), u.getDireccion(), u.getSexo());
+		else
+			return null;
 	}
 }
