@@ -30,12 +30,17 @@ public class Cupo  implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Cupo(int id, boolean ocupado) {
-		this.idCupo = id;
-		this.ocupado = ocupado;
-		// TODO Auto-generated constructor stub
-	}
 	
+	
+	public Cupo(int idCupo, boolean ocupado, Agenda agenda) {
+		super();
+		this.idCupo = idCupo;
+		this.ocupado = ocupado;
+		this.agenda = agenda;
+	}
+
+
+
 	public int getIdCupo() {
 		return idCupo;
 	}

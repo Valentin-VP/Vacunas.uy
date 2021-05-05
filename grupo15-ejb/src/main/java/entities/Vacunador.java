@@ -7,7 +7,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
-
+import javax.persistence.OneToMany;
 
 import datatypes.DtDireccion;
 
@@ -19,6 +19,8 @@ public class Vacunador extends Usuario {
 	@ManyToMany (cascade = CascadeType.ALL)
 	private List<Chat> chats = new ArrayList<Chat>();
 	
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Puesto> puestos = new ArrayList<>();
 	
 	public Vacunador() {
 		super();
