@@ -5,21 +5,21 @@ import java.io.Serializable;
 public class ReservaID implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private int etapa;
+	private EtapaID etapa;
 	private int usuario;
 	public ReservaID() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public ReservaID(int etapa, int usuario) {
+	public ReservaID(EtapaID etapa, int usuario) {
 		super();
 		this.etapa = etapa;
 		this.usuario = usuario;
 	}
-	public int getEtapa() {
+	public EtapaID getEtapa() {
 		return etapa;
 	}
-	public void setEtapa(int etapa) {
+	public void setEtapa(EtapaID etapa) {
 		this.etapa = etapa;
 	}
 	public int getUsuario() {
@@ -32,7 +32,7 @@ public class ReservaID implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + etapa;
+		result = prime * result + ((etapa == null) ? 0 : etapa.hashCode());
 		result = prime * result + usuario;
 		return result;
 	}
@@ -45,7 +45,10 @@ public class ReservaID implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		ReservaID other = (ReservaID) obj;
-		if (etapa != other.etapa)
+		if (etapa == null) {
+			if (other.etapa != null)
+				return false;
+		} else if (!etapa.equals(other.etapa))
 			return false;
 		if (usuario != other.usuario)
 			return false;
