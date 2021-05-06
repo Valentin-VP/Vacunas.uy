@@ -1,8 +1,5 @@
 package controllers;
 
-import interfaces.IAgendaDAOLocal;
-import interfaces.IAgendaDAORemote;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,20 +14,17 @@ import datatypes.DtAgenda;
 import datatypes.DtCiudadano;
 import datatypes.DtCupo;
 import datatypes.DtReserva;
-import datatypes.DtUsuario;
 import entities.Agenda;
 import entities.Ciudadano;
 import entities.Cupo;
-import entities.Etapa;
 import entities.Reserva;
-import entities.Usuario;
 import entities.Vacunatorio;
 import exceptions.AgendaInexistente;
 import exceptions.AgendaRepetida;
 import exceptions.CupoInexistente;
-import exceptions.ReservaInexistente;
-import exceptions.ReservaRepetida;
 import exceptions.VacunatorioNoCargadoException;
+import interfaces.IAgendaDAOLocal;
+import interfaces.IAgendaDAORemote;
 
 /**
  * Session Bean implementation class ControladorAgenda
@@ -51,7 +45,7 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
     /* TODO: controlar que una reserva no esté ya en otra agenda. Lo mismo para el cupo.
      * buscar vac, agenda no existe => add cupos, add vac, vac.setAgenda, merge(vac), persist(agenda)
      */
-    public void agregarAgenda(int id, int vacunatorio, LocalDate fecha, ArrayList<DtCupo> cupos, ArrayList<DtReserva> reservas) throws AgendaRepetida, CupoInexistente, VacunatorioNoCargadoException {
+    public void agregarAgenda(int id, String vacunatorio, LocalDate fecha, ArrayList<DtCupo> cupos, ArrayList<DtReserva> reservas) throws AgendaRepetida, CupoInexistente, VacunatorioNoCargadoException {
     	if (em.find(Agenda.class, id) != null){
     		throw new AgendaRepetida("Ya existe una agenda con ese ID.");
     	}
@@ -101,7 +95,7 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
     /* TODO: controlar que una reserva no esté ya en otra agenda. Lo mismo para el cupo.
      * 
      */
-    public void modificarAgenda(int id, int vacunatorio, LocalDate fecha, ArrayList<DtCupo> cupos, ArrayList<DtReserva> reservas) throws AgendaInexistente, CupoInexistente, AgendaRepetida, VacunatorioNoCargadoException {
+    public void modificarAgenda(int id, String vacunatorio, LocalDate fecha, ArrayList<DtCupo> cupos, ArrayList<DtReserva> reservas) throws AgendaInexistente, CupoInexistente, AgendaRepetida, VacunatorioNoCargadoException {
     	Agenda a = em.find(Agenda.class, id);
     	if (a == null){
     		throw new AgendaInexistente("No existe una agenda con ese ID.");

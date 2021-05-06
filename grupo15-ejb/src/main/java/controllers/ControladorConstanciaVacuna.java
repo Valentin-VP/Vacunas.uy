@@ -1,11 +1,7 @@
 package controllers;
 
-import interfaces.IConstanciaVacunaDAOLocal;
-import interfaces.IConstanciaVacunaDAORemote;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -13,24 +9,20 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import datatypes.DtAgenda;
 import datatypes.DtCiudadano;
 import datatypes.DtConstancia;
-import datatypes.DtCupo;
 import datatypes.DtReserva;
-import datatypes.DtUsuario;
-import entities.Agenda;
 import entities.CertificadoVacunacion;
 import entities.Ciudadano;
 import entities.ConstanciaVacuna;
-import entities.Cupo;
 import entities.Reserva;
 import entities.Usuario;
-import exceptions.AgendaInexistente;
 import exceptions.CertificadoInexistente;
 import exceptions.ConstanciaInexistente;
 import exceptions.ReservaInexistente;
 import exceptions.UsuarioExistente;
+import interfaces.IConstanciaVacunaDAOLocal;
+import interfaces.IConstanciaVacunaDAORemote;
 
 /**
  * Session Bean implementation class ControladorConstanciaVacuna

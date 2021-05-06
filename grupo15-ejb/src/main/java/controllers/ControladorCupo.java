@@ -1,8 +1,5 @@
 package controllers;
 
-import interfaces.ICupoDAOLocal;
-import interfaces.ICupoDAORemote;
-
 import java.util.ArrayList;
 
 import javax.ejb.LocalBean;
@@ -11,13 +8,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import datatypes.DtAgenda;
 import datatypes.DtCupo;
 import entities.Agenda;
 import entities.Cupo;
 import exceptions.AgendaInexistente;
 import exceptions.CupoInexistente;
 import exceptions.CupoRepetido;
+import interfaces.ICupoDAOLocal;
+import interfaces.ICupoDAORemote;
 
 /**
  * Session Bean implementation class ControladorCupo

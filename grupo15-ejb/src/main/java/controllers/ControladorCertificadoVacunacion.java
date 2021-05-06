@@ -1,37 +1,27 @@
 package controllers;
 
-import interfaces.ICertificadoVacunacionDAOLocal;
-import interfaces.ICertificadoVacunacionDAORemote;
-
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import datatypes.DtCertificadoVac;
 import datatypes.DtCiudadano;
 import datatypes.DtConstancia;
-import datatypes.DtCupo;
-import datatypes.DtDireccion;
 import datatypes.DtReserva;
-import datatypes.DtUsuario;
-import datatypes.Sexo;
 import entities.CertificadoVacunacion;
 import entities.Ciudadano;
 import entities.ConstanciaVacuna;
-import entities.Cupo;
 import entities.Usuario;
 import exceptions.CertificadoInexistente;
 import exceptions.CertificadoRepetido;
 import exceptions.ConstanciaInexistente;
-import exceptions.CupoInexistente;
 import exceptions.UsuarioExistente;
+import interfaces.ICertificadoVacunacionDAOLocal;
+import interfaces.ICertificadoVacunacionDAORemote;
 
 /**
  * Session Bean implementation class ControladorCertificadoVacunacion
