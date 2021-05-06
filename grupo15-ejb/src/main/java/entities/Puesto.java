@@ -25,7 +25,7 @@ public class Puesto {
 	@JoinColumn
 	private Vacunatorio vacunatorio;
 	
-	@OneToOne(mappedBy="puesto", cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	private Asignado asignado = null;
 	
 	

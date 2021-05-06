@@ -25,7 +25,7 @@ public class Vacunador extends Usuario {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Puesto> puestos = new ArrayList<>();
 	
-	@OneToOne(mappedBy="vacunador", cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	private Asignado asignado = null; //asignado
 	 
 	public Vacunador() {
