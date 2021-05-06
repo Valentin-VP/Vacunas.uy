@@ -2,10 +2,15 @@ package entities;
 
 import java.util.Date;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
 import datatypes.DtDireccion;
 import datatypes.Rol;
 import datatypes.Sexo;
 
+@Entity
+@DiscriminatorValue("UI")
 public class UsuarioInterno extends Usuario{
 
 	private String password;

@@ -14,12 +14,14 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import datatypes.DtAgenda;
+import datatypes.DtCiudadano;
 import datatypes.DtConstancia;
 import datatypes.DtCupo;
 import datatypes.DtReserva;
 import datatypes.DtUsuario;
 import entities.Agenda;
 import entities.CertificadoVacunacion;
+import entities.Ciudadano;
 import entities.ConstanciaVacuna;
 import entities.Cupo;
 import entities.Reserva;
@@ -46,7 +48,7 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
     }
     
     public void agregarConstanciaVacuna(String vacuna, int periodoInmunidad, int dosisRecibidas, LocalDate fechaUltimaDosis, DtReserva reserva) throws UsuarioExistente, ReservaInexistente, CertificadoInexistente {
-    	Usuario u = em.find(Usuario.class, reserva.getUsuario().getIdUsuario());
+    	Usuario u = em.find(Usuario.class, reserva.getCiudadano().getIdUsuario());
     	if (u==null)
     		throw new UsuarioExistente("No existe ese usuario.");
     	else {
@@ -74,7 +76,7 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
     	if (cv==null)
     		throw new ConstanciaInexistente("No existe una constancia con ese ID.");
     	else {
-	    	Usuario u = em.find(Usuario.class, reserva.getUsuario().getIdUsuario());
+	    	Usuario u = em.find(Usuario.class, reserva.getCiudadano().getIdUsuario());
 	    	if (u==null)
 	    		throw new UsuarioExistente("No existe ese usuario.");
 	    	else{
@@ -108,7 +110,7 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
     	else {
     		Reserva r = temp.getReserva();
     		retorno = new DtConstancia(temp.getIdConstVac(), temp.getDosisRecibidas(), temp.getPeriodoInmunidad(), temp.getFechaUltimaDosis(),  temp.getVacuna(),
-    				new DtReserva(r.getEstado(), getDtUsuario(r.getUsuario()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
+    				new DtReserva(r.getEstado(), getDtUsuario(r.getCiudadano()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
         					r.getEtapa().toDtEtapa().getFechaInicio(), r.getEtapa().toDtEtapa().getFechaFin(), r.getEtapa().toDtEtapa().getDtPvac().getNombre(), r.getEtapa().getId()));
     		return retorno;
     	}
@@ -125,7 +127,7 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 				
 				Reserva r = cv.getReserva();
 				retorno.add(new DtConstancia(cv.getIdConstVac(), cv.getDosisRecibidas(), cv.getPeriodoInmunidad(), cv.getFechaUltimaDosis(),  cv.getVacuna(),
-	    				new DtReserva(r.getEstado(), getDtUsuario(r.getUsuario()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
+	    				new DtReserva(r.getEstado(), getDtUsuario(r.getCiudadano()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
 	        					r.getEtapa().toDtEtapa().getFechaInicio(), r.getEtapa().toDtEtapa().getFechaFin(), r.getEtapa().toDtEtapa().getDtPvac().getNombre(), r.getEtapa().getId())));
 			}
 			return retorno;
@@ -136,9 +138,9 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
     }
     
 	private Reserva buscarReservaUsuarioEtapa(DtReserva res){
-		Usuario u = em.find(Usuario.class, res.getUsuario().getIdUsuario());
-		if (u!=null) {
-			ArrayList<Reserva> temp = (ArrayList<Reserva>) u.getReservas();
+		Ciudadano c = em.find(Ciudadano.class, res.getCiudadano().getIdUsuario());
+		if (c!=null) {
+			ArrayList<Reserva> temp = (ArrayList<Reserva>) c.getReservas();
 			for (Reserva r: temp) {
 				if (r.getEtapa().getId() == res.getEtapa())
 					return r;
@@ -147,9 +149,10 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 		return null;
 	}
     
-	private DtUsuario getDtUsuario(Usuario u) {
+	private DtCiudadano getDtUsuario(Ciudadano u) {
 		if (u!=null)
-			return new DtUsuario(u.getNombre(), u.getApellido(), u.getFechaNac(), u.getIdUsuario(), u.getEmail(), u.getDireccion(), u.getSexo());
+			return new DtCiudadano(
+					u.getIdUsuario(), u.getNombre(), u.getApellido(), u.getFechaNac(), u.getEmail(), u.getDireccion(), u.getSexo(), u.getTipoSector(), u.isAutenticado());
 		else
 			return null;
 	}

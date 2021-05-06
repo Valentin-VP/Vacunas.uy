@@ -39,7 +39,7 @@ public class Reserva implements Serializable{
 			insertable=false,
 			updatable=false
 	)
-	private Usuario usuario;
+	private Ciudadano ciudadano;
 	
 	@ManyToOne
 	@JoinColumn(insertable=false,updatable=false, referencedColumnName="id")
@@ -52,12 +52,12 @@ public class Reserva implements Serializable{
 	
 	//TODO: DtPuesto
 
-	public Reserva(LocalDateTime fechaRegistro, EstadoReserva estado, Etapa etapa, Usuario usuario, Puesto puesto) {
+	public Reserva(LocalDateTime fechaRegistro, EstadoReserva estado, Etapa etapa, Ciudadano ciudadano, Puesto puesto) {
 		super();
 		this.fechaRegistro = fechaRegistro;
 		this.estado = estado;
 		this.etapa = etapa;
-		this.usuario = usuario;
+		this.ciudadano = ciudadano;
 		this.puesto = puesto;
 	}
 
@@ -69,19 +69,13 @@ public class Reserva implements Serializable{
 		this.etapa = etapa;
 	}
 
-
-
-	public Usuario getUsuario() {
-		return usuario;
+	public Ciudadano getCiudadano() {
+		return ciudadano;
 	}
 
-
-
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+	public void setCiudadano(Ciudadano ciudadano) {
+		this.ciudadano = ciudadano;
 	}
-
-
 
 	public LocalDateTime getFechaRegistro() {
 		return fechaRegistro;

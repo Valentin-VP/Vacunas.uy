@@ -1,19 +1,27 @@
 package entities;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-
+import javax.persistence.OneToMany;
 
 import datatypes.DtDireccion;
 import datatypes.Sexo;
 
 @Entity
+@DiscriminatorValue("C")
 public class Ciudadano extends Usuario {
 
 
 	private String TipoSector;
 	private boolean autenticado;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Reserva> reservas = new ArrayList<>();
 	
 	public Ciudadano() {
 		super();
@@ -40,6 +48,14 @@ public class Ciudadano extends Usuario {
 
 	public void setAutenticado(boolean autenticado) {
 		this.autenticado = autenticado;
+	}
+
+	public List<Reserva> getReservas() {
+		return reservas;
+	}
+
+	public void setReservas(List<Reserva> reservas) {
+		this.reservas = reservas;
 	}
 	
 	

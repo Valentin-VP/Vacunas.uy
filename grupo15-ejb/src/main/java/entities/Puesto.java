@@ -3,11 +3,13 @@ package entities;
 
 
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import persistence.PuestoID;
 
@@ -22,6 +24,9 @@ public class Puesto {
 	@ManyToOne
 	@JoinColumn
 	private Vacunatorio vacunatorio;
+	
+	@OneToOne(mappedBy="puesto", cascade = CascadeType.ALL)
+	private Asignado asignado = null;
 	
 	
 	public Puesto() {
@@ -51,8 +56,14 @@ public class Puesto {
 		this.vacunatorio = vacunatorio;
 	}
 
+	public Asignado getAsignado() {
+		return asignado;
+	}
+
+	public void setAsignado(Asignado asignado) {
+		this.asignado = asignado;
+	}
 	
-
-
+	
 
 }

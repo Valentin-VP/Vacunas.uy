@@ -13,9 +13,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import datatypes.DtCiudadano;
 import datatypes.DtReserva;
 import datatypes.DtUsuario;
 import datatypes.EstadoReserva;
+import entities.Ciudadano;
 import entities.Cupo;
 import entities.Etapa;
 import entities.Puesto;
@@ -63,9 +65,9 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
     }
     
 
-    public void agregarReserva(int usuario, int etapa, String puesto, LocalDateTime fecha, EstadoReserva estado) throws ReservaRepetida, PuestoNoCargadoException, ReservaInexistente, UsuarioExistente {
-    	Usuario u = em.find(Usuario.class, usuario);
-    	if (u==null) {
+    public void agregarReserva(int ciudadano, int etapa, String puesto, LocalDateTime fecha, EstadoReserva estado) throws ReservaRepetida, PuestoNoCargadoException, ReservaInexistente, UsuarioExistente {
+    	Ciudadano c = em.find(Ciudadano.class, ciudadano);
+    	if (c==null) {
     		throw new UsuarioExistente("El usuario seleccionado no existe.");
     	}else{
     		Etapa e = em.find(Etapa.class, etapa);
@@ -74,14 +76,14 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
         	}else {
         		Puesto p = em.find(Puesto.class, puesto);
 	    		if (p!=null) {
-	    			Reserva test = getReservaEtapa(u.getReservas(), e);
+	    			Reserva test = getReservaEtapa(c.getReservas(), e);
 	        		if (test==null) {	//si no existe una reserva con el objeto Etapa e (de id etapa)
 			    		
-			    			Reserva r = new Reserva(fecha, estado, e, u, p);
-			    			u.getReservas().add(r);
+			    			Reserva r = new Reserva(fecha, estado, e, c, p);
+			    			c.getReservas().add(r);
 			    			//e.setReservas(e.getReservas().add(r));
 			    			//p.getReservas().add(r);;	//puesto setea reserva
-			        		em.persist(u);
+			        		em.persist(c);
 			        		//em.persist(e);
 			        		em.persist(r);
 			        		//em.merge(p);
@@ -95,9 +97,9 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
     	}
     }
     
-    public void modificarReserva(int usuario, int etapa, String puesto, LocalDateTime fecha, EstadoReserva estado) throws ReservaInexistente, PuestoNoCargadoException, UsuarioExistente {
-    	Usuario u = em.find(Usuario.class, usuario);
-    	if (u==null) {
+    public void modificarReserva(int ciudadano, int etapa, String puesto, LocalDateTime fecha, EstadoReserva estado) throws ReservaInexistente, PuestoNoCargadoException, UsuarioExistente {
+    	Ciudadano c = em.find(Ciudadano.class, ciudadano);
+    	if (c==null) {
     		throw new UsuarioExistente("El usuario seleccionado no existe.");
     	}else{
     		Etapa e = em.find(Etapa.class, etapa);
@@ -106,7 +108,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
         	}else {
         		Puesto p = em.find(Puesto.class, puesto);
 	    		if (p!=null) {
-	    			Reserva r = getReservaEtapa(u.getReservas(), e);
+	    			Reserva r = getReservaEtapa(c.getReservas(), e);
 			    	if (r!=null) {
 			    		
 			    			r.setFechaRegistro(fecha);
@@ -130,22 +132,22 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
     	}
     }
     
-    public void eliminarReserva(int usuario, int etapa) throws ReservaInexistente, UsuarioExistente {
-    	Usuario u = em.find(Usuario.class, usuario);
-    	if (u==null) {
+    public void eliminarReserva(int ciudadano, int etapa) throws ReservaInexistente, UsuarioExistente {
+    	Ciudadano c = em.find(Ciudadano.class, ciudadano);
+    	if (c==null) {
     		throw new UsuarioExistente("El usuario seleccionado no existe.");
     	}else{
     		Etapa e = em.find(Etapa.class, etapa);
         	if (e==null) {
         		throw new ReservaInexistente("La etapa seleccionada no existe.");
         	}else {
-    			Reserva r = getReservaEtapa(u.getReservas(), e);
+    			Reserva r = getReservaEtapa(c.getReservas(), e);
 		    	if (r!=null) {
 		    			Puesto p = r.getPuesto();
-		    			u.getReservas().remove(r);
+		    			c.getReservas().remove(r);
 		    			//e.getReservas().remove(r);
 		    			//p.getReservas().remove(r);
-		    			em.merge(u);
+		    			em.merge(c);
 		    			//em.merge(e);
 		    			//em.merge(p);
 		    			em.remove(r);
@@ -159,18 +161,18 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
     /* TODO: DtPuesto tiene Vacunatorio, y no DtVacunatorio.
      * 
      */
-	public DtReserva obtenerReserva(int usuario, int etapa) throws ReservaInexistente, UsuarioExistente {
-		Usuario u = em.find(Usuario.class, usuario);
-    	if (u==null) {
+	public DtReserva obtenerReserva(int ciudadano, int etapa) throws ReservaInexistente, UsuarioExistente {
+		Ciudadano c = em.find(Ciudadano.class, ciudadano);
+    	if (c==null) {
     		throw new UsuarioExistente("El usuario seleccionado no existe.");
     	}else{
     		Etapa e = em.find(Etapa.class, etapa);
         	if (e==null) {
         		throw new ReservaInexistente("La etapa seleccionada no existe.");
         	}else {
-        		Reserva r = getReservaEtapa(u.getReservas(), e);
+        		Reserva r = getReservaEtapa(c.getReservas(), e);
         		if (r!=null) {
-        			DtReserva retorno = new DtReserva(r.getEstado(), getDtUsuario(r.getUsuario()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
+        			DtReserva retorno = new DtReserva(r.getEstado(), getDtUsuario(r.getCiudadano()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
         					r.getEtapa().toDtEtapa().getFechaInicio(), r.getEtapa().toDtEtapa().getFechaFin(), r.getEtapa().toDtEtapa().getDtPvac().getNombre(), r.getEtapa().getId());
 
         			return retorno;
@@ -188,7 +190,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		ArrayList<DtReserva> retorno = new ArrayList<>();
 		if (result!=null) {
 			for (Reserva r: result) {
-				retorno.add(new DtReserva(r.getEstado(), getDtUsuario(r.getUsuario()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
+				retorno.add(new DtReserva(r.getEstado(), getDtUsuario(r.getCiudadano()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
     					r.getEtapa().toDtEtapa().getFechaInicio(), r.getEtapa().toDtEtapa().getFechaFin(), r.getEtapa().toDtEtapa().getDtPvac().getNombre(), r.getEtapa().getId()));
 			}
 			return retorno;
@@ -220,9 +222,10 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		return null;
 	}
 	
-	private DtUsuario getDtUsuario(Usuario u) {
+	private DtCiudadano getDtUsuario(Ciudadano u) {
 		if (u!=null)
-			return new DtUsuario(u.getNombre(), u.getApellido(), u.getFechaNac(), u.getIdUsuario(), u.getEmail(), u.getDireccion(), u.getSexo());
+			return new DtCiudadano(
+					u.getIdUsuario(), u.getNombre(), u.getApellido(), u.getFechaNac(), u.getEmail(), u.getDireccion(), u.getSexo(), u.getTipoSector(), u.isAutenticado());
 		else
 			return null;
 	}

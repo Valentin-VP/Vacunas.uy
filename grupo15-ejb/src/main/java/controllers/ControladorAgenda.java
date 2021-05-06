@@ -14,10 +14,12 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import datatypes.DtAgenda;
+import datatypes.DtCiudadano;
 import datatypes.DtCupo;
 import datatypes.DtReserva;
 import datatypes.DtUsuario;
 import entities.Agenda;
+import entities.Ciudadano;
 import entities.Cupo;
 import entities.Etapa;
 import entities.Reserva;
@@ -153,7 +155,7 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 			}
 			List<DtReserva> dtr= new ArrayList<DtReserva>();
 			for (Reserva r: temp.getReservas()) {
-				dtr.add(new DtReserva(r.getEstado(), getDtUsuario(r.getUsuario()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
+				dtr.add(new DtReserva(r.getEstado(), getDtUsuario(r.getCiudadano()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
 						r.getEtapa().toDtEtapa().getFechaInicio(), r.getEtapa().toDtEtapa().getFechaFin(), r.getEtapa().toDtEtapa().getDtPvac().getNombre(), r.getEtapa().getId()));
 			}
 			DtAgenda retorno = new DtAgenda(temp.getIdAgenda(), temp.getFecha(), dtc, dtr);
@@ -176,7 +178,7 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 				}
 				List<DtReserva> dtr= new ArrayList<DtReserva>();
 				for (Reserva r: a.getReservas()) {
-					dtr.add(new DtReserva(r.getEstado(), getDtUsuario(r.getUsuario()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
+					dtr.add(new DtReserva(r.getEstado(), getDtUsuario(r.getCiudadano()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
 							r.getEtapa().toDtEtapa().getFechaInicio(), r.getEtapa().toDtEtapa().getFechaFin(), r.getEtapa().toDtEtapa().getDtPvac().getNombre(), r.getEtapa().getId()));
 				}
 				retorno.add(new DtAgenda(a.getIdAgenda(), a.getFecha(), dtc, dtr));
@@ -200,7 +202,7 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 			throw new AgendaInexistente("No hay una agenda con ese ID.");
 	}
 	
-	private Agenda getAgendaEnVacunatorio(ArrayList<Agenda> lista, int id) {
+	private Agenda getAgendaEnVacunatorio(ArrayList<Agenda> lista, int id) { // que es esto nico
 		for (Agenda a: lista) {
 			if (a.equals(em.find(Agenda.class, id)))
 				return a;
@@ -217,12 +219,12 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 	}
 	
 	private ArrayList<Reserva> buscarReservasUsuarioEtapa(ArrayList<DtReserva> lista){
-		ArrayList<Reserva> retorno = null;
+		ArrayList<Reserva> retorno = new ArrayList<>();
 		for (DtReserva dtr: lista) {
 			
-			Usuario u = em.find(Usuario.class, dtr.getUsuario().getIdUsuario());
-			if (u!=null) {
-				ArrayList<Reserva> temp = (ArrayList<Reserva>) u.getReservas();
+			Ciudadano c = em.find(Ciudadano.class, dtr.getCiudadano().getIdUsuario());
+			if (c!=null) {
+				ArrayList<Reserva> temp = (ArrayList<Reserva>) c.getReservas();
 				for (Reserva r: temp) {
 					if (r.getEtapa().getId() == dtr.getEtapa())
 						retorno.add(r);
@@ -232,9 +234,10 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 		return retorno;
 	}
 	
-	private DtUsuario getDtUsuario(Usuario u) {
+	private DtCiudadano getDtUsuario(Ciudadano u) {
 		if (u!=null)
-			return new DtUsuario(u.getNombre(), u.getApellido(), u.getFechaNac(), u.getIdUsuario(), u.getEmail(), u.getDireccion(), u.getSexo());
+			return new DtCiudadano(
+					u.getIdUsuario(), u.getNombre(), u.getApellido(), u.getFechaNac(), u.getEmail(), u.getDireccion(), u.getSexo(), u.getTipoSector(), u.isAutenticado());
 		else
 			return null;
 	}

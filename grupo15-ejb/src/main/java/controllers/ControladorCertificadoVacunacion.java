@@ -15,6 +15,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import datatypes.DtCertificadoVac;
+import datatypes.DtCiudadano;
 import datatypes.DtConstancia;
 import datatypes.DtCupo;
 import datatypes.DtDireccion;
@@ -22,6 +23,7 @@ import datatypes.DtReserva;
 import datatypes.DtUsuario;
 import datatypes.Sexo;
 import entities.CertificadoVacunacion;
+import entities.Ciudadano;
 import entities.ConstanciaVacuna;
 import entities.Cupo;
 import entities.Usuario;
@@ -106,7 +108,7 @@ public class ControladorCertificadoVacunacion implements ICertificadoVacunacionD
     			ArrayList<DtConstancia> dtc= new ArrayList<DtConstancia>();
     			for (ConstanciaVacuna c: temp.getConstancias()) {
     				dtc.add(new DtConstancia(c.getIdConstVac(), c.getPeriodoInmunidad(), c.getDosisRecibidas(), c.getFechaUltimaDosis(), c.getVacuna(), 
-    						new DtReserva(c.getReserva().getEstado(), getDtUsuario(c.getReserva().getUsuario()), c.getReserva().getFechaRegistro(), c.getReserva().getPuesto().getId(), c.getReserva().getPuesto().getVacunatorio().getNombre(),
+    						new DtReserva(c.getReserva().getEstado(), getDtUsuario(c.getReserva().getCiudadano()), c.getReserva().getFechaRegistro(), c.getReserva().getPuesto().getId(), c.getReserva().getPuesto().getVacunatorio().getNombre(),
     								c.getReserva().getEtapa().toDtEtapa().getFechaInicio(), c.getReserva().getEtapa().toDtEtapa().getFechaFin(), c.getReserva().getEtapa().toDtEtapa().getDtPvac().getNombre(), c.getReserva().getEtapa().getId())));
     			}
     			DtCertificadoVac retorno = new DtCertificadoVac(temp.getIdCert(), dtc);
@@ -124,9 +126,10 @@ public class ControladorCertificadoVacunacion implements ICertificadoVacunacionD
 		return cv;
 	}
 	
-	private DtUsuario getDtUsuario(Usuario u) {
+	private DtCiudadano getDtUsuario(Ciudadano u) {
 		if (u!=null)
-			return new DtUsuario(u.getNombre(), u.getApellido(), u.getFechaNac(), u.getIdUsuario(), u.getEmail(), u.getDireccion(), u.getSexo());
+			return new DtCiudadano(
+					u.getIdUsuario(), u.getNombre(), u.getApellido(), u.getFechaNac(), u.getEmail(), u.getDireccion(), u.getSexo(), u.getTipoSector(), u.isAutenticado());
 		else
 			return null;
 	}

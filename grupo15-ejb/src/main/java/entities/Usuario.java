@@ -6,11 +6,11 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-
 
 import datatypes.DtDireccion;
 import datatypes.Sexo;
@@ -18,10 +18,11 @@ import datatypes.Sexo;
 
 
 @Entity
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 public abstract class Usuario {
 	
 	@Id 
-	private int IdUsuario;
+	private int idUsuario;
 
 	private String nombre;
 	private String apellido;
@@ -33,9 +34,6 @@ public abstract class Usuario {
 	@OneToOne 
 	CertificadoVacunacion certificado;
 	
-	@OneToMany(cascade = CascadeType.ALL)
-	private List<Reserva> reservas = new ArrayList<>();
-	
 	
 	public Usuario() {
 		super();
@@ -43,7 +41,7 @@ public abstract class Usuario {
 
 	public Usuario( int IdUsuario, String nombre, String apellido, Date fechaNac, String email, DtDireccion direccion, Sexo sexo) {
 		super();
-		this.IdUsuario = IdUsuario;
+		this.idUsuario = IdUsuario;
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.fechaNac = fechaNac;
@@ -77,7 +75,7 @@ public abstract class Usuario {
 	}
 
 	public int getIdUsuario() {
-		return IdUsuario;
+		return idUsuario;
 	}
 	
 	
@@ -96,7 +94,7 @@ public abstract class Usuario {
 	}
 
 	public void setIdUsuario(int idUsuario) {
-		IdUsuario = idUsuario;
+		this.idUsuario = idUsuario;
 	}
 
 	public void setNombre(String nombre) {
@@ -119,15 +117,6 @@ public abstract class Usuario {
 		this.certificado = certificado;
 	}
 
-	public List<Reserva> getReservas() {
-		return reservas;
-	}
-
-	public void setReservas(List<Reserva> reservas) {
-		this.reservas = reservas;
-	}
-	
-	
 	
 	
 }
