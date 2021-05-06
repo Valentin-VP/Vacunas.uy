@@ -4,12 +4,16 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import persistence.HistoricoID;
+
 @Entity
+@IdClass(HistoricoID.class)
 public class Historico {
 	@Id
 	@Temporal(TemporalType.DATE)
@@ -19,6 +23,7 @@ public class Historico {
 	private Integer disponibles;
 	private Integer administradas;
 	
+	@Id
 	@ManyToOne
 	@JoinColumn(updatable=false,insertable=false, referencedColumnName="vacunatorio")
 	@JoinColumn(updatable=false,insertable=false, referencedColumnName="vacuna")

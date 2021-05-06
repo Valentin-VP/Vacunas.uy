@@ -2,6 +2,7 @@ package entities;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -19,9 +20,9 @@ public class Vacuna{
 	private String nombre;
 	private int cantDosis; //cuantas veces se da la vacuna
 	private Date expira;  //fecha de expiracion
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private Laboratorio laboratorio;
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private Enfermedad enfermedad;
 	
 	public Vacuna() {
