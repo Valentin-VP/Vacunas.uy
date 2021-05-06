@@ -29,10 +29,8 @@ public class Reserva implements Serializable{
 	
 	@Id
 	@ManyToOne
-	@JoinColumn(
-			insertable=false,
-			updatable=false
-	)
+	@JoinColumn(insertable=false,updatable=false, referencedColumnName="id")
+	@JoinColumn(insertable=false,updatable=false, referencedColumnName="planVacunacion_id")
 	private Etapa etapa;
 	
 	@Id
@@ -44,7 +42,8 @@ public class Reserva implements Serializable{
 	private Usuario usuario;
 	
 	@ManyToOne
-	@JoinColumn(name="puesto_id")
+	@JoinColumn(insertable=false,updatable=false, referencedColumnName="id")
+	@JoinColumn(insertable=false,updatable=false, referencedColumnName="vacunatorio_id")
 	private Puesto puesto;
 	
 	public Reserva() {

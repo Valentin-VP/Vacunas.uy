@@ -4,12 +4,15 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import datatypes.DtEtapa;
+import persistence.EtapaID;
 
 @Entity
+@IdClass(EtapaID.class)
 public class Etapa {
 	
 	@Id
@@ -17,6 +20,7 @@ public class Etapa {
 	private Date fechaInicio;
 	private Date fechaFin;
 	private String condicion;
+	@Id
 	@ManyToOne
 	@JoinColumn
 	private PlanVacunacion planVacunacion;
