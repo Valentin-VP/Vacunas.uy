@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+	version="4.0">
+	<display-name>grupo15-services</display-name>
+	<env-entry>
+		<env-entry-name>auth0.domain</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>https://auth-testing.iduruguay.gub.uy/oidc/v1</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>auth0.clientId</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>890192</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>auth0.clientSecret</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>457d52f181bf11804a3365b49ae4d29a2e03bbabe74997a2f510b179</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>auth0.scope</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>openid</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>auth0.response_type</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>code</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>auth0.redirect_uri</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>https://openidconnect.net/callback</env-entry-value>
+<!-- 		<env-entry-value>https://localhost/grupo15-services/callback</env-entry-value> -->
+ 	</env-entry>
+</web-app>
