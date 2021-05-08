@@ -21,6 +21,7 @@ public class DtReserva implements Serializable {
 	private Date fechaInicioEtapa;
 	private Date fechaFinEtapa;
 	private String planVac;
+	private String vacuna;
 	private int etapa;
 
 	public DtReserva(EstadoReserva estado, DtCiudadano ciudadano, LocalDateTime fecha, String puesto,
@@ -33,8 +34,10 @@ public class DtReserva implements Serializable {
 		this.vacunatorio = vacunatorio;
 	}
 
+
+
 	public DtReserva(EstadoReserva estado, DtCiudadano ciudadano, LocalDateTime fecha, String puesto,
-			String vacunatorio, Date fechaInicioEtapa, Date fechaFinEtapa, String planVac, int etapa) {
+			String vacunatorio, Date fechaInicioEtapa, Date fechaFinEtapa, String planVac, String vacuna, int etapa) {
 		super();
 		this.estado = estado;
 		this.ciudadano = ciudadano;
@@ -44,8 +47,11 @@ public class DtReserva implements Serializable {
 		this.fechaInicioEtapa = fechaInicioEtapa;
 		this.fechaFinEtapa = fechaFinEtapa;
 		this.planVac = planVac;
+		this.vacuna = vacuna;
 		this.etapa = etapa;
 	}
+
+
 
 	public DtReserva() {
 		super();
@@ -115,12 +121,26 @@ public class DtReserva implements Serializable {
 		this.planVac = planVac;
 	}
 
+	public String getVacuna() {
+		return vacuna;
+	}
+
+	public void setVacuna(String vacuna) {
+		this.vacuna = vacuna;
+	}
+
+
+
 	public int getEtapa() {
 		return etapa;
 	}
+
+
 
 	public void setEtapa(int etapa) {
 		this.etapa = etapa;
 	}
 
+	
+	
 }

@@ -27,6 +27,7 @@ import entities.Puesto;
 import entities.ReglasCupos;
 import entities.Reserva;
 import entities.Vacunatorio;
+import exceptions.CupoInexistente;
 import exceptions.EnfermedadInexistente;
 import exceptions.EtapaInexistente;
 import exceptions.PlanVacunacionInexistente;
@@ -80,6 +81,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		// TODO Auto-generated constructor stub
 	}
 
+	//TODO: ELIMINAR ESTO
 	public ArrayList<DtEnfermedad> listarEnfermedades() throws EnfermedadInexistente {
 		Query query = em.createQuery("SELECT e FROM Enfermedad e ORDER BY nombre ASC");
 		@SuppressWarnings("unchecked")
@@ -129,6 +131,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		return retorno;
 	}
 	
+	//TODO: ELIMINAR ESTO
 	public ArrayList<DtVacunatorio> listarVacunatorios() throws VacunatoriosNoCargadosException {
 		Query query = em.createQuery("SELECT v FROM Vacunatorio v");
 		@SuppressWarnings("unchecked")
@@ -168,10 +171,14 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 			retorno.addAll(libres);
 			
 			for (LocalTime lt: libres) {
-				ArrayList<Reserva> reservas = getReservasHora(a, lt);
-				Puesto p = encontrarPuestoLibre(reservas, v.getPuesto());
-				if (p==null)
+				ArrayList<Reserva> reservas = getReservasTurno(a, lt);
+				if (reservas.size() < v.getPuesto().size()) { //si tengo menos reservas a esa hora que puestos en el vacunatorio, tengo lugar
+					Puesto p = encontrarPuestoLibre(reservas, v.getPuesto());
+					if (p==null) //no deberia pasar
+						retorno.remove(lt);
+				}else {
 					retorno.remove(lt);
+				}
 			}
 			return retorno;
 		}
@@ -179,13 +186,13 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 	// TODO: controlar stock, y condiciones de etapa
 	public void confirmarReserva(int idCiudadano, String idEnfermedad, int idPlan, String idVacunatorio,
 			LocalDate fecha, LocalTime hora)
-			throws UsuarioExistente, PlanVacunacionInexistente, VacunatorioNoCargadoException, EnfermedadInexistente {
+			throws UsuarioExistente, PlanVacunacionInexistente, VacunatorioNoCargadoException, EnfermedadInexistente, CupoInexistente {
 		Ciudadano c = em.find(Ciudadano.class, idCiudadano);
 		if (c == null) {
 			throw new UsuarioExistente("El usuario seleccionado no existe.");
 		} else {
-			Enfermedad d = em.find(Enfermedad.class, idEnfermedad);
-			if (d == null)
+			Enfermedad tvirus = em.find(Enfermedad.class, idEnfermedad);
+			if (tvirus == null)
 				throw new EnfermedadInexistente("No existe esa enfermedad.");
 			else {
 				PlanVacunacion pv = em.find(PlanVacunacion.class, idPlan);
@@ -201,16 +208,21 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 
 						Agenda a = getAgendaFecha(v, fecha);
 
-						ArrayList<Reserva> reservas = getReservasHora(a, hora);
-
-						Puesto p = encontrarPuestoLibre(reservas, v.getPuesto());
-
-						Reserva r = new Reserva(LocalDateTime.of(fecha, hora), EstadoReserva.EnProceso, e, c, p);
-						a.getReservas().add(r);
-						c.getReservas().add(r);
-						em.merge(a);
-						em.merge(c);
-						em.persist(r);
+						ArrayList<Reserva> reservas = getReservasTurno(a, hora);
+						if (reservas.size() < v.getPuesto().size()) { //si hay menos reservas para esa hora que puestos en el vacunatorio, entonces tengo lugar
+							Puesto p = encontrarPuestoLibre(reservas, v.getPuesto());
+							if (p==null) //no deberia pasar
+								throw new CupoInexistente("No hay cupos para esa hora.");
+							Reserva r = new Reserva(LocalDateTime.of(fecha, hora), EstadoReserva.EnProceso, e, c, p);
+							a.getReservas().add(r);
+							c.getReservas().add(r);
+							em.merge(a);
+							em.merge(c);
+							em.persist(r);
+						}else {
+							throw new CupoInexistente("No hay cupos para esa hora.");
+						}
+						
 
 						// si cuento la cantidad de reservas que apuntan a un puesto, y ese numero es
 						// mayor que los turnos diarios del vacunatorio, no puedo reservar para ese
@@ -410,7 +422,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		return null;
 	}
 
-	private ArrayList<Reserva> getReservasHora(Agenda a, LocalTime hora) {
+	private ArrayList<Reserva> getReservasTurno(Agenda a, LocalTime hora) {
 		ArrayList<Reserva> retorno = new ArrayList<Reserva>();
 		List<Reserva> list = a.getReservas();
 		for (Reserva r : list) {

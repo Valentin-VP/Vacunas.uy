@@ -26,7 +26,7 @@ public class ControladorEtapa {
 	@PersistenceContext(name = "test")
 	private EntityManager em;
 	
-	public void agregarEtapa(int idEtapa, Date fIni, Date fFin, String cond, int idPlan) throws EtapaRepetida, PlanVacunacionInexistente {
+	public void agregarEtapa(int idEtapa, Date fIni, Date fFin, String cond, int idPlan, String nombreVacuna) throws EtapaRepetida, PlanVacunacionInexistente {
 		if(em.find(Etapa.class, idEtapa) == null) {
 			PlanVacunacion pV = em.find(PlanVacunacion.class, idPlan);
 			if(pV != null) {

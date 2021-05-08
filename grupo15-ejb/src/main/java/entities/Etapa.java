@@ -26,6 +26,10 @@ public class Etapa {
 	@JoinColumn
 	private PlanVacunacion planVacunacion;
 	
+	@ManyToOne
+	@JoinColumn
+	private Vacuna vacuna;
+	
 	public Etapa() {
 		super();
 	}
@@ -83,5 +87,15 @@ public class Etapa {
 		DtEtapa dtEtapa = new DtEtapa(this.id, this.fechaInicio, this.fechaFin,this.planVacunacion.toDtPlanVacunacion());
 		return dtEtapa;
 	}
+
+	public Vacuna getVacuna() {
+		return vacuna;
+	}
+
+	public void setVacuna(Vacuna vacuna) {
+		this.vacuna = vacuna;
+	}
+	
+	
 	
 }

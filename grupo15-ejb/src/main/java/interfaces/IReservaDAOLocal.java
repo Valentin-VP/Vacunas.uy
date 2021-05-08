@@ -10,6 +10,7 @@ import datatypes.DtEnfermedad;
 import datatypes.DtEtapa;
 import datatypes.DtPlanVacunacion;
 import datatypes.DtVacunatorio;
+import exceptions.CupoInexistente;
 import exceptions.EnfermedadInexistente;
 import exceptions.EtapaInexistente;
 import exceptions.PlanVacunacionInexistente;
@@ -26,6 +27,6 @@ public interface IReservaDAOLocal {
 	public ArrayList<LocalTime> seleccionarFecha(LocalDate fecha, String idVacunatorio) throws VacunatorioNoCargadoException;
 	public void confirmarReserva(int idCiudadano, String idEnfermedad, int idPlan, String idVacunatorio,
 			LocalDate fecha, LocalTime hora)
-			throws UsuarioExistente, PlanVacunacionInexistente, VacunatorioNoCargadoException, EnfermedadInexistente;
+			throws UsuarioExistente, PlanVacunacionInexistente, VacunatorioNoCargadoException, EnfermedadInexistente, CupoInexistente;
 }
 

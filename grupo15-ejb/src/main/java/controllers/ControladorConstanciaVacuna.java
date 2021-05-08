@@ -103,7 +103,7 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
     		Reserva r = temp.getReserva();
     		retorno = new DtConstancia(temp.getIdConstVac(), temp.getDosisRecibidas(), temp.getPeriodoInmunidad(), temp.getFechaUltimaDosis(),  temp.getVacuna(),
     				new DtReserva(r.getEstado(), getDtUsuario(r.getCiudadano()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
-        					r.getEtapa().toDtEtapa().getFechaInicio(), r.getEtapa().toDtEtapa().getFechaFin(), r.getEtapa().toDtEtapa().getDtPvac().getNombre(), r.getEtapa().getId()));
+        					r.getEtapa().toDtEtapa().getFechaInicio(), r.getEtapa().toDtEtapa().getFechaFin(), r.getEtapa().toDtEtapa().getDtPvac().getNombre(), r.getEtapa().getVacuna().getNombre(), r.getEtapa().getId()));
     		return retorno;
     	}
     }
@@ -119,8 +119,8 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 				
 				Reserva r = cv.getReserva();
 				retorno.add(new DtConstancia(cv.getIdConstVac(), cv.getDosisRecibidas(), cv.getPeriodoInmunidad(), cv.getFechaUltimaDosis(),  cv.getVacuna(),
-	    				new DtReserva(r.getEstado(), getDtUsuario(r.getCiudadano()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
-	        					r.getEtapa().toDtEtapa().getFechaInicio(), r.getEtapa().toDtEtapa().getFechaFin(), r.getEtapa().toDtEtapa().getDtPvac().getNombre(), r.getEtapa().getId())));
+						new DtReserva(r.getEstado(), getDtUsuario(r.getCiudadano()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
+	        					r.getEtapa().toDtEtapa().getFechaInicio(), r.getEtapa().toDtEtapa().getFechaFin(), r.getEtapa().toDtEtapa().getDtPvac().getNombre(), r.getEtapa().getVacuna().getNombre(), r.getEtapa().getId())));
 			}
 			return retorno;
 		}else {

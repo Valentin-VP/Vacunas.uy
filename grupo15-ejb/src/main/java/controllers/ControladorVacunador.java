@@ -66,14 +66,16 @@ public class ControladorVacunador implements IControladorVacunadorRemote, IContr
     				throw new SinPuestosLibres(
     						String.format("No existe un puesto libre en el vacunatorio %s (ID: %s)", vact.getNombre(), vact.getId()));
     			}else { //si habia alguno libre
-    				if (!fecha.equals(Date.from(Instant.now()))) //es la fecha que me pasaron anterior a la actual?
-    					throw new FechaIncorrecta("La fecha es distinta a la actual.");
+    				if (!fecha.after(Date.from(Instant.now()))) //es la fecha que me pasaron anterior a la actual?
+    					throw new FechaIncorrecta("La fecha es anterior a la actual.");
     				else {
     					if (u.getAsignado()!=null) {
-    						em.remove(u.getAsignado());
+    						
     						u.getAsignado().getPuesto().setAsignado(null); //desvinculo el [Asignado] del [Puesto] previo asociado a ese usuario
     						u.getAsignado().setPuesto(null); //desvinculo el [Puesto] del [Asignado] asociado a ese usuario
     						u.getAsignado().setVacunador(null); //desvinculo el [Vacunador] del [Asignado] asociado a ese usuario
+    						em.merge(u.getAsignado());
+    						em.remove(u.getAsignado());
     					}
     					Asignado assign = new Asignado(fecha, u, pLibre);
     					pLibre.setAsignado(assign);
