@@ -31,7 +31,7 @@ import exceptions.CupoInexistente;
 import exceptions.EnfermedadInexistente;
 import exceptions.EtapaInexistente;
 import exceptions.PlanVacunacionInexistente;
-import exceptions.UsuarioExistente;
+import exceptions.UsuarioInexistente;
 import exceptions.VacunatorioNoCargadoException;
 import exceptions.VacunatoriosNoCargadosException;
 import interfaces.IReservaDAOLocal;
@@ -186,10 +186,10 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 	// TODO: controlar stock, y condiciones de etapa
 	public void confirmarReserva(int idCiudadano, String idEnfermedad, int idPlan, String idVacunatorio,
 			LocalDate fecha, LocalTime hora)
-			throws UsuarioExistente, PlanVacunacionInexistente, VacunatorioNoCargadoException, EnfermedadInexistente, CupoInexistente {
+			throws UsuarioInexistente, PlanVacunacionInexistente, VacunatorioNoCargadoException, EnfermedadInexistente, CupoInexistente {
 		Ciudadano c = em.find(Ciudadano.class, idCiudadano);
 		if (c == null) {
-			throw new UsuarioExistente("El usuario seleccionado no existe.");
+			throw new UsuarioInexistente("El usuario seleccionado no existe.");
 		} else {
 			Enfermedad tvirus = em.find(Enfermedad.class, idEnfermedad);
 			if (tvirus == null)
