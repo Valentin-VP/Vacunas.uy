@@ -21,7 +21,7 @@ import exceptions.VacunatoriosNoCargadosException;
 @Remote
 public interface IReservaDAORemote   {
 	public ArrayList<DtEnfermedad> listarEnfermedades() throws EnfermedadInexistente;
-	public ArrayList<DtPlanVacunacion> seleccionarEnfermedad(String enfermedad) throws PlanVacunacionInexistente;
+	public ArrayList<DtPlanVacunacion> seleccionarEnfermedad(String enfermedad) throws PlanVacunacionInexistente, EnfermedadInexistente;
 	public ArrayList<DtVacunatorio> listarVacunatorios() throws VacunatoriosNoCargadosException;
 	public ArrayList<DtEtapa> seleccionarPlanVacunacion(int idPlan) throws PlanVacunacionInexistente, EtapaInexistente;
 	public ArrayList<LocalTime> seleccionarFecha(LocalDate fecha, String idVacunatorio) throws VacunatorioNoCargadoException;

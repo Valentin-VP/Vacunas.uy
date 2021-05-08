@@ -97,7 +97,9 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		}
 	}
 
-	public ArrayList<DtPlanVacunacion> seleccionarEnfermedad(String enfermedad) throws PlanVacunacionInexistente {
+	public ArrayList<DtPlanVacunacion> seleccionarEnfermedad(String enfermedad) throws PlanVacunacionInexistente, EnfermedadInexistente {
+		if (em.find(Enfermedad.class, enfermedad)==null)
+			throw new EnfermedadInexistente("No existe esa enfermedad.");
 		Query query = em.createQuery("SELECT p FROM PlanVacunacion p");
 		@SuppressWarnings("unchecked")
 		List<PlanVacunacion> pVacs = query.getResultList();
