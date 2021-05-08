@@ -1,8 +1,12 @@
 package controllers;
 
+import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -10,8 +14,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import datatypes.DtPuesto;
+import datatypes.DtVacunatorio;
+import entities.Agenda;
 import entities.Asignado;
 import entities.Puesto;
+import entities.ReglasCupos;
+import entities.Reserva;
 import entities.Vacunador;
 import entities.Vacunatorio;
 import exceptions.FechaIncorrecta;
@@ -58,10 +66,11 @@ public class ControladorVacunador implements IControladorVacunadorRemote, IContr
     				throw new SinPuestosLibres(
     						String.format("No existe un puesto libre en el vacunatorio %s (ID: %s)", vact.getNombre(), vact.getId()));
     			}else { //si habia alguno libre
-    				if (fecha.before(Date.from(Instant.now()))) //es la fecha que me pasaron anterior a la actual?
-    					throw new FechaIncorrecta("La fecha es anterior a la actual.");
+    				if (!fecha.equals(Date.from(Instant.now()))) //es la fecha que me pasaron anterior a la actual?
+    					throw new FechaIncorrecta("La fecha es distinta a la actual.");
     				else {
     					if (u.getAsignado()!=null) {
+    						em.remove(u.getAsignado());
     						u.getAsignado().getPuesto().setAsignado(null); //desvinculo el [Asignado] del [Puesto] previo asociado a ese usuario
     						u.getAsignado().setPuesto(null); //desvinculo el [Puesto] del [Asignado] asociado a ese usuario
     						u.getAsignado().setVacunador(null); //desvinculo el [Vacunador] del [Asignado] asociado a ese usuario
@@ -69,6 +78,7 @@ public class ControladorVacunador implements IControladorVacunadorRemote, IContr
     					Asignado assign = new Asignado(fecha, u, pLibre);
     					pLibre.setAsignado(assign);
         				u.setAsignado(assign);
+        				
         				em.merge(u);
         				em.merge(pLibre);
     				}
@@ -91,10 +101,14 @@ public class ControladorVacunador implements IControladorVacunadorRemote, IContr
     				throw new VacunadorSinAsignar("El vacunador no tiene un puesto asignado.");//return null; 
     			else {
     				Puesto p = u.getAsignado().getPuesto();
-    				DtPuesto dt = new DtPuesto(p.getId(), p.getVacunatorio()); //TODO: DtVacunatorio en vez de Vacunatorio (en DtPuesto)
+    				DtPuesto dt = new DtPuesto(p.getId(), getDtVacunatorio(p.getVacunatorio())); //TODO: DtVacunatorio en vez de Vacunatorio (en DtPuesto)
     				return dt;
     			}
     		}
     	}
     }
+    
+	private DtVacunatorio getDtVacunatorio(Vacunatorio v) {
+		return new DtVacunatorio(v.getId(), v.getNombre(), v.getDtDir(), v.getTelefono(), v.getLatitud(), v.getLongitud());
+	}
 }

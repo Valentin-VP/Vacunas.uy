@@ -1,6 +1,7 @@
 package datatypes;
 
 import java.io.Serializable;
+import java.time.LocalTime;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -11,10 +12,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DtReglasCupos implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String id;
-	private Date fecha;
 	private Integer duracionTurno;
-	private DtHora horaApertura;
-	private DtHora horaCierre;
+	private LocalTime horaApertura;
+	private LocalTime horaCierre;
 	
 	
 	
@@ -25,11 +25,10 @@ public class DtReglasCupos implements Serializable {
 
 
 
-	public DtReglasCupos(String id, Date fecha, Integer duracionTurno,  DtHora horaApertura,
-			DtHora horaCierre) {
+	public DtReglasCupos(String id, Integer duracionTurno,  LocalTime horaApertura,
+			LocalTime horaCierre) {
 		super();
 		this.id = id;
-		this.fecha = fecha;
 		this.duracionTurno = duracionTurno;
 		
 		this.horaApertura = horaApertura;
@@ -50,18 +49,6 @@ public class DtReglasCupos implements Serializable {
 
 
 
-	public Date getFecha() {
-		return fecha;
-	}
-
-
-
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
-	}
-
-
-
 	public Integer getDuracionTurno() {
 		return duracionTurno;
 	}
@@ -77,25 +64,25 @@ public class DtReglasCupos implements Serializable {
 	
 
 
-	public DtHora getHoraApertura() {
+	public LocalTime getHoraApertura() {
 		return horaApertura;
 	}
 
 
 
-	public void setHoraApertura(DtHora horaApertura) {
+	public void setHoraApertura(LocalTime horaApertura) {
 		this.horaApertura = horaApertura;
 	}
 
 
 
-	public DtHora getHoraCierre() {
+	public LocalTime getHoraCierre() {
 		return horaCierre;
 	}
 
 
 
-	public void setHoraCierre(DtHora horaCierre) {
+	public void setHoraCierre(LocalTime horaCierre) {
 		this.horaCierre = horaCierre;
 	}
 

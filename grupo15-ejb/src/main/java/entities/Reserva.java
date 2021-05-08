@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
 
 import datatypes.EstadoReserva;
 import persistence.ReservaID;
-import persistence.StockID;
 
 ////TODO:Reserva es un tipo asociativo
 @Entity

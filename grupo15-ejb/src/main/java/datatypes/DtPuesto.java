@@ -8,7 +8,7 @@ public class DtPuesto implements Serializable {
 
 private static final long serialVersionUID = 1L;
 private String id;
-private Vacunatorio vacunatorio;
+private DtVacunatorio vacunatorio;
 
 
 
@@ -21,7 +21,7 @@ public DtPuesto() {
 
 
 
-public DtPuesto(String id, Vacunatorio vacunatorio) {
+public DtPuesto(String id, DtVacunatorio vacunatorio) {
 	super();
 	this.id = id;
 	this.vacunatorio = vacunatorio;
@@ -44,14 +44,14 @@ public void setId(String id) {
 
 
 
-public Vacunatorio getVacunatorio() {
+public DtVacunatorio getVacunatorio() {
 	return vacunatorio;
 }
 
 
 
 
-public void setVacunatorio(Vacunatorio vacunatorio) {
+public void setVacunatorio(DtVacunatorio vacunatorio) {
 	this.vacunatorio = vacunatorio;
 }
 

@@ -17,9 +17,7 @@ import exceptions.VacunatorioNoCargadoException;
 
 @Remote
 public interface IAgendaDAORemote {
-	public void agregarAgenda(int id, String vacunatorio, LocalDate fecha, ArrayList<DtCupo> cupos, ArrayList<DtReserva> reservas) throws AgendaRepetida, CupoInexistente, VacunatorioNoCargadoException;
-	public void modificarAgenda(int id, String vacunatorio, LocalDate fecha, ArrayList<DtCupo> cupos, ArrayList<DtReserva> reservas) throws AgendaInexistente, CupoInexistente, AgendaRepetida, VacunatorioNoCargadoException;
-	public DtAgenda obtenerAgenda(int id) throws AgendaInexistente ;
-	public ArrayList<DtAgenda> listarAgendas()  throws AgendaInexistente;
-	public void eliminarCuposAsociados(int idAgenda) throws AgendaInexistente ;
+	public void agregarAgenda(String vacunatorio, LocalDate fecha) throws AgendaRepetida, CupoInexistente, VacunatorioNoCargadoException;
+	public DtAgenda obtenerAgenda(String vacunatorio, LocalDate fecha) throws AgendaInexistente ;
+	public ArrayList<DtAgenda> listarAgendas(String vacunatorio)  throws AgendaInexistente, VacunatorioNoCargadoException;
 }

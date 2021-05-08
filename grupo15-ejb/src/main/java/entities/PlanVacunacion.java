@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import datatypes.DtEtapa;
@@ -20,6 +21,9 @@ public class PlanVacunacion {
 	private String descripcion;
 	@OneToMany(mappedBy = "planVacunacion", cascade = CascadeType.ALL)
 	private List<Etapa> etapas = new ArrayList<>();
+	
+	@ManyToOne
+	private Enfermedad enfermedad;
 	
 	public PlanVacunacion() {
 		super();
@@ -68,5 +72,13 @@ public class PlanVacunacion {
 		DtPlanVacunacion dtPlanVacunacion = new DtPlanVacunacion(this.id, this.nombre, this.descripcion, dtEtapas);
 		return dtPlanVacunacion;
 	}
+	public Enfermedad getEnfermedad() {
+		return enfermedad;
+	}
+	public void setEnfermedad(Enfermedad enfermedad) {
+		this.enfermedad = enfermedad;
+	}
 
+	
+	
 }

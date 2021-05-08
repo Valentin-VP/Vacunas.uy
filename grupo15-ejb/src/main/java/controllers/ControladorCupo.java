@@ -22,13 +22,13 @@ import interfaces.ICupoDAORemote;
  */
 @Stateless
 @LocalBean
-public class ControladorCupo implements ICupoDAORemote, ICupoDAOLocal {
+public class ControladorCupo {//implements ICupoDAORemote, ICupoDAOLocal {
 	
 	@PersistenceContext(name = "test")
 	private EntityManager em;
     /**
      * Default constructor. 
-     */
+     
     public ControladorCupo() {
         // TODO Auto-generated constructor stub
     }
@@ -111,4 +111,5 @@ public class ControladorCupo implements ICupoDAORemote, ICupoDAOLocal {
 		}else
 			throw new CupoInexistente("No hay cupos en el sistema.");
     }
+    */
 }

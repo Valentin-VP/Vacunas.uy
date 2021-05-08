@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import persistence.CupoID;
 
 @Entity
-@IdClass(CupoID.class)
+//@IdClass(CupoID.class)
 public class Cupo  implements Serializable{
 	/**
 	 * 
@@ -21,10 +21,10 @@ public class Cupo  implements Serializable{
 	private int idCupo;
 	private boolean ocupado;
 	
-	@Id
-	@JoinColumn
-	@ManyToOne
-	private Agenda agenda;
+	//@Id
+	//@JoinColumn
+	//@ManyToOne
+	//private Agenda agenda;
 	
 	
 	public Cupo() {
@@ -34,11 +34,11 @@ public class Cupo  implements Serializable{
 	
 	
 	
-	public Cupo(int idCupo, boolean ocupado, Agenda agenda) {
+	public Cupo(int idCupo, boolean ocupado) {
 		super();
 		this.idCupo = idCupo;
 		this.ocupado = ocupado;
-		this.agenda = agenda;
+		//this.agenda = agenda;
 	}
 
 
@@ -56,13 +56,7 @@ public class Cupo  implements Serializable{
 		this.ocupado = ocupado;
 	}
 
-	public Agenda getAgenda() {
-		return agenda;
-	}
-
-	public void setAgenda(Agenda agenda) {
-		this.agenda = agenda;
-	}
+	
 	
 	
 	
