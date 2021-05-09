@@ -152,7 +152,7 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 
 			return retorno;
 		}else
-			throw new AgendaInexistente("No hay una agenda con ese ID.");
+			throw new AgendaInexistente("No hay una agenda en esa fecha en ese vacunatorio.");
 	}
 	
 	public ArrayList<DtAgenda> listarAgendas(String vacunatorio)  throws AgendaInexistente, VacunatorioNoCargadoException{

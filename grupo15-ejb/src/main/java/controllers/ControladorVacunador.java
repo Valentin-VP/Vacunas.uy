@@ -103,8 +103,13 @@ public class ControladorVacunador implements IControladorVacunadorRemote, IContr
     				throw new VacunadorSinAsignar("El vacunador no tiene un puesto asignado.");//return null; 
     			else {
     				Puesto p = u.getAsignado().getPuesto();
-    				DtPuesto dt = new DtPuesto(p.getId(), getDtVacunatorio(p.getVacunatorio())); //TODO: DtVacunatorio en vez de Vacunatorio (en DtPuesto)
-    				return dt;
+    				if (p.getVacunatorio().equals(vact)) {
+    					DtPuesto dt = new DtPuesto(p.getId(), getDtVacunatorio(p.getVacunatorio())); //TODO: DtVacunatorio en vez de Vacunatorio (en DtPuesto)
+    					return dt;
+    				}else {
+    					throw new VacunadorSinAsignar("El vacunador no tiene un puesto asignado en ese vacunatorio.");//return null; 
+    				}
+    				
     			}
     		}
     	}
