@@ -5,12 +5,12 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -23,7 +23,11 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import datatypes.DtDatosReserva;
-import datatypes.DtReserva;
+import datatypes.DtEnfermedad;
+import datatypes.DtEtapa;
+import datatypes.DtHora;
+import datatypes.DtPlanVacunacion;
+import datatypes.DtVacunatorio;
 import exceptions.CupoInexistente;
 import exceptions.EnfermedadInexistente;
 import exceptions.EtapaInexistente;
@@ -58,6 +62,89 @@ public class AltaReservaRWS implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	
+	@GET
+	@Path("/enf")
+	public ArrayList<DtEnfermedad> listarEnfermedades(){
+		try {
+			return rs.listarEnfermedades();
+		} catch (EnfermedadInexistente e) {
+			return null;
+		}
+	}
+	
+	@GET
+	@Path("/vac")
+	public ArrayList<DtVacunatorio> listarVacunatorios(){
+		try {
+			return vs.listarVacunatorio();
+		} catch (VacunatoriosNoCargadosException e) {
+			return null;
+		}
+
+	}
+	
+	@GET
+	@Path("/enf/{e}")
+	public ArrayList<DtPlanVacunacion> seleccionarEnfermedad(@PathParam("e") String enfermedad){
+		try {
+			return rs.seleccionarEnfermedad(enfermedad);
+		} catch (EnfermedadInexistente | PlanVacunacionInexistente  e) {
+			return null;
+		}
+	}
+	
+	@GET
+	@Path("/pv/{p}")
+	public ArrayList<DtEtapa> seleccionarPlan(@PathParam("p") int plan){
+		try {
+			return rs.seleccionarPlanVacunacion(plan);
+		} catch (PlanVacunacionInexistente | EtapaInexistente e) {
+			return null;
+		}
+	}
+	
+	@GET
+	@Path("/fecha")///{vac}/{date}")
+	public ArrayList<LocalTime> seleccionarFecha(@QueryParam("vac") String idVacunatorio, @QueryParam("date") Date fecha){
+		try {
+			return rs.seleccionarFecha(LocalDate.from(fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()), idVacunatorio);
+		} catch (DateTimeException | VacunatorioNoCargadoException e) {
+			return null;
+		}
+	}
+	
+	@POST
+	@Path("/confirmar")
+	public void confirmarReserva(DtDatosReserva dtr){
+		try {
+			//return Response.ok(LocalTime.from(hora.toInstant().atZone(ZoneId.systemDefault()).toLocalTime())).build();
+			rs.confirmarReserva(dtr.getIdCiudadano(), dtr.getIdEnfermedad(), dtr.getIdPlan(), dtr.getIdVacunatorio(),
+					LocalDate.from(dtr.getFecha().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()),
+					LocalTime.from(dtr.getHora().toInstant().atZone(ZoneId.systemDefault()).toLocalTime()));
+		} catch (DateTimeException | UsuarioInexistente | PlanVacunacionInexistente | VacunatorioNoCargadoException | EnfermedadInexistente
+				| CupoInexistente e) {
+			
+		}
+	}
+		/*(@FormParam("idUser") int idCiudadano, @FormParam("idEnf") String idEnfermedad, @FormParam("idPlan") int idPlan, @FormParam("idVac") String idVacunatorio,
+			@FormParam("fecha")Date fecha, @FormParam("hora")Date hora){
+		if (idEnfermedad == null || idVacunatorio==null || fecha==null || hora == null) {
+			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
+			return rb.build();
+		}
+		try {
+			//return Response.ok(LocalTime.from(hora.toInstant().atZone(ZoneId.systemDefault()).toLocalTime())).build();
+			rs.confirmarReserva(idCiudadano, idEnfermedad, idPlan, idVacunatorio, LocalDate.from(fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()), LocalTime.from(hora.toInstant().atZone(ZoneId.systemDefault()).toLocalTime()));
+			return Response.ok().build();
+		} catch (DateTimeException e | UsuarioInexistente | PlanVacunacionInexistente | VacunatorioNoCargadoException | EnfermedadInexistente
+				| CupoInexistente e) {
+			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
+			return rb.entity(e.getMessage()).build();
+		}
+	}
+	*/
+	
+	/*
 	@GET
 	@Path("/enf")
 	public Response listarEnfermedades(){
@@ -137,23 +224,6 @@ public class AltaReservaRWS implements Serializable {
 			return rb.entity(e.getMessage()).build();
 		}
 	}
-		/*(@FormParam("idUser") int idCiudadano, @FormParam("idEnf") String idEnfermedad, @FormParam("idPlan") int idPlan, @FormParam("idVac") String idVacunatorio,
-			@FormParam("fecha")Date fecha, @FormParam("hora")Date hora){
-		if (idEnfermedad == null || idVacunatorio==null || fecha==null || hora == null) {
-			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
-			return rb.build();
-		}
-		try {
-			//return Response.ok(LocalTime.from(hora.toInstant().atZone(ZoneId.systemDefault()).toLocalTime())).build();
-			rs.confirmarReserva(idCiudadano, idEnfermedad, idPlan, idVacunatorio, LocalDate.from(fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()), LocalTime.from(hora.toInstant().atZone(ZoneId.systemDefault()).toLocalTime()));
-			return Response.ok().build();
-		} catch (DateTimeException e | UsuarioInexistente | PlanVacunacionInexistente | VacunatorioNoCargadoException | EnfermedadInexistente
-				| CupoInexistente e) {
-			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
-			return rb.entity(e.getMessage()).build();
-		}
-	}
 	*/
-	
 	
 }

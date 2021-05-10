@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.ejb.Local;
 
+import datatypes.DtAsignado;
 import datatypes.DtPuesto;
 import exceptions.FechaIncorrecta;
 import exceptions.SinPuestosLibres;
@@ -13,6 +14,6 @@ import exceptions.VacunatorioNoCargadoException;
 
 @Local
 public interface IControladorVacunadorLocal {
-	public void asignarVacunadorAVacunatorio(int idVacunador, String idVacunatorio, Date fecha) throws UsuarioInexistente, VacunatorioNoCargadoException, SinPuestosLibres, FechaIncorrecta;
-	public DtPuesto consultarPuestoAsignadoVacunador(int idVacunador, String idVacunatorio) throws UsuarioInexistente, VacunatorioNoCargadoException, VacunadorSinAsignar;
+	public void asignarVacunadorAVacunatorio(int idVacunador, String idVacunatorio, Date fecha) throws UsuarioInexistente, VacunatorioNoCargadoException, SinPuestosLibres, FechaIncorrecta ;
+	public DtAsignado consultarPuestoAsignadoVacunador(int idVacunador, String idVacunatorio, Date fecha) throws UsuarioInexistente, VacunatorioNoCargadoException, VacunadorSinAsignar;
 }

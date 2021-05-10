@@ -1,6 +1,10 @@
 package rest;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -14,6 +18,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
+import datatypes.DtAsignado;
 import exceptions.UsuarioInexistente;
 import exceptions.VacunadorSinAsignar;
 import exceptions.VacunatorioNoCargadoException;
@@ -38,18 +43,30 @@ public class ConsultarPuestoVacunadorRWS implements Serializable {
 	}
 	
 	@GET
-	@Path("/asignado")
-	public Response consultarPuestoVacunador(@QueryParam("user") int idVacunador, @QueryParam("vact") String idVacunatorio){
-		if (idVacunatorio==null) {
+	@Path("/asignado") //agregar fecha
+	public DtAsignado consultarPuestoVacunador(@QueryParam("user") int idVacunador, @QueryParam("vact") String idVacunatorio, @QueryParam("date") Date fecha){
+		try {
+			LocalDate f = LocalDate.from(fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+			Date nuevaFecha = Date.from(Instant.from(f));
+			return vs.consultarPuestoAsignadoVacunador(idVacunador, idVacunatorio, nuevaFecha);
+		} catch (VacunatorioNoCargadoException | UsuarioInexistente | VacunadorSinAsignar e) {
+			return null;
+		}
+	}
+
+	/*
+	@GET
+	@Path("/asignado") //agregar fecha
+	public Response consultarPuestoVacunador(@QueryParam("user") int idVacunador, @QueryParam("vact") String idVacunatorio, @QueryParam("date") Date fecha){
+		if (idVacunatorio==null || fecha==null) {
 			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
 			return rb.build();
 		}
 		try {
-			return Response.ok(vs.consultarPuestoAsignadoVacunador(idVacunador, idVacunatorio)).build();
+			return Response.ok(vs.consultarPuestoAsignadoVacunador(idVacunador, idVacunatorio, fecha)).build();
 		} catch (VacunatorioNoCargadoException | UsuarioInexistente | VacunadorSinAsignar e) {
 			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
 			return rb.entity(e.getMessage()).build();
 		}
-	}
-
+	}*/
 }

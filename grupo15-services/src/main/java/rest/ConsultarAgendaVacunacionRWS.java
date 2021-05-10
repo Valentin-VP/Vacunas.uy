@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
+import datatypes.DtAgenda;
 import exceptions.AgendaInexistente;
 import exceptions.UsuarioInexistente;
 import exceptions.VacunadorSinAsignar;
@@ -37,7 +38,18 @@ public class ConsultarAgendaVacunacionRWS {
 	}
 	
 	@GET
-	@Path("/consultar")
+	@Path("/consultar") //quitar fecha (es .now())
+	public DtAgenda consultarAgendaVacunacion(@QueryParam("date") Date fecha, @QueryParam("vact") String idVacunatorio){
+		try {
+			return as.obtenerAgenda(idVacunatorio, LocalDate.from(LocalDate.now()));
+		} catch (DateTimeException | AgendaInexistente e) {
+			return null;
+		}
+	}
+
+	/*
+	@GET
+	@Path("/consultar") //quitar fecha (es .now())
 	public Response consultarAgendaVacunacion(@QueryParam("date") Date fecha, @QueryParam("vact") String idVacunatorio){
 		if (idVacunatorio==null || fecha==null) {
 			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
@@ -49,6 +61,5 @@ public class ConsultarAgendaVacunacionRWS {
 			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
 			return rb.entity(e.getMessage()).build();
 		}
-	}
-
+	}*/
 }
