@@ -98,8 +98,7 @@ public class ControladorCertificadoVacunacion implements ICertificadoVacunacionD
     			ArrayList<DtConstancia> dtc= new ArrayList<DtConstancia>();
     			for (ConstanciaVacuna c: temp.getConstancias()) {
     				dtc.add(new DtConstancia(c.getIdConstVac(), c.getPeriodoInmunidad(), c.getDosisRecibidas(), c.getFechaUltimaDosis(), c.getVacuna(), 
-    						new DtReserva(c.getReserva().getEstado(), getDtUsuario(c.getReserva().getCiudadano()), c.getReserva().getFechaRegistro(), c.getReserva().getPuesto().getId(), c.getReserva().getPuesto().getVacunatorio().getNombre(),
-    								c.getReserva().getEtapa().toDtEtapa().getFechaInicio(), c.getReserva().getEtapa().toDtEtapa().getFechaFin(), c.getReserva().getEtapa().toDtEtapa().getDtPvac().getNombre(), c.getReserva().getEtapa().getVacuna().getNombre(), c.getReserva().getEtapa().getId())));
+    						c.getReserva().getDtReserva()));
     			}
     			DtCertificadoVac retorno = new DtCertificadoVac(temp.getIdCert(), dtc);
 

@@ -36,7 +36,7 @@ public class ConsultarAgendaVacunacionRWS {
 	public ConsultarAgendaVacunacionRWS() {
 		// TODO Auto-generated constructor stub
 	}
-	
+	/*
 	@GET
 	@Path("/consultar") //quitar fecha (es .now())
 	public DtAgenda consultarAgendaVacunacion(@QueryParam("date") Date fecha, @QueryParam("vact") String idVacunatorio){
@@ -46,8 +46,8 @@ public class ConsultarAgendaVacunacionRWS {
 			return null;
 		}
 	}
-
-	/*
+*/
+	
 	@GET
 	@Path("/consultar") //quitar fecha (es .now())
 	public Response consultarAgendaVacunacion(@QueryParam("date") Date fecha, @QueryParam("vact") String idVacunatorio){
@@ -58,8 +58,9 @@ public class ConsultarAgendaVacunacionRWS {
 		try {
 			return Response.ok(as.obtenerAgenda(idVacunatorio, LocalDate.from(fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()))).build();
 		} catch (DateTimeException | AgendaInexistente e) {
-			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
-			return rb.entity(e.getMessage()).build();
+			return Response.serverError().entity(e.getMessage()).status(400).build();
+			//ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
+			//return rb.entity(e.getMessage()).build();
 		}
-	}*/
+	}
 }

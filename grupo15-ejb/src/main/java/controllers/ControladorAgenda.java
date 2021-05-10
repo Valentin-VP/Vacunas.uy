@@ -145,8 +145,7 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 			}*/
 			List<DtReserva> dtr= new ArrayList<DtReserva>();
 			for (Reserva r: temp.getReservas()) {
-				dtr.add(new DtReserva(r.getEstado(), getDtUsuario(r.getCiudadano()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
-    					r.getEtapa().toDtEtapa().getFechaInicio(), r.getEtapa().toDtEtapa().getFechaFin(), r.getEtapa().toDtEtapa().getDtPvac().getNombre(), r.getEtapa().getVacuna().getNombre(), r.getEtapa().getId()));
+				dtr.add(r.getDtReserva());
 			}
 			DtAgenda retorno = new DtAgenda(temp.getFecha(), dtr);
 
@@ -169,8 +168,7 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 					}*/
 					List<DtReserva> dtr= new ArrayList<DtReserva>();
 					for (Reserva r: a.getReservas()) {
-						dtr.add(new DtReserva(r.getEstado(), getDtUsuario(r.getCiudadano()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
-	        					r.getEtapa().toDtEtapa().getFechaInicio(), r.getEtapa().toDtEtapa().getFechaFin(), r.getEtapa().toDtEtapa().getDtPvac().getNombre(), r.getEtapa().getVacuna().getNombre(), r.getEtapa().getId()));
+						dtr.add(r.getDtReserva());
 					}
 					retorno.add(new DtAgenda(a.getFecha(), dtr));
 				}

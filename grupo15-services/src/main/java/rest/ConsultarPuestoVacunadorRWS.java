@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.Temporal;
 import java.util.Date;
 
 import javax.ejb.EJB;
@@ -41,7 +42,7 @@ public class ConsultarPuestoVacunadorRWS implements Serializable {
 	public ConsultarPuestoVacunadorRWS() {
 		// TODO Auto-generated constructor stub
 	}
-	
+	/*
 	@GET
 	@Path("/asignado") //agregar fecha
 	public DtAsignado consultarPuestoVacunador(@QueryParam("user") int idVacunador, @QueryParam("vact") String idVacunatorio, @QueryParam("date") Date fecha){
@@ -53,8 +54,8 @@ public class ConsultarPuestoVacunadorRWS implements Serializable {
 			return null;
 		}
 	}
-
-	/*
+*/
+	
 	@GET
 	@Path("/asignado") //agregar fecha
 	public Response consultarPuestoVacunador(@QueryParam("user") int idVacunador, @QueryParam("vact") String idVacunatorio, @QueryParam("date") Date fecha){
@@ -63,10 +64,13 @@ public class ConsultarPuestoVacunadorRWS implements Serializable {
 			return rb.build();
 		}
 		try {
-			return Response.ok(vs.consultarPuestoAsignadoVacunador(idVacunador, idVacunatorio, fecha)).build();
+			LocalDate f = LocalDate.from(fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+			Date nuevaFecha = Date.from(f.atStartOfDay(ZoneId.systemDefault()).toInstant());
+			return Response.ok(vs.consultarPuestoAsignadoVacunador(idVacunador, idVacunatorio, nuevaFecha)).build();
 		} catch (VacunatorioNoCargadoException | UsuarioInexistente | VacunadorSinAsignar e) {
-			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
-			return rb.entity(e.getMessage()).build();
+			return Response.serverError().entity(e.getMessage()).status(400).build();
+			//ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
+			//return rb.entity(e.getMessage()).build();
 		}
-	}*/
+	}
 }

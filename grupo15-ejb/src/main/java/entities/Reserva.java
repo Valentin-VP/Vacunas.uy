@@ -1,7 +1,9 @@
 package entities;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -11,6 +13,7 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import datatypes.DtReserva;
 import datatypes.EstadoReserva;
 import persistence.ReservaID;
 
@@ -100,5 +103,10 @@ public class Reserva implements Serializable{
 		this.puesto = puesto;
 	}
 	
-	
+	public DtReserva getDtReserva() {
+		return new DtReserva(Date.from(Instant.from(this.getFechaRegistro())), this.getEstado(),
+				this.getEtapa().getPlanVacunacion().getNombre() + " " + this.getEtapa().getCondicion(),
+				this.getEtapa().getVacuna().getNombre(),
+				this.getCiudadano().getNombre() + " " + this.getCiudadano().getApellido(), this.getPuesto().getId());
+	}
 }

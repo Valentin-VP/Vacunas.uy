@@ -39,12 +39,12 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
         // TODO Auto-generated constructor stub
     }
     
-    public void agregarConstanciaVacuna(String vacuna, int periodoInmunidad, int dosisRecibidas, LocalDate fechaUltimaDosis, DtReserva reserva) throws UsuarioExistente, ReservaInexistente, CertificadoInexistente {
-    	Usuario u = em.find(Usuario.class, reserva.getCiudadano().getIdUsuario());
+    public void agregarConstanciaVacuna(String vacuna, int periodoInmunidad, int dosisRecibidas, LocalDate fechaUltimaDosis, int idUser, int idEtapa) throws UsuarioExistente, ReservaInexistente, CertificadoInexistente {
+    	Usuario u = em.find(Usuario.class, idUser);
     	if (u==null)
     		throw new UsuarioExistente("No existe ese usuario.");
     	else {
-    		Reserva r = buscarReservaUsuarioEtapa(reserva);
+    		Reserva r = buscarReservaUsuarioEtapa(idUser, idEtapa);
     		if (r==null) {
     			throw new ReservaInexistente("No existe una reserva para ese usuario y esa etapa.");
     		}else {
@@ -63,16 +63,16 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
     	}
     }
 
-    public void modificarConstanciaVacuna(int idConst, String vacuna, int periodoInmunidad, int dosisRecibidas, LocalDate fechaUltimaDosis, DtReserva reserva) throws UsuarioExistente, ReservaInexistente, CertificadoInexistente, ConstanciaInexistente {
+    public void modificarConstanciaVacuna(int idConst, String vacuna, int periodoInmunidad, int dosisRecibidas, LocalDate fechaUltimaDosis, int idUser, int idEtapa) throws UsuarioExistente, ReservaInexistente, CertificadoInexistente, ConstanciaInexistente {
     	ConstanciaVacuna cv = em.find(ConstanciaVacuna.class, idConst);
     	if (cv==null)
     		throw new ConstanciaInexistente("No existe una constancia con ese ID.");
     	else {
-	    	Usuario u = em.find(Usuario.class, reserva.getCiudadano().getIdUsuario());
+	    	Usuario u = em.find(Usuario.class, idUser);
 	    	if (u==null)
 	    		throw new UsuarioExistente("No existe ese usuario.");
 	    	else{
-	    		Reserva r = buscarReservaUsuarioEtapa(reserva);
+	    		Reserva r = buscarReservaUsuarioEtapa(idUser, idEtapa);
 	    		if (r==null) {
 	    			throw new ReservaInexistente("No existe una reserva para ese usuario y esa etapa.");
 	    		}else {
@@ -102,8 +102,7 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
     	else {
     		Reserva r = temp.getReserva();
     		retorno = new DtConstancia(temp.getIdConstVac(), temp.getDosisRecibidas(), temp.getPeriodoInmunidad(), temp.getFechaUltimaDosis(),  temp.getVacuna(),
-    				new DtReserva(r.getEstado(), getDtUsuario(r.getCiudadano()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
-        					r.getEtapa().toDtEtapa().getFechaInicio(), r.getEtapa().toDtEtapa().getFechaFin(), r.getEtapa().toDtEtapa().getDtPvac().getNombre(), r.getEtapa().getVacuna().getNombre(), r.getEtapa().getId()));
+    				r.getDtReserva());
     		return retorno;
     	}
     }
@@ -119,8 +118,7 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 				
 				Reserva r = cv.getReserva();
 				retorno.add(new DtConstancia(cv.getIdConstVac(), cv.getDosisRecibidas(), cv.getPeriodoInmunidad(), cv.getFechaUltimaDosis(),  cv.getVacuna(),
-						new DtReserva(r.getEstado(), getDtUsuario(r.getCiudadano()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
-	        					r.getEtapa().toDtEtapa().getFechaInicio(), r.getEtapa().toDtEtapa().getFechaFin(), r.getEtapa().toDtEtapa().getDtPvac().getNombre(), r.getEtapa().getVacuna().getNombre(), r.getEtapa().getId())));
+						r.getDtReserva()));
 			}
 			return retorno;
 		}else {
@@ -129,12 +127,12 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
     	 
     }
     
-	private Reserva buscarReservaUsuarioEtapa(DtReserva res){
-		Ciudadano c = em.find(Ciudadano.class, res.getCiudadano().getIdUsuario());
+	private Reserva buscarReservaUsuarioEtapa(int idUser, int idEtapa){
+		Ciudadano c = em.find(Ciudadano.class, idUser);
 		if (c!=null) {
 			ArrayList<Reserva> temp = (ArrayList<Reserva>) c.getReservas();
 			for (Reserva r: temp) {
-				if (r.getEtapa().getId() == res.getEtapa())
+				if (r.getEtapa().getId() == idEtapa)
 					return r;
 			}
 		}
