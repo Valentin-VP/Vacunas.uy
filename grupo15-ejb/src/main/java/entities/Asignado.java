@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import persistence.AsignadoID;
@@ -19,12 +20,12 @@ public class Asignado {
 	private Date fecha;
 	
 	@Id
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(insertable=false, updatable=false, referencedColumnName="idusuario")
 	private Vacunador vacunador;
 	
 	@Id
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(insertable=false, updatable=false, referencedColumnName="id")
 	@JoinColumn(insertable=false, updatable=false, referencedColumnName="vacunatorio_id")
 	private Puesto puesto;

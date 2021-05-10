@@ -3,12 +3,16 @@ package entities;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import persistence.PuestoID;
@@ -25,8 +29,8 @@ public class Puesto {
 	@JoinColumn
 	private Vacunatorio vacunatorio;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-	private Asignado asignado = null;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Asignado> asignado = new ArrayList<Asignado>();
 	
 	
 	public Puesto() {
@@ -56,13 +60,14 @@ public class Puesto {
 		this.vacunatorio = vacunatorio;
 	}
 
-	public Asignado getAsignado() {
+	public List<Asignado> getAsignado() {
 		return asignado;
 	}
 
-	public void setAsignado(Asignado asignado) {
+	public void setAsignado(List<Asignado> asignado) {
 		this.asignado = asignado;
 	}
+
 	
 	
 

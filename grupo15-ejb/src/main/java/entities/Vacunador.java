@@ -23,8 +23,8 @@ public class Vacunador extends Usuario {
 	private List<Chat> chats = new ArrayList<Chat>();
 
 	
-	@OneToOne(cascade = CascadeType.ALL)
-	private Asignado asignado = null; //asignado
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Asignado> asignado = new ArrayList<Asignado>(); //asignado
 	 
 	public Vacunador() {
 		super();
@@ -43,13 +43,15 @@ public class Vacunador extends Usuario {
 		this.chats = chats;
 	}
 
-	public Asignado getAsignado() {
+	public List<Asignado> getAsignado() {
 		return asignado;
 	}
 
-	public void setAsignado(Asignado asignado) {
+	public void setAsignado(List<Asignado> asignado) {
 		this.asignado = asignado;
 	}
+
+
 	
 	
 }
