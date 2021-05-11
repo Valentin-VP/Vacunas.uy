@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -52,9 +53,9 @@ public class ControladorVacunador implements IControladorVacunadorRemote, IContr
     //recorriendo sus asignados previamente, antes de asignarlo a ese puesto (solo si es del mismo vacunatorio¿?¿?¿?¿?¿¿)
     
     
-    public void asignarVacunadorAVacunatorio(int idVacunador, String idVacunatorio, Date fecha) throws UsuarioInexistente, VacunatorioNoCargadoException, SinPuestosLibres, FechaIncorrecta {
-    	LocalDate f = LocalDate.from(fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-		Date nuevaFecha = Date.from(f.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    public void asignarVacunadorAVacunatorio(int idVacunador, String idVacunatorio, LocalDate fecha) throws UsuarioInexistente, VacunatorioNoCargadoException, SinPuestosLibres, FechaIncorrecta {
+    	//LocalDate f = LocalDate.from(fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+		//Date nuevaFecha = Date.from(f.atStartOfDay(ZoneId.systemDefault()).toInstant());
     	Vacunador u = em.find(Vacunador.class, idVacunador);
     	if (u==null) {
     		throw new UsuarioInexistente("El vacunador no existe.");
@@ -64,21 +65,21 @@ public class ControladorVacunador implements IControladorVacunadorRemote, IContr
     			throw new VacunatorioNoCargadoException("El vacunatorio no existe.");
     		}else {
     			List<Puesto> listaPuesto = vact.getPuesto();
-    			Puesto pLibre = getPuestoLibreEnFecha(listaPuesto, nuevaFecha);
+    			Puesto pLibre = getPuestoLibreEnFecha(listaPuesto, fecha);
     			if (pLibre == null) { 
     				throw new SinPuestosLibres(
     						String.format("No existe un puesto libre en esa fecha en el vacunatorio %s.", vact.getNombre()));
     			}else { //si habia alguno libre
-    				if (nuevaFecha.before(Date.from(LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC)))) //es la fecha que me pasaron anterior a la actual?
+    				if (fecha.isBefore(LocalDate.now())) //es la fecha que me pasaron anterior a la actual?
     					throw new FechaIncorrecta("La fecha es anterior a la actual.");
     				else {
-    					Asignado asignadoPrevioEnFecha = getAsignadoEnFecha(u.getAsignado(), nuevaFecha);
+    					Asignado asignadoPrevioEnFecha = getAsignadoEnFecha(u.getAsignado(), fecha);
     					if (asignadoPrevioEnFecha != null) {
     						asignadoPrevioEnFecha.getPuesto().getAsignado().remove(asignadoPrevioEnFecha);
     						asignadoPrevioEnFecha.getVacunador().getAsignado().remove(asignadoPrevioEnFecha);
     					}
     					
-    					Asignado assign = new Asignado(nuevaFecha, u, pLibre);
+    					Asignado assign = new Asignado(fecha, u, pLibre);
     					pLibre.getAsignado().add(assign);
         				u.getAsignado().add(assign);
         				
@@ -91,11 +92,13 @@ public class ControladorVacunador implements IControladorVacunadorRemote, IContr
     	
     }
     
-    public DtAsignado consultarPuestoAsignadoVacunador(int idVacunador, String idVacunatorio, Date fecha) throws UsuarioInexistente, VacunatorioNoCargadoException, VacunadorSinAsignar {
-    	LocalDate f = LocalDate.from(fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-		Date nuevaFecha = Date.from(f.atStartOfDay(ZoneId.systemDefault()).toInstant());
-		System.out.println(nuevaFecha.toString());
-    	Vacunador u = em.find(Vacunador.class, idVacunador);
+    public DtAsignado consultarPuestoAsignadoVacunador(int idVacunador, String idVacunatorio, LocalDate fecha) throws UsuarioInexistente, VacunatorioNoCargadoException, VacunadorSinAsignar {
+    	//LocalDate f = LocalDate.from(fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+		//Date nuevaFecha = Date.from(f.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		System.out.println(fecha.toString());
+    	//		System.out.println(nuevaFecha.toString());
+
+		Vacunador u = em.find(Vacunador.class, idVacunador);
     	if (u==null) {
     		throw new UsuarioInexistente("El vacunador no existe.");
     	}else {
@@ -103,14 +106,15 @@ public class ControladorVacunador implements IControladorVacunadorRemote, IContr
     		if (vact == null) {
     			throw new VacunatorioNoCargadoException("El vacunatorio no existe.");
     		}else {
-    			Asignado a = getAsignadoEnFecha(u.getAsignado(), nuevaFecha);
+    			Asignado a = getAsignadoEnFecha(u.getAsignado(), fecha);
     			
     			if (a==null)
     				throw new VacunadorSinAsignar("El vacunador no tiene un puesto asignado en esa fecha.");//return null; 
     			else {
     				Puesto p = a.getPuesto();
     				if (p.getVacunatorio().equals(vact)) {
-    					DtAsignado dt = new DtAsignado(nuevaFecha, p.getId());
+    					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    					DtAsignado dt = new DtAsignado(fecha.format(formatter), p.getId());
     					return dt;
     				}else {
     					throw new VacunadorSinAsignar("El vacunador no tiene un puesto asignado en esa fecha en el vacunatorio.");//return null; 
@@ -125,7 +129,7 @@ public class ControladorVacunador implements IControladorVacunadorRemote, IContr
 		return new DtVacunatorio(v.getId(), v.getNombre(), v.getDtDir(), v.getTelefono(), v.getLatitud(), v.getLongitud());
 	}
 	
-	private Puesto getPuestoLibreEnFecha(List<Puesto> puestos, Date fecha) {
+	private Puesto getPuestoLibreEnFecha(List<Puesto> puestos, LocalDate fecha) {
 		for (Puesto temp: puestos) {
 			if (getAsignadoEnFecha(temp.getAsignado(), fecha)==null);
 				return temp;
@@ -149,14 +153,15 @@ public class ControladorVacunador implements IControladorVacunadorRemote, IContr
 		return null;
 	}
 	
-	private Asignado getAsignadoEnFecha(List<Asignado> asignados, Date fecha) {
+	private Asignado getAsignadoEnFecha(List<Asignado> asignados, LocalDate fecha) {
 		for (Asignado a: asignados) {
 			
-			LocalDate f = LocalDate.from(fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-			Date nuevaFecha = Date.from(f.atStartOfDay(ZoneId.systemDefault()).toInstant());
-			System.out.println(a.getFecha().getTime());
-			System.out.println(nuevaFecha.getTime());
-			if (a.getFecha().getTime() == nuevaFecha.getTime())
+			//LocalDate f = LocalDate.from(fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+			//Date nuevaFecha = Date.from(f.atStartOfDay(ZoneId.systemDefault()).toInstant());
+			System.out.println(a.getFecha());
+			System.out.println(fecha);
+			//System.out.println(nuevaFecha.getTime());
+			if (a.getFecha().equals(fecha))
 				return a;
 		}
 		System.out.println("null");

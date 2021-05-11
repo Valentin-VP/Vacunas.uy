@@ -116,7 +116,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 	}
 
 	
-	public ArrayList<DtEtapa> seleccionarPlanVacunacion(int idPlan, int idUser) throws PlanVacunacionInexistente, EtapaInexistente{
+	public ArrayList<DtEtapa> seleccionarPlanVacunacion(int idPlan, int idUser) throws PlanVacunacionInexistente, EtapaInexistente, UsuarioInexistente{
 		ArrayList<DtEtapa> retorno = new ArrayList<DtEtapa>();
 		PlanVacunacion pv = em.find(PlanVacunacion.class, idPlan);
 		if (pv == null)
@@ -130,16 +130,18 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 				}
 				Ciudadano c = em.find(Ciudadano.class, idUser);
 				if (c==null) {
-					throw new EtapaInexistente("El usuario no existe.");
+					throw new UsuarioInexistente("El usuario no existe.");
 				}else {
-					for (DtEtapa e: retorno) {
+					//for (DtEtapa e: retorno) {
 						for (Reserva r: c.getReservas()) {
-							if (r.getEtapa().getId()==e.getId()) {
+							if (r.getEtapa().getPlanVacunacion().getId()==pv.getId()) {
 								throw new EtapaInexistente("El usuario ya posee una reserva a ese plan.");
 							}
 						}
-					}
+					//}
 				}
+				
+				
 			}
 		}
 		return retorno;
@@ -167,41 +169,58 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		
 	}
 	
-	public ArrayList<LocalTime> seleccionarFecha(LocalDate fecha, String idVacunatorio) throws VacunatorioNoCargadoException{
+	public ArrayList<LocalTime> seleccionarFecha(LocalDate fecha, String idVacunatorio, int idPlan, int idCiudadano) throws VacunatorioNoCargadoException, PlanVacunacionInexistente, UsuarioInexistente, EtapaInexistente{
 		ArrayList<LocalTime> libres = new ArrayList<LocalTime>();
 		ArrayList<LocalTime> retorno = new ArrayList<LocalTime>();
 		Vacunatorio v = em.find(Vacunatorio.class, idVacunatorio);
 		if (v == null)
 			throw new VacunatorioNoCargadoException("El vacunatorio no existe.");
 		else {
-			Agenda a = getAgendaFecha(v, fecha);
-			if (a==null) {
-				a = new Agenda(fecha);
-        		v.getAgenda().add(a);
-        		a.setVacunatorio(v);
-        		em.merge(v);
-        		//em.persist(a);
-			}
-			libres = calcularHorasSegunReglas(v.getReglasCupos());
-			retorno.addAll(libres);
-			
-			for (LocalTime lt: libres) {
-				ArrayList<Reserva> reservas = getReservasTurno(a, lt);
-				if (reservas.size() < v.getPuesto().size()) { //si tengo menos reservas a esa hora que puestos en el vacunatorio, tengo lugar
-					Puesto p = encontrarPuestoLibre(reservas, v.getPuesto());
-					if (p==null) //no deberia pasar
-						retorno.remove(lt);
-				}else {
-					retorno.remove(lt);
+			PlanVacunacion pv = em.find(PlanVacunacion.class, idPlan);
+			if (pv == null)
+				throw new PlanVacunacionInexistente("No existe ese plan.");
+			else {
+				if (pv.getEtapas().isEmpty())
+					throw new EtapaInexistente("No hay etapas de vacunación asociadas a ese plan.");
+				else {
+					Ciudadano c = em.find(Ciudadano.class, idCiudadano);
+					if (c == null) {
+						throw new UsuarioInexistente("El usuario seleccionado no existe.");
+					} else {
+						Agenda a = getAgendaFecha(v, fecha);
+						if (a==null) {
+							a = new Agenda(fecha);
+							libres = calcularHorasSegunReglas(v.getReglasCupos());
+							return libres;
+			        		//v.getAgenda().add(a);
+			        		//a.setVacunatorio(v);
+			        		//em.merge(v);
+			        		//em.persist(a);
+						}else {
+							libres = calcularHorasSegunReglas(v.getReglasCupos());
+							retorno.addAll(libres);
+							
+							for (LocalTime lt: libres) {
+								ArrayList<Reserva> reservas = getReservasTurno(a, lt);
+								if (reservas.size() < v.getPuesto().size()) { //si tengo menos reservas a esa hora que puestos en el vacunatorio, tengo lugar
+									Puesto p = encontrarPuestoLibre(reservas, v.getPuesto());
+									if (p==null) //no deberia pasar
+										retorno.remove(lt);
+								}else {
+									retorno.remove(lt);
+								}
+							}
+							return retorno;
+						}
+					}
 				}
 			}
-			return retorno;
 		}
 	}
 	// TODO: controlar stock, y condiciones de etapa
 	public void confirmarReserva(int idCiudadano, String idEnfermedad, int idPlan, String idVacunatorio,
 			LocalDate fecha, LocalTime hora)
-			throws UsuarioInexistente, PlanVacunacionInexistente, VacunatorioNoCargadoException, EnfermedadInexistente, CupoInexistente {
+			throws UsuarioInexistente, PlanVacunacionInexistente, VacunatorioNoCargadoException, EnfermedadInexistente, CupoInexistente, EtapaInexistente {
 		Ciudadano c = em.find(Ciudadano.class, idCiudadano);
 		if (c == null) {
 			throw new UsuarioInexistente("El usuario seleccionado no existe.");
@@ -218,38 +237,42 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 					if (v == null)
 						throw new VacunatorioNoCargadoException("El vacunatorio no existe.");
 					else {
-						
-						Etapa e = pv.getEtapas().get(0); // cambiar esto por condiciones
-						//Controlar el tema de las dosis (tambien agregar atributo tiempo en Vacuna)
-						for (Reserva r: c.getReservas()) {
-							if (r.getEtapa().getId()==e.getId()) {
-								throw new CupoInexistente("El usuario ya posee una reserva a ese plan.");
+						if (pv.getEtapas().isEmpty())
+							throw new EtapaInexistente("No hay etapas de vacunación asociadas a ese plan.");
+						else {
+							Etapa e = pv.getEtapas().get(0); // cambiar esto por condiciones
+							//Controlar el tema de las dosis (tambien agregar atributo tiempo en Vacuna)
+							for (Reserva r: c.getReservas()) {
+								if (r.getEtapa().getPlanVacunacion().getId()==pv.getId()) {
+									throw new CupoInexistente("El usuario ya posee una reserva a ese plan.");
+								}
+							}
+							Agenda a = getAgendaFecha(v, fecha);
+							if (a==null) {
+								a = new Agenda(fecha);
+				        		v.getAgenda().add(a);
+				        		a.setVacunatorio(v);
+				        		//em.merge(v);
+				        		//em.persist(a);
+				        		
+							}
+							
+							ArrayList<Reserva> reservas = getReservasTurno(a, hora);
+							if (reservas.size() < v.getPuesto().size()) { //si hay menos reservas para esa hora que puestos en el vacunatorio, entonces tengo lugar
+								Puesto p = encontrarPuestoLibre(reservas, v.getPuesto());
+								if (p==null) //no deberia pasar
+									throw new CupoInexistente("No hay cupos para esa hora.");
+								Reserva r = new Reserva(LocalDateTime.of(fecha, hora), EstadoReserva.EnProceso, e, c, p);
+								a.getReservas().add(r);
+								c.getReservas().add(r);
+								em.merge(c);
+								em.merge(v);
+								em.merge(r);
+							}else {
+								throw new CupoInexistente("No hay cupos para esa hora.");
 							}
 						}
-						Agenda a = getAgendaFecha(v, fecha);
-						if (a==null) {
-							a = new Agenda(fecha);
-			        		v.getAgenda().add(a);
-			        		a.setVacunatorio(v);
-			        		//em.merge(v);
-			        		//em.persist(a);
-			        		
-						}
 						
-						ArrayList<Reserva> reservas = getReservasTurno(a, hora);
-						if (reservas.size() < v.getPuesto().size()) { //si hay menos reservas para esa hora que puestos en el vacunatorio, entonces tengo lugar
-							Puesto p = encontrarPuestoLibre(reservas, v.getPuesto());
-							if (p==null) //no deberia pasar
-								throw new CupoInexistente("No hay cupos para esa hora.");
-							Reserva r = new Reserva(LocalDateTime.of(fecha, hora), EstadoReserva.EnProceso, e, c, p);
-							a.getReservas().add(r);
-							c.getReservas().add(r);
-							em.merge(c);
-							em.merge(v);
-							em.merge(r);
-						}else {
-							throw new CupoInexistente("No hay cupos para esa hora.");
-						}
 						
 
 						// si cuento la cantidad de reservas que apuntan a un puesto, y ese numero es

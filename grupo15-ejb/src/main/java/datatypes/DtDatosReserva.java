@@ -17,8 +17,8 @@ public class DtDatosReserva implements Serializable {
 	private String idEnfermedad;
 	private int idPlan;
 	private String idVacunatorio;
-	private Date fecha;
-	private Date hora;
+	private String fecha;
+	private String hora;
 	public int getIdCiudadano() {
 		return idCiudadano;
 	}
@@ -43,16 +43,16 @@ public class DtDatosReserva implements Serializable {
 	public void setIdVacunatorio(String idVacunatorio) {
 		this.idVacunatorio = idVacunatorio;
 	}
-	public Date getFecha() {
+	public String getFecha() {
 		return fecha;
 	}
-	public void setFecha(Date fecha) {
+	public void setFecha(String fecha) {
 		this.fecha = fecha;
 	}
-	public Date getHora() {
+	public String getHora() {
 		return hora;
 	}
-	public void setHora(Date hora) {
+	public void setHora(String hora) {
 		this.hora = hora;
 	}
 

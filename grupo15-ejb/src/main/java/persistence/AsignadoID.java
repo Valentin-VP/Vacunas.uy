@@ -1,12 +1,12 @@
 package persistence;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class AsignadoID implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Date fecha; // PK de asignado
+	private LocalDate fecha; // PK de asignado
 	private int vacunador; //PK de vacunador
 	private PuestoID puesto; // PK compuesta de puesto
 	
@@ -14,11 +14,11 @@ public class AsignadoID implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Date getFecha() {
+	public LocalDate getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(Date fecha) {
+	public void setFecha(LocalDate fecha) {
 		this.fecha = fecha;
 	}
 

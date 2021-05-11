@@ -1,14 +1,12 @@
 package entities;
 
-import java.util.Date;
+import java.time.LocalDate;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 import persistence.AsignadoID;
 
@@ -17,7 +15,7 @@ import persistence.AsignadoID;
 public class Asignado {
 	
 	@Id
-	private Date fecha;
+	private LocalDate fecha;
 	
 	@Id
 	@ManyToOne//(cascade = CascadeType.ALL)
@@ -34,18 +32,18 @@ public class Asignado {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Asignado(Date fecha, Vacunador vacunador, Puesto puesto) {
+	public Asignado(LocalDate fecha, Vacunador vacunador, Puesto puesto) {
 		super();
 		this.fecha = fecha;
 		this.vacunador = vacunador;
 		this.puesto = puesto;
 	}
 
-	public Date getFecha() {
+	public LocalDate getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(Date fecha) {
+	public void setFecha(LocalDate fecha) {
 		this.fecha = fecha;
 	}
 

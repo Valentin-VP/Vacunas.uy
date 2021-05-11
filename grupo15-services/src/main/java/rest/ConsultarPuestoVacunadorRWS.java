@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,7 +53,7 @@ public class ConsultarPuestoVacunadorRWS implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	
-	//2021-05-12
+	
 	@GET
 	@Path("/vac")
 	public Response listarVacunatorios(){
@@ -77,18 +78,20 @@ public class ConsultarPuestoVacunadorRWS implements Serializable {
 		}
 	}
 */
-	
+	//2021-05-12 
 	@GET
 	@Path("/asignado") //agregar fecha
-	public Response consultarPuestoVacunador(@QueryParam("user") int idVacunador, @QueryParam("vact") String idVacunatorio, @QueryParam("date") Date fecha){
+	public Response consultarPuestoVacunador(@QueryParam("user") int idVacunador, @QueryParam("vact") String idVacunatorio, @QueryParam("date") String fecha){
 		if (idVacunatorio==null || fecha==null) {
 			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
 			return rb.build();
 		}
 		try {
-			LocalDate f = LocalDate.from(fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-			Date nuevaFecha = Date.from(f.atStartOfDay(ZoneId.systemDefault()).toInstant());
-			return Response.ok(vs.consultarPuestoAsignadoVacunador(idVacunador, idVacunatorio, nuevaFecha)).build();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDate f = LocalDate.parse(fecha, formatter);
+			//LocalDate f = LocalDate.from(fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+			//Date nuevaFecha = Date.from(f.atStartOfDay(ZoneId.systemDefault()).toInstant());
+			return Response.ok(vs.consultarPuestoAsignadoVacunador(idVacunador, idVacunatorio, f)).build();
 		} catch (VacunatorioNoCargadoException | UsuarioInexistente | VacunadorSinAsignar e) {
 			return Response.serverError().entity(new ErrorInfo(400, e.getMessage())).status(400).build();
 			//return Response.serverError().entity(e.getMessage()).status(400).build();

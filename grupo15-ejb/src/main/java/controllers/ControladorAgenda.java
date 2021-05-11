@@ -148,7 +148,7 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 			for (Reserva r: temp.getReservas()) {
 				dtr.add(r.getDtReserva());
 			}
-			DtAgenda retorno = new DtAgenda(temp.getFecha(), dtr);
+			//DtAgenda retorno = new DtAgenda(temp.getFecha(), dtr);
 
 			return dtr;
 		}else

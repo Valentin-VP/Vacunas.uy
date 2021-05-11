@@ -42,7 +42,7 @@ public class ConsultarAgendaVacunacionRWS {
 		}
 	}
 */
-	
+	 //.... ordenar fechas
 	@GET
 	@Path("/consultar/{vact}") //quitar fecha (es .now())
 	public Response consultarAgendaVacunacion(@PathParam("vact") String idVacunatorio){
