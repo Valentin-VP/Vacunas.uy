@@ -8,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import datatypes.DtDireccion;
 import datatypes.Sexo;
@@ -22,7 +23,8 @@ public class Ciudadano extends Usuario {
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Reserva> reservas = new ArrayList<>();
-	
+	@OneToOne (cascade = CascadeType.ALL)
+	CertificadoVacunacion certificado;
 	public Ciudadano() {
 		super();
 	}
@@ -56,6 +58,14 @@ public class Ciudadano extends Usuario {
 
 	public void setReservas(List<Reserva> reservas) {
 		this.reservas = reservas;
+	}
+
+	public CertificadoVacunacion getCertificado() {
+		return certificado;
+	}
+
+	public void setCertificado(CertificadoVacunacion certificado) {
+		this.certificado = certificado;
 	}
 	
 	

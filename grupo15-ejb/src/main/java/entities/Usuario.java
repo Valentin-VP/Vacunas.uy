@@ -31,8 +31,7 @@ public abstract class Usuario {
 	private DtDireccion direccion;
 	private Sexo sexo;
 	
-	@OneToOne 
-	CertificadoVacunacion certificado;
+
 	
 	
 	public Usuario() {
@@ -108,7 +107,7 @@ public abstract class Usuario {
 	public void setFechaNac(Date fechaNac) {
 		this.fechaNac = fechaNac;
 	}
-
+/*
 	public CertificadoVacunacion getCertificado() {
 		return certificado;
 	}
@@ -116,7 +115,7 @@ public abstract class Usuario {
 	public void setCertificado(CertificadoVacunacion certificado) {
 		this.certificado = certificado;
 	}
-
+*/
 	
 	
 }

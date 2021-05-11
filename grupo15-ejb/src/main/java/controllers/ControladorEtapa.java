@@ -12,12 +12,16 @@ import javax.persistence.Query;
 import datatypes.DtEtapa;
 import entities.Etapa;
 import entities.PlanVacunacion;
+import entities.Vacuna;
 import exceptions.EtapaInexistente;
 import exceptions.EtapaRepetida;
 import exceptions.PlanVacunacionInexistente;
+import interfaces.IEtapaLocal;
+import interfaces.IEtapaRemote;
+import persistence.EtapaID;
 
 @Stateless
-public class ControladorEtapa {
+public class ControladorEtapa implements IEtapaLocal, IEtapaRemote{
 
 	public ControladorEtapa() {
 		
@@ -27,10 +31,12 @@ public class ControladorEtapa {
 	private EntityManager em;
 	
 	public void agregarEtapa(int idEtapa, Date fIni, Date fFin, String cond, int idPlan, String nombreVacuna) throws EtapaRepetida, PlanVacunacionInexistente {
-		if(em.find(Etapa.class, idEtapa) == null) {
+		if(em.find(Etapa.class, new EtapaID(idEtapa, idPlan)) == null) {
 			PlanVacunacion pV = em.find(PlanVacunacion.class, idPlan);
 			if(pV != null) {
 				Etapa etapa = new Etapa(idEtapa, fIni, fFin, cond, pV);
+				Vacuna v = em.find(Vacuna.class, nombreVacuna);
+				etapa.setVacuna(v);
 				em.persist(etapa);
 				pV.addEtapa(etapa);
 				 em.persist(pV);

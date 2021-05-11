@@ -116,7 +116,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 	}
 
 	
-	public ArrayList<DtEtapa> seleccionarPlanVacunacion(int idPlan) throws PlanVacunacionInexistente, EtapaInexistente{
+	public ArrayList<DtEtapa> seleccionarPlanVacunacion(int idPlan, int idUser) throws PlanVacunacionInexistente, EtapaInexistente{
 		ArrayList<DtEtapa> retorno = new ArrayList<DtEtapa>();
 		PlanVacunacion pv = em.find(PlanVacunacion.class, idPlan);
 		if (pv == null)
@@ -127,6 +127,18 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 			else {
 				for (Etapa e: pv.getEtapas()) {
 					retorno.add(new DtEtapa(e.getId(), e.getFechaInicio(), e.getFechaFin(), pv.toDtPlanVacunacion()));
+				}
+				Ciudadano c = em.find(Ciudadano.class, idUser);
+				if (c==null) {
+					throw new EtapaInexistente("El usuario no existe.");
+				}else {
+					for (DtEtapa e: retorno) {
+						for (Reserva r: c.getReservas()) {
+							if (r.getEtapa().getId()==e.getId()) {
+								throw new EtapaInexistente("El usuario ya posee una reserva a ese plan.");
+							}
+						}
+					}
 				}
 			}
 		}
@@ -166,8 +178,9 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 			if (a==null) {
 				a = new Agenda(fecha);
         		v.getAgenda().add(a);
+        		a.setVacunatorio(v);
         		em.merge(v);
-        		em.persist(a);
+        		//em.persist(a);
 			}
 			libres = calcularHorasSegunReglas(v.getReglasCupos());
 			retorno.addAll(libres);
@@ -205,11 +218,24 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 					if (v == null)
 						throw new VacunatorioNoCargadoException("El vacunatorio no existe.");
 					else {
-
+						
 						Etapa e = pv.getEtapas().get(0); // cambiar esto por condiciones
-
+						//Controlar el tema de las dosis (tambien agregar atributo tiempo en Vacuna)
+						for (Reserva r: c.getReservas()) {
+							if (r.getEtapa().getId()==e.getId()) {
+								throw new CupoInexistente("El usuario ya posee una reserva a ese plan.");
+							}
+						}
 						Agenda a = getAgendaFecha(v, fecha);
-
+						if (a==null) {
+							a = new Agenda(fecha);
+			        		v.getAgenda().add(a);
+			        		a.setVacunatorio(v);
+			        		//em.merge(v);
+			        		//em.persist(a);
+			        		
+						}
+						
 						ArrayList<Reserva> reservas = getReservasTurno(a, hora);
 						if (reservas.size() < v.getPuesto().size()) { //si hay menos reservas para esa hora que puestos en el vacunatorio, entonces tengo lugar
 							Puesto p = encontrarPuestoLibre(reservas, v.getPuesto());
@@ -218,9 +244,9 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 							Reserva r = new Reserva(LocalDateTime.of(fecha, hora), EstadoReserva.EnProceso, e, c, p);
 							a.getReservas().add(r);
 							c.getReservas().add(r);
-							em.merge(a);
 							em.merge(c);
-							em.persist(r);
+							em.merge(v);
+							em.merge(r);
 						}else {
 							throw new CupoInexistente("No hay cupos para esa hora.");
 						}
@@ -457,8 +483,9 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		LocalTime hora = LocalTime.from(rc.getHoraApertura());
 		horas.add(hora);
 		for (int i=1; i<turnosTotales; i++) {
-			horas.add(hora.plusMinutes(turno));
+			horas.add(hora.plusMinutes(turno*i));
 		}
 		return horas;
 	}
+
 }

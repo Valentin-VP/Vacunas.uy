@@ -11,7 +11,17 @@ public class EtapaID implements Serializable {
     public EtapaID() {
     }
 
-    public int getId() {
+    
+    
+    public EtapaID(int id, int planVacunacion) {
+		super();
+		this.id = id;
+		this.planVacunacion = planVacunacion;
+	}
+
+
+
+	public int getId() {
         return id;
     }
 

@@ -94,10 +94,10 @@ public class AltaReservaRWS implements Serializable {
 	}
 	
 	@GET
-	@Path("/pv/{p}")
-	public ArrayList<DtEtapa> seleccionarPlan(@PathParam("p") int plan){
+	@Path("/pv")
+	public ArrayList<DtEtapa> seleccionarPlan(@QueryParam("p") int plan, @QueryParam("u") int user){
 		try {
-			return rs.seleccionarPlanVacunacion(plan);
+			return rs.seleccionarPlanVacunacion(plan, user);
 		} catch (PlanVacunacionInexistente | EtapaInexistente e) {
 			return null;
 		}

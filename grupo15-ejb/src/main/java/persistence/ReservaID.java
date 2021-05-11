@@ -1,16 +1,29 @@
 package persistence;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 public class ReservaID implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	private LocalDateTime fechaRegistro;
 	private EtapaID etapa;
 	private int ciudadano;
-	
+	public ReservaID(LocalDateTime fechaRegistro, EtapaID etapa, int ciudadano) {
+		super();
+		this.fechaRegistro = fechaRegistro;
+		this.etapa = etapa;
+		this.ciudadano = ciudadano;
+	}
 	public ReservaID() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+	public LocalDateTime getFechaRegistro() {
+		return fechaRegistro;
+	}
+	public void setFechaRegistro(LocalDateTime fechaRegistro) {
+		this.fechaRegistro = fechaRegistro;
 	}
 	public EtapaID getEtapa() {
 		return etapa;
@@ -30,6 +43,7 @@ public class ReservaID implements Serializable {
 		int result = 1;
 		result = prime * result + ciudadano;
 		result = prime * result + ((etapa == null) ? 0 : etapa.hashCode());
+		result = prime * result + ((fechaRegistro == null) ? 0 : fechaRegistro.hashCode());
 		return result;
 	}
 	@Override
@@ -48,8 +62,14 @@ public class ReservaID implements Serializable {
 				return false;
 		} else if (!etapa.equals(other.etapa))
 			return false;
+		if (fechaRegistro == null) {
+			if (other.fechaRegistro != null)
+				return false;
+		} else if (!fechaRegistro.equals(other.fechaRegistro))
+			return false;
 		return true;
 	}
 	
+
 	
 }

@@ -12,6 +12,16 @@ public class PuestoID implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
+	
+	
+	public PuestoID(String id, String vacunatorio) {
+		super();
+		this.id = id;
+		this.vacunatorio = vacunatorio;
+	}
+
+
+
 	public String getId() {
 		return id;
 	}

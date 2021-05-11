@@ -40,7 +40,7 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
     }
     
     public void agregarConstanciaVacuna(String vacuna, int periodoInmunidad, int dosisRecibidas, LocalDate fechaUltimaDosis, int idUser, int idEtapa) throws UsuarioExistente, ReservaInexistente, CertificadoInexistente {
-    	Usuario u = em.find(Usuario.class, idUser);
+    	Ciudadano u = em.find(Ciudadano.class, idUser);
     	if (u==null)
     		throw new UsuarioExistente("No existe ese usuario.");
     	else {
@@ -68,7 +68,7 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
     	if (cv==null)
     		throw new ConstanciaInexistente("No existe una constancia con ese ID.");
     	else {
-	    	Usuario u = em.find(Usuario.class, idUser);
+    		Ciudadano u = em.find(Ciudadano.class, idUser);
 	    	if (u==null)
 	    		throw new UsuarioExistente("No existe ese usuario.");
 	    	else{

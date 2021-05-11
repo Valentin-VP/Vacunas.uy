@@ -25,6 +25,7 @@ public class Reserva implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -3497082720868854723L;
+	@Id
 	private LocalDateTime fechaRegistro;
 	@Enumerated(EnumType.STRING)
 	private EstadoReserva estado;
@@ -44,8 +45,8 @@ public class Reserva implements Serializable{
 	private Ciudadano ciudadano;
 	
 	@ManyToOne
-	@JoinColumn(insertable=false,updatable=false, referencedColumnName="id")
-	@JoinColumn(insertable=false,updatable=false, referencedColumnName="vacunatorio_id")
+	//@JoinColumn(insertable=false,updatable=false, referencedColumnName="id")
+	//@JoinColumn(insertable=false,updatable=false, referencedColumnName="vacunatorio_id")
 	private Puesto puesto;
 	
 	public Reserva() {

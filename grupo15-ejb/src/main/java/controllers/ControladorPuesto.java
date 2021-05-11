@@ -1,8 +1,8 @@
 package controllers;
 
 import java.util.ArrayList;
-
 import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,14 +10,15 @@ import javax.persistence.Query;
 
 import datatypes.DtPuesto;
 import datatypes.DtVacunatorio;
-import interfaces.IControladorPuestoLocal;
-import interfaces.IControladorPuestoRemote;
 import entities.Puesto;
 import entities.Vacunatorio;
 import exceptions.PuestoCargadoException;
 import exceptions.PuestoNoCargadoException;
 import exceptions.PuestoNoCargadosException;
 import exceptions.VacunatorioNoCargadoException;
+import interfaces.IControladorPuestoLocal;
+import interfaces.IControladorPuestoRemote;
+import persistence.PuestoID;
 
 @Stateless
 public class ControladorPuesto implements IControladorPuestoLocal, IControladorPuestoRemote {
@@ -26,7 +27,7 @@ public class ControladorPuesto implements IControladorPuestoLocal, IControladorP
 
 	public void agregarPuesto(String id, String vacunatorio) throws PuestoCargadoException, VacunatorioNoCargadoException {
 
-		Puesto puesto = em.find(Puesto.class, id);
+		Puesto puesto = em.find(Puesto.class, new PuestoID(id, vacunatorio));
 		
 
 		if (puesto == null) {

@@ -53,6 +53,7 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
         			throw new AgendaRepetida("Ya existe una agenda para ese día.");
         		}*/
         		Agenda a = new Agenda(fecha);
+        		a.setVacunatorio(v);
         		v.getAgenda().add(a);
         		/*
         		List<Cupo> listCupos= new ArrayList<Cupo>();
@@ -84,7 +85,7 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
         		*/
         		
         		em.merge(v);
-        		em.persist(a);
+        		//em.persist(a);
         		//for (Cupo c: a.getCupos())
         		//	em.merge(c);
         		
