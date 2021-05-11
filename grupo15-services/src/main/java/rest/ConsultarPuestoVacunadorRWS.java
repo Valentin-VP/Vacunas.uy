@@ -21,6 +21,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import datatypes.DtAsignado;
+import datatypes.ErrorInfo;
 import exceptions.UsuarioInexistente;
 import exceptions.VacunadorSinAsignar;
 import exceptions.VacunatorioNoCargadoException;
@@ -69,7 +70,7 @@ public class ConsultarPuestoVacunadorRWS implements Serializable {
 			Date nuevaFecha = Date.from(f.atStartOfDay(ZoneId.systemDefault()).toInstant());
 			return Response.ok(vs.consultarPuestoAsignadoVacunador(idVacunador, idVacunatorio, nuevaFecha)).build();
 		} catch (VacunatorioNoCargadoException | UsuarioInexistente | VacunadorSinAsignar e) {
-			throw new WebApplicationException(e.getMessage());
+			return Response.serverError().entity(new ErrorInfo(400, e.getMessage())).status(400).build();
 			//return Response.serverError().entity(e.getMessage()).status(400).build();
 			//ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
 			//return rb.entity(e.getMessage()).build();

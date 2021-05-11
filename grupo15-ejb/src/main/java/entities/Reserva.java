@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -106,9 +107,15 @@ public class Reserva implements Serializable{
 	}
 	
 	public DtReserva getDtReserva() {
-		return new DtReserva(Date.from(Instant.from(this.getFechaRegistro().atZone(ZoneId.systemDefault()))), this.getEstado(),
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+		return new DtReserva(this.getFechaRegistro().format(formatter), this.getEstado(),
 				this.getEtapa().getPlanVacunacion().getNombre() + " " + this.getEtapa().getCondicion(),
 				this.getEtapa().getVacuna().getNombre(),
 				this.getCiudadano().getNombre() + " " + this.getCiudadano().getApellido(), this.getPuesto().getId());
+		
+		//return new DtReserva(Date.from(Instant.from(this.getFechaRegistro().atZone(ZoneId.systemDefault()))), this.getEstado(),
+		//		this.getEtapa().getPlanVacunacion().getNombre() + " " + this.getEtapa().getCondicion(),
+		//		this.getEtapa().getVacuna().getNombre(),
+		///		this.getCiudadano().getNombre() + " " + this.getCiudadano().getApellido(), this.getPuesto().getId());		
 	}
 }

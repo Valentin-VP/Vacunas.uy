@@ -136,7 +136,7 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
     	}
     }
 	
-	public DtAgenda obtenerAgenda(String vacunatorio, LocalDate fecha) throws AgendaInexistente {
+	public ArrayList<DtReserva> obtenerAgenda(String vacunatorio, LocalDate fecha) throws AgendaInexistente {
 		Agenda temp = em.find(Agenda.class, new AgendaID(LocalDate.now(), vacunatorio));
 		
 		if (temp!=null) {
@@ -144,13 +144,13 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 			for (Cupo c: temp.getCupos()) {
 				dtc.add(new DtCupo(c.getIdCupo(), c.isOcupado(), c.getAgenda().getIdAgenda()));
 			}*/
-			List<DtReserva> dtr= new ArrayList<DtReserva>();
+			ArrayList<DtReserva> dtr= new ArrayList<DtReserva>();
 			for (Reserva r: temp.getReservas()) {
 				dtr.add(r.getDtReserva());
 			}
 			DtAgenda retorno = new DtAgenda(temp.getFecha(), dtr);
 
-			return retorno;
+			return dtr;
 		}else
 			throw new AgendaInexistente("No hay una agenda en esa fecha en ese vacunatorio.");
 	}

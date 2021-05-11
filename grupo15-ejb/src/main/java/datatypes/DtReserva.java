@@ -11,7 +11,7 @@ public class DtReserva implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 4541370995128297208L;
-	private Date fecha;
+	private String fecha;
 	private EstadoReserva estado;
 	private String etapa;
 	private String vacuna;
@@ -21,7 +21,7 @@ public class DtReserva implements Serializable {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public DtReserva(Date fecha, EstadoReserva estado, String etapa, String vacuna, String usuario, String puesto) {
+	public DtReserva(String fecha, EstadoReserva estado, String etapa, String vacuna, String usuario, String puesto) {
 		super();
 		this.fecha = fecha;
 		this.estado = estado;
@@ -30,10 +30,10 @@ public class DtReserva implements Serializable {
 		this.usuario = usuario;
 		this.puesto = puesto;
 	}
-	public Date getFecha() {
+	public String getFecha() {
 		return fecha;
 	}
-	public void setFecha(Date fecha) {
+	public void setFecha(String fecha) {
 		this.fecha = fecha;
 	}
 	public EstadoReserva getEstado() {
