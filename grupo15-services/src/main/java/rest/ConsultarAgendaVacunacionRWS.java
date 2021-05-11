@@ -10,6 +10,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
@@ -51,14 +52,14 @@ public class ConsultarAgendaVacunacionRWS {
 */
 	
 	@GET
-	@Path("/consultar") //quitar fecha (es .now())
-	public Response consultarAgendaVacunacion(@QueryParam("date") Date fecha, @QueryParam("vact") String idVacunatorio){
-		if (idVacunatorio==null || fecha==null) {
+	@Path("/consultar/{vact}") //quitar fecha (es .now())
+	public Response consultarAgendaVacunacion(@PathParam("vact") String idVacunatorio){
+		if (idVacunatorio==null) {
 			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
 			return rb.build();
 		}
 		try {
-			return Response.ok(as.obtenerAgenda(idVacunatorio, LocalDate.from(fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()))).build();
+			return Response.ok(as.obtenerAgenda(idVacunatorio, LocalDate.now())).build();
 		} catch (DateTimeException | AgendaInexistente e) {
 			//throw new WebApplicationException(e.getMessage());
 			return Response.serverError().entity(new ErrorInfo(400, e.getMessage())).status(400).build();

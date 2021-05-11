@@ -137,7 +137,7 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
     }
 	
 	public DtAgenda obtenerAgenda(String vacunatorio, LocalDate fecha) throws AgendaInexistente {
-		Agenda temp = em.find(Agenda.class, new AgendaID(fecha, vacunatorio));
+		Agenda temp = em.find(Agenda.class, new AgendaID(LocalDate.now(), vacunatorio));
 		
 		if (temp!=null) {
 			/*List<DtCupo> dtc= new ArrayList<DtCupo>();
