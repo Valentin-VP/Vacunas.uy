@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.Temporal;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.ejb.EJB;
@@ -21,11 +22,14 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import datatypes.DtAsignado;
+import datatypes.DtVacunatorio;
 import datatypes.ErrorInfo;
 import exceptions.UsuarioInexistente;
 import exceptions.VacunadorSinAsignar;
 import exceptions.VacunatorioNoCargadoException;
+import exceptions.VacunatoriosNoCargadosException;
 import interfaces.IControladorVacunadorLocal;
+import interfaces.IControladorVacunatorioLocal;
 
 @SessionScoped
 @Path("/puestovac")
@@ -39,11 +43,27 @@ public class ConsultarPuestoVacunadorRWS implements Serializable {
 	@EJB
 	IControladorVacunadorLocal vs;
 	
+	@EJB
+	IControladorVacunatorioLocal vacs;
+	
 	private static final long serialVersionUID = 1L;
 
 	public ConsultarPuestoVacunadorRWS() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	//2021-05-12
+	@GET
+	@Path("/vac")
+	public Response listarVacunatorios(){
+		try {
+			return Response.ok(vacs.listarVacunatorio()).status(200).build();
+		} catch (VacunatoriosNoCargadosException e) {
+			return Response.serverError().entity(new ErrorInfo(400, e.getMessage())).status(400).build();
+		}
+
+	}
+	
 	/*
 	@GET
 	@Path("/asignado") //agregar fecha
