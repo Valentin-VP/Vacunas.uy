@@ -20,12 +20,12 @@ public class Asignado {
 	private Date fecha;
 	
 	@Id
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne//(cascade = CascadeType.ALL)
 	@JoinColumn(insertable=false, updatable=false, referencedColumnName="idusuario")
 	private Vacunador vacunador;
 	
 	@Id
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne//(cascade = CascadeType.ALL)
 	@JoinColumn(insertable=false, updatable=false, referencedColumnName="id")
 	@JoinColumn(insertable=false, updatable=false, referencedColumnName="vacunatorio_id")
 	private Puesto puesto;
