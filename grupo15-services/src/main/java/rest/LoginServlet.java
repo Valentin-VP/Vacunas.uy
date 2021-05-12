@@ -19,31 +19,31 @@ public class LoginServlet extends HttpServlet {
 	// Se agrega serializacion
 	private static final long serialVersionUID = 1L;
 	private final Auth0AuthenticationConfig config;
-    private final AuthenticationController authenticationController;
     private final Logger LOGGER = Logger.getLogger(getClass().getName());
     @Inject
-    LoginServlet(Auth0AuthenticationConfig config, AuthenticationController authenticationController) {
+    LoginServlet(Auth0AuthenticationConfig config) {
         this.config = config;
-        this.authenticationController = authenticationController;
     }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // URL where the application will receive the authorization code (e.g., http://localhost:3000/callback)
-//        String callbackUrl = String.format(
-//                "%s://%s:%s/grupo15-services/callback",
-//                request.getScheme(),
-//                request.getServerName(),
-//                request.getServerPort()
-//        );
-    	String callbackUrl = "https://openidconnect.net/callback";
-        LOGGER.severe("Test log message with callbackUrl: " + callbackUrl);
+        // URL donde la app recibira el authorization code (e.g., http://localhost:3000/callback)
+    	String authorizationUri = config.getAuthorizeEndpoint();
+    	String clientId = config.getClientId();
+    	String redirectUri = config.getRedirect_uri();
+    	String scope = config.getOpenid();
+        LOGGER.severe("Test log message with callbackUrl: " + redirectUri);
         // Create the authorization URL to redirect the user to, to begin the authentication flow.
-        String authURL = authenticationController.buildAuthorizeUrl(request, response, callbackUrl)
-        		.withParameter("openid", config.getOpenid())
-        		//.withParameter("response_type", config.getResponse_type())
-                //.withScope(config.getScope())
-                .build();
+		/*
+		 * String authURL = authenticationController.buildAuthorizeUrl(request,
+		 * response, callbackUrl) .withParameter("openid", config.getOpenid())
+		 * //.withParameter("response_type", config.getResponse_type())
+		 * //.withScope(config.getScope()) .build();
+		 */
+        String authURL = authorizationUri + "?response_type=code"
+        		  + "&client_id=" + clientId
+        		  + "&redirect_uri=" + redirectUri
+        		  + "&scope=" + scope;
 
         response.sendRedirect(authURL);
     }
