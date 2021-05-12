@@ -122,7 +122,7 @@ public class InitTest {
 			etapa.agregarEtapa(2, Date.from(Instant.now()), Date.from(Instant.now()), "25|80", 1, "vacuna1paraVirus1");
 			etapa.agregarEtapa(3, Date.from(Instant.now()), Date.from(Instant.now()), "18|50", 2, "vacuna1paraVirus1");
 			
-			agd.agregarAgenda("vact1", LocalDate.now());
+			//agd.agregarAgenda("vact1", LocalDate.now());
 			
 			cert.agregarCertificadoVacunacion(21111111, new ArrayList<DtConstancia>());
 			cert.agregarCertificadoVacunacion(21111112, new ArrayList<DtConstancia>());
@@ -134,7 +134,7 @@ public class InitTest {
 			
 			vc.asignarVacunadorAVacunatorio(11111111, "vact1", LocalDate.now());
 			
-		} catch (EnfermedadRepetida | VacunatorioCargadoException | UsuarioExistente | LaboratorioRepetido | TransportistaRepetido | VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | PlanVacunacionRepetido | EtapaRepetida | PlanVacunacionInexistente | VacunatorioNoCargadoException | ReglasCuposCargadoException | AgendaRepetida | CupoInexistente | CertificadoRepetido | ConstanciaInexistente | PuestoCargadoException | UsuarioInexistente | SinPuestosLibres | FechaIncorrecta e) {
+		} catch (EnfermedadRepetida | VacunatorioCargadoException | UsuarioExistente | LaboratorioRepetido | TransportistaRepetido | VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | PlanVacunacionRepetido | EtapaRepetida | PlanVacunacionInexistente | VacunatorioNoCargadoException | ReglasCuposCargadoException | CertificadoRepetido | ConstanciaInexistente | PuestoCargadoException | UsuarioInexistente | SinPuestosLibres | FechaIncorrecta e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
