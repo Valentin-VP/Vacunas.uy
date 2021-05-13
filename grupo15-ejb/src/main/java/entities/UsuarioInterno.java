@@ -11,7 +11,7 @@ import datatypes.Rol;
 import datatypes.Sexo;
 
 @Entity
-@DiscriminatorValue("UI")
+@DiscriminatorValue("interno")
 public class UsuarioInterno extends Usuario{
 
 	private String password;

@@ -15,7 +15,7 @@ import datatypes.DtDireccion;
 import datatypes.Sexo;
 
 @Entity
-@DiscriminatorValue("C")
+@DiscriminatorValue("ciudadano")
 public class Ciudadano extends Usuario {
 
 

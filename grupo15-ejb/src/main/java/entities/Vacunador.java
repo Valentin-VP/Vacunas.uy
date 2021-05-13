@@ -17,7 +17,7 @@ import datatypes.DtDireccion;
 import datatypes.Sexo;
 
 @Entity
-@DiscriminatorValue("V")
+@DiscriminatorValue("vacunador")
 public class Vacunador extends Usuario {
 
 	@ManyToMany (cascade = CascadeType.ALL)
