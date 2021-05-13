@@ -1,5 +1,6 @@
 package interfaces;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -15,13 +16,13 @@ import exceptions.VacunaRepetida;
 @Local
 public interface IControladorVacunaLocal {
 
-	public void agregarVacuna(String nombre, Integer cantDosis, int dia, int mes, int anio, String laboratorio, String enfermedad)throws VacunaRepetida, LaboratorioInexistente, EnfermedadInexistente;
+	public void agregarVacuna(String nombre, int cantDosis, int tiempoEntreDosis, int dia, int mes, int anio, String laboratorio, String enfermedad) throws VacunaRepetida , LaboratorioInexistente, EnfermedadInexistente;
 	
 	public ArrayList<DtVacuna> listarVacunas()throws VacunaInexistente;
 	
 	public DtVacuna obtenerVacuna(String nombre)throws VacunaInexistente;
 	
-	public void modificarVacuna(String nombre, int cantDosis, Date expira, Laboratorio laboratorio, Enfermedad enfermedad) throws VacunaInexistente;
+	public void modificarVacuna(String nombre, int cantDosis, LocalDate expira, int tiempoEntreDosis, Laboratorio laboratorio, Enfermedad enfermedad) throws VacunaInexistente;
 	
 	public void eliminarVacuna(String nombre) throws VacunaInexistente;
 }

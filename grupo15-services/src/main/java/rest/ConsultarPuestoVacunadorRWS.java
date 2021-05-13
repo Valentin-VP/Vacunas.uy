@@ -60,7 +60,7 @@ public class ConsultarPuestoVacunadorRWS implements Serializable {
 		try {
 			return Response.ok(vacs.listarVacunatorio()).status(200).build();
 		} catch (VacunatoriosNoCargadosException e) {
-			return Response.serverError().entity(new ErrorInfo(400, e.getMessage())).status(400).build();
+			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
 		}
 
 	}
@@ -93,7 +93,7 @@ public class ConsultarPuestoVacunadorRWS implements Serializable {
 			//Date nuevaFecha = Date.from(f.atStartOfDay(ZoneId.systemDefault()).toInstant());
 			return Response.ok(vs.consultarPuestoAsignadoVacunador(idVacunador, idVacunatorio, f)).build();
 		} catch (VacunatorioNoCargadoException | UsuarioInexistente | VacunadorSinAsignar e) {
-			return Response.serverError().entity(new ErrorInfo(400, e.getMessage())).status(400).build();
+			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
 			//return Response.serverError().entity(e.getMessage()).status(400).build();
 			//ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
 			//return rb.entity(e.getMessage()).build();

@@ -229,7 +229,7 @@ public class AltaReservaRWS implements Serializable {
 			return Response.ok().build();
 		} catch (DateTimeException | UsuarioInexistente | PlanVacunacionInexistente | VacunatorioNoCargadoException | EnfermedadInexistente
 				| CupoInexistente | EtapaInexistente e) {
-			return Response.serverError().entity(new ErrorInfo(400, e.getMessage())).status(400).build();
+			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
 		}
 	}
 	

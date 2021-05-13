@@ -1,5 +1,6 @@
 package entities;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +31,7 @@ public class Vacunador extends Usuario {
 		super();
 	}
 	
-	public Vacunador( int IdUsuario, String nombre, String apellido, Date fechaNac, String email, DtDireccion direccion, Sexo sexo) {
+	public Vacunador( int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo) {
 		super(IdUsuario, nombre, apellido, fechaNac, email, direccion, sexo);
 	
 	}

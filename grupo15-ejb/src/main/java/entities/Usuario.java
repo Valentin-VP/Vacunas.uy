@@ -1,16 +1,11 @@
 package entities;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import datatypes.DtDireccion;
 import datatypes.Sexo;
@@ -26,7 +21,7 @@ public abstract class Usuario {
 
 	private String nombre;
 	private String apellido;
-	private Date fechaNac;
+	private LocalDate fechaNac;
 	private String email;
 	private DtDireccion direccion;
 	private Sexo sexo;
@@ -38,7 +33,7 @@ public abstract class Usuario {
 		super();
 	}
 
-	public Usuario( int IdUsuario, String nombre, String apellido, Date fechaNac, String email, DtDireccion direccion, Sexo sexo) {
+	public Usuario( int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo) {
 		super();
 		this.idUsuario = IdUsuario;
 		this.nombre = nombre;
@@ -88,7 +83,7 @@ public abstract class Usuario {
 	}
 	
 	
-	public Date getFechaNac() {
+	public LocalDate getFechaNac() {
 		return fechaNac;
 	}
 
@@ -104,7 +99,7 @@ public abstract class Usuario {
 		this.apellido = apellido;
 	}
 
-	public void setFechaNac(Date fechaNac) {
+	public void setFechaNac(LocalDate fechaNac) {
 		this.fechaNac = fechaNac;
 	}
 /*

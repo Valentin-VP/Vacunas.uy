@@ -1,5 +1,6 @@
 package controllers;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,18 +36,18 @@ public class ControladorVacuna implements IControladorVacunaLocal, IControladorV
 	@PersistenceContext(name = "test")
 	private EntityManager em;
 	
-	public void agregarVacuna(String nombre, Integer cantDosis, int dia, int mes, int anio, String laboratorio, String enfermedad) throws VacunaRepetida , LaboratorioInexistente, EnfermedadInexistente{
+	public void agregarVacuna(String nombre, int cantDosis, int tiempoEntreDosis, int dia, int mes, int anio, String laboratorio, String enfermedad) throws VacunaRepetida , LaboratorioInexistente, EnfermedadInexistente{
 		if(em.find(Vacuna.class, nombre) == null) {
-			Calendar result = new GregorianCalendar();
-            result.set(anio, mes, dia, 0, 0, 0);
-            Date f = result.getTime();
+			//Calendar result = new GregorianCalendar();
+            //result.set(anio, mes, dia, 0, 0, 0);
+            LocalDate f = LocalDate.of(anio, mes, dia);
             Laboratorio lab = em.find(Laboratorio.class, laboratorio);
             if(lab == null) //controla que exista el laboratorio
             	throw new LaboratorioInexistente("No existe una laboratorio con ese nombre");
             Enfermedad enf = em.find(Enfermedad.class, enfermedad);
             if(enf == null) //controla que exista la enfermedad
             	throw new EnfermedadInexistente("No existe una enfermedad con ese nombre");
-            Vacuna vac = new Vacuna(nombre, cantDosis, f, lab, enf);
+            Vacuna vac = new Vacuna(nombre, cantDosis, f, tiempoEntreDosis, lab, enf);
 			em.persist(vac);
 		}else {
 			throw new VacunaRepetida("Ya existe una Vacuna con ese nombre");
@@ -86,13 +87,14 @@ public class ControladorVacuna implements IControladorVacunaLocal, IControladorV
 			throw new VacunaInexistente("No existe una vacuna con ese nombre");
 	}
 	
-	public void modificarVacuna(String nombre, int cantDosis, Date expira, Laboratorio laboratorio, Enfermedad enfermedad) throws VacunaInexistente {
+	public void modificarVacuna(String nombre, int cantDosis, LocalDate expira, int tiempoEntreDosis, Laboratorio laboratorio, Enfermedad enfermedad) throws VacunaInexistente {
 		Vacuna vac = em.find(Vacuna.class, nombre);
 		if(vac != null) {
 			vac.setCantDosis(cantDosis);
 			vac.setExpira(expira);
 			vac.setLaboratorio(laboratorio);
 			vac.setEnfermedad(enfermedad);
+			vac.setTiempoEntreDosis(tiempoEntreDosis);
 			em.persist(vac);
 		}else
 			throw new VacunaInexistente("No existe una vacuna con ese nombre");

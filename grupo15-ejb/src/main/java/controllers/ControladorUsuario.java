@@ -1,5 +1,6 @@
 package controllers;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -86,7 +87,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal{
 		}
 
 		@Override
-		public void agregarUsuarioVacunador(int IdUsuario, String nombre, String apellido, Date fechaNac, String email, DtDireccion direccion, Sexo sexo) throws UsuarioExistente {
+		public void agregarUsuarioVacunador(int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo) throws UsuarioExistente {
 				//ManejadorUsuario mu = ManejadorUsuario.getInstancia();
 				
 				if (em.find(Vacunador.class,IdUsuario) != null) {
@@ -101,7 +102,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal{
 		}
 		
 		@Override
-		public void agregarUsuarioInterno(int IdUsuario, String nombre, String apellido, Date fechaNac, String email, DtDireccion direccion, Sexo sexo, String password, Rol rol) throws UsuarioExistente {
+		public void agregarUsuarioInterno(int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo, String password, Rol rol) throws UsuarioExistente {
 			//ManejadorUsuario mu = ManejadorUsuario.getInstancia();
 			
 			if (em.find(UsuarioInterno.class,IdUsuario) != null) {
@@ -116,7 +117,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal{
 	}
 		
 		@Override
-		public void agregarUsuarioCiudadano(int IdUsuario, String nombre, String apellido, Date fechaNac, String email, DtDireccion direccion, Sexo sexo, String TipoSector, Boolean autenticado) throws UsuarioExistente {
+		public void agregarUsuarioCiudadano(int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo, String TipoSector, Boolean autenticado) throws UsuarioExistente {
 			//ManejadorUsuario mu = ManejadorUsuario.getInstancia();
 			
 			if (em.find(Ciudadano.class,IdUsuario) != null) {

@@ -1,18 +1,19 @@
 package datatypes;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class DtEtapa {
 
 	private int id;
-	private Date fechaInicio;
-	private Date fechaFin;
+	private LocalDate fechaInicio;
+	private LocalDate fechaFin;
 	private DtPlanVacunacion DtPvac;
 	
 	public DtEtapa() {
 	}
 
-	public DtEtapa(int id, Date fechaInicio, Date fechaFin, DtPlanVacunacion dtPvac) {
+	public DtEtapa(int id, LocalDate fechaInicio, LocalDate fechaFin, DtPlanVacunacion dtPvac) {
 		super();
 		this.id = id;
 		this.fechaInicio = fechaInicio;
@@ -28,19 +29,19 @@ public class DtEtapa {
 		this.id = id;
 	}
 
-	public Date getFechaInicio() {
+	public LocalDate getFechaInicio() {
 		return fechaInicio;
 	}
 
-	public void setFechaInicio(Date fechaInicio) {
+	public void setFechaInicio(LocalDate fechaInicio) {
 		this.fechaInicio = fechaInicio;
 	}
 
-	public Date getFechaFin() {
+	public LocalDate getFechaFin() {
 		return fechaFin;
 	}
 
-	public void setFechaFin(Date fechaFin) {
+	public void setFechaFin(LocalDate fechaFin) {
 		this.fechaFin = fechaFin;
 	}
 

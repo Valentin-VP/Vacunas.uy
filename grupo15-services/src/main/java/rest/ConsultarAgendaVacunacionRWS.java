@@ -54,7 +54,7 @@ public class ConsultarAgendaVacunacionRWS {
 			return Response.ok(as.obtenerAgenda(idVacunatorio, LocalDate.now())).build();
 		} catch (DateTimeException | AgendaInexistente e) {
 			//throw new WebApplicationException(e.getMessage());
-			return Response.serverError().entity(new ErrorInfo(400, e.getMessage())).status(400).build();
+			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
 			//ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
 			//return rb.entity(e.getMessage()).build();
 		}

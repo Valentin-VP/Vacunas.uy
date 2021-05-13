@@ -1,5 +1,6 @@
 package controllers;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +31,7 @@ public class ControladorEtapa implements IEtapaLocal, IEtapaRemote{
 	@PersistenceContext(name = "test")
 	private EntityManager em;
 	
-	public void agregarEtapa(int idEtapa, Date fIni, Date fFin, String cond, int idPlan, String nombreVacuna) throws EtapaRepetida, PlanVacunacionInexistente {
+	public void agregarEtapa(int idEtapa, LocalDate fIni, LocalDate fFin, String cond, int idPlan, String nombreVacuna) throws EtapaRepetida, PlanVacunacionInexistente {
 		if(em.find(Etapa.class, new EtapaID(idEtapa, idPlan)) == null) {
 			PlanVacunacion pV = em.find(PlanVacunacion.class, idPlan);
 			if(pV != null) {

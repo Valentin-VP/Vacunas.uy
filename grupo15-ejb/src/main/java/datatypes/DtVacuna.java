@@ -1,7 +1,7 @@
 package datatypes;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -10,8 +10,9 @@ public class DtVacuna implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private String nombre;
-	private Integer cantDosis; //cuantas veces se da la vacuna
-	private Date expira;  //fecha de expiracion
+	private int cantDosis; //cuantas veces se da la vacuna
+	private LocalDate expira;  //fecha de expiracion
+	private int tiempoEntreDosis;
 	private DtLaboratorio dtLab;
 	private DtEnfermedad dtEnf;
 	
@@ -19,11 +20,13 @@ public class DtVacuna implements Serializable {
 		
 	}
 	
-	public DtVacuna(String nombre, Integer cantDosis, Date expira, DtLaboratorio dtLab, DtEnfermedad dtEnf) {
+	public DtVacuna(String nombre, int cantDosis, LocalDate expira, int tiempoEntreDosis, DtLaboratorio dtLab,
+			DtEnfermedad dtEnf) {
 		super();
 		this.nombre = nombre;
 		this.cantDosis = cantDosis;
 		this.expira = expira;
+		this.tiempoEntreDosis = tiempoEntreDosis;
 		this.dtLab = dtLab;
 		this.dtEnf = dtEnf;
 	}
@@ -36,19 +39,19 @@ public class DtVacuna implements Serializable {
 		this.nombre = nombre;
 	}
 
-	public Integer getCantDosis() {
+	public int getCantDosis() {
 		return cantDosis;
 	}
 
-	public void setCantDosis(Integer cantDosis) {
+	public void setCantDosis(int cantDosis) {
 		this.cantDosis = cantDosis;
 	}
 
-	public Date getExpira() {
+	public LocalDate getExpira() {
 		return expira;
 	}
 
-	public void setExpira(Date expira) {
+	public void setExpira(LocalDate expira) {
 		this.expira = expira;
 	}
 
@@ -67,5 +70,15 @@ public class DtVacuna implements Serializable {
 	public void setDtEnf(DtEnfermedad dtEnf) {
 		this.dtEnf = dtEnf;
 	}
+
+	public int getTiempoEntreDosis() {
+		return tiempoEntreDosis;
+	}
+
+	public void setTiempoEntreDosis(int tiempoEntreDosis) {
+		this.tiempoEntreDosis = tiempoEntreDosis;
+	}
+	
+	
 	
 }

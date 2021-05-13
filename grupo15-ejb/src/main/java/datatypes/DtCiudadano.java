@@ -1,5 +1,6 @@
 package datatypes;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class DtCiudadano extends DtUsuario {
@@ -15,7 +16,7 @@ public class DtCiudadano extends DtUsuario {
 		super();
 	}
 	
-	public DtCiudadano( int IdUsuario, String nombre, String apellido, Date fechaNac, String email, DtDireccion direccion, Sexo sexo, String TipoSector, Boolean autenticado) {
+	public DtCiudadano( int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo, String TipoSector, Boolean autenticado) {
 		super(nombre, apellido, fechaNac, IdUsuario, email, direccion, sexo);
 		this.autenticado = autenticado;
 		this.TipoSector = TipoSector;

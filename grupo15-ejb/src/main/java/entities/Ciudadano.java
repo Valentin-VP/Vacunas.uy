@@ -1,5 +1,6 @@
 package entities;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +30,7 @@ public class Ciudadano extends Usuario {
 		super();
 	}
 	
-	public Ciudadano( int IdUsuario, String nombre, String apellido, Date fechaNac, String email, DtDireccion direccion, Sexo sexo, String TipoSector, Boolean autenticado) {
+	public Ciudadano( int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo, String TipoSector, Boolean autenticado) {
 		super(IdUsuario, nombre, apellido, fechaNac, email, direccion, sexo);
 		this.autenticado = autenticado;
 		this.TipoSector = TipoSector;

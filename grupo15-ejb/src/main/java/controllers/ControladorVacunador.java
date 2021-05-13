@@ -75,8 +75,12 @@ public class ControladorVacunador implements IControladorVacunadorRemote, IContr
     				else {
     					Asignado asignadoPrevioEnFecha = getAsignadoEnFecha(u.getAsignado(), fecha);
     					if (asignadoPrevioEnFecha != null) {
+    						System.out.println("CtrlVacunador: asignadoPrevioEnFecha not null: P:" + asignadoPrevioEnFecha.getPuesto().getId() + " V:" + asignadoPrevioEnFecha.getVacunador().getIdUsuario());
     						asignadoPrevioEnFecha.getPuesto().getAsignado().remove(asignadoPrevioEnFecha);
     						asignadoPrevioEnFecha.getVacunador().getAsignado().remove(asignadoPrevioEnFecha);
+    						em.merge(asignadoPrevioEnFecha.getPuesto());
+    						em.merge(asignadoPrevioEnFecha.getVacunador());
+    						em.remove(asignadoPrevioEnFecha);
     					}
     					
     					Asignado assign = new Asignado(fecha, u, pLibre);
@@ -131,8 +135,11 @@ public class ControladorVacunador implements IControladorVacunadorRemote, IContr
 	
 	private Puesto getPuestoLibreEnFecha(List<Puesto> puestos, LocalDate fecha) {
 		for (Puesto temp: puestos) {
-			if (getAsignadoEnFecha(temp.getAsignado(), fecha)==null);
+			if (getAsignadoEnFecha(temp.getAsignado(), fecha)==null) {
+				System.out.println("getPuestoLibreEnFecha: asignado==null F: " + fecha.toString() + " P: " + temp.getId());
 				return temp;
+			}
+				
 		}
 		return null;
 	}
@@ -161,8 +168,10 @@ public class ControladorVacunador implements IControladorVacunadorRemote, IContr
 			System.out.println(a.getFecha());
 			System.out.println(fecha);
 			//System.out.println(nuevaFecha.getTime());
-			if (a.getFecha().equals(fecha))
+			if (a.getFecha().equals(fecha)) {
 				return a;
+			}
+				
 		}
 		System.out.println("null");
 		return null;

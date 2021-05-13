@@ -1,5 +1,6 @@
 package datatypes;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class DtVacunador extends DtUsuario{
@@ -16,7 +17,7 @@ public class DtVacunador extends DtUsuario{
 	}
 	
 	
-	public DtVacunador(String nombre, String apellido, Date fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo) {
+	public DtVacunador(String nombre, String apellido, LocalDate fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo) {
 		super(nombre, apellido, fechaNac, IdUsuario, email, direccion, sexo);
 	
 	}

@@ -1,6 +1,6 @@
 package entities;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -19,7 +19,8 @@ public class Vacuna{
 	@Id
 	private String nombre;
 	private int cantDosis; //cuantas veces se da la vacuna
-	private Date expira;  //fecha de expiracion
+	private LocalDate expira;  //fecha de expiracion
+	private int tiempoEntreDosis;
 	@OneToOne(cascade = CascadeType.ALL)
 	private Laboratorio laboratorio;
 	@OneToOne(cascade = CascadeType.ALL)
@@ -29,11 +30,13 @@ public class Vacuna{
 		super();
 	}
 
-	public Vacuna(String nombre, int cantDosis, Date expira, Laboratorio laboratorio, Enfermedad enfermedad) {
+	public Vacuna(String nombre, int cantDosis, LocalDate expira, int tiempoEntreDosis, Laboratorio laboratorio,
+			Enfermedad enfermedad) {
 		super();
 		this.nombre = nombre;
 		this.cantDosis = cantDosis;
 		this.expira = expira;
+		this.tiempoEntreDosis = tiempoEntreDosis;
 		this.laboratorio = laboratorio;
 		this.enfermedad = enfermedad;
 	}
@@ -54,11 +57,11 @@ public class Vacuna{
 		return this.cantDosis;
 	}
 	
-	public void setExpira(Date fecha) {
+	public void setExpira(LocalDate fecha) {
 		this.expira = fecha;
 	}
 	
-	public Date getExpira() {
+	public LocalDate getExpira() {
 		return this.expira;
 	}
 
@@ -78,10 +81,20 @@ public class Vacuna{
 		this.enfermedad = enfermedad;
 	}
 	
+	
+	
+	public int getTiempoEntreDosis() {
+		return tiempoEntreDosis;
+	}
+
+	public void setTiempoEntreDosis(int tiempoEntreDosis) {
+		this.tiempoEntreDosis = tiempoEntreDosis;
+	}
+
 	public DtVacuna toDtVacuna() {
 		DtLaboratorio dtLab = new DtLaboratorio(this.getLaboratorio().getNombre());
 		DtEnfermedad dtEnf = new DtEnfermedad(this.getEnfermedad().getNombre());
-		DtVacuna dtVac = new DtVacuna(this.getNombre(), this.getCantDosis(), this.getExpira(), dtLab, dtEnf);
+		DtVacuna dtVac = new DtVacuna(this.getNombre(), this.getCantDosis(), this.getExpira(), this.getTiempoEntreDosis(), dtLab, dtEnf);
 		return dtVac;
 	}
 	
