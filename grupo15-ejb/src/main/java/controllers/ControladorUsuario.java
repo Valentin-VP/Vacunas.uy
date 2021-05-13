@@ -137,7 +137,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal{
 		public DtUsuario buscarUsuario(int IdUsuario) {
 				//ManejadorUsuario mu = ManejadorUsuario.getInstancia();
 				Usuario usu = em.find(Usuario.class,IdUsuario);
-				DtUsuario dt = new DtUsuario(usu.getNombre(),usu.getApellido(), usu.getFechaNac(),usu.getIdUsuario(), usu.getEmail(), usu.getDireccion(), usu.getSexo());
+				DtUsuario dt = new DtUsuario(usu.getNombre(),usu.getApellido(), usu.getFechaNac(),usu.getIdUsuario(), usu.getEmail(), usu.getDireccion(), usu.getSexo(), usu.getToken());
 				return dt;
 		}
 

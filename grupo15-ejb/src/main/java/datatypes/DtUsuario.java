@@ -17,6 +17,7 @@ public class DtUsuario implements Serializable {
 	private String email;
 	private DtDireccion direccion;
 	private Sexo sexo;
+	private String token = null;
 	
 	
 	public DtUsuario() {
@@ -36,6 +37,18 @@ public class DtUsuario implements Serializable {
 		this.sexo = sexo;
 	}
 	
+	public DtUsuario(String nombre, String apellido, LocalDate fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo, String token) {
+		super();
+	
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.IdUsuario = IdUsuario;
+		this.fechaNac = fechaNac;
+		this.email = email;
+		this.direccion = direccion;
+		this.sexo = sexo;
+		this.token = token;
+	}
 
 	public String getNombre() {
 		return nombre;
@@ -127,6 +140,16 @@ public class DtUsuario implements Serializable {
 
 	public void setSexo(Sexo sexo) {
 		this.sexo = sexo;
+	}
+
+
+	public String getToken() {
+		return token;
+	}
+
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 	
 	

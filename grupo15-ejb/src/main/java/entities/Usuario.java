@@ -27,7 +27,7 @@ public abstract class Usuario {
 	private String email;
 	private DtDireccion direccion;
 	private Sexo sexo;
-	
+	private String token = null;
 
 	
 	
@@ -113,6 +113,14 @@ public abstract class Usuario {
 		this.certificado = certificado;
 	}
 */
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
 	
 	
 }
