@@ -55,38 +55,40 @@
 
   </nav>
 
-    <div class="formulario">
-      <form>
 
 
-        
-        
-        
-        <div>
-          <label for="idVac" style="font-size: medium">Seleccione un vacunatorio:</label>
-          <select class="form-control" id="idVac" v-model=idVac >
-            <option v-for="item in listaVac">{{item.id}}</option>
-            
-          </select>
-        </div>
-        <div>
-          <label for="fecha" style="font-size: medium">Seleccione la fecha:</label>
-          <input type="date" v-model=fecha class="form-control" id="fecha">
-       </div>
-    
-      </form>
-      <a href="consultarPuestosLista.html"> <input type="button" value="Confirmar"  @click="setDatos"></a>
-     
-    </div>
-
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-3">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Puesto</th>
   
-   
-  </div>
- <!-- development version, includes helpful console warnings -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{vacPuesto.fecha}}</td>
+                  <td>{{vacPuesto.idPuesto}}</td>
+  
+  
+                </tr>
+  
+  
+  
+              </tbody>
+            </table>
+          </div>
+        </div>
+  
+      </div>
+    <!-- development version, includes helpful console warnings -->
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
- <script src="/js/consultarPuestos.js"></script>
-
-</body>
-
-</html>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="/js/consultarPuestos.js"></script>
+ 
+ </body>
+ 
+ </html>  
