@@ -32,6 +32,8 @@ public class LoginServlet extends HttpServlet {
     	String clientId = config.getClientId();
     	String redirectUri = config.getRedirect_uri();
     	String scope = config.getOpenid();
+    	String tipoUsuario = "vacunador";
+    	//String tipoUsuario = request.getParameter("tipoUsuario");
         LOGGER.severe("Test log message with callbackUrl: " + redirectUri);
         // Create the authorization URL to redirect the user to, to begin the authentication flow.
 		/*
@@ -43,7 +45,8 @@ public class LoginServlet extends HttpServlet {
         String authURL = authorizationUri + "?response_type=code"
         		  + "&client_id=" + clientId
         		  + "&redirect_uri=" + redirectUri
-        		  + "&scope=" + scope;
+        		  + "&scope=" + scope
+        		  + "&state=" + tipoUsuario;
 
         response.sendRedirect(authURL);
     }

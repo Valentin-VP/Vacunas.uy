@@ -2,8 +2,6 @@ package interfaces;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
-
 
 import javax.ejb.Remote;
 
@@ -15,6 +13,7 @@ import datatypes.DtVacunador;
 import datatypes.Rol;
 import datatypes.Sexo;
 import exceptions.UsuarioExistente;
+import exceptions.UsuarioInexistente;
 
 	
 @Remote
@@ -24,6 +23,8 @@ public interface IUsuarioRemote {
 	public void agregarUsuarioInterno(int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo, String password, Rol rol) throws UsuarioExistente;
 	public void agregarUsuarioCiudadano(int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo, String TipoSector, Boolean autenticado) throws UsuarioExistente;
 	public DtUsuario buscarUsuario(int IdUsuario);
+	public DtCiudadano buscarCiudadano(int id) throws UsuarioInexistente;
+	public DtVacunador buscarVacunador(int id) throws UsuarioInexistente;
 	public ArrayList<DtCiudadano> listarCiudadanos();
 	public ArrayList<DtUsuarioInterno> listarUsuariosInternos();
 	public ArrayList<DtVacunador> listarVacunadores();
@@ -31,7 +32,6 @@ public interface IUsuarioRemote {
 	public void ModificarCiudadano(DtCiudadano ciudadano) throws UsuarioExistente;
 	public void ModificarUsuarioInterno(DtUsuarioInterno usu) throws UsuarioExistente;
 	public void ModificarVacunador(DtVacunador vacunador) throws UsuarioExistente;
-	
 	}
 
 

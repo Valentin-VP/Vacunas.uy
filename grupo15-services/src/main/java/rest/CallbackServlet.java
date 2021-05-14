@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.Base64;
 import java.util.logging.Logger;
 
+import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -29,6 +30,11 @@ import javax.ws.rs.core.MediaType;
 
 import com.auth0.AuthenticationController;
 
+import datatypes.DtCiudadano;
+import datatypes.DtVacunador;
+import interfaces.IUsuarioLocal;
+import rest.filter.TokenSecurity;
+
 //cambiar por /callback !!!
 @WebServlet(urlPatterns = { "/callback" })
 public class CallbackServlet extends HttpServlet {
@@ -37,7 +43,10 @@ public class CallbackServlet extends HttpServlet {
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 	private final Auth0AuthenticationConfig config;
 	private final AuthenticationController authenticationController;
-
+	
+	@EJB(lookup = "java:global/grupo15/grupo15-ejb/ControladorUsuario!interfaces.IUsuarioLocal")
+	private IUsuarioLocal IUsuarioLocal;
+	
 	@Inject
 	CallbackServlet(Auth0AuthenticationConfig config, AuthenticationController authenticationController) {
 		this.config = config;
@@ -46,11 +55,14 @@ public class CallbackServlet extends HttpServlet {
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		String referer = (String) request.getSession().getAttribute("Referer");
-		String redirectTo = referer != null ? referer : "/";
+		//String referer = (String) request.getSession().getAttribute("Referer");
+		//String redirectTo = referer != null ? referer : "/";
 		
-		LOGGER.severe("Llega code: " + request.getParameter("code"));
 		String code = request.getParameter("code");
+		String tipoUsuario = request.getParameter("state");
+		
+		LOGGER.severe("Llega code: " + code + " y tipoUsuario: " + tipoUsuario);
+		
 		Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(config.getTokenEndpoint());
 		
@@ -65,7 +77,7 @@ public class CallbackServlet extends HttpServlet {
 		String base64Credentials = new String(Base64.getEncoder().encode(plainCredentials.getBytes()));
 		String authorizationHeader = "Basic " + base64Credentials;
 		LOGGER.severe("authorizationHeader : " + authorizationHeader);
-		
+		String ci;
 		try {
 			JsonObject tokenResponse = target.request(MediaType.APPLICATION_JSON_TYPE)
 					.header(HttpHeaders.AUTHORIZATION, authorizationHeader)
@@ -74,20 +86,41 @@ public class CallbackServlet extends HttpServlet {
 			LOGGER.severe("Tokens obtenidos : " + tokenResponse);
 			String accessToken = tokenResponse.getString("access_token");
 			LOGGER.severe("Token de acceso : " + accessToken);
-			requestUserId(accessToken);
+			ci = requestUserId(accessToken);
+			if (ci != null) {
+				// Genero token de sesion con ID y tipo de usuario
+				String token = TokenSecurity.generateJwtToken(ci, tipoUsuario);
+				LOGGER.severe("JWT generado : " + token);
+				// Lo persisto en la DB asociado al usuario
+				if(tipoUsuario.equals("vacunador")) {
+					DtVacunador vacunador = IUsuarioLocal.buscarVacunador(Integer.parseInt(ci));
+					vacunador.setToken(token);
+					IUsuarioLocal.ModificarVacunador(vacunador);
+					LOGGER.severe("Se agrega JWT al vacunador " + vacunador.getIdUsuario());
+				}else {
+					if (tipoUsuario.equals("ciudadano")) {
+						DtCiudadano ciudadano = IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci));
+						ciudadano.setToken(token);
+						IUsuarioLocal.ModificarCiudadano(ciudadano);
+						LOGGER.severe("Se agrega JWT al ciudadano " + ciudadano.getIdUsuario());
+					}
+				}
+				
+			}
 			
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 			request.setAttribute("error", ex.getMessage());
 		}
-
-		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/");
-		requestDispatcher.forward(request, response);
+		// Podria setear el rol del usuario en el response
+		LOGGER.severe("Redirecting to /grupo15-web/index.html");
+		response.sendRedirect("/grupo15-web/index.html");
 
 		//response.sendRedirect(redirectTo);
 	}
 	
 	public String requestUserId(String accessToken) {
+		// Ultimo paso con Gub Uy. Se envia el access token para solicitar la CI del usuario actua al UserInfo Endpoint.
 		// https://reqbin.com/req/java/5k564bhv/get-request-with-bearer-token-authorization-header
 		String authorizationHeader = "Bearer " + accessToken;
 		LOGGER.severe("authorizationHeader de tipo Bearer : " + authorizationHeader);
@@ -116,7 +149,11 @@ public class CallbackServlet extends HttpServlet {
             JsonReader jsonReader = Json.createReader(new StringReader(sb.toString()));
             JsonObject object = jsonReader.readObject();
             jsonReader.close();
-            LOGGER.severe("CI Usuario: " + object.getString("numero_documento"));
+            String ci = object.getString("numero_documento");
+            if (ci != null) {
+            	LOGGER.severe("CI Usuario: " + ci);
+                return ci;
+            }
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}

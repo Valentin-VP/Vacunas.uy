@@ -23,6 +23,13 @@ public class DtCiudadano extends DtUsuario {
 		
 	}
 
+	public DtCiudadano( int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo, String token, String TipoSector, Boolean autenticado) {
+		super(nombre, apellido, fechaNac, IdUsuario, email, direccion, sexo, token);
+		this.autenticado = autenticado;
+		this.TipoSector = TipoSector;
+		
+	}
+	
 	public String getTipoSector() {
 		return TipoSector;
 	}

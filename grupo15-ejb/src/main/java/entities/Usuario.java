@@ -2,6 +2,7 @@ package entities;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -27,6 +28,7 @@ public abstract class Usuario {
 	private String email;
 	private DtDireccion direccion;
 	private Sexo sexo;
+	@Column(length = 1024)
 	private String token = null;
 
 	

@@ -2,10 +2,14 @@ package datatypes;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
 import java.util.Calendar;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+@XmlRootElement
 public class DtUsuario implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
