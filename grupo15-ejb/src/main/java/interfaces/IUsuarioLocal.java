@@ -26,11 +26,12 @@ public interface IUsuarioLocal {
 	public DtUsuario buscarUsuario(int IdUsuario);
 	public DtCiudadano buscarCiudadano(int id) throws UsuarioInexistente;
 	public DtVacunador buscarVacunador(int id) throws UsuarioInexistente;
+	public DtUsuarioInterno buscarUsuarioInterno(int id) throws UsuarioInexistente;
 	public ArrayList<DtCiudadano> listarCiudadanos();
 	public ArrayList<DtUsuarioInterno> listarUsuariosInternos();
 	public ArrayList<DtVacunador> listarVacunadores();
-	public void EliminarUsuario(int IdUsuario) throws UsuarioExistente;
-	public void ModificarCiudadano(DtCiudadano ciudadano) throws UsuarioExistente;
-	public void ModificarUsuarioInterno(DtUsuarioInterno usu) throws UsuarioExistente;
-	public void ModificarVacunador(DtVacunador vacunador) throws UsuarioExistente;
+	public void EliminarUsuario(int IdUsuario) throws UsuarioInexistente;
+	public void ModificarCiudadano(DtCiudadano ciudadano) throws UsuarioInexistente;
+	public void ModificarUsuarioInterno(DtUsuarioInterno usu) throws UsuarioInexistente;
+	public void ModificarVacunador(DtVacunador vacunador) throws UsuarioInexistente;
 }

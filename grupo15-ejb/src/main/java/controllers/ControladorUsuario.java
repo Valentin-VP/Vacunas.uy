@@ -64,7 +64,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 
 		for (UsuarioInterno u : usuarios) {
 			Usu.add(new DtUsuarioInterno(u.getNombre(), u.getApellido(), u.getFechaNac(), u.getIdUsuario(),
-					u.getEmail(), u.getDireccion(), u.getSexo(), u.getPassword(), u.getRol()));
+					u.getEmail(), u.getDireccion(), u.getSexo(), u.getRol()));
 		}
 
 		return Usu;
@@ -171,10 +171,22 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 	}
 
 	@Override
-	public void EliminarUsuario(int IdUsuario) throws UsuarioExistente {
+	public DtUsuarioInterno buscarUsuarioInterno(int id) throws UsuarioInexistente {
+		UsuarioInterno interno = em.find(UsuarioInterno.class, id);
+		if (interno == null) {
+			throw new UsuarioInexistente("No se encuentra el usuario interno con ID " + id);
+		}
+		DtUsuarioInterno dt = new DtUsuarioInterno(interno.getNombre(), interno.getApellido(), interno.getFechaNac(),
+				interno.getIdUsuario(), interno.getEmail(), interno.getDireccion(), interno.getSexo(), interno.getRol(),
+				interno.getToken());
+		return dt;
+	}
+
+	@Override
+	public void EliminarUsuario(int IdUsuario) throws UsuarioInexistente {
 
 		if (em.find(Usuario.class, IdUsuario) == null) {
-			throw new UsuarioExistente("No existe el usuario ingresado");
+			throw new UsuarioInexistente("No existe el usuario ingresado");
 		}
 
 		Usuario usu = em.find(Usuario.class, IdUsuario);
@@ -182,10 +194,10 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 	}
 
 	@Override
-	public void ModificarVacunador(DtVacunador vacunador) throws UsuarioExistente {
+	public void ModificarVacunador(DtVacunador vacunador) throws UsuarioInexistente {
 
 		if (em.find(Vacunador.class, vacunador.getIdUsuario()) == null) {
-			throw new UsuarioExistente("No existe el usuario ingresado");
+			throw new UsuarioInexistente("No existe el usuario ingresado");
 		}
 
 		Vacunador vac = em.find(Vacunador.class, vacunador.getIdUsuario());
@@ -203,10 +215,10 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 	}
 
 	@Override
-	public void ModificarUsuarioInterno(DtUsuarioInterno usu) throws UsuarioExistente {
+	public void ModificarUsuarioInterno(DtUsuarioInterno usu) throws UsuarioInexistente {
 
 		if (em.find(UsuarioInterno.class, usu.getIdUsuario()) == null) {
-			throw new UsuarioExistente("No existe el usuario ingresado");
+			throw new UsuarioInexistente("No existe el usuario ingresado");
 		}
 
 		UsuarioInterno u = em.find(UsuarioInterno.class, usu.getIdUsuario());
@@ -224,10 +236,10 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 	}
 
 	@Override
-	public void ModificarCiudadano(DtCiudadano ciudadano) throws UsuarioExistente {
+	public void ModificarCiudadano(DtCiudadano ciudadano) throws UsuarioInexistente {
 
 		if (em.find(Ciudadano.class, ciudadano.getIdUsuario()) == null) {
-			throw new UsuarioExistente("No existe el usuario ingresado");
+			throw new UsuarioInexistente("No existe el usuario ingresado");
 		}
 
 		Ciudadano ciu = em.find(Ciudadano.class, ciudadano.getIdUsuario());

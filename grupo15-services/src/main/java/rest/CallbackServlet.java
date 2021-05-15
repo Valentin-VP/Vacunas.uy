@@ -106,12 +106,11 @@ public class CallbackServlet extends HttpServlet {
 						LOGGER.severe("Se agrega JWT al ciudadano " + ciudadano.getIdUsuario());
 					}
 				}
-				
 			}
 			// Podria setear el jwt del usuario en el redirect
-			response.setHeader(token, accessToken);
+			response.setHeader("token", token);
 			// Valentin tiene que ver como sacar el header token
-			String urlRedirect = "localhost/grupo15-web/index.html";
+			String urlRedirect = "/grupo15-web/html/index.html";
 			LOGGER.severe("Redirecting to: " + urlRedirect);
 			response.sendRedirect(urlRedirect);
 		} catch (Exception ex) {
