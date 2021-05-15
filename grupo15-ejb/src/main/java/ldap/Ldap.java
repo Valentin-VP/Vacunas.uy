@@ -11,6 +11,7 @@ import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
+import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
@@ -48,7 +49,8 @@ public class Ldap {
 		//ldap.deleteUser();
 		ldap.getAllUsers();
 		//ldap.searchUser();
-		//System.out.println(authUser("12345678","1234"));
+		//System.out.println(authUser("12345678","12"));
+		//ldap.updateUserPass("12345678", "12");
 	}
 	
 	public void getAllUsers() throws NamingException {
@@ -199,6 +201,17 @@ public static boolean authUser(String userId, String password) {
 //System.out.println("failed: "+e.getMessage());
 //return false;
 //}
+}
+public void updateUserPass(String userId, String password) {
+	try {
+		String ruta=",ou=users,ou=system";
+		ModificationItem[] mods= new ModificationItem[1];
+		mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("userPassword", password));// if you want, then you can delete the old password and after that you can replace with new password 
+		connection.modifyAttributes("userId="+userId +ruta, mods);//try to form DN dynamically
+		System.out.println("Se modifico el password");
+	}catch (Exception e) {
+		System.out.println("failed: "+e.getMessage());
+	}
 }
 
 	}
