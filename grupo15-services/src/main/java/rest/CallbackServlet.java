@@ -78,6 +78,7 @@ public class CallbackServlet extends HttpServlet {
 		String authorizationHeader = "Basic " + base64Credentials;
 		LOGGER.severe("authorizationHeader : " + authorizationHeader);
 		String ci;
+		String token = null;
 		try {
 			JsonObject tokenResponse = target.request(MediaType.APPLICATION_JSON_TYPE)
 					.header(HttpHeaders.AUTHORIZATION, authorizationHeader)
@@ -89,7 +90,7 @@ public class CallbackServlet extends HttpServlet {
 			ci = requestUserId(accessToken);
 			if (ci != null) {
 				// Genero token de sesion con ID y tipo de usuario
-				String token = TokenSecurity.generateJwtToken(ci, tipoUsuario);
+				token = TokenSecurity.generateJwtToken(ci, tipoUsuario);
 				LOGGER.severe("JWT generado : " + token);
 				// Lo persisto en la DB asociado al usuario
 				if(tipoUsuario.equals("vacunador")) {
@@ -107,16 +108,15 @@ public class CallbackServlet extends HttpServlet {
 				}
 				
 			}
-			
+			// Podria setear el jwt del usuario en el redirect
+			String urlRedirect = "localhost/grupo15-web/index.html?jwt=" + token;
+			LOGGER.severe("Redirecting to /grupo15-web/index.html");
+			response.sendRedirect(urlRedirect);
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 			request.setAttribute("error", ex.getMessage());
 		}
-		// Podria setear el rol del usuario en el response
-		LOGGER.severe("Redirecting to /grupo15-web/index.html");
-		response.sendRedirect("/grupo15-web/index.html");
 
-		//response.sendRedirect(redirectTo);
 	}
 	
 	public String requestUserId(String accessToken) {
