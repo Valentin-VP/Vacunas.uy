@@ -15,29 +15,33 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import datatypes.DtLdap;
-//import ldap.ILdap;
-import ldap.Ldap;
-import interfaces.IUsuarioLocal;
+
+import interfaces.ILdapLocal;
+
 
 @SessionScoped
 @Path("/agregarUsuario")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class AgregarUsuarioRest implements Serializable {
-	@EJB
-	// ILdap l;
-
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	
+	@EJB
+	ILdapLocal l;
+
+	public AgregarUsuarioRest() {
+		// TODO Auto-generated constructor stub
+	}
 
 	@POST
 	@Path("/usuario")
-	public Response agregarUsuario(DtLdap dt) {
+	public void agregarUsuario(DtLdap dt) {
+		
+		l.addUser(dt.getApellido(), dt.getCi(), dt.getNombre(),dt.getTipoUser(), dt.getPassword());
 
-		// l.addUser(dt.getIdUsuario(), dt.getApellido(), dt.getNombre(),dt.getRol());
-		return Response.ok().build();
 
 	}
 

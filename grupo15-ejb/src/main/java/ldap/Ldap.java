@@ -3,6 +3,8 @@ package ldap;
 
 import java.util.Properties;
 
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
@@ -15,10 +17,18 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
-public class Ldap {
+import interfaces.ILdap;
+import interfaces.ILdapLocal;
+
+@Stateless
+@LocalBean
+public class Ldap implements ILdap, ILdapLocal{
 	
 	DirContext connection;
 	
+	 public Ldap() {
+	        // TODO Auto-generated constructor stub
+	    }
 	
 	
 	public void newConnection() {
@@ -51,6 +61,8 @@ public class Ldap {
 		//ldap.searchUser();
 		//System.out.println(authUser("12345678","12"));
 		//ldap.updateUserPass("12345678", "12");
+		
+		ldap.addUser("Rodriguez", 22222222, "Jose", "Autoridad", "123");
 	}
 	
 	public void getAllUsers() throws NamingException {
@@ -71,18 +83,22 @@ public class Ldap {
 	}
 		
 
-public void addUser(String apellido, Integer ci, String nombre, String tipoUser) {
+public void addUser(String apellido, Integer ci, String nombre, String tipoUser, String password) {
+	//Ldap ldap = new Ldap();
+	this.newConnection();
+	String cedula = ci.toString();
 	Attributes attributes = new BasicAttributes();
 	Attribute attribute = new BasicAttribute("objectClass");
 	attribute.add("inetOrgPerson");
 	attributes.put(attribute);
-	attributes.put("userid",ci);
+	attributes.put("userid",cedula);
 	attributes.put("cn",nombre);
 	attributes.put("sn",apellido);
 	attributes.put("employeeType", tipoUser);
-	
+	attributes.put("userPassword", password);
+	System.out.print(cedula);
 	try {
-		connection.createSubcontext("userid="+ci+ ",ou=users,ou=system", attributes);
+		connection.createSubcontext("userid="+cedula+ ",ou=users,ou=system", attributes);
 		System.out.println("Usuario ingresado correctamente");
 	} catch (NamingException e) {
 		// TODO Auto-generated catch block

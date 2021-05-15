@@ -8,13 +8,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 
-@XmlRootElement
 public class DtLdap implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String idUsuario;
+	private Integer ci;
 	private String nombre;
 	private String apellido;
-	private String rol;
+	private String tipoUser;
+	private String password;
 	
 	
 	
@@ -26,25 +26,38 @@ public class DtLdap implements Serializable {
 
 
 
-	public DtLdap(String idUsuario, String nombre,  String apellido, String rol) {
+	public DtLdap(String apellido, Integer ci, String nombre, String tipoUser, String password) {
 		super();
-		this.idUsuario = idUsuario;
+		this.ci = ci;
 		this.nombre = nombre;
 		
 		this.apellido = apellido;
-		this.rol = rol;
+		this.tipoUser = tipoUser;
+		this.password = password;
 	}
 
 
 
-	public String getIdUsuario() {
-		return idUsuario;
+	public String getPassword() {
+		return password;
 	}
 
 
 
-	public void setIdUsuario(String idUsuario) {
-		this.idUsuario = idUsuario;
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+
+
+	public Integer getCi() {
+		return ci;
+	}
+
+
+
+	public void setCi(Integer ci) {
+		this.ci = ci;
 	}
 
 
@@ -73,14 +86,17 @@ public class DtLdap implements Serializable {
 
 
 
-	public String getRol() {
-		return rol;
+	public String getTipoUser() {
+		return tipoUser;
 	}
 
 
 
-	public void setRol(String rol) {
-		this.rol = rol;
+	public void setTipoUser(String tipoUser) {
+		this.tipoUser = tipoUser;
 	}
+
 	
 }
+
+	
