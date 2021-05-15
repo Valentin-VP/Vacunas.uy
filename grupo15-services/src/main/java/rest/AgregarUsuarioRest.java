@@ -15,12 +15,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-
-import datatypes.DtUsuarioInterno;
-import datatypes.ErrorInfo;
-import exceptions.UsuarioExistente;
-
-
+import datatypes.DtLdap;
+import ldap.ILdap;
+import ldap.Ldap;
 import interfaces.IUsuarioLocal;
 
 @SessionScoped
@@ -29,7 +26,7 @@ import interfaces.IUsuarioLocal;
 @Produces(MediaType.APPLICATION_JSON)
 public class AgregarUsuarioRest implements Serializable {
 	@EJB
-	IUsuarioLocal usu;
+	ILdap l;
 	
 
 	/**
@@ -40,15 +37,10 @@ public class AgregarUsuarioRest implements Serializable {
 	
 	@POST
 	@Path("/usuario")
-	public Response agregarUsuario(DtUsuarioInterno dt){
+	public Response agregarUsuario(DtLdap dt){
 	
-			try {
-				usu.agregarUsuarioInterno(dt.getIdUsuario(), dt.getNombre(), dt.getApellido(), dt.getFechaNac(), dt.getEmail(), 
-						dt.getDireccion(), dt.getSexo(), dt.getPassword(), dt.getRol());
-				return Response.ok().build();
-			} catch (UsuarioExistente e) {
-				return Response.serverError().entity(new ErrorInfo(400, e.getMessage())).status(400).build();
-			}
+			l.addUser(dt.getIdUsuario(), dt.getApellido(), dt.getNombre(),dt.getRol());
+			return Response.ok().build();
 			
 		
 			
