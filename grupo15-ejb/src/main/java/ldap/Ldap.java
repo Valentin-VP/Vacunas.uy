@@ -57,12 +57,13 @@ public class Ldap implements ILdap, ILdapLocal{
 		Ldap ldap = new Ldap();
 		ldap.newConnection();
 		//ldap.deleteUser();
-		ldap.getAllUsers();
+	//	ldap.getAllUsers();
 		//ldap.searchUser();
 		//System.out.println(authUser("12345678","12"));
 		//ldap.updateUserPass("12345678", "12");
 		
-		ldap.addUser("Rodriguez", 22222222, "Jose", "Autoridad", "123");
+		//ldap.addUser("Rodriguez", 22222222, "Jose", "Autoridad", "123");
+		ldap.searchType("11111111");
 	}
 	
 	public void getAllUsers() throws NamingException {
@@ -167,6 +168,27 @@ public void searchUser(Integer ci) throws NamingException {
 	}
 }
 
+
+public String searchType(String ci) throws NamingException {
+    String searchFilter = "(userId="+ci+")";
+    String [] reqAtt = {"employeeType"};
+    SearchControls controls= new SearchControls();
+    controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+    controls.setReturningAttributes(reqAtt);
+    NamingEnumeration users = connection.search("ou=users,ou=system", searchFilter, controls);
+    SearchResult result = null;
+  
+        result = (SearchResult)users.next();
+        Attributes attr = result.getAttributes();
+    //    System.out.println(attr.get("userId"));
+    //    System.out.println(attr.get("userPassword"));
+      //  System.out.println(attr.get("employeeType"));
+        
+    String tipoEmpleado = (attr.get("employeeType").toString());
+	return tipoEmpleado;
+}
+
+
 //SEARCH USER HARDCOREADO
 //public void searchUser() throws NamingException {
 //	String searchFilter = "(userId=12345678)";
@@ -185,7 +207,7 @@ public void searchUser(Integer ci) throws NamingException {
 //	}
 //}
 
-public static boolean authUser(String userId, String password) {
+public boolean authUser(String userId, String password) {
 	try {
 	Properties env = new Properties();
 	env.put(DirContext.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
@@ -203,6 +225,8 @@ public static boolean authUser(String userId, String password) {
 		return false;
 	
 	}
+	
+
 
 //
 //env.put(Context.SECURITY_PRINCIPAL, "cn="+username+",ou=users,ou=system");  //check the DN correctly
