@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.server.ResourceConfig;
 
+import exceptions.UsuarioInexistente;
 import interfaces.IUsuarioLocal;
 import rest.filter.AuthenticationFilter;
 
@@ -38,7 +39,16 @@ public class LoginMobileDemo {
 	public String getCedulaJWT(@Context HttpHeaders headers) {
 		String id = getId( headers );
 		LOGGER.info("Recuperando CI de JWT en Header: " + id);
-		return IUsuarioLocal.buscarUsuario(Integer.parseInt(id)).getNombre();
+		try {
+			return IUsuarioLocal.buscarCiudadano(Integer.parseInt(id)).getNombre();
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UsuarioInexistente e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	@GET
