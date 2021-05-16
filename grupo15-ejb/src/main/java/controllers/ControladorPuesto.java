@@ -47,7 +47,7 @@ public class ControladorPuesto implements IControladorPuestoLocal, IControladorP
 
 	}
 
-	public DtPuesto obtenerPuesto(String id, String vac) throws PuestoNoCargadoException, VacunatorioNoCargadoException {
+	public String obtenerPuesto(String id, String vac) throws PuestoNoCargadoException, VacunatorioNoCargadoException {
 
 		Puesto puesto = em.find(Puesto.class, id);
 
@@ -61,24 +61,26 @@ public class ControladorPuesto implements IControladorPuestoLocal, IControladorP
 			if (v == null) {
     			throw new VacunatorioNoCargadoException("El vacunatorio no existe.");
     		}else {
-    			DtPuesto dtPuesto = new DtPuesto(puesto.getId(), getDtVacunatorio(v));
-    			return dtPuesto;
+    			
+    			//DtPuesto dtPuesto = new DtPuesto(puesto.getId(), getDtVacunatorio(v));
+    			return puesto.getId();
     		}
 			
 		}
 
 	}
 
-	public ArrayList<DtPuesto> listarPuestos() throws PuestoNoCargadosException {
+	public ArrayList<String> listarPuestos(String idVac) throws PuestoNoCargadosException {
 
 		Query query = em.createQuery("SELECT v FROM Puesto v");
 		List<Puesto> aux = query.getResultList();
-		ArrayList<DtPuesto> puestos = new ArrayList<DtPuesto>();
+		ArrayList<String> puestos = new ArrayList<String>();
 
 		for (Puesto p : aux) {
-
-			DtPuesto dtPuesto = new DtPuesto(p.getId(), getDtVacunatorio(p.getVacunatorio()));
-			puestos.add(dtPuesto);
+			if (p.getVacunatorio().getId().equals(idVac)) {
+				//DtPuesto dtPuesto = new DtPuesto(p.getId(), getDtVacunatorio(p.getVacunatorio()));
+				puestos.add(p.getId());
+			}
 		}
 		if (aux.isEmpty()) {
 			throw new PuestoNoCargadosException("No existen puestos en el sistema\n");

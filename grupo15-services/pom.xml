@@ -180,6 +180,12 @@
 			<artifactId>jettison</artifactId>
 			<version>1.4.0</version>
 		</dependency>
+		
+				<!-- https://mvnrepository.com/artifact/javax.jws/jsr181-api -->
+		<dependency>
+		    <groupId>javax.jws</groupId>
+		    <artifactId>jsr181-api</artifactId>		    
+		</dependency>
 	</dependencies>
 
 	<build>

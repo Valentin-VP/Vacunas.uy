@@ -17,8 +17,8 @@ import exceptions.VacunatorioNoCargadoException;
 public interface IControladorPuestoLocal {
 
 	public void agregarPuesto(String id, String vacunatorio) throws PuestoCargadoException, VacunatorioNoCargadoException;
-	public DtPuesto obtenerPuesto(String id, String vac) throws PuestoNoCargadoException, VacunatorioNoCargadoException;
-	public ArrayList<DtPuesto> listarPuestos() throws PuestoNoCargadosException;
+	public String obtenerPuesto(String id, String vac) throws PuestoNoCargadoException, VacunatorioNoCargadoException;
+	public ArrayList<String> listarPuestos(String idVac) throws PuestoNoCargadosException;
 	public void modificarPuesto(DtPuesto dtPuesto) throws PuestoNoCargadoException;
 	public void eliminarPuesto(String id) throws PuestoNoCargadoException;
 }

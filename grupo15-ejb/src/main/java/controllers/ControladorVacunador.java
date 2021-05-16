@@ -75,12 +75,13 @@ public class ControladorVacunador implements IControladorVacunadorRemote, IContr
     				else {
     					Asignado asignadoPrevioEnFecha = getAsignadoEnFecha(u.getAsignado(), fecha);
     					if (asignadoPrevioEnFecha != null) {
-    						System.out.println("CtrlVacunador: asignadoPrevioEnFecha not null: P:" + asignadoPrevioEnFecha.getPuesto().getId() + " V:" + asignadoPrevioEnFecha.getVacunador().getIdUsuario());
+    						/*System.out.println("CtrlVacunador: asignadoPrevioEnFecha not null: P:" + asignadoPrevioEnFecha.getPuesto().getId() + " V:" + asignadoPrevioEnFecha.getVacunador().getIdUsuario());
     						asignadoPrevioEnFecha.getPuesto().getAsignado().remove(asignadoPrevioEnFecha);
     						asignadoPrevioEnFecha.getVacunador().getAsignado().remove(asignadoPrevioEnFecha);
     						em.merge(asignadoPrevioEnFecha.getPuesto());
     						em.merge(asignadoPrevioEnFecha.getVacunador());
-    						em.remove(asignadoPrevioEnFecha);
+    						em.remove(asignadoPrevioEnFecha);*/
+    						throw new SinPuestosLibres("Ya está asignado a el vacunatorio " + asignadoPrevioEnFecha.getPuesto().getVacunatorio().getId());
     					}
     					
     					Asignado assign = new Asignado(fecha, u, pLibre);
@@ -126,6 +127,22 @@ public class ControladorVacunador implements IControladorVacunadorRemote, IContr
     				
     			}
     		}
+    	}
+    }
+    
+    public String isVacunadorAsignadoEnFecha(int idVacunador, LocalDate fecha) {
+    	Vacunador u = em.find(Vacunador.class, idVacunador);
+    	if (u==null) {
+    		return "";
+    	}else {
+    		Asignado a = getAsignadoEnFecha(u.getAsignado(), fecha);
+			
+			if (a==null)  {
+				return "";
+			}else {
+				return a.getPuesto().getVacunatorio().getId();
+			}
+				
     	}
     }
     
