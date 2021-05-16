@@ -22,7 +22,7 @@ import rest.filter.AuthenticationFilter;
 @Path("/mobile")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class LoginMobileDemo extends ResourceConfig {
+public class LoginMobileDemo {
 
 	//private static final long serialVersionUID = 1L;
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
