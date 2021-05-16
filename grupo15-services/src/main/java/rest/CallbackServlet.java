@@ -108,7 +108,7 @@ public class CallbackServlet extends HttpServlet {
 				}
 			}
 			// Podria setear el jwt del usuario en el redirect
-			response.setHeader("token", token);
+			response.setHeader("x-access-token", token);
 			// Valentin tiene que ver como sacar el header token
 			String urlRedirect = "/grupo15-web/html/index.html";
 			LOGGER.severe("Redirecting to: " + urlRedirect);
