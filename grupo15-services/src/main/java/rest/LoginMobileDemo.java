@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
+import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotAuthorizedException;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.server.ResourceConfig;
 
+import interfaces.IUsuarioLocal;
 import rest.filter.AuthenticationFilter;
 
 @DeclareRoles({"vacunador", "ciudadano", "interno"})
@@ -26,6 +28,8 @@ public class LoginMobileDemo extends ResourceConfig {
 
 	//private static final long serialVersionUID = 1L;
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
+	@EJB(lookup = "java:global/grupo15/grupo15-ejb/ControladorUsuario!interfaces.IUsuarioLocal")
+	private IUsuarioLocal IUsuarioLocal;
 	public LoginMobileDemo() {}
 	
 	@GET
@@ -33,8 +37,8 @@ public class LoginMobileDemo extends ResourceConfig {
 	@RolesAllowed({"ciudadano"})
 	public String getCedulaJWT(@Context HttpHeaders headers) {
 		String id = getId( headers );
-		LOGGER.info("Recuperando CI de JWT en Header...");
-		return id;
+		LOGGER.info("Recuperando CI de JWT en Header: " + id);
+		return IUsuarioLocal.buscarUsuario(Integer.parseInt(id)).getNombre();
 	}
 	
 	@GET
