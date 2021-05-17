@@ -15,4 +15,5 @@ import exceptions.VacunatorioNoCargadoException;
 public interface IControladorVacunadorLocal {
 	public void asignarVacunadorAVacunatorio(int idVacunador, String idVacunatorio, LocalDate fecha) throws UsuarioInexistente, VacunatorioNoCargadoException, SinPuestosLibres, FechaIncorrecta ;
 	public DtAsignado consultarPuestoAsignadoVacunador(int idVacunador, String idVacunatorio, LocalDate fecha) throws UsuarioInexistente, VacunatorioNoCargadoException, VacunadorSinAsignar;
+	public String isVacunadorAsignadoEnFecha(int idVacunador, LocalDate fecha) ;
 }

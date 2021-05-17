@@ -1,6 +1,7 @@
 package controllers;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javax.ejb.LocalBean;
@@ -138,12 +139,5 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 		}
 		return null;
 	}
-    
-	private DtCiudadano getDtUsuario(Ciudadano u) {
-		if (u!=null)
-			return new DtCiudadano(
-					u.getIdUsuario(), u.getNombre(), u.getApellido(), u.getFechaNac(), u.getEmail(), u.getDireccion(), u.getSexo(), u.getTipoSector(), u.isAutenticado());
-		else
-			return null;
-	}
+
 }

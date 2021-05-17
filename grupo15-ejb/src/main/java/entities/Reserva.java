@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import datatypes.DtReserva;
+import datatypes.DtReservaCompleto;
 import datatypes.EstadoReserva;
 import persistence.ReservaID;
 
@@ -112,6 +113,23 @@ public class Reserva implements Serializable{
 				this.getEtapa().getPlanVacunacion().getNombre() + " " + this.getEtapa().getCondicion(),
 				this.getEtapa().getVacuna().getNombre(),
 				this.getCiudadano().getNombre() + " " + this.getCiudadano().getApellido(), this.getPuesto().getId());
+		
+		//return new DtReserva(Date.from(Instant.from(this.getFechaRegistro().atZone(ZoneId.systemDefault()))), this.getEstado(),
+		//		this.getEtapa().getPlanVacunacion().getNombre() + " " + this.getEtapa().getCondicion(),
+		//		this.getEtapa().getVacuna().getNombre(),
+		///		this.getCiudadano().getNombre() + " " + this.getCiudadano().getApellido(), this.getPuesto().getId());		
+	}
+	
+	public DtReservaCompleto getDtReservaCompleto() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+		DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		return new DtReservaCompleto(String.valueOf(this.getCiudadano().getIdUsuario()), String.valueOf(this.getEtapa().getId()), String.valueOf(this.getEtapa().getPlanVacunacion().getId()),
+				this.getFechaRegistro().format(formatter), this.getEstado(),
+				this.getEtapa().getFechaInicio().format(formatter2) + "|" + this.getEtapa().getFechaFin().format(formatter2) + "|" + this.getEtapa().getCondicion() ,
+				this.getEtapa().getPlanVacunacion().getNombre() + "|" + this.getEtapa().getPlanVacunacion().getDescripcion(),
+				this.getEtapa().getVacuna().getNombre(),
+				this.getEtapa().getPlanVacunacion().getEnfermedad().getNombre(),
+				this.getCiudadano().getNombre() + "|" + this.getCiudadano().getApellido(), this.getPuesto().getId());
 		
 		//return new DtReserva(Date.from(Instant.from(this.getFechaRegistro().atZone(ZoneId.systemDefault()))), this.getEstado(),
 		//		this.getEtapa().getPlanVacunacion().getNombre() + " " + this.getEtapa().getCondicion(),

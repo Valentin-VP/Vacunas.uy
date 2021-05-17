@@ -16,18 +16,18 @@ public class DtUsuarioInterno extends DtUsuario {
 	}
 	
 	
-	public DtUsuarioInterno(String nombre, String apellido, LocalDate fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo) {
+	public DtUsuarioInterno(String nombre, String apellido, String fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo) {
 		super(nombre, apellido, fechaNac, IdUsuario, email, direccion, sexo);
 	
 	}
 	
-	public DtUsuarioInterno(String nombre, String apellido, LocalDate fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo, Rol rol) {
+	public DtUsuarioInterno(String nombre, String apellido, String fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo, Rol rol) {
 		super(nombre, apellido, fechaNac, IdUsuario, email, direccion, sexo);
 		this.rol = rol;
 	
 	}
 	
-	public DtUsuarioInterno(String nombre, String apellido, LocalDate fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo, Rol rol, String token) {
+	public DtUsuarioInterno(String nombre, String apellido, String fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo, Rol rol, String token) {
 		super(nombre, apellido, fechaNac, IdUsuario, email, direccion, sexo, token);
 		this.rol = rol;
 	

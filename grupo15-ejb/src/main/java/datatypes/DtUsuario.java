@@ -16,7 +16,7 @@ public class DtUsuario implements Serializable {
 	
 	private String nombre;
 	private String apellido;
-	private LocalDate fechaNac;
+	private String fechaNac;
 	private int IdUsuario;
 	private String email;
 	private DtDireccion direccion;
@@ -29,7 +29,7 @@ public class DtUsuario implements Serializable {
 	}
 	
 	
-	public DtUsuario(String nombre, String apellido, LocalDate fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo) {
+	public DtUsuario(String nombre, String apellido, String fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo) {
 		super();
 	
 		this.nombre = nombre;
@@ -41,7 +41,7 @@ public class DtUsuario implements Serializable {
 		this.sexo = sexo;
 	}
 	
-	public DtUsuario(String nombre, String apellido, LocalDate fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo, String token) {
+	public DtUsuario(String nombre, String apellido, String fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo, String token) {
 		super();
 	
 		this.nombre = nombre;
@@ -71,7 +71,7 @@ public class DtUsuario implements Serializable {
 	}
 	
 
-	public LocalDate getFechaNac() {
+	public String getFechaNac() {
 		return fechaNac;
 	}
 	/*
@@ -103,7 +103,7 @@ public class DtUsuario implements Serializable {
 		return anio;
 	}
 	*/
-	public void setFechaNac(LocalDate fechaNac) {
+	public void setFechaNac(String fechaNac) {
 		this.fechaNac = fechaNac;
 
 	}

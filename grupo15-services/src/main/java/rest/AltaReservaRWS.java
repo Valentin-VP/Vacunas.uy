@@ -11,6 +11,7 @@ import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.ws.rs.Consumes;
@@ -193,6 +194,7 @@ public class AltaReservaRWS implements Serializable {
 	
 	@GET
 	@Path("/fecha")///{vac}/{date}")
+	@PermitAll
 	public Response seleccionarFecha(@QueryParam("p") int plan, @QueryParam("u") int user, @QueryParam("vac") String idVacunatorio, @QueryParam("date") String fecha){
 		if (idVacunatorio==null || fecha==null) {
 			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
@@ -211,6 +213,7 @@ public class AltaReservaRWS implements Serializable {
 	
 	@POST
 	@Path("/confirmar")
+	@PermitAll
 	public Response confirmarReserva(DtDatosReserva dtr){
 		if (dtr.getIdEnfermedad()==null || dtr.getIdVacunatorio()==null || dtr.getFecha()==null || dtr.getHora()==null) {
 			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);

@@ -13,12 +13,12 @@ public class DtVacunador extends DtUsuario{
 	}
 	
 	
-	public DtVacunador(String nombre, String apellido, LocalDate fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo) {
+	public DtVacunador(String nombre, String apellido, String fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo) {
 		super(nombre, apellido, fechaNac, IdUsuario, email, direccion, sexo);
 	
 	}
 	
-	public DtVacunador(String nombre, String apellido, LocalDate fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo, String token) {
+	public DtVacunador(String nombre, String apellido, String fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo, String token) {
 		super(nombre, apellido, fechaNac, IdUsuario, email, direccion, sexo, token);
 	
 	}
