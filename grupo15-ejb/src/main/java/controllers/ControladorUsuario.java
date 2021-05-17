@@ -1,7 +1,6 @@
 package controllers;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,10 +43,9 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		Query q = em.createQuery("select u from Ciudadano u");
 		@SuppressWarnings("unchecked")
 		ArrayList<Ciudadano> usuarios = (ArrayList<Ciudadano>) q.getResultList();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
 		for (Ciudadano u : usuarios) {
-			
-			Usu.add(new DtCiudadano(u.getIdUsuario(), u.getNombre(), u.getApellido(), u.getFechaNac().format(formatter), u.getEmail(),
+			Usu.add(new DtCiudadano(u.getIdUsuario(), u.getNombre(), u.getApellido(), u.getFechaNac(), u.getEmail(),
 					u.getDireccion(), u.getSexo(), u.getTipoSector(), u.isAutenticado()));
 		}
 
@@ -63,9 +61,9 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		Query q1 = em.createQuery("select u from UsuarioInterno u");
 		@SuppressWarnings("unchecked")
 		List<UsuarioInterno> usuarios = (List<UsuarioInterno>) q1.getResultList();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
 		for (UsuarioInterno u : usuarios) {
-			Usu.add(new DtUsuarioInterno(u.getNombre(), u.getApellido(), u.getFechaNac().format(formatter), u.getIdUsuario(),
+			Usu.add(new DtUsuarioInterno(u.getNombre(), u.getApellido(), u.getFechaNac(), u.getIdUsuario(),
 					u.getEmail(), u.getDireccion(), u.getSexo(), u.getRol()));
 		}
 
@@ -81,9 +79,9 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		Query q2 = em.createQuery("select v from Vacunador v");
 		@SuppressWarnings("unchecked")
 		List<Vacunador> usuarios = (List<Vacunador>) q2.getResultList();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
 		for (Vacunador u : usuarios) {
-			Usu.add(new DtVacunador(u.getNombre(), u.getApellido(), u.getFechaNac().format(formatter), u.getIdUsuario(), u.getEmail(),
+			Usu.add(new DtVacunador(u.getNombre(), u.getApellido(), u.getFechaNac(), u.getIdUsuario(), u.getEmail(),
 					u.getDireccion(), u.getSexo()));
 		}
 
@@ -143,8 +141,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 	@Override
 	public DtUsuario buscarUsuario(int IdUsuario) {
 		Usuario usu = em.find(Usuario.class, IdUsuario);
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		DtUsuario dt = new DtUsuario(usu.getNombre(), usu.getApellido(), usu.getFechaNac().format(formatter), usu.getIdUsuario(),
+		DtUsuario dt = new DtUsuario(usu.getNombre(), usu.getApellido(), usu.getFechaNac(), usu.getIdUsuario(),
 				usu.getEmail(), usu.getDireccion(), usu.getSexo(), usu.getToken());
 		return dt;
 	}
@@ -155,9 +152,8 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		if (ciudadano == null) {
 			throw new UsuarioInexistente("No se encuentra el ciudadano con ID " + id);
 		}
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		DtCiudadano dt = new DtCiudadano(ciudadano.getIdUsuario(), ciudadano.getNombre(), ciudadano.getApellido(),
-				ciudadano.getFechaNac().format(formatter), ciudadano.getEmail(), ciudadano.getDireccion(), ciudadano.getSexo(),
+				ciudadano.getFechaNac(), ciudadano.getEmail(), ciudadano.getDireccion(), ciudadano.getSexo(),
 				ciudadano.getToken(), ciudadano.getTipoSector(), ciudadano.isAutenticado());
 		return dt;
 	}
@@ -168,8 +164,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		if (vacunador == null) {
 			throw new UsuarioInexistente("No se encuentra el vacunador con ID " + id);
 		}
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		DtVacunador dt = new DtVacunador(vacunador.getNombre(), vacunador.getApellido(), vacunador.getFechaNac().format(formatter),
+		DtVacunador dt = new DtVacunador(vacunador.getNombre(), vacunador.getApellido(), vacunador.getFechaNac(),
 				vacunador.getIdUsuario(), vacunador.getEmail(), vacunador.getDireccion(), vacunador.getSexo(),
 				vacunador.getToken());
 		return dt;
@@ -181,8 +176,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		if (interno == null) {
 			throw new UsuarioInexistente("No se encuentra el usuario interno con ID " + id);
 		}
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		DtUsuarioInterno dt = new DtUsuarioInterno(interno.getNombre(), interno.getApellido(), interno.getFechaNac().format(formatter),
+		DtUsuarioInterno dt = new DtUsuarioInterno(interno.getNombre(), interno.getApellido(), interno.getFechaNac(),
 				interno.getIdUsuario(), interno.getEmail(), interno.getDireccion(), interno.getSexo(), interno.getRol(),
 				interno.getToken());
 		return dt;
@@ -207,13 +201,13 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		}
 
 		Vacunador vac = em.find(Vacunador.class, vacunador.getIdUsuario());
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
 		vac.setIdUsuario(vacunador.getIdUsuario());
 		vac.setNombre(vacunador.getNombre());
 		vac.setApellido(vacunador.getApellido());
 		vac.setDireccion(vacunador.getDireccion());
 		vac.setEmail(vacunador.getEmail());
-		vac.setFechaNac(LocalDate.parse(vacunador.getFechaNac(), formatter));
+		vac.setFechaNac(vacunador.getFechaNac());
 		vac.setSexo(vacunador.getSexo());
 		vac.setToken(vacunador.getToken());
 		em.persist(vac);
@@ -234,8 +228,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		u.setApellido(usu.getApellido());
 		u.setDireccion(usu.getDireccion());
 		u.setEmail(usu.getEmail());
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		u.setFechaNac(LocalDate.parse(usu.getFechaNac(), formatter));
+		u.setFechaNac(usu.getFechaNac());
 		u.setSexo(usu.getSexo());
 		u.setToken(usu.getToken());
 		em.persist(u);
@@ -256,8 +249,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		ciu.setApellido(ciudadano.getApellido());
 		ciu.setDireccion(ciudadano.getDireccion());
 		ciu.setEmail(ciudadano.getEmail());
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		ciu.setFechaNac(LocalDate.parse(ciudadano.getFechaNac(), formatter));
+		ciu.setFechaNac(ciudadano.getFechaNac());
 		ciu.setSexo(ciudadano.getSexo());
 		ciu.setToken(ciudadano.getToken());
 		em.persist(ciu);

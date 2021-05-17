@@ -1,7 +1,6 @@
 package controllers;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import javax.persistence.PersistenceContext;
 import datatypes.DtAgenda;
 import datatypes.DtCiudadano;
 import datatypes.DtReserva;
-import datatypes.DtReservaCompleto;
 import entities.Agenda;
 import entities.Ciudadano;
 import entities.Reserva;
@@ -157,25 +155,6 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 			throw new AgendaInexistente("No hay una agenda en esa fecha en ese vacunatorio.");
 	}
 	
-	public ArrayList<DtReservaCompleto> obtenerAgendaSoap(String vacunatorio, LocalDate fecha) throws AgendaInexistente {
-		Agenda temp = em.find(Agenda.class, new AgendaID(LocalDate.now(), vacunatorio));
-		
-		if (temp!=null) {
-			/*List<DtCupo> dtc= new ArrayList<DtCupo>();
-			for (Cupo c: temp.getCupos()) {
-				dtc.add(new DtCupo(c.getIdCupo(), c.isOcupado(), c.getAgenda().getIdAgenda()));
-			}*/
-			ArrayList<DtReservaCompleto> dtr= new ArrayList<DtReservaCompleto>();
-			for (Reserva r: temp.getReservas()) {
-				dtr.add(r.getDtReservaCompleto());
-			}
-			//DtAgenda retorno = new DtAgenda(temp.getFecha(), dtr);
-
-			return dtr;
-		}else
-			throw new AgendaInexistente("No hay una agenda en esa fecha en ese vacunatorio.");
-	}
-	
 	public ArrayList<DtAgenda> listarAgendas(String vacunatorio)  throws AgendaInexistente, VacunatorioNoCargadoException{
 		Vacunatorio v = em.find(Vacunatorio.class, vacunatorio);
 		if (v != null){
@@ -248,12 +227,9 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 	}
 	*/
 	private DtCiudadano getDtUsuario(Ciudadano u) {
-		if (u!=null) {
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		if (u!=null)
 			return new DtCiudadano(
-					u.getIdUsuario(), u.getNombre(), u.getApellido(), u.getFechaNac().format(formatter), u.getEmail(), u.getDireccion(), u.getSexo(), u.getTipoSector(), u.isAutenticado());			
-		}
-			
+					u.getIdUsuario(), u.getNombre(), u.getApellido(), u.getFechaNac(), u.getEmail(), u.getDireccion(), u.getSexo(), u.getTipoSector(), u.isAutenticado());
 		else
 			return null;
 	}

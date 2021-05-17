@@ -1,6 +1,5 @@
 package controllers;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,5 +114,13 @@ public class ControladorCertificadoVacunacion implements ICertificadoVacunacionD
 	private CertificadoVacunacion getCertificado(int id) {
 		CertificadoVacunacion cv = em.find(CertificadoVacunacion.class, id);
 		return cv;
+	}
+	
+	private DtCiudadano getDtUsuario(Ciudadano u) {
+		if (u!=null)
+			return new DtCiudadano(
+					u.getIdUsuario(), u.getNombre(), u.getApellido(), u.getFechaNac(), u.getEmail(), u.getDireccion(), u.getSexo(), u.getTipoSector(), u.isAutenticado());
+		else
+			return null;
 	}
 }
