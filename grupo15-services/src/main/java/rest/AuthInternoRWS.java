@@ -5,6 +5,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.naming.NamingException;
@@ -37,6 +38,7 @@ public class AuthInternoRWS implements Serializable{
 
 	@POST
 	@Path("/login")
+	@PermitAll
 	public Response autenticarUsuario(@Context HttpHeaders headers) {
 		// http://wiki.eclipse.org/Tutorial:_Extending_the_JaxRS_Remote_Services_Provider
 		//Obtener Headers de Auth
