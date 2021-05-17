@@ -60,6 +60,7 @@ public class CallbackServlet extends HttpServlet {
 		
 		String code = request.getParameter("code");
 		String tipoUsuario = request.getParameter("state");
+		String urlRedirect;
 		
 		LOGGER.severe("Llega code: " + code + " y tipoUsuario: " + tipoUsuario);
 		
@@ -110,7 +111,11 @@ public class CallbackServlet extends HttpServlet {
 			// Podria setear el jwt del usuario en el redirect
 			response.setHeader("x-access-token", token);
 			// Valentin tiene que ver como sacar el header token
-			String urlRedirect = "/grupo15-web/html/index.html";
+			if(tipoUsuario.equals("ciudadano")) {
+				urlRedirect = "/grupo15-web/html/MenuCiudadano.html";
+			}else {
+				urlRedirect = "/grupo15-web/html/MenuVacunador.html";
+			}
 			LOGGER.severe("Redirecting to: " + urlRedirect);
 			response.sendRedirect(urlRedirect);
 		} catch (Exception ex) {
