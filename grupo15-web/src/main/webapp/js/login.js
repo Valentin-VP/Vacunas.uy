@@ -5,19 +5,9 @@ var vac = new Vue({
   }),
 
   mounted(){
-      Vue.http.interceptors.push({
-
-          request: function (request){
-            request.headers['Authorization'] = auth.getAuthHeader()
-            return request
-          },
-
-          response: function (response) {
-            //console.log('status: ' + response.data)
-            return response;
-          }
-
-        });
+    var url = window.location;
+    var token = new URLSearchParams(url.search).get('x-access-token');
+    console.log("token:", token);
   }
 
 

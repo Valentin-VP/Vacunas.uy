@@ -112,9 +112,9 @@ public class CallbackServlet extends HttpServlet {
 			response.setHeader("x-access-token", token);
 			// Valentin tiene que ver como sacar el header token
 			if(tipoUsuario.equals("ciudadano")) {
-				urlRedirect = "/grupo15-web/html/MenuCiudadano.html";
+				urlRedirect = "/grupo15-web/html/MenuCiudadano.html?x-access-token=" + token;
 			}else {
-				urlRedirect = "/grupo15-web/html/MenuVacunador.html";
+				urlRedirect = "/grupo15-web/html/menuVacunador.html?x-access-token=" + token;
 			}
 			LOGGER.severe("Redirecting to: " + urlRedirect);
 			response.sendRedirect(urlRedirect);
