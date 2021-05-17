@@ -26,7 +26,9 @@ var int = new Vue({
         console.log("Hash:" + this.hash);
         Basic = 'Basic ' + hash;
         console.log("Basic:" + this.Basic);
-       axios.post('http://localhost:8080/grupo15-services/rest/internalauth/login', {headers : { 'Auth' : Basic }})
+        axios.defaults.headers.common["Authorization"] = this.Basic;
+        let config = {"Authorization": Basic};
+       axios.post('http://localhost:8080/grupo15-services/rest/internalauth/login', {headers : {"Authorization": Basic}})
        
    }
   

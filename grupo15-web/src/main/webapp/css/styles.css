@@ -10310,7 +10310,7 @@ text-align:left;
 	bottom: -40px;
 	width: auto;
 	height: auto;
-	background-image: url(https://www.clinicalascondes.cl/getattachment/f6874180-03a3-42bf-a795-595f862a6b5d/);
+	background-image: url(/grupo15-web/media/vacuna.jpg);
 	background-size: cover;
 	filter: blur(5px);
 	z-index: 0;
@@ -10340,13 +10340,14 @@ text-align:left;
 	float: left;
 	color: #fff;
 	font-family: 'Exo', sans-serif;
-	font-size: 35px;
-	font-weight: 200;
+	font-size: 37px;
+	font-weight: 600;
 }
 
 .header2 div span{
-	color: #5379fa !important;
+	color: #153396 !important;
 }
+
 
 .login2{
 	position: absolute;
@@ -10392,7 +10393,7 @@ text-align:left;
 	border: 1px solid #fff;
 	cursor: pointer;
 	border-radius: 2px;
-	color: #a18d6c;
+	color: #153396;
 	font-family: 'Exo', sans-serif;
 	font-size: 16px;
 	font-weight: 400;
@@ -10430,3 +10431,143 @@ text-align:left;
    color: rgba(255,255,255,0.6);
 }
 
+
+.body4{
+	margin: 0;
+	padding: 0;
+	background: #fff;
+
+	color: #fff;
+	font-family: Arial;
+	font-size: 12px;
+}
+
+.body5{
+	position: absolute;
+	top: -20px;
+	left: -20px;
+	right: -40px;
+	bottom: -40px;
+	width: auto;
+	height: auto;
+	background-image: url(/grupo15-web/media/vacuna2.jpg);
+	background-size: cover;
+	-webkit-filter: blur(5px);
+	z-index: 0;
+}
+
+.grad5{
+	position: absolute;
+	top: -20px;
+	left: -20px;
+	right: -40px;
+	bottom: -40px;
+	width: auto;
+	height: auto;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,0.65))); /* Chrome,Safari4+ */
+	z-index: 1;
+	opacity: 0.7;
+}
+
+.header5{
+	position: absolute;
+	top: calc(50% - 35px);
+	left: calc(50% - 255px);
+	z-index: 2;
+}
+
+.header5 div{
+	float: left;
+	color: #fff;
+	font-family: 'Exo', sans-serif;
+	font-size: 37px;
+	font-weight: 600;
+}
+
+.header5 div span{
+	color: #153396 !important;
+}
+
+.login5{
+	position: absolute;
+	top: calc(50% - 75px);
+	left: calc(50% - 50px);
+	height: 150px;
+	width: 350px;
+	padding: 10px;
+	z-index: 2;
+}
+
+.login5 input[type=text]{
+	width: 250px;
+	height: 35px;
+	background: transparent;
+	border: 1px solid rgba(255,255,255,0.6);
+	border-radius: 2px;
+	color: #fff;
+	font-family: 'Exo', sans-serif;
+	font-size: 18px;
+	font-weight: 400;
+	padding: 4px;
+  margin-top: 10px;
+}
+
+.login5 input[type=password]{
+  
+	width: 250px;
+	height: 35px;
+	background: transparent;
+	border: 1px solid rgba(255,255,255,0.6);
+	border-radius: 2px;
+	color: #fff;
+	font-family: 'Exo', sans-serif;
+	font-size: 18px;
+	font-weight: 400;
+	padding: 4px;
+	margin-top: 10px;
+}
+
+.login5 input[type=button]{
+	width: 250px;
+	height: 40px;
+	background: #fff;
+	border: 1px solid #fff;
+	cursor: pointer;
+	border-radius: 2px;
+	color: #153396;
+	font-family: 'Exo', sans-serif;
+	font-size: 18px;
+	font-weight: 500;
+	padding: 4px;
+	margin-top: 10px;
+}
+
+.login5 input[type=button]:hover{
+	opacity: 0.8;
+}
+
+.login5 input[type=button]:active{
+	opacity: 0.6;
+}
+
+.login5 input[type=text]:focus{
+	outline: none;
+	border: 1px solid rgba(255,255,255,0.9);
+}
+
+.login5 input[type=password]:focus{
+	outline: none;
+	border: 1px solid rgba(255,255,255,0.9);
+}
+
+.login5 input[type=button]:focus{
+	outline: none;
+}
+
+::-webkit-input-placeholder{
+   color: rgba(255, 255, 255, 0.945);
+}
+
+::-moz-input-placeholder{
+   color: rgba(255, 255, 255, 0.945);
+}
