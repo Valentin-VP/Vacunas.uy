@@ -25,6 +25,7 @@ import rest.filter.TokenSecurity;
 @SessionScoped
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@Path("/internalauth")
 public class AuthInternoRWS implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -35,7 +36,7 @@ public class AuthInternoRWS implements Serializable{
 	public AuthInternoRWS() {}
 
 	@POST
-	@Path("/internalauth")
+	@Path("/login")
 	public Response autenticarUsuario(@Context HttpHeaders headers) {
 		// http://wiki.eclipse.org/Tutorial:_Extending_the_JaxRS_Remote_Services_Provider
 		//Obtener Headers de Auth
