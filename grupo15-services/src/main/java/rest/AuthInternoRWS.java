@@ -48,6 +48,7 @@ public class AuthInternoRWS implements Serializable{
 		}
 		//Obtener value del header Auth 
 		String authHeaderValue = authHeaders.get(0);
+		System.out.println(authHeaderValue);
 		if (authHeaderValue == null) {
 			throw new IllegalArgumentException("Request does not have authorization header value");
 		}
