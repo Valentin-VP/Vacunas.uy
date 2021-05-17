@@ -1,3 +1,4 @@
+
 var res = new Vue({
     el: "#res",
     data: () => ({
@@ -11,13 +12,23 @@ var res = new Vue({
       listaPlanes: [],
       listaHoras: [],
       ciudadano:'21111113',
+      token: '',
     }),
 
     mounted(){
+     this.getToken();
+      
       this.CargarEnfermedades();
+     
     },
 
-    methods: {
+    methods: 
+    {
+      getToken(){
+        this.token=getToken();
+        //this.token=login.token;
+        console.log("tokenReserva:", this.token);
+      },
       SetDatos () {
       IdEnf=this.IdEnf;
       console.log("IdEnf:" + this.IdEnf);
