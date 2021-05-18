@@ -9,6 +9,7 @@ import datatypes.DtCiudadano;
 import datatypes.DtDireccion;
 import datatypes.DtUsuario;
 import datatypes.DtUsuarioInterno;
+import datatypes.DtUsuarioSoap;
 import datatypes.DtVacunador;
 import datatypes.Rol;
 import datatypes.Sexo;
@@ -33,6 +34,8 @@ public interface IUsuarioRemote {
 	public void ModificarCiudadano(DtCiudadano ciudadano) throws UsuarioInexistente;
 	public void ModificarUsuarioInterno(DtUsuarioInterno usu) throws UsuarioInexistente;
 	public void ModificarVacunador(DtVacunador vacunador) throws UsuarioInexistente;
+	public ArrayList<DtUsuarioSoap> listarVacunadoresSoap();
+	public DtUsuarioSoap buscarVacunadorSoap(int id) throws UsuarioInexistente;
 	}
 
 

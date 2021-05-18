@@ -1,6 +1,7 @@
 package controllers;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import datatypes.DtCiudadano;
 import datatypes.DtDireccion;
 import datatypes.DtUsuario;
 import datatypes.DtUsuarioInterno;
+import datatypes.DtUsuarioSoap;
 import datatypes.DtVacunador;
 import datatypes.Rol;
 import datatypes.Sexo;
@@ -82,6 +84,22 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 
 		for (Vacunador u : usuarios) {
 			Usu.add(new DtVacunador(u.getNombre(), u.getApellido(), u.getFechaNac(), u.getIdUsuario(), u.getEmail(),
+					u.getDireccion(), u.getSexo()));
+		}
+
+		return Usu;
+	}
+	
+	@Override
+	public ArrayList<DtUsuarioSoap> listarVacunadoresSoap() {
+		ArrayList<DtUsuarioSoap> Usu = new ArrayList<>();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		Query q2 = em.createQuery("select v from Vacunador v");
+		@SuppressWarnings("unchecked")
+		List<Vacunador> usuarios = (List<Vacunador>) q2.getResultList();
+
+		for (Vacunador u : usuarios) {
+			Usu.add(new DtUsuarioSoap(u.getNombre(), u.getApellido(), u.getFechaNac().format(formatter), u.getIdUsuario(), u.getEmail(),
 					u.getDireccion(), u.getSexo()));
 		}
 
@@ -169,7 +187,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 				vacunador.getToken());
 		return dt;
 	}
-
+	
 	@Override
 	public DtUsuarioInterno buscarUsuarioInterno(int id) throws UsuarioInexistente {
 		UsuarioInterno interno = em.find(UsuarioInterno.class, id);
@@ -182,6 +200,18 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		return dt;
 	}
 
+	@Override
+	public DtUsuarioSoap buscarVacunadorSoap(int id) throws UsuarioInexistente {
+		Vacunador vacunador = em.find(Vacunador.class, id);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		if (vacunador == null) {
+			throw new UsuarioInexistente("No se encuentra el vacunador con ID " + id);
+		}
+		DtUsuarioSoap dt = new DtUsuarioSoap(vacunador.getNombre(), vacunador.getApellido(), vacunador.getFechaNac().format(formatter),
+				vacunador.getIdUsuario(), vacunador.getEmail(), vacunador.getDireccion(), vacunador.getSexo());
+		return dt;
+	}
+	
 	@Override
 	public void EliminarUsuario(int IdUsuario) throws UsuarioInexistente {
 
