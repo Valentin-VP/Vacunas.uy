@@ -9,6 +9,7 @@ import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.naming.NamingException;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -16,6 +17,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
 import org.jose4j.lang.JoseException;
@@ -72,7 +74,11 @@ public class AuthInternoRWS implements Serializable{
 				e.printStackTrace();
 			}
 		}
+		Cookie userCookie = new Cookie("x-access-token", token, "/", "");
+		NewCookie rwsCookie = new NewCookie(userCookie);
+		// Alternativa:
+		//NewCookie userCookie = new NewCookie("x-access-token", token, "/", "", "x-access-token", 3600, false);
 		return Response.status(Response.Status.OK).header(HttpHeaders.LOCATION, "/grupo15-services/logininterno")
-				.header("token", token).build();
+				.cookie(rwsCookie).build();
 	}
 }

@@ -17,6 +17,7 @@ import javax.json.JsonReader;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,10 +44,10 @@ public class CallbackServlet extends HttpServlet {
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 	private final Auth0AuthenticationConfig config;
 	private final AuthenticationController authenticationController;
-	
+
 	@EJB(lookup = "java:global/grupo15/grupo15-ejb/ControladorUsuario!interfaces.IUsuarioLocal")
 	private IUsuarioLocal IUsuarioLocal;
-	
+
 	@Inject
 	CallbackServlet(Auth0AuthenticationConfig config, AuthenticationController authenticationController) {
 		this.config = config;
@@ -55,25 +56,25 @@ public class CallbackServlet extends HttpServlet {
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		//String referer = (String) request.getSession().getAttribute("Referer");
-		//String redirectTo = referer != null ? referer : "/";
-		
+		// String referer = (String) request.getSession().getAttribute("Referer");
+		// String redirectTo = referer != null ? referer : "/";
+
 		String code = request.getParameter("code");
 		String tipoUsuario = request.getParameter("state");
 		String urlRedirect;
-		
+
 		LOGGER.severe("Llega code: " + code + " y tipoUsuario: " + tipoUsuario);
-		
+
 		Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(config.getTokenEndpoint());
-		
-		//Creo Body Params para el POST al Token Endpoint
+
+		// Creo Body Params para el POST al Token Endpoint
 		Form form = new Form();
 		form.param("grant_type", "authorization_code");
 		form.param("code", code);
 		form.param("redirect_uri", config.getRedirect_uri());
 
-		//Creo Basic Auth Header
+		// Creo Basic Auth Header
 		String plainCredentials = config.getClientId() + ":" + config.getClientSecret();
 		String base64Credentials = new String(Base64.getEncoder().encode(plainCredentials.getBytes()));
 		String authorizationHeader = "Basic " + base64Credentials;
@@ -94,12 +95,12 @@ public class CallbackServlet extends HttpServlet {
 				token = TokenSecurity.generateJwtToken(ci, tipoUsuario);
 				LOGGER.severe("JWT generado : " + token);
 				// Lo persisto en la DB asociado al usuario
-				if(tipoUsuario.equals("vacunador")) {
+				if (tipoUsuario.equals("vacunador")) {
 					DtVacunador vacunador = IUsuarioLocal.buscarVacunador(Integer.parseInt(ci));
 					vacunador.setToken(token);
 					IUsuarioLocal.ModificarVacunador(vacunador);
 					LOGGER.severe("Se agrega JWT al vacunador " + vacunador.getIdUsuario());
-				}else {
+				} else {
 					if (tipoUsuario.equals("ciudadano")) {
 						DtCiudadano ciudadano = IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci));
 						ciudadano.setToken(token);
@@ -108,13 +109,15 @@ public class CallbackServlet extends HttpServlet {
 					}
 				}
 			}
-			// Podria setear el jwt del usuario en el redirect
-			response.setHeader("x-access-token", token);
-			// Valentin tiene que ver como sacar el header token
-			if(tipoUsuario.equals("ciudadano")) {
-				urlRedirect = "/grupo15-web/html/MenuCiudadano.html?x-access-token=" + token;
-			}else {
-				urlRedirect = "/grupo15-web/html/menuVacunador.html?x-access-token=" + token;
+			// Se guarda token en Cookie asociada al path root ("/") para todo el dominio;
+			// sino sólo quedaria en grupo15-services
+			Cookie userCookie = new Cookie("x-access-token", token);
+			userCookie.setPath("/");
+			response.addCookie(userCookie);
+			if (tipoUsuario.equals("ciudadano")) {
+				urlRedirect = "/grupo15-web/html/MenuCiudadano.html";
+			} else {
+				urlRedirect = "/grupo15-web/html/menuVacunador.html";
 			}
 			LOGGER.severe("Redirecting to: " + urlRedirect);
 			response.sendRedirect(urlRedirect);
@@ -124,15 +127,16 @@ public class CallbackServlet extends HttpServlet {
 		}
 
 	}
-	
+
 	public String requestUserId(String accessToken) {
-		// Ultimo paso con Gub Uy. Se envia el access token para solicitar la CI del usuario actua al UserInfo Endpoint.
+		// Ultimo paso con Gub Uy. Se envia el access token para solicitar la CI del
+		// usuario actua al UserInfo Endpoint.
 		// https://reqbin.com/req/java/5k564bhv/get-request-with-bearer-token-authorization-header
 		String authorizationHeader = "Bearer " + accessToken;
 		LOGGER.severe("authorizationHeader de tipo Bearer : " + authorizationHeader);
 		try {
 			URL url = new URL("https://auth-testing.iduruguay.gub.uy/oidc/v1/userinfo");
-			HttpURLConnection http = (HttpURLConnection)url.openConnection();
+			HttpURLConnection http = (HttpURLConnection) url.openConnection();
 			http.setRequestProperty("Accept", "application/json");
 			http.setRequestProperty("Authorization", authorizationHeader);
 			http.setDoInput(true);
@@ -140,26 +144,25 @@ public class CallbackServlet extends HttpServlet {
 			http.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
 			StringBuilder sb = new StringBuilder();
 			int HttpResult = http.getResponseCode();
-            if (HttpResult == HttpURLConnection.HTTP_OK) {
-                BufferedReader br = new BufferedReader(
-                        new InputStreamReader(http.getInputStream(), "utf-8"));
-                String line = null;
-                while ((line = br.readLine()) != null) {
-                    sb.append(line + "\n");
-                }
-                br.close();
-            } else {
-                System.out.println(http.getResponseMessage());
-            }
-            http.disconnect();
-            JsonReader jsonReader = Json.createReader(new StringReader(sb.toString()));
-            JsonObject object = jsonReader.readObject();
-            jsonReader.close();
-            String ci = object.getString("numero_documento");
-            if (ci != null) {
-            	LOGGER.severe("CI Usuario: " + ci);
-                return ci;
-            }
+			if (HttpResult == HttpURLConnection.HTTP_OK) {
+				BufferedReader br = new BufferedReader(new InputStreamReader(http.getInputStream(), "utf-8"));
+				String line = null;
+				while ((line = br.readLine()) != null) {
+					sb.append(line + "\n");
+				}
+				br.close();
+			} else {
+				System.out.println(http.getResponseMessage());
+			}
+			http.disconnect();
+			JsonReader jsonReader = Json.createReader(new StringReader(sb.toString()));
+			JsonObject object = jsonReader.readObject();
+			jsonReader.close();
+			String ci = object.getString("numero_documento");
+			if (ci != null) {
+				LOGGER.severe("CI Usuario: " + ci);
+				return ci;
+			}
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}
