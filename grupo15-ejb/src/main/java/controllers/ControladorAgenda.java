@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import datatypes.DtAgenda;
 import datatypes.DtCiudadano;
 import datatypes.DtReserva;
+import datatypes.DtReservaCompleto;
 import entities.Agenda;
 import entities.Ciudadano;
 import entities.Reserva;
@@ -179,6 +180,25 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 			}
     	}else
     		throw new VacunatorioNoCargadoException("No existe ese vacunatorio.");
+	}
+	
+	public ArrayList<DtReservaCompleto> obtenerAgendaSoap(String vacunatorio, LocalDate fecha) throws AgendaInexistente {
+		Agenda temp = em.find(Agenda.class, new AgendaID(LocalDate.now(), vacunatorio));
+		
+		if (temp!=null) {
+			/*List<DtCupo> dtc= new ArrayList<DtCupo>();
+			for (Cupo c: temp.getCupos()) {
+				dtc.add(new DtCupo(c.getIdCupo(), c.isOcupado(), c.getAgenda().getIdAgenda()));
+			}*/
+			ArrayList<DtReservaCompleto> dtr= new ArrayList<DtReservaCompleto>();
+			for (Reserva r: temp.getReservas()) {
+				dtr.add(r.getDtReservaCompleto());
+			}
+			//DtAgenda retorno = new DtAgenda(temp.getFecha(), dtr);
+
+			return dtr;
+		}else
+			throw new AgendaInexistente("No hay una agenda en esa fecha en ese vacunatorio.");
 	}
 	
 	public void eliminarCuposAsociados(int idAgenda) throws AgendaInexistente {
