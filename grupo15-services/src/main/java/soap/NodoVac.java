@@ -6,7 +6,7 @@ import javax.ejb.EJB;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
-import datatypes.DtVacunador;
+import datatypes.DtUsuarioSoap;
 import exceptions.PuestoNoCargadosException;
 import interfaces.IControladorPuestoLocal;
 import interfaces.IUsuarioLocal;
@@ -26,8 +26,8 @@ public class NodoVac {
 	}
 	
 	@WebMethod
-	public ArrayList<DtVacunador> listarVacunadores() throws PuestoNoCargadosException {
-		return cu.listarVacunadores();
+	public ArrayList<DtUsuarioSoap> listarVacunadoresSoap() throws PuestoNoCargadosException {
+		return cu.listarVacunadoresSoap();
 	}
 	
 }

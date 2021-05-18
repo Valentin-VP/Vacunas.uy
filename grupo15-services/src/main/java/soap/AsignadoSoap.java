@@ -26,4 +26,9 @@ public class AsignadoSoap {
 		vc.asignarVacunadorAVacunatorio(idVacunador, idVacunatorio, f);
 	}
 	
+	public String isVacunadorAsignadoEnFecha(int idVacunador, String fecha) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate f = LocalDate.parse(fecha, formatter);
+		return vc.isVacunadorAsignadoEnFecha(idVacunador, f);
+	}
 }
