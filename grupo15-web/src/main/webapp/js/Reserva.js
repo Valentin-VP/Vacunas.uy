@@ -11,12 +11,11 @@ var res = new Vue({
       listaVacunatorios: [],
       listaPlanes: [],
       listaHoras: [],
-      ciudadano:'21111113',
-      token: '',
+
     }),
 
     mounted(){
-     this.getToken();
+    
       
       this.CargarEnfermedades();
      
@@ -24,11 +23,7 @@ var res = new Vue({
 
     methods: 
     {
-      getToken(){
-        this.token=getToken();
-        //this.token=login.token;
-        console.log("tokenReserva:", this.token);
-      },
+      
       SetDatos () {
       IdEnf=this.IdEnf;
       console.log("IdEnf:" + this.IdEnf);
@@ -54,7 +49,7 @@ var res = new Vue({
       idVacunatorio : this.IdVac.toString(),
       fecha : this.fecha.toString(),
       hora : this.Hora.toString(),
-    });
+    }, {headers : {token}});
     console.log(this.reserva);
 
       },
