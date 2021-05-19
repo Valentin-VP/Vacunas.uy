@@ -1,14 +1,12 @@
 package rest;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Date;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -19,10 +17,8 @@ import datatypes.DtConstancia;
 import datatypes.DtDireccion;
 import datatypes.ErrorInfo;
 import datatypes.Sexo;
-import exceptions.AgendaRepetida;
 import exceptions.CertificadoRepetido;
 import exceptions.ConstanciaInexistente;
-import exceptions.CupoInexistente;
 import exceptions.EnfermedadInexistente;
 import exceptions.EnfermedadRepetida;
 import exceptions.EtapaRepetida;
@@ -100,25 +96,30 @@ public class InitTest {
 	
 	@POST
 	@Path("/alta")
+	@PermitAll
 	public Response alta() {
 		try {
 			es.agregarEnfermedad("virus1");
 			es.agregarEnfermedad("virus2");
 			vact.agregarVacunatorio("vact1", "Nest1", new DtDireccion("Av. Italia 1111", "Brooks", "Melbourne"), 1555897235, 1.0f, 1.0f);
-			vact.agregarReglasCupos("vact1", "1", 15,  LocalTime.of(10, 0, 0),  LocalTime.of(18, 0, 0));
-			vact.agregarVacunatorio("vact2", "Nest2", new DtDireccion("Av. Italia 1112", "Brooks", "Melbourne"), 1555897235, 1.0f, 1.0f);
-			vact.agregarReglasCupos("vact2", "2", 20,  LocalTime.of(10, 0, 0),  LocalTime.of(18, 0, 0));
-			vact.agregarVacunatorio("vact3", "Nest3", new DtDireccion("Av. Italia 1113", "Brooks", "Melbourne"), 1555897235, 1.0f, 1.0f);
-			vact.agregarReglasCupos("vact3", "3", 30,  LocalTime.of(10, 0, 0),  LocalTime.of(20, 0, 0));
+			vact.agregarReglasCupos("vact1", "1", 15,  LocalTime.of(0, 0, 0),  LocalTime.of(23, 59, 59));
+			//vact.agregarVacunatorio("vact2", "Nest2", new DtDireccion("Av. Italia 1112", "Brooks", "Melbourne"), 1555897235, 1.0f, 1.0f);
+			//vact.agregarReglasCupos("vact2", "2", 20,  LocalTime.of(10, 0, 0),  LocalTime.of(22, 0, 0));
+			//vact.agregarVacunatorio("vact3", "Nest3", new DtDireccion("Av. Italia 1113", "Brooks", "Melbourne"), 1555897235, 1.0f, 1.0f);
+			//vact.agregarReglasCupos("vact3", "3", 30,  LocalTime.of(10, 0, 0),  LocalTime.of(20, 0, 0));
 			
 			uc.agregarUsuarioVacunador(11111111, "Vacunador", "DeTest Uno", LocalDate.now(), "v@1", new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Otro);
 			uc.agregarUsuarioVacunador(11111112, "Vacunador", "DeTest Dos", LocalDate.now(), "v@2", new DtDireccion("Av. Vcd 1002", "Brooks", "Melbourne"), Sexo.Otro);
 			uc.agregarUsuarioVacunador(11111113, "Vacunador", "DeTest Tres", LocalDate.now(), "v@3", new DtDireccion("Av. Vcd 1003", "Brooks", "Melbourne"), Sexo.Otro);
 			uc.agregarUsuarioVacunador(11111114, "Vacunador", "DeTest Cuatro", LocalDate.now(), "v@4", new DtDireccion("Av. Vcd 1004", "Brooks", "Melbourne"), Sexo.Otro);
+			uc.agregarUsuarioVacunador(45946590, "Rodrigo", "Castro", LocalDate.now(), "rodrigo@castro", new DtDireccion("Av. Vcd RRRR", "Brooks", "Melbourne"), Sexo.Otro);
+			//uc.agregarUsuarioVacunador(54657902, "Nicolás", "Méndez", LocalDate.now(), "nicolas@mendez", new DtDireccion("Av. Vcd NNNN", "Brooks", "Melbourne"), Sexo.Otro);
 			uc.agregarUsuarioCiudadano(21111111, "Ciudadano", "DeTest Uno", LocalDate.of(2000, 1, 1), "c@1", new DtDireccion("Av. Cdd 2001", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			uc.agregarUsuarioCiudadano(21111112, "Ciudadano", "DeTest Dos", LocalDate.of(1960, 1, 1), "c@2", new DtDireccion("Av. Cdd 2002", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			uc.agregarUsuarioCiudadano(21111113, "Ciudadano", "DeTest Tres", LocalDate.of(1900, 1, 1), "c@3", new DtDireccion("Av. Cdd 2003", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			uc.agregarUsuarioCiudadano(21111114, "Ciudadano", "DeTest Cuatro", LocalDate.of(1995, 1, 1), "c@4", new DtDireccion("Av. Cdd 2004", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
+			uc.agregarUsuarioCiudadano(54657902, "Nicolás", "Méndez", LocalDate.of(1995, 1, 1), "nicolas@mendez", new DtDireccion("Av. Cdd NNNN", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
+			uc.agregarUsuarioCiudadano(49457795, "Valentin", "Vasconcellos", LocalDate.of(1995, 1, 1), "valentin@vasconcellos", new DtDireccion("Av. Cdd VVVV", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			lab.agregarLaboratorio("lab1");
 			lab.agregarLaboratorio("lab2");
 			trs.agregarTransportista(1);
@@ -144,21 +145,20 @@ public class InitTest {
 			pst.agregarPuesto("puesto1vact1", "vact1");
 			pst.agregarPuesto("puesto2vact1", "vact1");
 			pst.agregarPuesto("puesto3vact1", "vact1");
-			pst.agregarPuesto("puesto1vact2", "vact2");
-			pst.agregarPuesto("puesto2vact2", "vact2");
-			pst.agregarPuesto("puesto1vact3", "vact3");
+			//pst.agregarPuesto("puesto1vact2", "vact2");
+			//pst.agregarPuesto("puesto2vact2", "vact2");
+			//pst.agregarPuesto("puesto1vact3", "vact3");
 			
-			vc.asignarVacunadorAVacunatorio(11111111, "vact1", LocalDate.now());
-			vc.asignarVacunadorAVacunatorio(11111111, "vact1", LocalDate.now().plusDays(1));
-			vc.asignarVacunadorAVacunatorio(11111112, "vact1", LocalDate.now());
-			vc.asignarVacunadorAVacunatorio(11111113, "vact2", LocalDate.now());
+			/*vc.asignarVacunadorAVacunatorio(11111111, "vact2", LocalDate.now());
+			vc.asignarVacunadorAVacunatorio(11111111, "vact2", LocalDate.now().plusDays(1));
 			vc.asignarVacunadorAVacunatorio(11111112, "vact2", LocalDate.now());
-			vc.asignarVacunadorAVacunatorio(11111113, "vact2", LocalDate.now().plusDays(1));
-			vc.asignarVacunadorAVacunatorio(11111111, "vact3", LocalDate.now());
+			vc.asignarVacunadorAVacunatorio(11111113, "vact3", LocalDate.now());
+			vc.asignarVacunadorAVacunatorio(11111112, "vact2", LocalDate.now().plusDays(1));
+			vc.asignarVacunadorAVacunatorio(11111114, "vact3", LocalDate.now().plusDays(1));*/
 			return Response.ok().build();
-		} catch (EnfermedadRepetida | VacunatorioCargadoException | UsuarioExistente | LaboratorioRepetido | TransportistaRepetido | VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | PlanVacunacionRepetido | EtapaRepetida | PlanVacunacionInexistente | VacunatorioNoCargadoException | ReglasCuposCargadoException | CertificadoRepetido | ConstanciaInexistente | PuestoCargadoException | UsuarioInexistente | SinPuestosLibres | FechaIncorrecta e) {
+		} catch (EnfermedadRepetida | VacunatorioCargadoException | UsuarioExistente | LaboratorioRepetido | TransportistaRepetido | VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | PlanVacunacionRepetido | EtapaRepetida | PlanVacunacionInexistente | VacunatorioNoCargadoException | ReglasCuposCargadoException | CertificadoRepetido | ConstanciaInexistente | PuestoCargadoException e) {
 			// TODO Auto-generated catch block
-			return Response.serverError().entity(new ErrorInfo(400, e.getMessage())).status(400).build();
+			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
 		}
 		
 	}

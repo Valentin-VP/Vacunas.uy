@@ -3,6 +3,7 @@ package rest;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 
+import javax.annotation.security.DenyAll;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.Consumes;
@@ -45,6 +46,7 @@ public class ConsultarAgendaVacunacionRWS {
 	 //.... ordenar fechas
 	@GET
 	@Path("/consultar/{vact}") //quitar fecha (es .now())
+	@DenyAll
 	public Response consultarAgendaVacunacion(@PathParam("vact") String idVacunatorio){
 		if (idVacunatorio==null) {
 			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);

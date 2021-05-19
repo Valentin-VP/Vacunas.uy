@@ -13,18 +13,18 @@ public class DtDatosReserva implements Serializable {
 	 */
 	private static final long serialVersionUID = -5360946905967514828L;
 
-	private int idCiudadano;
+	//private int idCiudadano;
 	private String idEnfermedad;
 	private int idPlan;
 	private String idVacunatorio;
 	private String fecha;
 	private String hora;
-	public int getIdCiudadano() {
+	/*public int getIdCiudadano() {
 		return idCiudadano;
 	}
 	public void setIdCiudadano(int idCiudadano) {
 		this.idCiudadano = idCiudadano;
-	}
+	}*/
 	public String getIdEnfermedad() {
 		return idEnfermedad;
 	}

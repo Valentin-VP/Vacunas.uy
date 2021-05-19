@@ -49,7 +49,7 @@ var res = new Vue({
       idVacunatorio : this.IdVac.toString(),
       fecha : this.fecha.toString(),
       hora : this.Hora.toString(),
-    }, {headers : {token}});
+    });
     console.log(this.reserva);
 
       },
