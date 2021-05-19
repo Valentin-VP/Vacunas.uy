@@ -35,7 +35,7 @@ var res = new Vue({
       console.log("Fecha:" + this.fecha);
       Hora=this.Hora;
       console.log("Hora:" + this.Hora);
-      const reserva = { idCiudadano: this.ciudadano.toString(),
+      const reserva = {
         idEnfermedad : this.IdEnf.toString(),
         idPlan : this.IdPlan.toString(),
         idVacunatorio : this.IdVac.toString(),
@@ -43,7 +43,7 @@ var res = new Vue({
         hora : this.Hora.toString(),
       };
       
-      axios.post("http://localhost:8080/grupo15-services/rest/reservas/confirmar", { idCiudadano: this.ciudadano.toString(),
+      axios.post("http://localhost:8080/grupo15-services/rest/reservas/confirmar", {
       idEnfermedad : this.IdEnf.toString(),
       idPlan : this.IdPlan.toString(),
       idVacunatorio : this.IdVac.toString(),
@@ -79,7 +79,7 @@ var res = new Vue({
           SeleccionarPlanes () {
         
             IdPlan = this.IdPlan;
-            axios.get("http://localhost:8080/grupo15-services/rest/reservas/pv" + "?p="+ this.IdPlan.toString() +"&u="+ this.ciudadano.toString())
+            axios.get("http://localhost:8080/grupo15-services/rest/reservas/pv" + "?p="+ this.IdPlan.toString())
           this.CargarVacunatorios();
         
             },
@@ -99,7 +99,7 @@ var res = new Vue({
             },
           SeleccionarFecha() {
             fecha=this.fecha;
-            axios.get("http://localhost:8080/grupo15-services/rest/reservas/fecha" + "?vac="+ this.IdVac.toString() +"&date="+ this.fecha.toString()  +"&p="+ this.IdPlan.toString()  +"&u="+ this.ciudadano.toString())
+            axios.get("http://localhost:8080/grupo15-services/rest/reservas/fecha" + "?vac="+ this.IdVac.toString() +"&date="+ this.fecha.toString()  +"&p="+ this.IdPlan.toString())
               .then((response => {
                 console.log("GET horas: ", response.data)
                 this.listaHoras = response.data
