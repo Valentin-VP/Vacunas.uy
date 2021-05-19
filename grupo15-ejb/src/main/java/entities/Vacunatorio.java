@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
 import datatypes.DtDireccion;
 
 @Entity
@@ -21,14 +23,16 @@ public class Vacunatorio {
 	private Integer telefono;
 	private Float latitud;
 	private Float longitud;
-	@OneToMany(cascade = CascadeType.ALL)
-	private List<ReglasCupos> reglasCupos = new ArrayList<>();
+	//@OneToMany(cascade = CascadeType.ALL)
+	//private List<ReglasCupos> reglasCupos = new ArrayList<>();
+	@OneToOne
+	private ReglasCupos reglasCupos;
 	@OneToMany(mappedBy = "vacunatorio", cascade = CascadeType.ALL)
 	private List<Puesto> puesto = new ArrayList<Puesto>();
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Stock> stock = new ArrayList<Stock>();
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "vacunatorio", cascade = CascadeType.ALL)
 	private List<Agenda> agenda = new ArrayList<Agenda>();
 
 	public Vacunatorio(String id, String nombre, DtDireccion dtDir, Integer telefono, Float latitud, Float longitud) {
@@ -95,11 +99,11 @@ public class Vacunatorio {
 		this.longitud = longitud;
 	}
 
-	public List<ReglasCupos> getReglasCupos() {
+	public ReglasCupos getReglasCupos() {
 		return reglasCupos;
 	}
 
-	public void setReglasCupos(ArrayList<ReglasCupos> reglasCupos) {
+	public void setReglasCupos(ReglasCupos reglasCupos) {
 		this.reglasCupos = reglasCupos;
 	}
 

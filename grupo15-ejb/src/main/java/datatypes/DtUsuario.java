@@ -2,20 +2,26 @@ package datatypes;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
 import java.util.Calendar;
 import java.io.Serializable;
+import java.time.LocalDate;
 
+@XmlRootElement
 public class DtUsuario implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
 	private String nombre;
 	private String apellido;
-	private Date fechaNac;
+	private LocalDate fechaNac;
 	private int IdUsuario;
 	private String email;
 	private DtDireccion direccion;
 	private Sexo sexo;
+	private String token = null;
 	
 	
 	public DtUsuario() {
@@ -23,7 +29,7 @@ public class DtUsuario implements Serializable {
 	}
 	
 	
-	public DtUsuario(String nombre, String apellido, Date fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo) {
+	public DtUsuario(String nombre, String apellido, LocalDate fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo) {
 		super();
 	
 		this.nombre = nombre;
@@ -35,6 +41,18 @@ public class DtUsuario implements Serializable {
 		this.sexo = sexo;
 	}
 	
+	public DtUsuario(String nombre, String apellido, LocalDate fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo, String token) {
+		super();
+	
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.IdUsuario = IdUsuario;
+		this.fechaNac = fechaNac;
+		this.email = email;
+		this.direccion = direccion;
+		this.sexo = sexo;
+		this.token = token;
+	}
 
 	public String getNombre() {
 		return nombre;
@@ -53,10 +71,10 @@ public class DtUsuario implements Serializable {
 	}
 	
 
-	public Date getFechaNac() {
+	public LocalDate getFechaNac() {
 		return fechaNac;
 	}
-	
+	/*
 	public int getDia() {
 		Calendar c2 = new GregorianCalendar();
 		c2.setTime(fechaNac);
@@ -84,8 +102,8 @@ public class DtUsuario implements Serializable {
 		int anio = c2.get(Calendar.YEAR);
 		return anio;
 	}
-	
-	public void setFechaNac(Date fechaNac) {
+	*/
+	public void setFechaNac(LocalDate fechaNac) {
 		this.fechaNac = fechaNac;
 
 	}
@@ -126,6 +144,16 @@ public class DtUsuario implements Serializable {
 
 	public void setSexo(Sexo sexo) {
 		this.sexo = sexo;
+	}
+
+
+	public String getToken() {
+		return token;
+	}
+
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 	
 	

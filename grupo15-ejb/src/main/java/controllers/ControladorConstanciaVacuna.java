@@ -1,11 +1,7 @@
 package controllers;
 
-import interfaces.IConstanciaVacunaDAOLocal;
-import interfaces.IConstanciaVacunaDAORemote;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -13,22 +9,20 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import datatypes.DtAgenda;
+import datatypes.DtCiudadano;
 import datatypes.DtConstancia;
-import datatypes.DtCupo;
 import datatypes.DtReserva;
-import datatypes.DtUsuario;
-import entities.Agenda;
 import entities.CertificadoVacunacion;
+import entities.Ciudadano;
 import entities.ConstanciaVacuna;
-import entities.Cupo;
 import entities.Reserva;
 import entities.Usuario;
-import exceptions.AgendaInexistente;
 import exceptions.CertificadoInexistente;
 import exceptions.ConstanciaInexistente;
 import exceptions.ReservaInexistente;
 import exceptions.UsuarioExistente;
+import interfaces.IConstanciaVacunaDAOLocal;
+import interfaces.IConstanciaVacunaDAORemote;
 
 /**
  * Session Bean implementation class ControladorConstanciaVacuna
@@ -45,12 +39,12 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
         // TODO Auto-generated constructor stub
     }
     
-    public void agregarConstanciaVacuna(String vacuna, int periodoInmunidad, int dosisRecibidas, LocalDate fechaUltimaDosis, DtReserva reserva) throws UsuarioExistente, ReservaInexistente, CertificadoInexistente {
-    	Usuario u = em.find(Usuario.class, reserva.getUsuario().getIdUsuario());
+    public void agregarConstanciaVacuna(String vacuna, int periodoInmunidad, int dosisRecibidas, LocalDate fechaUltimaDosis, int idUser, int idEtapa) throws UsuarioExistente, ReservaInexistente, CertificadoInexistente {
+    	Ciudadano u = em.find(Ciudadano.class, idUser);
     	if (u==null)
     		throw new UsuarioExistente("No existe ese usuario.");
     	else {
-    		Reserva r = buscarReservaUsuarioEtapa(reserva);
+    		Reserva r = buscarReservaUsuarioEtapa(idUser, idEtapa);
     		if (r==null) {
     			throw new ReservaInexistente("No existe una reserva para ese usuario y esa etapa.");
     		}else {
@@ -69,16 +63,16 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
     	}
     }
 
-    public void modificarConstanciaVacuna(int idConst, String vacuna, int periodoInmunidad, int dosisRecibidas, LocalDate fechaUltimaDosis, DtReserva reserva) throws UsuarioExistente, ReservaInexistente, CertificadoInexistente, ConstanciaInexistente {
+    public void modificarConstanciaVacuna(int idConst, String vacuna, int periodoInmunidad, int dosisRecibidas, LocalDate fechaUltimaDosis, int idUser, int idEtapa) throws UsuarioExistente, ReservaInexistente, CertificadoInexistente, ConstanciaInexistente {
     	ConstanciaVacuna cv = em.find(ConstanciaVacuna.class, idConst);
     	if (cv==null)
     		throw new ConstanciaInexistente("No existe una constancia con ese ID.");
     	else {
-	    	Usuario u = em.find(Usuario.class, reserva.getUsuario().getIdUsuario());
+    		Ciudadano u = em.find(Ciudadano.class, idUser);
 	    	if (u==null)
 	    		throw new UsuarioExistente("No existe ese usuario.");
 	    	else{
-	    		Reserva r = buscarReservaUsuarioEtapa(reserva);
+	    		Reserva r = buscarReservaUsuarioEtapa(idUser, idEtapa);
 	    		if (r==null) {
 	    			throw new ReservaInexistente("No existe una reserva para ese usuario y esa etapa.");
 	    		}else {
@@ -108,8 +102,7 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
     	else {
     		Reserva r = temp.getReserva();
     		retorno = new DtConstancia(temp.getIdConstVac(), temp.getDosisRecibidas(), temp.getPeriodoInmunidad(), temp.getFechaUltimaDosis(),  temp.getVacuna(),
-    				new DtReserva(r.getEstado(), getDtUsuario(r.getUsuario()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
-        					r.getEtapa().toDtEtapa().getFechaInicio(), r.getEtapa().toDtEtapa().getFechaFin(), r.getEtapa().toDtEtapa().getDtPvac().getNombre(), r.getEtapa().getId()));
+    				r.getDtReserva());
     		return retorno;
     	}
     }
@@ -125,8 +118,7 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 				
 				Reserva r = cv.getReserva();
 				retorno.add(new DtConstancia(cv.getIdConstVac(), cv.getDosisRecibidas(), cv.getPeriodoInmunidad(), cv.getFechaUltimaDosis(),  cv.getVacuna(),
-	    				new DtReserva(r.getEstado(), getDtUsuario(r.getUsuario()), r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
-	        					r.getEtapa().toDtEtapa().getFechaInicio(), r.getEtapa().toDtEtapa().getFechaFin(), r.getEtapa().toDtEtapa().getDtPvac().getNombre(), r.getEtapa().getId())));
+						r.getDtReserva()));
 			}
 			return retorno;
 		}else {
@@ -135,21 +127,22 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
     	 
     }
     
-	private Reserva buscarReservaUsuarioEtapa(DtReserva res){
-		Usuario u = em.find(Usuario.class, res.getUsuario().getIdUsuario());
-		if (u!=null) {
-			ArrayList<Reserva> temp = (ArrayList<Reserva>) u.getReservas();
+	private Reserva buscarReservaUsuarioEtapa(int idUser, int idEtapa){
+		Ciudadano c = em.find(Ciudadano.class, idUser);
+		if (c!=null) {
+			ArrayList<Reserva> temp = (ArrayList<Reserva>) c.getReservas();
 			for (Reserva r: temp) {
-				if (r.getEtapa().getId() == res.getEtapa())
+				if (r.getEtapa().getId() == idEtapa)
 					return r;
 			}
 		}
 		return null;
 	}
     
-	private DtUsuario getDtUsuario(Usuario u) {
+	private DtCiudadano getDtUsuario(Ciudadano u) {
 		if (u!=null)
-			return new DtUsuario(u.getNombre(), u.getApellido(), u.getFechaNac(), u.getIdUsuario(), u.getEmail(), u.getDireccion(), u.getSexo());
+			return new DtCiudadano(
+					u.getIdUsuario(), u.getNombre(), u.getApellido(), u.getFechaNac(), u.getEmail(), u.getDireccion(), u.getSexo(), u.getTipoSector(), u.isAutenticado());
 		else
 			return null;
 	}

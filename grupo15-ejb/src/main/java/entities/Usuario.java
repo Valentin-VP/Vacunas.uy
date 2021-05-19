@@ -1,16 +1,13 @@
 package entities;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
 
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
-
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 import datatypes.DtDireccion;
 import datatypes.Sexo;
@@ -18,32 +15,31 @@ import datatypes.Sexo;
 
 
 @Entity
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="tipousuario")
 public abstract class Usuario {
 	
 	@Id 
-	private int IdUsuario;
+	private int idUsuario;
 
 	private String nombre;
 	private String apellido;
-	private Date fechaNac;
+	private LocalDate fechaNac;
 	private String email;
 	private DtDireccion direccion;
 	private Sexo sexo;
-	
-	@OneToOne 
-	CertificadoVacunacion certificado;
-	
-	@OneToMany(cascade = CascadeType.ALL)
-	private List<Reserva> reservas = new ArrayList<>();
+	@Column(length = 1024)
+	private String token = null;
+
 	
 	
 	public Usuario() {
 		super();
 	}
 
-	public Usuario( int IdUsuario, String nombre, String apellido, Date fechaNac, String email, DtDireccion direccion, Sexo sexo) {
+	public Usuario( int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo) {
 		super();
-		this.IdUsuario = IdUsuario;
+		this.idUsuario = IdUsuario;
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.fechaNac = fechaNac;
@@ -77,7 +73,7 @@ public abstract class Usuario {
 	}
 
 	public int getIdUsuario() {
-		return IdUsuario;
+		return idUsuario;
 	}
 	
 	
@@ -91,12 +87,12 @@ public abstract class Usuario {
 	}
 	
 	
-	public Date getFechaNac() {
+	public LocalDate getFechaNac() {
 		return fechaNac;
 	}
 
 	public void setIdUsuario(int idUsuario) {
-		IdUsuario = idUsuario;
+		this.idUsuario = idUsuario;
 	}
 
 	public void setNombre(String nombre) {
@@ -107,10 +103,10 @@ public abstract class Usuario {
 		this.apellido = apellido;
 	}
 
-	public void setFechaNac(Date fechaNac) {
+	public void setFechaNac(LocalDate fechaNac) {
 		this.fechaNac = fechaNac;
 	}
-
+/*
 	public CertificadoVacunacion getCertificado() {
 		return certificado;
 	}
@@ -118,16 +114,15 @@ public abstract class Usuario {
 	public void setCertificado(CertificadoVacunacion certificado) {
 		this.certificado = certificado;
 	}
+*/
 
-	public List<Reserva> getReservas() {
-		return reservas;
+	public String getToken() {
+		return token;
 	}
 
-	public void setReservas(List<Reserva> reservas) {
-		this.reservas = reservas;
+	public void setToken(String token) {
+		this.token = token;
 	}
-	
-	
 	
 	
 }

@@ -1,5 +1,6 @@
 package interfaces;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 
@@ -7,6 +8,7 @@ import javax.ejb.Remote;
 
 import datatypes.DtDireccion;
 import datatypes.DtVacunatorio;
+import exceptions.ReglasCuposCargadoException;
 import exceptions.VacunatorioCargadoException;
 import exceptions.VacunatorioNoCargadoException;
 import exceptions.VacunatoriosNoCargadosException;
@@ -21,5 +23,6 @@ public interface IControladorVacunatorioRemote {
 	public ArrayList<DtVacunatorio> listarVacunatorio()throws VacunatoriosNoCargadosException;
 	public void modificarVacunatorio(DtVacunatorio dtVac) throws VacunatorioNoCargadoException;
 	public void eliminarVacunatorio(String id) throws VacunatorioNoCargadoException;
-	
+	public void agregarReglasCupos(String idVac, String id, Integer duracionTurno, LocalTime horaApertura,
+			LocalTime horaCierre) throws VacunatorioNoCargadoException, ReglasCuposCargadoException;
 }

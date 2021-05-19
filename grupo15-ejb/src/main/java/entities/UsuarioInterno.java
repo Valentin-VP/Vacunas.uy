@@ -1,11 +1,17 @@
 package entities;
 
+import java.time.LocalDate;
 import java.util.Date;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
 import datatypes.DtDireccion;
 import datatypes.Rol;
 import datatypes.Sexo;
 
+@Entity
+@DiscriminatorValue("interno")
 public class UsuarioInterno extends Usuario{
 
 	private String password;
@@ -16,7 +22,7 @@ public class UsuarioInterno extends Usuario{
 		super();
 	}
 	
-	public UsuarioInterno( int IdUsuario, String nombre, String apellido, Date fechaNac, String email, DtDireccion direccion, Sexo sexo, String password, Rol rol) {
+	public UsuarioInterno( int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo, String password, Rol rol) {
 		super(IdUsuario, nombre, apellido, fechaNac, email, direccion, sexo);
 		this.password = password;
 		this.rol = rol;

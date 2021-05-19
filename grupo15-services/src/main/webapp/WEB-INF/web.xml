@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+	version="4.0">
+	<display-name>grupo15-services</display-name>
+
+	<servlet>
+		<servlet-name>rest-jersey2-json-jwt</servlet-name>
+		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>jersey.config.server.provider.packages</param-name>
+			<param-value>rest</param-value>
+		</init-param>
+		<init-param>
+			<param-name>javax.ws.rs.Application</param-name>
+			<param-value>rest.filter.RestApplicationConfig</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>rest-jersey2-json-jwt</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+
+	<env-entry>
+		<env-entry-name>auth0.authorizeEndpoint</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>https://auth-testing.iduruguay.gub.uy/oidc/v1/authorize</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>auth0.tokenEndpoint</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>https://auth-testing.iduruguay.gub.uy/oidc/v1/token</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>auth0.userInfoEndpoint</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>https://auth-testing.iduruguay.gub.uy/oidc/v1/userinfo</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>auth0.clientId</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>890192</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>auth0.clientSecret</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>457d52f181bf11804a3365b49ae4d29a2e03bbabe74997a2f510b179</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>auth0.scope</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>openid document</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>auth0.response_type</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>code</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>auth0.redirect_uri</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>http://localhost</env-entry-value>
+		<!-- <env-entry-value>https://localhost/grupo15-services/callback</env-entry-value> -->
+	</env-entry>
+</web-app>

@@ -1,5 +1,6 @@
 package entities;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -18,19 +19,23 @@ public class Etapa {
 	
 	@Id
 	private int id;
-	private Date fechaInicio;
-	private Date fechaFin;
+	private LocalDate fechaInicio;
+	private LocalDate fechaFin;
 	private String condicion;
 	@Id
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn
 	private PlanVacunacion planVacunacion;
 	
+	@ManyToOne
+	@JoinColumn
+	private Vacuna vacuna;
+	
 	public Etapa() {
 		super();
 	}
 
-	public Etapa(int id, Date fechaInicio, Date fechaFin, String condicion, PlanVacunacion planVacunacion) {
+	public Etapa(int id, LocalDate fechaInicio, LocalDate fechaFin, String condicion, PlanVacunacion planVacunacion) {
 		super();
 		this.id = id;
 		this.fechaInicio = fechaInicio;
@@ -47,19 +52,19 @@ public class Etapa {
 		this.id = id;
 	}
 
-	public Date getFechaInicio() {
+	public LocalDate getFechaInicio() {
 		return fechaInicio;
 	}
 
-	public void setFechaInicio(Date fechaInicio) {
+	public void setFechaInicio(LocalDate fechaInicio) {
 		this.fechaInicio = fechaInicio;
 	}
 
-	public Date getFechaFin() {
+	public LocalDate getFechaFin() {
 		return fechaFin;
 	}
 
-	public void setFechaFin(Date fechaFin) {
+	public void setFechaFin(LocalDate fechaFin) {
 		this.fechaFin = fechaFin;
 	}
 	
@@ -83,5 +88,15 @@ public class Etapa {
 		DtEtapa dtEtapa = new DtEtapa(this.id, this.fechaInicio, this.fechaFin,this.planVacunacion.toDtPlanVacunacion());
 		return dtEtapa;
 	}
+
+	public Vacuna getVacuna() {
+		return vacuna;
+	}
+
+	public void setVacuna(Vacuna vacuna) {
+		this.vacuna = vacuna;
+	}
+	
+	
 	
 }
