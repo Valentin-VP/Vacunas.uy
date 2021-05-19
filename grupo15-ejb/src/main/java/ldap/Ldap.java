@@ -170,6 +170,7 @@ public void searchUser(Integer ci) throws NamingException {
 
 
 public String searchType(String ci) throws NamingException {
+	this.newConnection();
     String searchFilter = "(userId="+ci+")";
     String [] reqAtt = {"employeeType"};
     SearchControls controls= new SearchControls();
