@@ -1,27 +1,26 @@
 package rest;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 
-import org.glassfish.jersey.server.ResourceConfig;
+import org.jose4j.jwt.consumer.InvalidJwtException;
 
 import exceptions.UsuarioInexistente;
 import interfaces.IUsuarioLocal;
-import rest.filter.AuthenticationFilter;
+import rest.filter.TokenSecurity;
 
-@DeclareRoles({"vacunador", "ciudadano", "interno"})
+@DeclareRoles({"vacunador", "ciudadano", "administrador", "autoridad"})
 @Path("/mobile")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -36,11 +35,20 @@ public class LoginMobileDemo {
 	@GET
 	@Path("/id")
 	@RolesAllowed({"ciudadano"})
-	public String getCedulaJWT(@Context HttpHeaders headers) {
-		String id = getId( headers );
-		LOGGER.info("Recuperando CI de JWT en Header: " + id);
+	public String getCedulaJWT(@CookieParam("x-access-token") Cookie cookie) {
+		String token = cookie.getValue();
+		String ci = null;
 		try {
-			return IUsuarioLocal.buscarCiudadano(Integer.parseInt(id)).getNombre();
+			ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+		} catch (InvalidJwtException e) {
+			e.printStackTrace();
+		}
+        if( ci == null)
+            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
+		LOGGER.info("Cedula obtenida en REST: " + ci);
+		LOGGER.info("Recuperando CI de JWT en Header: " + ci);
+		try {
+			return IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci)).getNombre();
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -57,12 +65,5 @@ public class LoginMobileDemo {
 	public void metodoVacunador() {
 		LOGGER.info("Metodo no permitido para ciudadano. Este print nunca deberiamos verlo dede la app mobile!");
 	}
-	
-    private String getId( HttpHeaders headers) {
-        // Obtener CI del AuthenticationFilter
-        List<String> id = headers.getRequestHeader( AuthenticationFilter.HEADER_PROPERTY_ID );   
-        if( id == null || id.size() != 1 )
-            throw new NotAuthorizedException("Unauthorized!");
-        return id.get(0);
-    }
+
 }

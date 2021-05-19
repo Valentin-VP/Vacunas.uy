@@ -47,7 +47,7 @@ public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequ
 	private ResourceInfo resourceInfo;
 
 	public static final String HEADER_PROPERTY_ID = "id";
-	public static final String HEADER_PROPERTY_TIPO = "tipo";
+	public static final String HEADER_PROPERTY_TIPO = "tipoUsuario";
 	public static final String AUTHORIZATION_PROPERTY = "x-access-token";
 
 	@Override
@@ -93,7 +93,8 @@ public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequ
 						"Token invalid. Please authenticate again!"));
 				return;
 			}
-
+			LOGGER.info("Auth Filter id: " + id);
+			LOGGER.info("Auth Filter tipoUsuario: " + tipoUsuario);
 			DtUsuario user = null;
 			// Recupero el ciudadano o vacunador segun corresponda, para chequear si tiene
 			// un token de sesion activo. Si ingreso como ciudadano, no va a tener como
@@ -149,8 +150,8 @@ public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequ
 			idList.add(id.toString());
 			tipoUsuarioList.add(tipoUsuario);
 			LOGGER.warning("Acceso Permitido - Seteando id y tipoUsuario en Headers");
-			headers.put("id", idList);
-			headers.put("tipoUsuario", tipoUsuarioList);
+			headers.put(HEADER_PROPERTY_ID, idList);
+			headers.put(HEADER_PROPERTY_TIPO, tipoUsuarioList);
 		}
 	}
 

@@ -1,26 +1,26 @@
 package rest;
 
-import java.io.Serializable;
 import java.util.Iterator;
-import java.util.List;
+import java.util.logging.Logger;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
+import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -40,14 +40,14 @@ import jakarta.xml.soap.SOAPEnvelope;
 import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPMessage;
 import jakarta.xml.soap.SOAPPart;
-import rest.filter.AuthenticationFilter;
+import rest.filter.TokenSecurity;
 
-@DeclareRoles({"vacunador", "ciudadano", "interno"})
-@SessionScoped
+@DeclareRoles({"vacunador", "ciudadano", "administrador", "autoridad"})
+@RequestScoped
 @Path("/puestovac")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class ConsultarPuestoVacunadorRWS implements Serializable {
+public class ConsultarPuestoVacunadorRWS{
 
 	/**
 	 * 
@@ -58,7 +58,7 @@ public class ConsultarPuestoVacunadorRWS implements Serializable {
 	@EJB
 	IControladorVacunatorioLocal vacs;
 	
-	private static final long serialVersionUID = 1L;
+	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 
 	public ConsultarPuestoVacunadorRWS() {
 		// TODO Auto-generated constructor stub
@@ -67,9 +67,19 @@ public class ConsultarPuestoVacunadorRWS implements Serializable {
 	
 	@GET
 	@Path("/vac")
-	@RolesAllowed({"vacunador"}) 
-	public Response listarVacunatorios(){
+	@PermitAll
+	public Response listarVacunatorios(@CookieParam("x-access-token") Cookie cookie){
 		try {
+			String token = cookie.getValue();
+			String ci = null;
+			try {
+				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+			} catch (InvalidJwtException e) {
+				e.printStackTrace();
+			}
+	        if( ci == null)
+	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
+			LOGGER.info("Cedula obtenida en REST: " + ci);
 			return Response.ok(vacs.listarVacunatorio()).status(200).build();
 		} catch (VacunatoriosNoCargadosException e) {
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
@@ -94,20 +104,30 @@ public class ConsultarPuestoVacunadorRWS implements Serializable {
 	@GET
 	@Path("/asignado") //agregar fecha
 	@PermitAll
-	@RolesAllowed({"vacunador"}) 
-	public Response consultarPuestoVacunador(@Context HttpHeaders headers, @QueryParam("vact") String idVacunatorio, @QueryParam("date") String fecha){
+	public Response consultarPuestoVacunador(@CookieParam("x-access-token") Cookie cookie, @QueryParam("vact") String idVacunatorio, @QueryParam("date") String fecha){
 		if (idVacunatorio==null || fecha==null) {
 			System.out.println("G15Services/Soap/ConsultarPuestoVaucnadorRWS/consultarPuestoVacunador : idVacunatorio || fecha NULL");
 			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
 			return rb.build();
 		}
-		List<String> id = headers.getRequestHeader( AuthenticationFilter.HEADER_PROPERTY_ID ); 
+
+		String token = cookie.getValue();
+		String ci = null;
+		try {
+			ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+		} catch (InvalidJwtException e) {
+			e.printStackTrace();
+		}
+        if( ci == null)
+            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
+		LOGGER.info("Cedula obtenida en REST: " + ci);
+		
 		String soapEndpointUrl = "http://localhost:8180/vacunatorio-services/AsignadoSoap?wsdl";
         String soapAction = "consultar";
         DtAsignado dt;
 		try {
 			System.out.println("G15Services/Soap/ConsultarPuestoVaucnadorRWS/consultarPuestoVacunador : " + fecha);
-			dt = callSoapWebService(soapEndpointUrl, soapAction, Integer.parseInt(id.get(0)), fecha);
+			dt = callSoapWebService(soapEndpointUrl, soapAction, Integer.parseInt(ci), fecha);
 	        if (dt!=null) {
 	        	System.out.println("G15Services/Soap/ConsultarPuestoVaucnadorRWS/consultarPuestoVacunador : " + dt.getIdPuesto());
 	        	return Response.ok(dt).build();

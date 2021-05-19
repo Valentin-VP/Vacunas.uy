@@ -6,19 +6,15 @@ import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jose4j.lang.JoseException;
-
-import datatypes.DtCiudadano;
 import datatypes.DtUsuarioInterno;
-import datatypes.DtVacunador;
-import exceptions.UsuarioExistente;
 import exceptions.UsuarioInexistente;
 import interfaces.IUsuarioLocal;
-import rest.filter.TokenSecurity;
+import rest.filter.AuthenticationFilter;
 
 @WebServlet("/logininterno")
 public class LoginInterno extends HttpServlet {
@@ -34,16 +30,25 @@ public class LoginInterno extends HttpServlet {
 
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// Verificar que en el REST tengan estos nombres los headers agregados
-		String ci = request.getParameter("ci");
-		String tipoUsuario = request.getParameter("tipousuario");
+		LOGGER.info("Accediendo a LoginInterno WebServlet");
 		String token = null;
-		try {
-			token = TokenSecurity.generateJwtToken(ci, tipoUsuario);	
-		} catch (JoseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		Cookie[] cookies = request.getCookies();
+
+		if (cookies != null) {
+		 for (Cookie cookie : cookies) {
+		   if (cookie.getName().equals("x-acces-token")) {
+			   token = cookie.getValue();
+			   LOGGER.info("Se obtiene Cookie en LoginInterno WebServlet: " + token);
+		    }
+		  }
 		}
+		else {
+			throw new ServletException("No se detecto Cookie al llegar a servlet LoginInterno");
+		}
+		String ci = request.getHeader(AuthenticationFilter.HEADER_PROPERTY_ID);
+		String tipoUsuario = request.getHeader(AuthenticationFilter.HEADER_PROPERTY_TIPO);
+		// Si lo anterior no funciona, probar lo siguiente
+		//String tipoUsuario = TokenSecurity.getTipoUsuarioClaim(TokenSecurity.validateJwtToken(token));
 		if(token != null && (tipoUsuario.equals("administrador") || tipoUsuario.equals("autoridad"))) {
 			DtUsuarioInterno interno = null;
 			try {
@@ -55,8 +60,7 @@ public class LoginInterno extends HttpServlet {
 			} catch (UsuarioInexistente e) {
 				e.printStackTrace();
 			}
-			LOGGER.severe("Se agrega JWT al usuario interno " + interno.getIdUsuario());
-			response.setHeader("token", token);
+			LOGGER.severe("Se agrega JWT en la Base de Datos al usuario interno " + interno.getIdUsuario());
 		}
 		else {
 			LOGGER.severe("No se ha recibido el token, o el tipo de usuario no es el correcto");
