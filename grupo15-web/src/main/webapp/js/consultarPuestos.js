@@ -33,7 +33,7 @@ var vac = new Vue({
         }))
       },
     getData() {
-   //   axios.get("http://localhost:8080/grupo15-services/rest/puestovac/asignado?user=11111111&vact=vact1&date=2021-05-12")
+  
       axios.get("http://localhost:8080/grupo15-services/rest/puestovac/asignado?vact="+this.idVac.toString()+"&date="+this.fecha.toString())
         .then((response => {
 
