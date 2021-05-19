@@ -9,8 +9,10 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import datatypes.DtPlanVacunacion;
+import entities.Enfermedad;
 import entities.Etapa;
 import entities.PlanVacunacion;
+import exceptions.EnfermedadInexistente;
 import exceptions.PlanVacunacionInexistente;
 import exceptions.PlanVacunacionRepetido;
 import interfaces.IPlanVacunacionLocal;
@@ -32,6 +34,22 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 			em.persist(pV);
 		}else
 			throw new PlanVacunacionRepetido("Ya existe un plan de vacunacion con esa id");
+	}
+	
+	public void agregarEnfermedadPlan(int id, String nombre) throws PlanVacunacionInexistente, EnfermedadInexistente {
+		PlanVacunacion pv = em.find(PlanVacunacion.class, id);
+		if (pv==null) {
+			throw new PlanVacunacionInexistente("No existe ese plan de vacunacion.");
+		}else {
+			Enfermedad e = em.find(Enfermedad.class, nombre);
+			if (e==null) {
+				throw new EnfermedadInexistente("No existe esa enfermedad.");
+			}else {
+				pv.setEnfermedad(e);
+				em.merge(pv);
+			}
+		}
+		
 	}
 	
 	public ArrayList<DtPlanVacunacion> listarPlanesVacunacion() throws PlanVacunacionInexistente{

@@ -1,6 +1,7 @@
 
 package interfaces;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -15,7 +16,7 @@ import exceptions.ReglasCuposNoCargadosException;
 @Local
 public interface IControladorReglasCuposLocal {
 
-	public void agregarReglasCupos(String id, Date fecha, Integer duracionTurno,  DtHora horaApertura,DtHora horaCierre) throws ReglasCuposCargadoException;
+	public void agregarReglasCupos(String id, Integer duracionTurno,  LocalTime horaApertura,LocalTime horaCierre) throws ReglasCuposCargadoException;
 	public DtReglasCupos obtenerReglasCupos(String id) throws ReglasCuposNoCargadoException;
 	public ArrayList<DtReglasCupos> listarReglasCupos()throws ReglasCuposNoCargadosException;
 	public void modificarReglasCupos(DtReglasCupos dtRegCup) throws ReglasCuposNoCargadoException;

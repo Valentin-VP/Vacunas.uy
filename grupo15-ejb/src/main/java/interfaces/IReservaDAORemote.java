@@ -1,32 +1,31 @@
 package interfaces;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 import javax.ejb.Remote;
 
-import datatypes.DtReserva;
-import datatypes.EstadoReserva;
-import exceptions.PuestoNoCargadoException;
-import exceptions.ReservaInexistente;
-import exceptions.ReservaRepetida;
-import exceptions.UsuarioExistente;
+import datatypes.DtEnfermedad;
+import datatypes.DtEtapa;
+import datatypes.DtPlanVacunacion;
+import datatypes.DtVacunatorio;
+import exceptions.CupoInexistente;
+import exceptions.EnfermedadInexistente;
+import exceptions.EtapaInexistente;
+import exceptions.PlanVacunacionInexistente;
+import exceptions.UsuarioInexistente;
+import exceptions.VacunatorioNoCargadoException;
+import exceptions.VacunatoriosNoCargadosException;
 
 @Remote
 public interface IReservaDAORemote   {
-	public void agregarReserva(int usuario, int etapa, String puesto, LocalDateTime fecha, EstadoReserva estado) throws ReservaRepetida, PuestoNoCargadoException, ReservaInexistente, UsuarioExistente;
-	
-	public void modificarReserva(int usuario, int etapa, String puesto, LocalDateTime fecha, EstadoReserva estado) throws ReservaInexistente, PuestoNoCargadoException, UsuarioExistente;
-	
-	 public void eliminarReserva(int usuario, int etapa) throws ReservaInexistente, UsuarioExistente;
-	
-	 public DtReserva obtenerReserva(int usuario, int etapa) throws ReservaInexistente, UsuarioExistente ;
-	
-	/*public DtReserva obtenerReserva(String user);
-	
-	public DtReserva obtenerReserva(Date fecha);
-	
-	public DtReserva obtenerReserva(EstadoReserva estado);*/
-	
-	 public ArrayList<DtReserva> listarReservasGenerales()  throws ReservaInexistente;
+	public ArrayList<DtEnfermedad> listarEnfermedades() throws EnfermedadInexistente;
+	public ArrayList<DtPlanVacunacion> seleccionarEnfermedad(String enfermedad) throws PlanVacunacionInexistente, EnfermedadInexistente;
+	public ArrayList<DtVacunatorio> listarVacunatorios() throws VacunatoriosNoCargadosException;
+	public ArrayList<DtEtapa> seleccionarPlanVacunacion(int idPlan, int idUser) throws PlanVacunacionInexistente, EtapaInexistente, UsuarioInexistente;
+	public ArrayList<String> seleccionarFecha(LocalDate fecha, String idVacunatorio, int idPlan, int idCiudadano) throws VacunatorioNoCargadoException, PlanVacunacionInexistente, UsuarioInexistente, EtapaInexistente;
+	public void confirmarReserva(int idCiudadano, String idEnfermedad, int idPlan, String idVacunatorio,
+			LocalDate fecha, LocalTime hora)
+			throws UsuarioInexistente, PlanVacunacionInexistente, VacunatorioNoCargadoException, EnfermedadInexistente, CupoInexistente, EtapaInexistente;
 }

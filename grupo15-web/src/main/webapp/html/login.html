@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Login</title>
+  <link href="/grupo15-web/css/styles.css" rel="stylesheet" type="text/css" media="all">
+  <link rel="shortcut icon" href="#">
+ 
+</head>
+
+<body> 
+
+<div id="log">
+	<div id="login">
+	<div class="body3">
+  <div class="body2"></div>
+		<div class="grad2"></div>
+		<div class="header2">
+			<div>Vacunas<span>UY</span></div>
+		</div>
+		<br>
+		<div class="login2">
+			<a href="http://localhost:8080/grupo15-services/login?tipoUsuario=ciudadano">  <input type="button" @click="setCiudadano" value="Ciudadano" id="ciudadano"></a>
+			<a href="http://localhost:8080/grupo15-services/login?tipoUsuario=vacunador"> <input type="button" @click="setVacunador" value="Vacunador" id="vacunador"></a>
+		</div>
+	</div>
+</div>
+
+ <!-- development version, includes helpful console warnings -->
+ <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+ <script src="/grupo15-web/js/login.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/js-base64@3.6.0/base64.min.js"></script>
+</body>
+
+</html>
