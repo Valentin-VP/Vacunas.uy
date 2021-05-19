@@ -106,7 +106,7 @@ public class ConsultarPuestoVacunadorRWS{
 	@PermitAll
 	public Response consultarPuestoVacunador(@CookieParam("x-access-token") Cookie cookie, @QueryParam("vact") String idVacunatorio, @QueryParam("date") String fecha){
 		if (idVacunatorio==null || fecha==null) {
-			System.out.println("G15Services/Soap/ConsultarPuestoVaucnadorRWS/consultarPuestoVacunador : idVacunatorio || fecha NULL");
+			LOGGER.info("G15Services/Soap/ConsultarPuestoVaucnadorRWS/consultarPuestoVacunador : idVacunatorio || fecha NULL");
 			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
 			return rb.build();
 		}
@@ -126,10 +126,10 @@ public class ConsultarPuestoVacunadorRWS{
         String soapAction = "consultar";
         DtAsignado dt;
 		try {
-			System.out.println("G15Services/Soap/ConsultarPuestoVaucnadorRWS/consultarPuestoVacunador : " + fecha);
+			LOGGER.info("G15Services/Soap/ConsultarPuestoVaucnadorRWS/consultarPuestoVacunador : " + fecha);
 			dt = callSoapWebService(soapEndpointUrl, soapAction, Integer.parseInt(ci), fecha);
 	        if (dt!=null) {
-	        	System.out.println("G15Services/Soap/ConsultarPuestoVaucnadorRWS/consultarPuestoVacunador : " + dt.getIdPuesto());
+	        	LOGGER.info("G15Services/Soap/ConsultarPuestoVaucnadorRWS/consultarPuestoVacunador : " + dt.getIdPuesto());
 	        	return Response.ok(dt).build();
 	        }
 	        else
