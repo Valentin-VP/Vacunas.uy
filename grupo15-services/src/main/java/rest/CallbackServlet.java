@@ -131,18 +131,20 @@ public class CallbackServlet extends HttpServlet {
 					}
 				}
 			}
-			// Se guarda token en Cookie asociada al path root ("/") para todo el dominio;
-			// sino sólo quedaria en grupo15-services
-			Cookie userCookie = new Cookie("x-access-token", token);
-			userCookie.setPath("/");
-			response.addCookie(userCookie);
-			if (tipoUsuario.equals("ciudadano")) {
-				urlRedirect = "/grupo15-web/html/MenuCiudadano.html";
-			} else {
-				urlRedirect = "/grupo15-web/html/menuVacunador.html";
+			if (token!= null) {
+				// Se guarda token en Cookie asociada al path root ("/") para todo el dominio;
+				// sino sólo quedaria en grupo15-services
+				Cookie userCookie = new Cookie("x-access-token", token);
+				userCookie.setPath("/");
+				response.addCookie(userCookie);
+				if (tipoUsuario.equals("ciudadano")) {
+					urlRedirect = "/grupo15-web/html/MenuCiudadano.html";
+				} else {
+					urlRedirect = "/grupo15-web/html/menuVacunador.html";
+				}
+				LOGGER.severe("Redirecting to: " + urlRedirect);
+				response.sendRedirect(urlRedirect);
 			}
-			LOGGER.severe("Redirecting to: " + urlRedirect);
-			response.sendRedirect(urlRedirect);
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 			request.setAttribute("error", ex.getMessage());
