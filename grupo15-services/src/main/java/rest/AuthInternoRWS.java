@@ -79,10 +79,12 @@ public class AuthInternoRWS{
 				e.printStackTrace();
 			}
 		}
+		else {
+			// Usuario no existe en LDAP, se redirige al Servlet Login Interno sin Cookie. Probar si llega con el status 401
+			return Response.status(Response.Status.UNAUTHORIZED).header(HttpHeaders.LOCATION, "/grupo15-services/logininterno").build();
+		}
 		Cookie userCookie = new Cookie("x-access-token", token, "/", "");
 		NewCookie rwsCookie = new NewCookie(userCookie);
-		// Alternativa:
-		//NewCookie userCookie = new NewCookie("x-access-token", token, "/", "", "x-access-token", 3600, false);
 		return Response.status(Response.Status.OK).header(HttpHeaders.LOCATION, "/grupo15-services/logininterno")
 				.cookie(rwsCookie).build();
 	}

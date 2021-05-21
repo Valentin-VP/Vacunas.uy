@@ -33,6 +33,7 @@ import com.auth0.AuthenticationController;
 
 import datatypes.DtCiudadano;
 import datatypes.DtVacunador;
+import exceptions.UsuarioInexistente;
 import interfaces.IUsuarioLocal;
 import rest.filter.TokenSecurity;
 
@@ -91,21 +92,42 @@ public class CallbackServlet extends HttpServlet {
 			LOGGER.severe("Token de acceso : " + accessToken);
 			ci = requestUserId(accessToken);
 			if (ci != null) {
-				// Genero token de sesion con ID y tipo de usuario
-				token = TokenSecurity.generateJwtToken(ci, tipoUsuario);
-				LOGGER.severe("JWT generado : " + token);
-				// Lo persisto en la DB asociado al usuario
 				if (tipoUsuario.equals("vacunador")) {
-					DtVacunador vacunador = IUsuarioLocal.buscarVacunador(Integer.parseInt(ci));
-					vacunador.setToken(token);
-					IUsuarioLocal.ModificarVacunador(vacunador);
-					LOGGER.severe("Se agrega JWT al vacunador " + vacunador.getIdUsuario());
+					try {
+						// Busco si existe este usuario con el rol actual
+						DtVacunador vacunador = IUsuarioLocal.buscarVacunador(Integer.parseInt(ci));
+						// Genero token de sesion con ID y tipo de usuario
+						token = TokenSecurity.generateJwtToken(ci, tipoUsuario);
+						LOGGER.severe("JWT generado : " + token);
+						// Persisto el token en la DB asociado al usuario
+						vacunador.setToken(token);
+						IUsuarioLocal.ModificarVacunador(vacunador);
+						LOGGER.severe("Se agrega JWT al vacunador " + vacunador.getIdUsuario());
+					} catch (UsuarioInexistente error){
+						// No existe el usuario con rol Vacunador, se debe informar que debe solicitar el rol a un administrador --> Definir pagina destino
+						LOGGER.severe("El usuario no existe o no tiene el rol vacunador");
+						urlRedirect = "/grupo15-web/html/error.html";
+						response.sendRedirect(urlRedirect);
+					}
 				} else {
 					if (tipoUsuario.equals("ciudadano")) {
-						DtCiudadano ciudadano = IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci));
-						ciudadano.setToken(token);
-						IUsuarioLocal.ModificarCiudadano(ciudadano);
-						LOGGER.severe("Se agrega JWT al ciudadano " + ciudadano.getIdUsuario());
+						try {
+							// Busco si existe este usuario con el rol actual
+							DtCiudadano ciudadano = IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci));
+							// Genero token de sesion con ID y tipo de usuario
+							token = TokenSecurity.generateJwtToken(ci, tipoUsuario);
+							LOGGER.severe("JWT generado : " + token);
+							// Persisto el token en la DB asociado al usuario
+							ciudadano.setToken(token);
+							IUsuarioLocal.ModificarCiudadano(ciudadano);
+							LOGGER.severe("Se agrega JWT al ciudadano " + ciudadano.getIdUsuario());
+						}catch(UsuarioInexistente error) {
+							// No existe el usuario, se debe pedir Registro, y luego redirigir desde ahi al login nuevamente
+							LOGGER.severe("El usuario no existe. Debe darse de alta como ciudadano.");
+							urlRedirect = "/grupo15-web/html/registro.html";
+							response.sendRedirect(urlRedirect);
+						}
+						
 					}
 				}
 			}

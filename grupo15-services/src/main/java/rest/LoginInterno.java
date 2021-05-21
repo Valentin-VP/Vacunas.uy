@@ -33,7 +33,6 @@ public class LoginInterno extends HttpServlet {
 		LOGGER.info("Accediendo a LoginInterno WebServlet");
 		String token = null;
 		Cookie[] cookies = request.getCookies();
-
 		if (cookies != null) {
 		 for (Cookie cookie : cookies) {
 		   if (cookie.getName().equals("x-acces-token")) {
@@ -43,6 +42,7 @@ public class LoginInterno extends HttpServlet {
 		  }
 		}
 		else {
+			// Si llego sin Cookie, no esta autorizado (o accedio ilicito al recurso, o no existe en LDAP) --> No puede seguir, arrojar a pagina de error o index?
 			throw new ServletException("No se detecto Cookie al llegar a servlet LoginInterno");
 		}
 		String ci = request.getHeader(AuthenticationFilter.HEADER_PROPERTY_ID);
@@ -63,6 +63,7 @@ public class LoginInterno extends HttpServlet {
 			LOGGER.severe("Se agrega JWT en la Base de Datos al usuario interno " + interno.getIdUsuario());
 		}
 		else {
+			// Caso en que el usuario tiene Cookie con token pero no inicio sesion como interno --> No puede seguir, arrojar a pagina de error o index?
 			LOGGER.severe("No se ha recibido el token, o el tipo de usuario no es el correcto");
 		}
 		String urlRedirect = "/grupo15-web/html/index.html";
