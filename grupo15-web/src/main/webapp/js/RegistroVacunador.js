@@ -15,12 +15,12 @@ var res = new Vue({
     {
       
       SetDatos () {
-      id=this.id;
-      console.log("IdEnf:" + this.id);
+      id=this.id; 
+      console.log("id:" + this.id);
       nombre=this.nombre;
-      console.log("IdPlan:" + this.nombre);
+      console.log("nombre:" + this.nombre);
       apellido= this.apellido;
-      console.log("IdVac:" + this.apellido);
+      console.log("apellido:" + this.apellido);
       fecha=this.fecha;
       console.log("Fecha:" + this.fecha);
       sexo=this.sexo;
