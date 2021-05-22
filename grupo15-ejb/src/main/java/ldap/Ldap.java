@@ -169,6 +169,7 @@ public void searchUser(Integer ci) throws NamingException {
 }
 
 public boolean searchUserBool(Integer ci) throws NamingException {
+	this.newConnection();
 	String searchFilter = "(userId="+ci+")";
 	String [] reqAtt = {"userId","userPassword", "cn"};
 	SearchControls controls= new SearchControls();
