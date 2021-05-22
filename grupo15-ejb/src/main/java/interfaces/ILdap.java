@@ -11,6 +11,7 @@ public interface ILdap {
 	public void newConnection();
 	public void getAllUsers() throws NamingException;
 	public  boolean authUser(String userId, String password);
+	public  boolean searchUserBool(Integer ci) throws NamingException;
 	public String searchType(String ci) throws NamingException;
 }
 

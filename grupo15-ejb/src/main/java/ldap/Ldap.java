@@ -168,6 +168,27 @@ public void searchUser(Integer ci) throws NamingException {
 	}
 }
 
+public boolean searchUserBool(Integer ci) throws NamingException {
+	String searchFilter = "(userId="+ci+")";
+	String [] reqAtt = {"userId","userPassword", "cn"};
+	SearchControls controls= new SearchControls();
+	controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+	controls.setReturningAttributes(reqAtt);
+	NamingEnumeration users = connection.search("ou=users,ou=system", searchFilter, controls);
+	SearchResult result = null;
+	while (users.hasMore()){
+		result = (SearchResult)users.next();
+		Attributes attr = result.getAttributes();
+		System.out.println(attr.get("userId"));
+		System.out.println(attr.get("userPassword"));
+		System.out.println(attr.get("cn"));
+	}
+	if (users!= null) {
+		return true;
+	} else return false;
+	}
+
+
 
 public String searchType(String ci) throws NamingException {
 	this.newConnection();
