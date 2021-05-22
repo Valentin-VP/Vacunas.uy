@@ -7,6 +7,7 @@ var res = new Vue({
       direccion:'',
       fecha:'',
       sexo:'',
+      email:'',
 
     }),
 
@@ -24,14 +25,15 @@ var res = new Vue({
       console.log("Fecha:" + this.fecha);
       sexo=this.sexo;
       console.log("Sexo:" + this.sexo);
-    
-
+      email=this.email;
+      console.log("Email:" + this.email);
      // axios.post("http://localhost:8080/grupo15-services/rest/reservas/confirmar", {
        // id : this.id.toString(),
        // nombre : this.nombre.toString(),
        // apellido : this.apellido.toString(),
        // fecha : this.fecha.toString(),
        // sexo : this.sexo.toString(),
+       //  email : this.email.toString(),
      // });
    
   
