@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.Base64;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.logging.Logger;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.naming.NamingException;
@@ -39,14 +41,35 @@ public class AgregarUsuarioRest implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	@POST
-	@Path("/usuario")
-	public void agregarUsuario(DtLdap dt) {
-
-		l.addUser(dt.getApellido(), dt.getCi(), dt.getNombre(), dt.getTipoUser(), dt.getPassword());
-
-	}
-
+	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 	
+	@PermitAll
+	@POST
+	@Path("/add")
+	public Response agregarUsuario(@Context HttpHeaders headers, DtLdap dt) {
+		LOGGER.info("Accediendo a AgregarUsuarioRest");
+
+		List<String> authHeaders = headers.getRequestHeader("Authorization");
+		if (authHeaders == null) {
+			throw new IllegalArgumentException("Request does not have Authorization header");
+		}
+
+		// Obtener value del header Auth
+		String authHeaderValue = authHeaders.get(0);
+		System.out.println(authHeaderValue);
+		if (authHeaderValue == null) {
+			throw new IllegalArgumentException("Request does not have authorization header value");
+		}
+
+		StringTokenizer tokenizer = new StringTokenizer(
+				new String(Base64.getDecoder().decode(authHeaderValue.replaceFirst("Basic ", "").getBytes())), ":");
+		String ci = tokenizer.nextToken();
+		String password = tokenizer.nextToken();
+		System.out.println(ci);
+		System.out.println(password);
+		l.addUser(dt.getApellido(), Integer.parseInt(ci), dt.getNombre(), dt.getTipoUser(), password);
+		
+		return Response.ok().build();
+	}
 
 }
