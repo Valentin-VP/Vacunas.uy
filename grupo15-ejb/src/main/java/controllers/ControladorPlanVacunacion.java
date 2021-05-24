@@ -137,4 +137,40 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 			throw new PlanVacunacionInexistente("No existen agendas abiertas.");
 		}
 	}
+	
+	public ArrayList<DtPlanFecha> listarAgendasProximas() throws PlanVacunacionInexistente{
+		Query query = em.createQuery("SELECT p FROM PlanVacunacion p ORDER BY nombre ASC");
+		@SuppressWarnings("unchecked")
+		List<PlanVacunacion> pVacs = query.getResultList();
+		if(!pVacs.isEmpty()) {
+			ArrayList<DtPlanFecha> retorno = new ArrayList<>();
+	    	for(PlanVacunacion pV: pVacs) {
+	    		LocalDate fIni;
+    			LocalDate fFin;
+	    		ArrayList<Etapa> etapas = (ArrayList<Etapa>) pV.getEtapas();
+	    		if (!etapas.isEmpty()) {
+	    			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	    			fIni = etapas.get(0).getFechaInicio();
+	    			fFin = etapas.get(0).getFechaFin();
+		    		for (Etapa e: etapas) {
+		    			if (e.getFechaInicio().isBefore(fIni))
+		    				fIni = e.getFechaInicio();
+		    			if (e.getFechaFin().isAfter(fFin))
+		    				fFin = e.getFechaFin();
+		    		}
+		    		if (fIni.isBefore(LocalDate.now().plusDays(30)) && fIni.isAfter(LocalDate.now()) && fFin.isAfter(fIni)) {
+		    			retorno.add(new DtPlanFecha(pV.getNombre(), pV.getDescripcion(), fIni.format(formatter) + " - " + fFin.format(formatter), pV.getEnfermedad().getNombre()));
+		    		}
+	    		}else {
+	    			throw new PlanVacunacionInexistente("No existen agendas proximas.");
+	    		}
+	    	}
+    		if (retorno.isEmpty())
+    			throw new PlanVacunacionInexistente("No existen agendas proximas.");
+    		else 
+    			return retorno;
+		}else {
+			throw new PlanVacunacionInexistente("No existen agendas proximas.");
+		}
+	}
 }
