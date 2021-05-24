@@ -15,8 +15,10 @@ public class DtLdap implements Serializable {
 	private String apellido;
 	private String tipoUser;
 	private String password;
-	private Date fecha;
+	private String fecha;
 	private String direccion;
+	private String barrio;
+	private String departamento;
 	private String email;
 	private String sexo;
 	
@@ -41,7 +43,7 @@ public class DtLdap implements Serializable {
 		this.password = password;
 	}
 	
-	public DtLdap(String apellido, String email, Date fecha, String nombre, String tipoUser, String direccion, String sexo) {
+	public DtLdap(String apellido, String email, String fecha, String nombre, String tipoUser, String direccion, String barrio, String departamento, String sexo) {
 		super();
 		this.nombre = nombre;
 		this.apellido = apellido;
@@ -50,6 +52,8 @@ public class DtLdap implements Serializable {
 		this.sexo = sexo;
 		this.email = email;
 		this.fecha = fecha;
+		this.setBarrio(barrio);
+		this.setDepartamento(departamento);
 	
 	}
 
@@ -67,13 +71,13 @@ public class DtLdap implements Serializable {
 
 
 
-	public Date getFecha() {
+	public String getFecha() {
 		return fecha;
 	}
 
 
 
-	public void setFecha(Date fecha) {
+	public void setFecha(String fecha) {
 		this.fecha = fecha;
 	}
 
@@ -159,6 +163,30 @@ public class DtLdap implements Serializable {
 
 	public void setTipoUser(String tipoUser) {
 		this.tipoUser = tipoUser;
+	}
+
+
+
+	public String getBarrio() {
+		return barrio;
+	}
+
+
+
+	public void setBarrio(String barrio) {
+		this.barrio = barrio;
+	}
+
+
+
+	public String getDepartamento() {
+		return departamento;
+	}
+
+
+
+	public void setDepartamento(String departamento) {
+		this.departamento = departamento;
 	}
 
 	

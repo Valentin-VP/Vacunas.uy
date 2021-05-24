@@ -44,15 +44,13 @@ public class CallbackServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 	private final Auth0AuthenticationConfig config;
-	private final AuthenticationController authenticationController;
 
 	@EJB(lookup = "java:global/grupo15/grupo15-ejb/ControladorUsuario!interfaces.IUsuarioLocal")
 	private IUsuarioLocal IUsuarioLocal;
 
 	@Inject
-	CallbackServlet(Auth0AuthenticationConfig config, AuthenticationController authenticationController) {
+	CallbackServlet(Auth0AuthenticationConfig config) {
 		this.config = config;
-		this.authenticationController = authenticationController;
 	}
 
 	@Override
@@ -106,7 +104,7 @@ public class CallbackServlet extends HttpServlet {
 					} catch (UsuarioInexistente error){
 						// No existe el usuario con rol Vacunador, se debe informar que debe solicitar el rol a un administrador --> Definir pagina destino
 						LOGGER.severe("El usuario no existe o no tiene el rol vacunador");
-						urlRedirect = "/grupo15-web/html/error.html";
+						urlRedirect = "/grupo15-web/html/index.html";
 						response.sendRedirect(urlRedirect);
 					}
 				} else {
@@ -124,7 +122,7 @@ public class CallbackServlet extends HttpServlet {
 						}catch(UsuarioInexistente error) {
 							// No existe el usuario, se debe pedir Registro, y luego redirigir desde ahi al login nuevamente
 							LOGGER.severe("El usuario no existe. Debe darse de alta como ciudadano.");
-							urlRedirect = "/grupo15-web/html/registro.html";
+							urlRedirect = "/grupo15-web/html/registroCiudadano.html";
 							response.sendRedirect(urlRedirect);
 						}
 						

@@ -27,14 +27,17 @@ var res = new Vue({
       console.log("Sexo:" + this.sexo);
       email=this.email;
       console.log("Email:" + this.email);
-     // axios.post("http://localhost:8080/grupo15-services/rest/reservas/confirmar", {
-       // id : this.id.toString(),
-       // nombre : this.nombre.toString(),
-       // apellido : this.apellido.toString(),
-       // fecha : this.fecha.toString(),
-       // sexo : this.sexo.toString(),
-       //  email : this.email.toString(),
-     // });
+      direccion = this.direccion;
+      console.log("Direccion: " + this.direccion);
+      axios.post("http://localhost:8080/grupo15-services/rest/registro/ciudadano", {
+        id : this.id.toString(),
+        nombre : this.nombre.toString(),
+        apellido : this.apellido.toString(),
+        fechaNac : this.fecha.toString(),
+        sexo : this.sexo.toString(),
+         email : this.email.toString(),
+        direccion: this.direccion.toString(),
+      });
    
   
         }

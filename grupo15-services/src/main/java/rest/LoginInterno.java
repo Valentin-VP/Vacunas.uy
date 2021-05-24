@@ -11,10 +11,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jose4j.jwt.consumer.InvalidJwtException;
+
 import datatypes.DtUsuarioInterno;
 import exceptions.UsuarioInexistente;
 import interfaces.IUsuarioLocal;
 import rest.filter.AuthenticationFilter;
+import rest.filter.TokenSecurity;
 
 @WebServlet("/logininterno")
 public class LoginInterno extends HttpServlet {
@@ -45,10 +48,15 @@ public class LoginInterno extends HttpServlet {
 			// Si llego sin Cookie, no esta autorizado (o accedio ilicito al recurso, o no existe en LDAP) --> No puede seguir, arrojar a pagina de error o index?
 			throw new ServletException("No se detecto Cookie al llegar a servlet LoginInterno");
 		}
-		String ci = request.getHeader(AuthenticationFilter.HEADER_PROPERTY_ID);
-		String tipoUsuario = request.getHeader(AuthenticationFilter.HEADER_PROPERTY_TIPO);
-		// Si lo anterior no funciona, probar lo siguiente
-		//String tipoUsuario = TokenSecurity.getTipoUsuarioClaim(TokenSecurity.validateJwtToken(token));
+
+		String ci = null ;
+		String tipoUsuario = null;
+		try {
+			ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+			tipoUsuario = TokenSecurity.getTipoUsuarioClaim(TokenSecurity.validateJwtToken(token));
+		} catch (InvalidJwtException e1) {
+			LOGGER.severe("Error decodificando token");
+		}
 		if(token != null && (tipoUsuario.equals("administrador") || tipoUsuario.equals("autoridad"))) {
 			DtUsuarioInterno interno = null;
 			try {
@@ -56,9 +64,13 @@ public class LoginInterno extends HttpServlet {
 				interno.setToken(token);
 				IUsuarioLocal.ModificarUsuarioInterno(interno);
 			} catch (NumberFormatException e) {
-				e.printStackTrace();
+				LOGGER.severe("Error parseando ci del token");
 			} catch (UsuarioInexistente e) {
-				e.printStackTrace();
+				// Denegar acceso, debe registrarse primero. Eliminar Cookie e informar
+				Cookie cookie = new Cookie("x-acces-token", "");
+		        cookie.setMaxAge(0);
+		        response.addCookie(cookie);
+		        LOGGER.severe("Usuario no existe en BD. Retirando Cookie...");
 			}
 			LOGGER.severe("Se agrega JWT en la Base de Datos al usuario interno " + interno.getIdUsuario());
 		}

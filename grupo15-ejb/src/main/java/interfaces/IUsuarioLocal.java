@@ -22,7 +22,7 @@ import exceptions.UsuarioInexistente;
 public interface IUsuarioLocal {
 	
 	public void agregarUsuarioVacunador(int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo) throws UsuarioExistente;
-	public void agregarUsuarioInterno(int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo, String password, Rol rol) throws UsuarioExistente;
+	public void agregarUsuarioInterno(int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo, Rol rol) throws UsuarioExistente;
 	public void agregarUsuarioCiudadano(int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo, String TipoSector, Boolean autenticado) throws UsuarioExistente;
 	public DtUsuario buscarUsuario(int IdUsuario);
 	public DtCiudadano buscarCiudadano(int id) throws UsuarioInexistente;

@@ -124,15 +124,14 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 
 	@Override
 	public void agregarUsuarioInterno(int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email,
-			DtDireccion direccion, Sexo sexo, String password, Rol rol) throws UsuarioExistente {
+			DtDireccion direccion, Sexo sexo, Rol rol) throws UsuarioExistente {
 		// ManejadorUsuario mu = ManejadorUsuario.getInstancia();
 
 		if (em.find(UsuarioInterno.class, IdUsuario) != null) {
 			throw new UsuarioExistente("Ya existe el usuario ingresado");
 		}
 
-		UsuarioInterno usu = new UsuarioInterno(IdUsuario, nombre, apellido, fechaNac, email, direccion, sexo, password,
-				rol);
+		UsuarioInterno usu = new UsuarioInterno(IdUsuario, nombre, apellido, fechaNac, email, direccion, sexo, rol);
 		// mu.agregarUsuario(usu);
 
 		em.persist(usu);
