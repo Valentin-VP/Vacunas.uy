@@ -1,5 +1,7 @@
 package controllers;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import datatypes.DtPlanFecha;
 import datatypes.DtPlanVacunacion;
 import entities.Enfermedad;
 import entities.Etapa;
@@ -99,4 +102,39 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 			throw new PlanVacunacionInexistente("No existe unplan vacunacion con esa id");
 	}
 	
+	public ArrayList<DtPlanFecha> listarAgendasAbiertas() throws PlanVacunacionInexistente{
+		Query query = em.createQuery("SELECT p FROM PlanVacunacion p ORDER BY nombre ASC");
+		@SuppressWarnings("unchecked")
+		List<PlanVacunacion> pVacs = query.getResultList();
+		if(!pVacs.isEmpty()) {
+			ArrayList<DtPlanFecha> retorno = new ArrayList<>();
+	    	for(PlanVacunacion pV: pVacs) {
+	    		LocalDate fIni;
+    			LocalDate fFin;
+	    		ArrayList<Etapa> etapas = (ArrayList<Etapa>) pV.getEtapas();
+	    		if (!etapas.isEmpty()) {
+	    			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	    			fIni = etapas.get(0).getFechaInicio();
+	    			fFin = etapas.get(0).getFechaFin();
+		    		for (Etapa e: etapas) {
+		    			if (e.getFechaInicio().isBefore(fIni))
+		    				fIni = e.getFechaInicio();
+		    			if (e.getFechaFin().isAfter(fFin))
+		    				fFin = e.getFechaFin();
+		    		}
+		    		if (fIni.isBefore(LocalDate.now()) && fFin.isAfter(LocalDate.now())) {
+		    			retorno.add(new DtPlanFecha(pV.getNombre(), pV.getDescripcion(), fIni.format(formatter) + " - " + fFin.format(formatter), pV.getEnfermedad().getNombre()));
+		    		}
+	    		}else {
+	    			throw new PlanVacunacionInexistente("No existen agendas abiertas.");
+	    		}
+	    	}
+    		if (retorno.isEmpty())
+    			throw new PlanVacunacionInexistente("No existen agendas abiertas.");
+    		else 
+    			return retorno;
+		}else {
+			throw new PlanVacunacionInexistente("No existen agendas abiertas.");
+		}
+	}
 }

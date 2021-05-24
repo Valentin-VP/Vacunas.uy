@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.ejb.Local;
 
+import datatypes.DtPlanFecha;
 import datatypes.DtPlanVacunacion;
 import exceptions.EnfermedadInexistente;
 import exceptions.PlanVacunacionInexistente;
@@ -19,4 +20,6 @@ public interface IPlanVacunacionLocal {
 	public DtPlanVacunacion obtenerVacuna(int id) throws PlanVacunacionInexistente;
 	
 	public void agregarEnfermedadPlan(int id, String nombre) throws PlanVacunacionInexistente, EnfermedadInexistente;
+	
+	public ArrayList<DtPlanFecha> listarAgendasAbiertas() throws PlanVacunacionInexistente;
 }
