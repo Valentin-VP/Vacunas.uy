@@ -19,7 +19,7 @@ import interfaces.IUsuarioLocal;
 import rest.filter.AuthenticationFilter;
 import rest.filter.TokenSecurity;
 
-@WebServlet("/logininterno")
+@WebServlet("/rest/logininterno")
 public class LoginInterno extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
@@ -38,7 +38,8 @@ public class LoginInterno extends HttpServlet {
 		Cookie[] cookies = request.getCookies();
 		if (cookies != null) {
 		 for (Cookie cookie : cookies) {
-		   if (cookie.getName().equals("x-acces-token")) {
+			 
+		   if (cookie.getName().equals("x-access-token")) {
 			   token = cookie.getValue();
 			   LOGGER.info("Se obtiene Cookie en LoginInterno WebServlet: " + token);
 		    }
@@ -57,6 +58,8 @@ public class LoginInterno extends HttpServlet {
 		} catch (InvalidJwtException e1) {
 			LOGGER.severe("Error decodificando token");
 		}
+		LOGGER.severe(token);
+		LOGGER.severe(tipoUsuario);
 		if(token != null && (tipoUsuario.equals("administrador") || tipoUsuario.equals("autoridad"))) {
 			DtUsuarioInterno interno = null;
 			try {
@@ -67,7 +70,7 @@ public class LoginInterno extends HttpServlet {
 				LOGGER.severe("Error parseando ci del token");
 			} catch (UsuarioInexistente e) {
 				// Denegar acceso, debe registrarse primero. Eliminar Cookie e informar
-				Cookie cookie = new Cookie("x-acces-token", "");
+				Cookie cookie = new Cookie("x-access-token", "");
 		        cookie.setMaxAge(0);
 		        response.addCookie(cookie);
 		        LOGGER.severe("Usuario no existe en BD. Retirando Cookie...");
@@ -78,7 +81,7 @@ public class LoginInterno extends HttpServlet {
 			// Caso en que el usuario tiene Cookie con token pero no inicio sesion como interno --> No puede seguir, arrojar a pagina de error o index?
 			LOGGER.severe("No se ha recibido el token, o el tipo de usuario no es el correcto");
 		}
-		String urlRedirect = "/grupo15-web/html/index.html";
+		String urlRedirect = "/grupo15-web/html/menuAdministrador.html";
 		LOGGER.severe("Redirecting to: " + urlRedirect);
 		response.sendRedirect(urlRedirect);
 	}

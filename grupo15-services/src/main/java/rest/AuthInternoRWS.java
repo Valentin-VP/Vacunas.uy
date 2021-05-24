@@ -89,7 +89,7 @@ public class AuthInternoRWS{
 		Cookie userCookie = new Cookie("x-access-token", token, "/", "");
 		NewCookie rwsCookie = new NewCookie(userCookie);
 		
-		URI uri = UriBuilder.fromPath("/logininterno").build();
+		URI uri = UriBuilder.fromUri("/logininterno").build();
 		//return Response.temporaryRedirect();
 		return Response.temporaryRedirect(uri).cookie(rwsCookie).build();
 	}

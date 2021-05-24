@@ -207,7 +207,7 @@ public String searchType(String ci) throws NamingException {
     //    System.out.println(attr.get("userPassword"));
       //  System.out.println(attr.get("employeeType"));
         
-    String tipoEmpleado = (attr.get("employeeType").toString());
+    String tipoEmpleado = (attr.get("employeeType").toString()).replaceAll("employeeType: ", "");
 	return tipoEmpleado;
 }
 
