@@ -111,7 +111,7 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 	    	for(PlanVacunacion pV: pVacs) {
 	    		LocalDate fIni;
     			LocalDate fFin;
-	    		ArrayList<Etapa> etapas = (ArrayList<Etapa>) pV.getEtapas();
+	    		List<Etapa> etapas = pV.getEtapas();
 	    		if (!etapas.isEmpty()) {
 	    			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 	    			fIni = etapas.get(0).getFechaInicio();
@@ -147,7 +147,7 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 	    	for(PlanVacunacion pV: pVacs) {
 	    		LocalDate fIni;
     			LocalDate fFin;
-	    		ArrayList<Etapa> etapas = (ArrayList<Etapa>) pV.getEtapas();
+	    		List<Etapa> etapas = pV.getEtapas();
 	    		if (!etapas.isEmpty()) {
 	    			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 	    			fIni = etapas.get(0).getFechaInicio();
