@@ -1,5 +1,6 @@
 package rest;
 
+import java.net.URI;
 import java.util.Base64;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -20,6 +21,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 
 import org.jose4j.lang.JoseException;
 
@@ -86,7 +88,9 @@ public class AuthInternoRWS{
 		}
 		Cookie userCookie = new Cookie("x-access-token", token, "/", "");
 		NewCookie rwsCookie = new NewCookie(userCookie);
-		return Response.status(Response.Status.OK).header(HttpHeaders.LOCATION, "/grupo15-services/logininterno")
-				.cookie(rwsCookie).build();
+		
+		URI uri = UriBuilder.fromPath("/grupo15-services/logininterno").build();
+		//return Response.temporaryRedirect();
+		return Response.temporaryRedirect(uri).status(Response.Status.OK).cookie(rwsCookie).build();
 	}
 }
