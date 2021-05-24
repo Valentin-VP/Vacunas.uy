@@ -91,6 +91,6 @@ public class AuthInternoRWS{
 		
 		URI uri = UriBuilder.fromPath("/grupo15-services/logininterno").build();
 		//return Response.temporaryRedirect();
-		return Response.temporaryRedirect(uri).status(Response.Status.OK).cookie(rwsCookie).build();
+		return Response.temporaryRedirect(uri).cookie(rwsCookie).build();
 	}
 }
