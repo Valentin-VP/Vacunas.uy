@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.Consumes;
@@ -67,7 +68,8 @@ public class ConsultarPuestoVacunadorRWS{
 	
 	@GET
 	@Path("/vac")
-	@PermitAll
+	//@PermitAll
+	@RolesAllowed({"vacunador"}) 
 	public Response listarVacunatorios(@CookieParam("x-access-token") Cookie cookie){
 		try {
 			String token = cookie.getValue();
@@ -103,7 +105,8 @@ public class ConsultarPuestoVacunadorRWS{
 	//2021-05-12 
 	@GET
 	@Path("/asignado") //agregar fecha
-	@PermitAll
+	//@PermitAll
+	@RolesAllowed({"vacunador"}) 
 	public Response consultarPuestoVacunador(@CookieParam("x-access-token") Cookie cookie, @QueryParam("vact") String idVacunatorio, @QueryParam("date") String fecha){
 		if (idVacunatorio==null || fecha==null) {
 			LOGGER.info("G15Services/Soap/ConsultarPuestoVaucnadorRWS/consultarPuestoVacunador : idVacunatorio || fecha NULL");

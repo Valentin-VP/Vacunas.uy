@@ -255,8 +255,8 @@ public class AltaReservaRWS implements Serializable {
 		}
 	}
 	
-	//@RolesAllowed({"ciudadano"}) 
-	@PermitAll
+	@RolesAllowed({"ciudadano"}) 
+	//@PermitAll
 	@POST
 	@Path("/confirmar")
 	public Response confirmarReserva(@CookieParam("x-access-token") Cookie cookie, DtDatosReserva dtr){
