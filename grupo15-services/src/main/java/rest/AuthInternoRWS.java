@@ -84,12 +84,12 @@ public class AuthInternoRWS{
 		else {
 			// Usuario no existe en LDAP, se redirige al Servlet Login Interno sin Cookie. Probar si llega con el status 401
 			LOGGER.severe("Usuario no existe en LDAP");
-			return Response.status(Response.Status.UNAUTHORIZED).header(HttpHeaders.LOCATION, "/grupo15-services/logininterno").build();
+			return Response.status(Response.Status.UNAUTHORIZED).build();
 		}
 		Cookie userCookie = new Cookie("x-access-token", token, "/", "");
 		NewCookie rwsCookie = new NewCookie(userCookie);
 		
-		URI uri = UriBuilder.fromPath("/grupo15-services/logininterno").build();
+		URI uri = UriBuilder.fromPath("/logininterno").build();
 		//return Response.temporaryRedirect();
 		return Response.temporaryRedirect(uri).cookie(rwsCookie).build();
 	}
