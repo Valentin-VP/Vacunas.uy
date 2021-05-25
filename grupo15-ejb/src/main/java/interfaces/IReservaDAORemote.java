@@ -1,6 +1,7 @@
 package interfaces;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -9,11 +10,13 @@ import javax.ejb.Remote;
 import datatypes.DtEnfermedad;
 import datatypes.DtEtapa;
 import datatypes.DtPlanVacunacion;
+import datatypes.DtReservaCompleto;
 import datatypes.DtVacunatorio;
 import exceptions.CupoInexistente;
 import exceptions.EnfermedadInexistente;
 import exceptions.EtapaInexistente;
 import exceptions.PlanVacunacionInexistente;
+import exceptions.ReservaInexistente;
 import exceptions.UsuarioInexistente;
 import exceptions.VacunatorioNoCargadoException;
 import exceptions.VacunatoriosNoCargadosException;
@@ -28,4 +31,7 @@ public interface IReservaDAORemote   {
 	public void confirmarReserva(int idCiudadano, String idEnfermedad, int idPlan, String idVacunatorio,
 			LocalDate fecha, LocalTime hora)
 			throws UsuarioInexistente, PlanVacunacionInexistente, VacunatorioNoCargadoException, EnfermedadInexistente, CupoInexistente, EtapaInexistente;
+	public DtReservaCompleto obtenerReserva(int ciudadano, int plan, int etapa, LocalDateTime fecha) throws ReservaInexistente, UsuarioInexistente, EtapaInexistente;
+	public ArrayList<DtReservaCompleto> listarReservasCiudadano(int ciudadano) throws ReservaInexistente, UsuarioInexistente;
+	public void eliminarReserva(int ciudadano, int plan, int etapa, LocalDateTime fecha) throws ReservaInexistente, UsuarioInexistente ;
 }

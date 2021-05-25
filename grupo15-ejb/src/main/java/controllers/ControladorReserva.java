@@ -19,6 +19,8 @@ import javax.persistence.Query;
 import datatypes.DtEnfermedad;
 import datatypes.DtEtapa;
 import datatypes.DtPlanVacunacion;
+import datatypes.DtReserva;
+import datatypes.DtReservaCompleto;
 import datatypes.DtVacunatorio;
 import datatypes.EstadoReserva;
 import entities.Agenda;
@@ -34,11 +36,13 @@ import exceptions.CupoInexistente;
 import exceptions.EnfermedadInexistente;
 import exceptions.EtapaInexistente;
 import exceptions.PlanVacunacionInexistente;
+import exceptions.ReservaInexistente;
 import exceptions.UsuarioInexistente;
 import exceptions.VacunatorioNoCargadoException;
 import exceptions.VacunatoriosNoCargadosException;
 import interfaces.IReservaDAOLocal;
 import interfaces.IReservaDAORemote;
+import persistence.EtapaID;
 
 /**
  * Session Bean implementation class ControladorReserva
@@ -388,8 +392,93 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 				}
 			}
 		}
+		
+		
 	}
+	
+	public DtReservaCompleto obtenerReserva(int ciudadano, int plan, int etapa, LocalDateTime fecha) throws ReservaInexistente, UsuarioInexistente, EtapaInexistente {
+		Ciudadano c = em.find(Ciudadano.class, ciudadano);
+		if (c == null) {
+			throw new UsuarioInexistente("El usuario seleccionado no existe.");
+		} else {
+			Etapa e = em.find(Etapa.class, new EtapaID(etapa, plan));
+			if (e == null) {
+				throw new EtapaInexistente("La etapa seleccionada no existe.");
+			} else {
+				Reserva r = getReservaEtapa(c.getReservas(), e, fecha);
+				if (r != null && r.getEstado().equals(EstadoReserva.EnProceso)) {
+					DtReservaCompleto retorno = r.getDtReservaCompleto();
 
+					return retorno;
+				} else {
+					throw new ReservaInexistente("No existe esa reserva.");
+				}
+			}
+		}
+	}
+	
+	public ArrayList<DtReservaCompleto> listarReservasCiudadano(int ciudadano) throws ReservaInexistente, UsuarioInexistente {
+		Ciudadano c = em.find(Ciudadano.class, ciudadano);
+		if (c == null) {
+			throw new UsuarioInexistente("El usuario seleccionado no existe.");
+		} else {
+			if (c.getReservas().isEmpty()) {
+				throw new ReservaInexistente("No hay reservas.");
+			}else {
+				ArrayList<DtReservaCompleto> retorno = new ArrayList<DtReservaCompleto>();
+				for (Reserva r: c.getReservas()) {
+					if (r.getEstado().equals(EstadoReserva.EnProceso)) {
+						retorno.add(r.getDtReservaCompleto());
+					}
+				}
+				if (retorno.isEmpty()) {
+					throw new ReservaInexistente("No hay reservas.");
+				}else {
+					return retorno;
+				}
+			}
+		}
+	}
+	
+	public void eliminarReserva(int ciudadano, int plan, int etapa, LocalDateTime fecha) throws ReservaInexistente, UsuarioInexistente {
+		Ciudadano c = em.find(Ciudadano.class, ciudadano);
+		if (c == null) {
+			throw new UsuarioInexistente("El usuario seleccionado no existe.");
+		} else {
+			Etapa e = em.find(Etapa.class, new EtapaID(etapa, plan));
+			if (e == null) {
+				throw new ReservaInexistente("La etapa seleccionada no existe.");
+			} else {
+				Reserva r = getReservaEtapa(c.getReservas(), e, fecha);
+				if (r != null) {
+					c.getReservas().remove(r);
+					
+					//recorrer vacunatorios y sus agendas para eliminarle esa reserva al que la tenga
+					Query query = em.createQuery("SELECT v FROM Vacunatorio v");
+					@SuppressWarnings("unchecked")
+					List<Vacunatorio> aux = query.getResultList();
+					for (Vacunatorio v: aux) {
+						boolean salgo = false;
+						if (!salgo) {
+							Agenda a = getAgendaFecha(v, fecha.toLocalDate());
+							for (Reserva reservaAComparar: a.getReservas()) {
+								if (reservaAComparar.equals(r)) {
+									a.getReservas().remove(reservaAComparar);
+									em.merge(reservaAComparar);
+									salgo = true;
+									break;
+								}
+							}
+						}
+					}
+					em.merge(c);
+					em.remove(r);
+				} else {
+					throw new ReservaInexistente("No existe esa reserva.");
+				}
+			}
+		}
+	}
 	// enfermedad => plan, vacunatorio, fecha => horas libres
 /*
 	public void agregarReserva(int ciudadano, int etapa, String puesto, LocalDateTime fecha, EstadoReserva estado)
@@ -461,60 +550,6 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		}
 	}
 
-	public void eliminarReserva(int ciudadano, int etapa) throws ReservaInexistente, UsuarioExistente {
-		Ciudadano c = em.find(Ciudadano.class, ciudadano);
-		if (c == null) {
-			throw new UsuarioExistente("El usuario seleccionado no existe.");
-		} else {
-			Etapa e = em.find(Etapa.class, etapa);
-			if (e == null) {
-				throw new ReservaInexistente("La etapa seleccionada no existe.");
-			} else {
-				Reserva r = getReservaEtapa(c.getReservas(), e);
-				if (r != null) {
-					Puesto p = r.getPuesto();
-					c.getReservas().remove(r);
-					// e.getReservas().remove(r);
-					// p.getReservas().remove(r);
-					em.merge(c);
-					// em.merge(e);
-					// em.merge(p);
-					em.remove(r);
-				} else {
-					throw new ReservaInexistente("No hay una reserva para esa etapa.");
-				}
-			}
-		}
-	}
-
-	/*
-	 * TODO: DtPuesto tiene Vacunatorio, y no DtVacunatorio.
-	 * 
-	 
-	public DtReserva obtenerReserva(int ciudadano, int etapa) throws ReservaInexistente, UsuarioExistente {
-		Ciudadano c = em.find(Ciudadano.class, ciudadano);
-		if (c == null) {
-			throw new UsuarioExistente("El usuario seleccionado no existe.");
-		} else {
-			Etapa e = em.find(Etapa.class, etapa);
-			if (e == null) {
-				throw new ReservaInexistente("La etapa seleccionada no existe.");
-			} else {
-				Reserva r = getReservaEtapa(c.getReservas(), e);
-				if (r != null) {
-					DtReserva retorno = new DtReserva(r.getEstado(), getDtUsuario(r.getCiudadano()),
-							r.getFechaRegistro(), r.getPuesto().getId(), r.getPuesto().getVacunatorio().getNombre(),
-							r.getEtapa().toDtEtapa().getFechaInicio(), r.getEtapa().toDtEtapa().getFechaFin(),
-							r.getEtapa().toDtEtapa().getDtPvac().getNombre(), r.getEtapa().getId());
-
-					return retorno;
-				} else {
-					throw new ReservaInexistente("No hay una reserva para esa etapa.");
-				}
-			}
-		}
-	}
-
 	public ArrayList<DtReserva> listarReservasGenerales() throws ReservaInexistente {
 		Query query = em.createQuery("SELECT r FROM Reserva r");
 		@SuppressWarnings("unchecked")
@@ -547,14 +582,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		return false;
 	}
 
-	private Reserva getReservaEtapa(List<Reserva> lista, Etapa e) {
-		for (Reserva r : lista) {
-			if (r.getEtapa().equals(e))
-				return r;
-		}
 
-		return null;
-	}
 
 	private DtCiudadano getDtUsuario(Ciudadano u) {
 		if (u != null)
@@ -691,6 +719,15 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 				}
 			}
 		}
+		return null;
+	}
+	
+	private Reserva getReservaEtapa(List<Reserva> lista, Etapa e, LocalDateTime fecha) {
+		for (Reserva r : lista) {
+			if (r.getEtapa().equals(e) && r.getFechaRegistro().isEqual(fecha))
+				return r;
+		}
+
 		return null;
 	}
 	
