@@ -8,6 +8,8 @@ var res = new Vue({
       fecha:'',
       sexo:'',
       email:'',
+      departamento:'',
+      barrio:''
 
     }),
 
@@ -27,18 +29,23 @@ var res = new Vue({
       console.log("Sexo:" + this.sexo);
       email=this.email;
       console.log("Email:" + this.email);
-     // axios.post("http://localhost:8080/grupo15-services/rest/reservas/confirmar", {
-       // id : this.id.toString(),
-       // nombre : this.nombre.toString(),
-       // apellido : this.apellido.toString(),
-       // fecha : this.fecha.toString(),
-       // sexo : this.sexo.toString(),
-       //  email : this.email.toString(),
-     // });
-   
+      barrio=this.barrio;
+      console.log("Barrio:" + this.barrio);
+      departamento=this.departamento;
+      console.log("Departamento:" + this.departamento);
+     axios.post("http://localhost:8080/grupo15-services/rest/registro/vacunador", {
+      id : this.id.toString(),
+      nombre : this.nombre.toString(),
+      apellido : this.apellido.toString(),
+      fechaNac : this.fecha.toString(),
+      sexo : this.sexo.toString(),
+       email : this.email.toString(),
+      direccion: this.direccion.toString(),
+      departamento: this.departamento.toString(),
+      barrio: this.barrio.toString()
   
-        }
+        })
     }
      
-  
+  }
 })

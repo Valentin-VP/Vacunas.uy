@@ -9,7 +9,9 @@ var res = new Vue({
     sexo: '',
     email: '',
     password: '',
-    tipoUser: ''
+    tipoUser: '',
+    barrio: '',
+    departamento: ''
 
   }),
 
@@ -35,7 +37,10 @@ var res = new Vue({
       console.log("Direccion:" + this.direccion);
       tipoUser = this.tipoUser;
       console.log("TipoUser:" + this.tipoUser);
-
+      barrio = this.barrio;
+      console.log("barrio:" + this.barrio);
+      departamento = this.departamento;
+      console.log("Departamento:" + this.departamento);
 
       this.enviar();
 
@@ -50,7 +55,7 @@ var res = new Vue({
       console.log("Basic:" + this.Basic);
       axios.defaults.headers.common["Authorization"] = Basic;
       let config = { "Authorization": this.Basic };
-      axios.post('http://localhost:8080/grupo15-services/rest/agregarUsuario/add', 
+      axios.post('http://localhost:8080/grupo15-services/rest/registro/interno/', 
         {
           tipoUser: this.tipoUser.toString(),
           nombre: this.nombre.toString(),
@@ -59,6 +64,8 @@ var res = new Vue({
           sexo: this.sexo.toString(),
           direccion: this.direccion.toString(),
           email: this.email.toString(),
+          barrio: this.barrio.toString(),
+          departamento: this.departamento.toString()
         }, {
           headers: { config }
       })

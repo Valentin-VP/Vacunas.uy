@@ -8,6 +8,8 @@ var res = new Vue({
       fecha:'',
       sexo:'',
       email:'',
+      departamento: '',
+      barrio:''
 
     }),
 
@@ -29,6 +31,11 @@ var res = new Vue({
       console.log("Email:" + this.email);
       direccion = this.direccion;
       console.log("Direccion: " + this.direccion);
+      departamento = this.departamento;
+      console.log("Departamento: " + this.departamento);
+      barrio = this.barrio;
+      console.log("Barrio: " + this.barrio);
+      
       axios.post("http://localhost:8080/grupo15-services/rest/registro/ciudadano", {
         id : this.id.toString(),
         nombre : this.nombre.toString(),
@@ -37,6 +44,8 @@ var res = new Vue({
         sexo : this.sexo.toString(),
          email : this.email.toString(),
         direccion: this.direccion.toString(),
+        departamento: this.departamento.toString(),
+        barrio: this.barrio.toString()
       });
    
   
