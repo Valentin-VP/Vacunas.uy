@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jose4j.json.internal.json_simple.JSONObject;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 
 import datatypes.DtUsuarioInterno;
@@ -19,7 +20,7 @@ import interfaces.IUsuarioLocal;
 import rest.filter.AuthenticationFilter;
 import rest.filter.TokenSecurity;
 
-@WebServlet("/rest/logininterno")
+@WebServlet("logininterno")
 public class LoginInterno extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
@@ -58,7 +59,7 @@ public class LoginInterno extends HttpServlet {
 		} catch (InvalidJwtException e1) {
 			LOGGER.severe("Error decodificando token");
 		}
-		LOGGER.severe(token);
+		LOGGER.severe(ci);
 		LOGGER.severe(tipoUsuario);
 		if(token != null && (tipoUsuario.equals("administrador") || tipoUsuario.equals("autoridad"))) {
 			DtUsuarioInterno interno = null;
@@ -66,6 +67,17 @@ public class LoginInterno extends HttpServlet {
 				interno = IUsuarioLocal.buscarUsuarioInterno(Integer.parseInt(ci));
 				interno.setToken(token);
 				IUsuarioLocal.ModificarUsuarioInterno(interno);
+				LOGGER.severe("Se agrega JWT en la Base de Datos al usuario interno " + interno.getIdUsuario());
+				
+				String host = request.getHeader("Origin");
+		        LOGGER.severe("Origin en LoginInterno: " + host);
+				String urlRedirect = host + "/grupo15-web/html/menuAdministrador.html";
+				JSONObject address = new JSONObject();
+				address.put("url", urlRedirect);
+				LOGGER.severe("Redirecting to: " + address.toJSONString());
+				//response.sendRedirect(urlRedirect);
+				response.setContentType("application/json");
+				response.getWriter().write(address.toString());
 			} catch (NumberFormatException e) {
 				LOGGER.severe("Error parseando ci del token");
 			} catch (UsuarioInexistente e) {
@@ -73,17 +85,29 @@ public class LoginInterno extends HttpServlet {
 				Cookie cookie = new Cookie("x-access-token", "");
 		        cookie.setMaxAge(0);
 		        response.addCookie(cookie);
+		        response.setContentType("application/json");
+		        String url = request.getHeader("Origin") + "/grupo15-web/html/error.html";
+		        LOGGER.severe("Origin en LoginInterno: " + url);
+		        JSONObject content = new JSONObject();
+		        content.put("url", url);
+		        response.getWriter().write(content.toJSONString());
 		        LOGGER.severe("Usuario no existe en BD. Retirando Cookie...");
 			}
-			LOGGER.severe("Se agrega JWT en la Base de Datos al usuario interno " + interno.getIdUsuario());
 		}
 		else {
 			// Caso en que el usuario tiene Cookie con token pero no inicio sesion como interno --> No puede seguir, arrojar a pagina de error o index?
 			LOGGER.severe("No se ha recibido el token, o el tipo de usuario no es el correcto");
+			Cookie cookie = new Cookie("x-access-token", "");
+	        cookie.setMaxAge(0);
+	        response.addCookie(cookie);
+	        response.setContentType("application/json");
+	        String host = request.getHeader("Origin") + "/grupo15-web/html/error.html";
+	        LOGGER.severe("Origin en LoginInterno: " + host);
+	        JSONObject content = new JSONObject();
+	        content.put("url", host);
+	        response.getWriter().write(content.toJSONString());
 		}
-		String urlRedirect = "/grupo15-web/html/menuAdministrador.html";
-		LOGGER.severe("Redirecting to: " + urlRedirect);
-		response.sendRedirect(urlRedirect);
+		
 	}
 
 

@@ -15,6 +15,8 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
@@ -89,8 +91,20 @@ public class AuthInternoRWS{
 		Cookie userCookie = new Cookie("x-access-token", token, "/", "");
 		NewCookie rwsCookie = new NewCookie(userCookie);
 		
-		URI uri = UriBuilder.fromUri("/logininterno").build();
+		//URI uri = UriBuilder.fromUri("/logininterno").build();
+		String url = headers.getHeaderString("Origin") + "/grupo15-services/logininterno";
+		URI uri = UriBuilder.fromPath(url).build();
+		LOGGER.severe("Uri: " + uri.toString());
 		//return Response.temporaryRedirect();
-		return Response.temporaryRedirect(uri).cookie(rwsCookie).build();
+		//Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
+		//Response login = Response.temporaryRedirect(uri).cookie(rwsCookie).build();
+		Client conexion = ClientBuilder.newClient();
+		String loginResponse = conexion.target(uri)
+		.request(MediaType.APPLICATION_JSON)
+		.cookie(rwsCookie)
+		.header("Origin", headers.getHeaderString("Origin"))
+		.get(String.class);
+		LOGGER.severe("LoginResponse: " + loginResponse);
+		return Response.ok().cookie(rwsCookie).entity(loginResponse).build();
 	}
 }
