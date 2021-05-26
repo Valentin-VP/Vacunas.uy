@@ -35,7 +35,7 @@ var res = new Vue({
       console.log("Password:" + this.password);
       direccion = this.direccion;
       console.log("Direccion:" + this.direccion);
-      tipoUser = this.tipoUser;
+      tipoUser = this.tipoUser.charAt(0).toUpperCase() + this.tipoUser.slice(1);
       console.log("TipoUser:" + this.tipoUser);
       barrio = this.barrio;
       console.log("barrio:" + this.barrio);
