@@ -73,12 +73,12 @@ public class ControladorEnfermedad implements IEnfermedadLocal, IEnfermedadRemot
 			List<Vacuna> vacunas = queryV.getResultList();
 			for (PlanVacunacion pv: planes) {
 				if (pv.getEnfermedad().equals(enf)) {
-					throw new AccionInvalida("Hay un Plan de Vacunacion de ID " + pv.getId() + ": " + pv.getNombre() + " que esta asociado a esa enfermedad.");
+					throw new AccionInvalida("Hay un Plan de Vacunacion de ID '" + pv.getId() + "': " + pv.getNombre() + " que esta asociado a esa enfermedad.");
 				}
 			}
 			for (Vacuna v: vacunas) {
 				if (v.getEnfermedad().equals(enf)) {
-					throw new AccionInvalida("Hay una vacuna de ID y nombre " + v.getNombre() + " que esta asociada a esa enfermedad.");
+					throw new AccionInvalida("Hay una vacuna de ID y nombre '" + v.getNombre() + "' que esta asociada a esa enfermedad.");
 				}
 			}
 			em.remove(enf);
