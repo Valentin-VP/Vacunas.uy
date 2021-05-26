@@ -10,6 +10,10 @@ import javax.persistence.Query;
 
 import datatypes.DtEnfermedad;
 import entities.Enfermedad;
+import entities.Etapa;
+import entities.PlanVacunacion;
+import entities.Vacuna;
+import exceptions.AccionInvalida;
 import exceptions.EnfermedadInexistente;
 import exceptions.EnfermedadRepetida;
 import interfaces.IEnfermedadLocal;
@@ -49,7 +53,7 @@ public class ControladorEnfermedad implements IEnfermedadLocal, IEnfermedadRemot
 		}
 	}
 	
-	public DtEnfermedad obtenerLaboratorio(String nombre) throws EnfermedadInexistente {
+	public DtEnfermedad obtenerEnfermedad(String nombre) throws EnfermedadInexistente {
 		Enfermedad enf = em.find(Enfermedad.class, nombre);
 		if(enf != null) {
 			return new DtEnfermedad(enf.getNombre());
@@ -58,9 +62,25 @@ public class ControladorEnfermedad implements IEnfermedadLocal, IEnfermedadRemot
 		}
 	}
 	
-	public void eliminarEnfermedad(String nombre) throws EnfermedadInexistente {
+	public void eliminarEnfermedad(String nombre) throws EnfermedadInexistente, AccionInvalida {
 		Enfermedad enf = em.find(Enfermedad.class, nombre);
 		if(enf != null) {
+			Query queryP = em.createQuery("SELECT p FROM PlanVacunacion p ORDER BY nombre ASC");
+			Query queryV = em.createQuery("SELECT v FROM Vacuna v ORDER BY nombre ASC");
+			@SuppressWarnings("unchecked")
+			List<PlanVacunacion> planes = queryP.getResultList();
+			@SuppressWarnings("unchecked")
+			List<Vacuna> vacunas = queryV.getResultList();
+			for (PlanVacunacion pv: planes) {
+				if (pv.getEnfermedad().equals(enf)) {
+					throw new AccionInvalida("Hay un Plan de Vacunacion de ID " + pv.getId() + ": " + pv.getNombre() + " que esta asociado a esa enfermedad.");
+				}
+			}
+			for (Vacuna v: vacunas) {
+				if (v.getEnfermedad().equals(enf)) {
+					throw new AccionInvalida("Hay una vacuna de ID y nombre " + v.getNombre() + " que esta asociada a esa enfermedad.");
+				}
+			}
 			em.remove(enf);
 		}else
 			throw new EnfermedadInexistente("No existe una Enfermedad con ese nombre");
