@@ -113,7 +113,7 @@ public class InitTest {
 			uc.agregarUsuarioVacunador(11111113, "Vacunador", "DeTest Tres", LocalDate.now(), "v@3", new DtDireccion("Av. Vcd 1003", "Brooks", "Melbourne"), Sexo.Otro);
 			uc.agregarUsuarioVacunador(11111114, "Vacunador", "DeTest Cuatro", LocalDate.now(), "v@4", new DtDireccion("Av. Vcd 1004", "Brooks", "Melbourne"), Sexo.Otro);
 			uc.agregarUsuarioVacunador(45946590, "Rodrigo", "Castro", LocalDate.now(), "rodrigo@castro", new DtDireccion("Av. Vcd RRRR", "Brooks", "Melbourne"), Sexo.Otro);
-			//uc.agregarUsuarioVacunador(54657902, "Nicolás", "Méndez", LocalDate.now(), "nicolas@mendez", new DtDireccion("Av. Vcd NNNN", "Brooks", "Melbourne"), Sexo.Otro);
+			uc.agregarUsuarioVacunador(54657902, "Nicolás", "Méndez", LocalDate.now(), "nicolas@mendez", new DtDireccion("Av. Vcd NNNN", "Brooks", "Melbourne"), Sexo.Otro);
 			uc.agregarUsuarioCiudadano(21111111, "Ciudadano", "DeTest Uno", LocalDate.of(2000, 1, 1), "c@1", new DtDireccion("Av. Cdd 2001", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			uc.agregarUsuarioCiudadano(21111112, "Ciudadano", "DeTest Dos", LocalDate.of(1960, 1, 1), "c@2", new DtDireccion("Av. Cdd 2002", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			uc.agregarUsuarioCiudadano(21111113, "Ciudadano", "DeTest Tres", LocalDate.of(1900, 1, 1), "c@3", new DtDireccion("Av. Cdd 2003", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
@@ -124,8 +124,8 @@ public class InitTest {
 			lab.agregarLaboratorio("lab2");
 			trs.agregarTransportista(1);
 			trs.agregarTransportista(2);
-			vch.agregarVacuna("vacuna1Virus1", 1, 0, 1, 1, 1999, "lab1", "virus1");
-			vch.agregarVacuna("vacuna2Virus2", 3, 15, 1, 1, 1999, "lab1", "virus2");
+			vch.agregarVacuna("vacuna1Virus1", 1, 60, 1999, "lab1", "virus1");
+			vch.agregarVacuna("vacuna2Virus2", 3, 60, 1999, "lab1", "virus2");
 			
 			plan.agregarPlanVacunacion(1, "plan1virus1", "descripcion plan1virus1");
 			plan.agregarPlanVacunacion(2, "plan2virus1", "descripcion plan2virus1");
