@@ -11,7 +11,7 @@ public class DtVacuna implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String nombre;
 	private int cantDosis; //cuantas veces se da la vacuna
-	private LocalDate expira;  //fecha de expiracion
+	private int expira;  //fecha de expiracion
 	private int tiempoEntreDosis;
 	private DtLaboratorio dtLab;
 	private DtEnfermedad dtEnf;
@@ -20,7 +20,7 @@ public class DtVacuna implements Serializable {
 		
 	}
 	
-	public DtVacuna(String nombre, int cantDosis, LocalDate expira, int tiempoEntreDosis, DtLaboratorio dtLab,
+	public DtVacuna(String nombre, int cantDosis, int expira, int tiempoEntreDosis, DtLaboratorio dtLab,
 			DtEnfermedad dtEnf) {
 		super();
 		this.nombre = nombre;
@@ -47,11 +47,11 @@ public class DtVacuna implements Serializable {
 		this.cantDosis = cantDosis;
 	}
 
-	public LocalDate getExpira() {
+	public int getExpira() {
 		return expira;
 	}
 
-	public void setExpira(LocalDate expira) {
+	public void setExpira(int expira) {
 		this.expira = expira;
 	}
 
