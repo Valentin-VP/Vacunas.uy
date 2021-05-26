@@ -113,7 +113,7 @@ public class GestionVacunasRWS {
 	        if( ci == null)
 	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
 			LOGGER.info("Cedula obtenida en REST: " + ci);
-			cv.agregarVacuna(dtv.getNombre(), Integer.parseInt(dtv.getCantDosis()), Integer.parseInt(dtv.getTiempoEntreDosis()), Integer.parseInt(dtv.getExpira()), dtv.getLaboratorio(), dtv.getEnfermedad());;
+			cv.agregarVacuna(dtv.getNombre(), Integer.parseInt(dtv.getCantDosis()), Integer.parseInt(dtv.getTiempoEntreDosis()), Integer.parseInt(dtv.getExpira()), dtv.getLaboratorio(), dtv.getEnfermedad());
 			return Response.ok().build();
 		} catch (NumberFormatException | VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente e) {
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
@@ -124,7 +124,7 @@ public class GestionVacunasRWS {
 	@PermitAll
 	@DELETE
 	@Path("/eliminar")
-	public Response eliminarEnfermedad(@CookieParam("x-access-token") Cookie cookie, @QueryParam("vac") String vacuna) {
+	public Response eliminarVacuna(@CookieParam("x-access-token") Cookie cookie, @QueryParam("vac") String vacuna) {
 		if (vacuna==null) {
 			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
 			return rb.build();

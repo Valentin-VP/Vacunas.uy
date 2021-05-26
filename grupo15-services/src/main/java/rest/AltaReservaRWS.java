@@ -170,8 +170,18 @@ public class AltaReservaRWS implements Serializable {
 	//@PermitAll
 	@GET
 	@Path("/enf")
-	public Response listarEnfermedades(){
+	public Response listarEnfermedades(@CookieParam("x-access-token") Cookie cookie){
 		try {
+			String token = cookie.getValue();
+			String ci = null;
+			try {
+				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+			} catch (InvalidJwtException e) {
+				e.printStackTrace();
+			}
+	        if( ci == null)
+	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
+			LOGGER.info("Cedula obtenida en REST: " + ci);
 			return Response.ok(rs.listarEnfermedades()).build();
 		} catch (EnfermedadInexistente e) {
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
@@ -182,8 +192,18 @@ public class AltaReservaRWS implements Serializable {
 	//@PermitAll
 	@GET
 	@Path("/vac")
-	public Response listarVacunatorios(){
+	public Response listarVacunatorios(@CookieParam("x-access-token") Cookie cookie){
 		try {
+			String token = cookie.getValue();
+			String ci = null;
+			try {
+				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+			} catch (InvalidJwtException e) {
+				e.printStackTrace();
+			}
+	        if( ci == null)
+	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
+			LOGGER.info("Cedula obtenida en REST: " + ci);
 			return Response.ok(vs.listarVacunatorio()).build();
 		} catch (VacunatoriosNoCargadosException e) {
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
@@ -195,8 +215,18 @@ public class AltaReservaRWS implements Serializable {
 	//@PermitAll
 	@GET
 	@Path("/enf/{e}")
-	public Response seleccionarEnfermedad(@PathParam("e") String enfermedad){
+	public Response seleccionarEnfermedad(@CookieParam("x-access-token") Cookie cookie, @PathParam("e") String enfermedad){
 		try {
+			String token = cookie.getValue();
+			String ci = null;
+			try {
+				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+			} catch (InvalidJwtException e) {
+				e.printStackTrace();
+			}
+	        if( ci == null)
+	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
+			LOGGER.info("Cedula obtenida en REST: " + ci);
 			return Response.ok(rs.seleccionarEnfermedad(enfermedad)).build();
 		} catch (EnfermedadInexistente | PlanVacunacionInexistente  e) {
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
