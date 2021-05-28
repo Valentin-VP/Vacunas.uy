@@ -86,7 +86,7 @@ public class Etapa {
 	}
 	
 	public DtEtapa toDtEtapa() {
-		DtEtapa dtEtapa = new DtEtapa(this.id, this.fechaInicio, this.fechaFin,new DtPlanVacunacion());
+		DtEtapa dtEtapa = new DtEtapa(this.id, this.fechaInicio, this.fechaFin,new DtPlanVacunacion(planVacunacion.getId(), "","", null));
 		return dtEtapa;
 	}
 
