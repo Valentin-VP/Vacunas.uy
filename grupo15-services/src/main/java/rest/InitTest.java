@@ -17,6 +17,7 @@ import datatypes.DtConstancia;
 import datatypes.DtDireccion;
 import datatypes.ErrorInfo;
 import datatypes.Sexo;
+import exceptions.AccionInvalida;
 import exceptions.CertificadoRepetido;
 import exceptions.ConstanciaInexistente;
 import exceptions.EnfermedadInexistente;
@@ -33,6 +34,7 @@ import exceptions.SinPuestosLibres;
 import exceptions.TransportistaRepetido;
 import exceptions.UsuarioExistente;
 import exceptions.UsuarioInexistente;
+import exceptions.VacunaInexistente;
 import exceptions.VacunaRepetida;
 import exceptions.VacunatorioCargadoException;
 import exceptions.VacunatorioNoCargadoException;
@@ -156,7 +158,7 @@ public class InitTest {
 			vc.asignarVacunadorAVacunatorio(11111112, "vact2", LocalDate.now().plusDays(1));
 			vc.asignarVacunadorAVacunatorio(11111114, "vact3", LocalDate.now().plusDays(1));*/
 			return Response.ok().build();
-		} catch (EnfermedadRepetida | VacunatorioCargadoException | UsuarioExistente | LaboratorioRepetido | TransportistaRepetido | VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | PlanVacunacionRepetido | EtapaRepetida | PlanVacunacionInexistente | VacunatorioNoCargadoException | ReglasCuposCargadoException | CertificadoRepetido | ConstanciaInexistente | PuestoCargadoException e) {
+		} catch (EnfermedadRepetida | VacunatorioCargadoException | UsuarioExistente | LaboratorioRepetido | TransportistaRepetido | VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | PlanVacunacionRepetido | EtapaRepetida | PlanVacunacionInexistente | VacunatorioNoCargadoException | ReglasCuposCargadoException | CertificadoRepetido | ConstanciaInexistente | PuestoCargadoException | AccionInvalida | VacunaInexistente e) {
 			// TODO Auto-generated catch block
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
 		}

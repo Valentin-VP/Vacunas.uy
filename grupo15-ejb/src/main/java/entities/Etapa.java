@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import datatypes.DtEtapa;
+import datatypes.DtPlanVacunacion;
 import persistence.EtapaID;
 
 @Entity
@@ -23,7 +24,7 @@ public class Etapa {
 	private LocalDate fechaFin;
 	private String condicion;
 	@Id
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne//(cascade = CascadeType.ALL)
 	@JoinColumn
 	private PlanVacunacion planVacunacion;
 	
@@ -85,7 +86,7 @@ public class Etapa {
 	}
 	
 	public DtEtapa toDtEtapa() {
-		DtEtapa dtEtapa = new DtEtapa(this.id, this.fechaInicio, this.fechaFin,this.planVacunacion.toDtPlanVacunacion());
+		DtEtapa dtEtapa = new DtEtapa(this.id, this.fechaInicio, this.fechaFin,new DtPlanVacunacion());
 		return dtEtapa;
 	}
 

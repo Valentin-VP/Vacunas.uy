@@ -15,6 +15,8 @@ import datatypes.DtPlanVacunacion;
 import entities.Enfermedad;
 import entities.Etapa;
 import entities.PlanVacunacion;
+import entities.Reserva;
+import exceptions.AccionInvalida;
 import exceptions.EnfermedadInexistente;
 import exceptions.PlanVacunacionInexistente;
 import exceptions.PlanVacunacionRepetido;
@@ -39,7 +41,7 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 			throw new PlanVacunacionRepetido("Ya existe un plan de vacunacion con esa id");
 	}
 	
-	public void agregarEnfermedadPlan(int id, String nombre) throws PlanVacunacionInexistente, EnfermedadInexistente {
+	public void agregarEnfermedadPlan(int id, String nombre) throws PlanVacunacionInexistente, EnfermedadInexistente, AccionInvalida {
 		PlanVacunacion pv = em.find(PlanVacunacion.class, id);
 		if (pv==null) {
 			throw new PlanVacunacionInexistente("No existe ese plan de vacunacion.");
@@ -48,6 +50,21 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 			if (e==null) {
 				throw new EnfermedadInexistente("No existe esa enfermedad.");
 			}else {
+				Query queryR = em.createQuery("SELECT r FROM Reserva r");
+				@SuppressWarnings("unchecked")
+				List<Reserva> reservas = queryR.getResultList();
+				for(Etapa et: pv.getEtapas()) { 
+					for (Reserva r: reservas) {
+						if (r.getEtapa().equals(et)) {
+							throw new AccionInvalida("El usuario de cedula '" +r.getCiudadano().getIdUsuario() + "' tiene una reserva asociada a la etapa '" + et.getId() + "' de ese plan.");
+						}
+					}
+					if (!et.getVacuna().getEnfermedad().equals(e)) {
+						throw new AccionInvalida("La etapa '" + et.getId() + "' de ese plan tiene una vacuna que no inmuniza a esa enfermedad.");
+					}
+				}
+				//if (pv.getEnfermedad()!=null)
+				//	throw new AccionInvalida("El plan tiene la enfermedad '" + pv.getEnfermedad().getNombre() + "' asociada.");
 				pv.setEnfermedad(e);
 				em.merge(pv);
 			}
@@ -70,7 +87,7 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 		}
 	}
 	
-	public DtPlanVacunacion obtenerVacuna(int id) throws PlanVacunacionInexistente{
+	public DtPlanVacunacion obtenerPlanVacunacion(int id) throws PlanVacunacionInexistente{
 		PlanVacunacion pV = em.find(PlanVacunacion.class, id);
 		if(pV != null) {
 			return pV.toDtPlanVacunacion();
@@ -79,16 +96,29 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 		}
 	}
 	
-	public void eliminarPlanVacunacion(int id) throws PlanVacunacionInexistente { //controlar si al eliminar un plan, elimina las etapas relacionadas a el automaticamente
+	public void eliminarPlanVacunacion(int id) throws PlanVacunacionInexistente, AccionInvalida { //controlar si al eliminar un plan, elimina las etapas relacionadas a el automaticamente
 		PlanVacunacion pV = em.find(PlanVacunacion.class, id);
 		if(pV != null) {
 			List<Etapa> etapas = pV.getEtapas();
+			
+			Query queryR = em.createQuery("SELECT r FROM Reserva r");
+			@SuppressWarnings("unchecked")
+			List<Reserva> reservas = queryR.getResultList();
+			for(Etapa e: etapas) { 
+				for (Reserva r: reservas) {
+					if (r.getEtapa().equals(e)) {
+						throw new AccionInvalida("El usuario de cedula '" +r.getCiudadano().getIdUsuario() + "' tiene una reserva asociada a la etapa '" + e.getId() + "' de ese plan.");
+					}
+				}
+			}
 			for(Etapa e: etapas) { //Este for elimina las etapas de la BD en el PlanVacunacion
+				//pV.getEtapas().remove(e);
+				//em.merge(pV);
 				em.remove(e);
 			}
 			em.remove(pV);
 		}else
-			throw new PlanVacunacionInexistente("No existe unplan vacunacion con esa id");
+			throw new PlanVacunacionInexistente("No existe un plan de vacunacion con esa id");
 		
 	}
 	
@@ -97,9 +127,10 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 		if(pV != null) {
 			pV.setNombre(nombre);
 			pV.setDescripcion(descripcion);
-			pV.setEtapas(etapas);
+			em.merge(pV);
+			//pV.setEtapas(etapas);
 		}else
-			throw new PlanVacunacionInexistente("No existe unplan vacunacion con esa id");
+			throw new PlanVacunacionInexistente("No existe un plan de vacunacion con esa id");
 	}
 	
 	public ArrayList<DtPlanFecha> listarAgendasAbiertas() throws PlanVacunacionInexistente{
