@@ -33,6 +33,6 @@ public interface IReservaDAOLocal {
 			throws UsuarioInexistente, PlanVacunacionInexistente, VacunatorioNoCargadoException, EnfermedadInexistente, CupoInexistente, EtapaInexistente;
 	public DtReservaCompleto obtenerReserva(int ciudadano, int plan, int etapa, LocalDateTime fecha) throws ReservaInexistente, UsuarioInexistente, EtapaInexistente;
 	public ArrayList<DtReservaCompleto> listarReservasCiudadano(int ciudadano) throws ReservaInexistente, UsuarioInexistente;
-	public void eliminarReserva(int ciudadano, int plan, int etapa, LocalDateTime fecha) throws ReservaInexistente, UsuarioInexistente ;
+	public void eliminarReserva(int ciudadano, LocalDateTime fecha, String enfermedad) throws ReservaInexistente, UsuarioInexistente, EnfermedadInexistente;
 }
 

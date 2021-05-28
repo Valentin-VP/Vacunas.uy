@@ -401,6 +401,12 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		if (c == null) {
 			throw new UsuarioInexistente("El usuario seleccionado no existe.");
 		} else {
+			/*Enfermedad e = em.find(Enfermedad.class, enfermedad);
+			if (e == null) {
+				throw new EnfermedadInexistente("La enfermedad seleccionada no existe.");
+			} else {
+				Reserva r = getReservaCiudadanoDeEnfermedadEnFecha(c.getReservas(), enfermedad, fecha);//getReservaEtapa(c.getReservas(), e, fecha);
+			}*/
 			Etapa e = em.find(Etapa.class, new EtapaID(etapa, plan));
 			if (e == null) {
 				throw new EtapaInexistente("La etapa seleccionada no existe.");
@@ -440,16 +446,16 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		}
 	}
 	
-	public void eliminarReserva(int ciudadano, int plan, int etapa, LocalDateTime fecha) throws ReservaInexistente, UsuarioInexistente {
+	public void eliminarReserva(int ciudadano, LocalDateTime fecha, String enfermedad) throws ReservaInexistente, UsuarioInexistente, EnfermedadInexistente {
 		Ciudadano c = em.find(Ciudadano.class, ciudadano);
 		if (c == null) {
 			throw new UsuarioInexistente("El usuario seleccionado no existe.");
 		} else {
-			Etapa e = em.find(Etapa.class, new EtapaID(etapa, plan));
+			Enfermedad e = em.find(Enfermedad.class, enfermedad);
 			if (e == null) {
-				throw new ReservaInexistente("La etapa seleccionada no existe.");
+				throw new EnfermedadInexistente("La enfermedad seleccionada no existe.");
 			} else {
-				Reserva r = getReservaEtapa(c.getReservas(), e, fecha);
+				Reserva r = getReservaCiudadanoDeEnfermedadEnFecha(c.getReservas(), enfermedad, fecha);//getReservaEtapa(c.getReservas(), e, fecha);
 				if (r != null) {
 					c.getReservas().remove(r);
 					
@@ -731,4 +737,12 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		return null;
 	}
 	
+	private Reserva getReservaCiudadanoDeEnfermedadEnFecha(List<Reserva> lista, String enfermedad, LocalDateTime fecha) {
+		for (Reserva r : lista) {
+			if (r.getEtapa().getVacuna().getEnfermedad().getNombre().equals(enfermedad) && r.getFechaRegistro().isEqual(fecha))
+				return r;
+		}
+
+		return null;
+	}
 }

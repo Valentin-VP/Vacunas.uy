@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response.Status;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 
 import datatypes.ErrorInfo;
+import exceptions.EnfermedadInexistente;
 import exceptions.EtapaInexistente;
 import exceptions.ReservaInexistente;
 import exceptions.UsuarioInexistente;
@@ -98,8 +99,8 @@ public class ConsultarEliminarReservaRWS {
 	@PermitAll
 	@DELETE
 	@Path("/eliminar")
-	public Response eliminarReservaCiudadano(@CookieParam("x-access-token") Cookie cookie, @QueryParam("p") int plan, @QueryParam("e") int etapa, @QueryParam("date") String fecha) {
-		if (fecha==null) {
+	public Response eliminarReservaCiudadano(@CookieParam("x-access-token") Cookie cookie, @QueryParam("e") String idEnfermedad, @QueryParam("date") String fecha) {
+		if (idEnfermedad==null || fecha==null) {
 			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
 			return rb.build();
 		}
@@ -115,9 +116,9 @@ public class ConsultarEliminarReservaRWS {
 	        if( ci == null)
 	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
 			LOGGER.info("Cedula obtenida en REST: " + ci);
-			rs.eliminarReserva(Integer.parseInt(ci), plan, etapa, LocalDateTime.parse(fecha, formatter));
+			rs.eliminarReserva(Integer.parseInt(ci), LocalDateTime.parse(fecha, formatter), idEnfermedad);
 			return Response.ok().build();
-		} catch (NumberFormatException | ReservaInexistente | UsuarioInexistente e) {
+		} catch (NumberFormatException | ReservaInexistente | UsuarioInexistente | EnfermedadInexistente e) {
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
 		}
 	}
