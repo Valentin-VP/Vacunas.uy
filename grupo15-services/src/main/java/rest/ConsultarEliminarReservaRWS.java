@@ -19,7 +19,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import org.jose4j.jwt.consumer.InvalidJwtException;
@@ -30,6 +29,7 @@ import exceptions.EtapaInexistente;
 import exceptions.ReservaInexistente;
 import exceptions.UsuarioInexistente;
 import interfaces.IReservaDAOLocal;
+import rest.filter.ResponseBuilder;
 import rest.filter.TokenSecurity;
 
 @DeclareRoles({"vacunador", "ciudadano", "administrador", "autoridad"})
@@ -64,18 +64,19 @@ public class ConsultarEliminarReservaRWS {
 			LOGGER.info("Cedula obtenida en REST: " + ci);
 			return Response.ok(rs.listarReservasCiudadano(Integer.parseInt(ci))).build();
 		} catch (NumberFormatException | ReservaInexistente | UsuarioInexistente e) {
-			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					e.getMessage());
 		}
 	}
 	
-	//@RolesAllowed({"ciudadano"}) 
+	/*@RolesAllowed({"ciudadano"}) 
 	@PermitAll
 	@GET
 	@Path("/obtener")
 	public Response obtenerReservaCiudadano(@CookieParam("x-access-token") Cookie cookie, @QueryParam("p") int plan, @QueryParam("e") int etapa, @QueryParam("date") String fecha) {
 		if (fecha==null) {
-			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
-			return rb.build();
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					"No se han ingresado todos los parametros necesarios.");
 		}
 		try {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
@@ -91,9 +92,10 @@ public class ConsultarEliminarReservaRWS {
 			LOGGER.info("Cedula obtenida en REST: " + ci);
 			return Response.ok(rs.obtenerReserva(Integer.parseInt(ci), plan, etapa, LocalDateTime.parse(fecha, formatter))).build();
 		} catch (NumberFormatException | ReservaInexistente | UsuarioInexistente | EtapaInexistente e) {
-			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					e.getMessage());
 		}
-	}
+	}*/
 	
 	//@RolesAllowed({"ciudadano"}) 
 	@PermitAll
@@ -101,8 +103,8 @@ public class ConsultarEliminarReservaRWS {
 	@Path("/eliminar")
 	public Response eliminarReservaCiudadano(@CookieParam("x-access-token") Cookie cookie, @QueryParam("e") String idEnfermedad, @QueryParam("date") String fecha) {
 		if (idEnfermedad==null || fecha==null) {
-			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
-			return rb.build();
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					"No se han ingresado todos los parametros necesarios.");
 		}
 		try {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
@@ -119,7 +121,8 @@ public class ConsultarEliminarReservaRWS {
 			rs.eliminarReserva(Integer.parseInt(ci), LocalDateTime.parse(fecha, formatter), idEnfermedad);
 			return Response.ok().build();
 		} catch (NumberFormatException | ReservaInexistente | UsuarioInexistente | EnfermedadInexistente e) {
-			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					e.getMessage());
 		}
 	}
 	
