@@ -2,11 +2,14 @@ package interfaces;
 
 import java.util.ArrayList;
 
+import javax.ejb.Remote;
+
 import datatypes.DtEnfermedad;
 import exceptions.AccionInvalida;
 import exceptions.EnfermedadInexistente;
 import exceptions.EnfermedadRepetida;
 
+@Remote
 public interface IEnfermedadRemote {
 
 public void agregarEnfermedad(String nombre) throws EnfermedadRepetida;

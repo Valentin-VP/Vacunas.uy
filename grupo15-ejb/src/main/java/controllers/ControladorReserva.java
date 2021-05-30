@@ -182,7 +182,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		
 	}
 	
-	public ArrayList<String> seleccionarFecha(LocalDate fecha, String idVacunatorio, int idPlan, int idCiudadano) throws VacunatorioNoCargadoException, PlanVacunacionInexistente, UsuarioInexistente, EtapaInexistente{
+	public ArrayList<String> seleccionarFecha(LocalDate fecha, String idVacunatorio, int idPlan, int idCiudadano) throws VacunatorioNoCargadoException, PlanVacunacionInexistente, UsuarioInexistente, EtapaInexistente, CupoInexistente{
 		ArrayList<LocalTime> libresFinal = new ArrayList<LocalTime>();
 		Vacunatorio v = em.find(Vacunatorio.class, idVacunatorio);
 		if (v == null)
@@ -203,7 +203,9 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 						if (etapaSelect == null) {
 							throw new EtapaInexistente("No hay una etapa a la cual el usuario pueda registrarse.");
 						}
-						
+						if (!fecha.isAfter(LocalDate.now())) {
+							throw new CupoInexistente("Fecha incorrecta.");
+						}
 						int cantReservasNecesarias = etapaSelect.getVacuna().getCantDosis();
 						int diasEntreDosis = etapaSelect.getVacuna().getTiempoEntreDosis();
 						ArrayList<ArrayList<LocalTime>> libres = new ArrayList<ArrayList<LocalTime>>(cantReservasNecesarias);
@@ -314,6 +316,9 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 							if (pv.getEtapas().isEmpty())
 								throw new EtapaInexistente("No hay etapas de vacunación asociadas a ese plan.");
 							else {
+								if (!fecha.isAfter(LocalDate.now())) {
+									throw new CupoInexistente("Fecha incorrecta.");
+								}
 								//Primero compruebo el pipe de condicion que tiene las edades, y el comienzo y fin de la etapa. Si dio bien, me traigo una etapa.
 								Etapa etapaSelect = getEtapaHabilitadoDePlan(pv, c);
 								if (etapaSelect == null) {

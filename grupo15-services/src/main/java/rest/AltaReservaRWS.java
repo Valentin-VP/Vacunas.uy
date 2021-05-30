@@ -280,7 +280,7 @@ public class AltaReservaRWS implements Serializable {
 			//LocalDate f = LocalDate.from(fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 			//Date nuevaFecha = Date.from(f.atStartOfDay(ZoneId.systemDefault()).toInstant());
 			return Response.ok(rs.seleccionarFecha(f, idVacunatorio, plan, Integer.parseInt(ci))).build();
-		} catch (DateTimeException | VacunatorioNoCargadoException | PlanVacunacionInexistente | UsuarioInexistente | EtapaInexistente e) {
+		} catch (DateTimeException | VacunatorioNoCargadoException | PlanVacunacionInexistente | UsuarioInexistente | EtapaInexistente | NumberFormatException | CupoInexistente e) {
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
 		}
 	}

@@ -20,8 +20,10 @@ import datatypes.Sexo;
 import exceptions.AccionInvalida;
 import exceptions.CertificadoRepetido;
 import exceptions.ConstanciaInexistente;
+import exceptions.CupoInexistente;
 import exceptions.EnfermedadInexistente;
 import exceptions.EnfermedadRepetida;
+import exceptions.EtapaInexistente;
 import exceptions.EtapaRepetida;
 import exceptions.FechaIncorrecta;
 import exceptions.LaboratorioInexistente;
@@ -49,6 +51,7 @@ import interfaces.IEnfermedadLocal;
 import interfaces.IEtapaRemote;
 import interfaces.ILaboratorioLocal;
 import interfaces.IPlanVacunacionLocal;
+import interfaces.IReservaDAOLocal;
 import interfaces.ITransportistaDaoLocal;
 import interfaces.IUsuarioLocal;
 
@@ -81,6 +84,8 @@ public class InitTest {
 	
 	@EJB
 	IUsuarioLocal uc;
+	@EJB
+	IReservaDAOLocal cr;
 	@EJB
 	ICertificadoVacunacionDAOLocal cert;
 	@EJB
@@ -116,12 +121,14 @@ public class InitTest {
 			uc.agregarUsuarioVacunador(11111114, "Vacunador", "DeTest Cuatro", LocalDate.now(), "v@4", new DtDireccion("Av. Vcd 1004", "Brooks", "Melbourne"), Sexo.Otro);
 			uc.agregarUsuarioVacunador(45946590, "Rodrigo", "Castro", LocalDate.now(), "rodrigo@castro", new DtDireccion("Av. Vcd RRRR", "Brooks", "Melbourne"), Sexo.Otro);
 			uc.agregarUsuarioVacunador(54657902, "Nicolás", "Méndez", LocalDate.now(), "nicolas@mendez", new DtDireccion("Av. Vcd NNNN", "Brooks", "Melbourne"), Sexo.Otro);
+			uc.agregarUsuarioVacunador(48585559, "Nohelia", "Yanibelli", LocalDate.now(), "nohelia@yanibelli", new DtDireccion("Av. Vcd YYYY", "Brooks", "Melbourne"), Sexo.Otro);
 			uc.agregarUsuarioCiudadano(21111111, "Ciudadano", "DeTest Uno", LocalDate.of(2000, 1, 1), "c@1", new DtDireccion("Av. Cdd 2001", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			uc.agregarUsuarioCiudadano(21111112, "Ciudadano", "DeTest Dos", LocalDate.of(1960, 1, 1), "c@2", new DtDireccion("Av. Cdd 2002", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			uc.agregarUsuarioCiudadano(21111113, "Ciudadano", "DeTest Tres", LocalDate.of(1900, 1, 1), "c@3", new DtDireccion("Av. Cdd 2003", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			uc.agregarUsuarioCiudadano(21111114, "Ciudadano", "DeTest Cuatro", LocalDate.of(1995, 1, 1), "c@4", new DtDireccion("Av. Cdd 2004", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			uc.agregarUsuarioCiudadano(54657902, "Nicolás", "Méndez", LocalDate.of(1995, 1, 1), "nicolas@mendez", new DtDireccion("Av. Cdd NNNN", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			uc.agregarUsuarioCiudadano(49457795, "Valentin", "Vasconcellos", LocalDate.of(1995, 1, 1), "valentin@vasconcellos", new DtDireccion("Av. Cdd VVVV", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
+			uc.agregarUsuarioCiudadano(48585559, "Nohelia", "Yanibelli", LocalDate.of(1995, 1, 1), "nohelia@yanibelli", new DtDireccion("Av. Cdd YYYY", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			lab.agregarLaboratorio("lab1");
 			lab.agregarLaboratorio("lab2");
 			trs.agregarTransportista(1);
@@ -157,8 +164,9 @@ public class InitTest {
 			vc.asignarVacunadorAVacunatorio(11111113, "vact3", LocalDate.now());
 			vc.asignarVacunadorAVacunatorio(11111112, "vact2", LocalDate.now().plusDays(1));
 			vc.asignarVacunadorAVacunatorio(11111114, "vact3", LocalDate.now().plusDays(1));*/
+			cr.confirmarReserva(48585559, "virus1", 1, "vact1", LocalDate.now().plusDays(1), LocalTime.of(23, 30, 00));
 			return Response.ok().build();
-		} catch (EnfermedadRepetida | VacunatorioCargadoException | UsuarioExistente | LaboratorioRepetido | TransportistaRepetido | VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | PlanVacunacionRepetido | EtapaRepetida | PlanVacunacionInexistente | VacunatorioNoCargadoException | ReglasCuposCargadoException | CertificadoRepetido | ConstanciaInexistente | PuestoCargadoException | AccionInvalida | VacunaInexistente e) {
+		} catch (EnfermedadRepetida | VacunatorioCargadoException | UsuarioExistente | LaboratorioRepetido | TransportistaRepetido | VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | PlanVacunacionRepetido | EtapaRepetida | PlanVacunacionInexistente | VacunatorioNoCargadoException | ReglasCuposCargadoException | CertificadoRepetido | ConstanciaInexistente | PuestoCargadoException | AccionInvalida | VacunaInexistente | UsuarioInexistente | CupoInexistente | EtapaInexistente e) {
 			// TODO Auto-generated catch block
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
 		}
