@@ -46,6 +46,10 @@ public class ResponseBuilder {
 		return Response.status( status ).entity( json.toJson().toString() ).build();
 	}
 	
+	public static Response createResponse( Response.Status status, JSONObject json ) throws JSONException {
+		return Response.status( status ).entity( json.toString() ).build();
+	}
+	
 	public static Response createResponse( Response.Status status, List<JsonSerializable> json ) throws JSONException {
 		JSONArray jsonArray = new JSONArray();
 		

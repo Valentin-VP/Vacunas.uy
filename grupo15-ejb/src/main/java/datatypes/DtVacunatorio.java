@@ -3,6 +3,8 @@ package datatypes;
 import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 @XmlRootElement
 public class DtVacunatorio implements Serializable {
@@ -103,6 +105,17 @@ public class DtVacunatorio implements Serializable {
 
 	public void setLongitud(Float longitud) {
 		this.longitud = longitud;
+	}
+	
+	public JSONObject toJson() throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put( "id", this.id );
+		jsonObject.put( "nombre", this.nombre );
+		jsonObject.put( "dtDir", this.dtDir.toJson() );
+		jsonObject.put( "telefono", this.telefono );
+		jsonObject.put( "latitud", this.latitud );
+		jsonObject.put( "longitud", this.longitud );
+		return jsonObject;
 	}
 
 }
