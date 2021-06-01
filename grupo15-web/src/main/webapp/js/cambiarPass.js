@@ -26,8 +26,8 @@ var pass = new Vue({
         console.log("Hash:" + this.hash);
        
       
-       axios.post('http://localhost:8080/grupo15-services/rest/internalauth/login', { 
-        pass : this.hash.toString(),
+       axios.post('http://localhost:8080/grupo15-services/rest/usuario/cambiarpass', { 
+        pass : hash.toString(),
        
       })
       

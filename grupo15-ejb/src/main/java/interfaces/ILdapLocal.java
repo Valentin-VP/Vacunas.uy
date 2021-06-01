@@ -13,5 +13,6 @@ public interface ILdapLocal {
 	public  boolean authUser(String userId, String password);
 	public  boolean searchUserBool(Integer ci) throws NamingException;
 	public String searchType(String ci) throws NamingException;
+	public void updateUserPass(String userId, String password);
 }
 
