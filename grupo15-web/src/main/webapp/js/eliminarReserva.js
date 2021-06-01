@@ -1,9 +1,10 @@
 var res = new Vue({
   el: "#res",
   data: {
-    fecha:'',
+   
     listaReservas: [],
-    aEliminar:''
+    reserva:''
+  
   },
   mounted() {
     this.getReservas();
@@ -14,19 +15,24 @@ var res = new Vue({
 
     methods: 
     {
+      aEliminar() {
+        
+        reserva=this.reserva;
+        console.log('lista Eliminar: ', this.reserva);
+        this.eliminarDatos();
+        
+      },
       
-      
-     // EliminarDatos () {
+    //  eliminarDatos () {
 
     
       
-    //  axios.delete("/grupo15-services/rest/reservas/eliminar?p=idPlan&e=idEtapa&date=yyyy-MM-dd", {
+    // axios.delete("/grupo15-services/rest/reservas/eliminar?p=idPlan&e=idEtapa&date=yyyy-MM-dd", {
 
-   //   idPlan : this.IdPlan.toString(),
-    //  idEtapa : this.IdEtapa.toString(),
-    //  fecha : this.fecha.toString(),
+    //  reserva : this.reserva.toString(),
+    
      
-//    });
+   //});
   
 getReservas () {
         
