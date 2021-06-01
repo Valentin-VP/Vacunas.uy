@@ -418,7 +418,9 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 			} else {
 				Reserva r = getReservaEtapa(c.getReservas(), e, fecha);
 				if (r != null && r.getEstado().equals(EstadoReserva.EnProceso)) {
-					DtReservaCompleto retorno = r.getDtReservaCompleto();
+					DtReservaCompleto temp = r.getDtReservaCompleto();
+					temp.setPuesto(r.getPuesto().getVacunatorio().getNombre() + " - Puesto " + r.getPuesto().getId());
+					DtReservaCompleto retorno = temp;
 
 					return retorno;
 				} else {
@@ -439,7 +441,9 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 				ArrayList<DtReservaCompleto> retorno = new ArrayList<DtReservaCompleto>();
 				for (Reserva r: c.getReservas()) {
 					if (r.getEstado().equals(EstadoReserva.EnProceso)) {
-						retorno.add(r.getDtReservaCompleto());
+						DtReservaCompleto temp = r.getDtReservaCompleto();
+						temp.setPuesto(r.getPuesto().getVacunatorio().getNombre() + " - Puesto " + r.getPuesto().getId());
+						retorno.add(temp);
 					}
 				}
 				if (retorno.isEmpty()) {
