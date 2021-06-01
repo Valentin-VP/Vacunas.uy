@@ -46,33 +46,17 @@ public class GestionVacunatoriosRWS {
 	public GestionVacunatoriosRWS() {}
 	
 	@PermitAll
-	@GET
-	@Path("/listar")
-	public Response listarVacunatorios(@CookieParam("x-access-token") Cookie cookie) {
-		try {
-			String token = cookie.getValue();
-			String ci = null;
-			try {
-				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-			} catch (InvalidJwtException e) {
-				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-						"Error procesando JWT");
-			}
-	        if( ci == null)
-	        	return ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED,
-						"No se ha obtenido ci de Cookie/Token");
-			LOGGER.info("Cedula obtenida en REST: " + ci);
-			List<JsonSerializable> vacunatoriosJson = new ArrayList<JsonSerializable>();
-			vacunatoriosJson.addAll( (Collection<? extends JsonSerializable>) iControladorVacunatorio.listarVacunatorio() );
-			return ResponseBuilder.createResponse(Response.Status.OK, vacunatoriosJson );
-		} catch (VacunatoriosNoCargadosException e) {
-			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-					e.getMessage());
-		} catch (JSONException e) {
-			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-					e.getMessage());
-		}
-	}
+    @GET
+    @Path("/listar")
+    public Response listarVacunatorios() {
+        try {
+            LOGGER.info("accediendo a listar vacunatorio");
+            return Response.ok(iControladorVacunatorio.listarVacunatorio()).build();
+        } catch (VacunatoriosNoCargadosException e) {
+            return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+                    e.getMessage());
+        }
+    }
 	
 	@PermitAll
 	@GET
