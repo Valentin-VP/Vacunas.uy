@@ -27,7 +27,7 @@ var pass = new Vue({
        
       
        axios.post('http://localhost:8080/grupo15-services/rest/usuario/cambiarpass', { 
-        pass : this.hash.toString(),
+        pass : hash.toString(),
        
       })
       

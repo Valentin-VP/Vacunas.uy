@@ -8,13 +8,15 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
-import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 
 import interfaces.ILdapLocal;
@@ -39,13 +41,16 @@ public class GestionUsuariosRWS {
 	public GestionUsuariosRWS() {
 	}
 
-	@RolesAllowed("administrador")
-	@GET
+	@RolesAllowed({ "administrador", "autoridad" })
+	@POST
 	@Path("/cambiarpass")
 	public Response cambiarPassword(@CookieParam("x-access-token") Cookie cookie, String hashedpass) {
 		try {
-			LOGGER.info("Pass hasheada recibida en REST: " + hashedpass);
-			String nuevaPass = new String(Base64.getDecoder().decode(hashedpass.getBytes()));
+			JSONObject jsonObject = new JSONObject(hashedpass);
+			LOGGER.info("Pass hasheada recibida en REST: " + jsonObject.getString("pass"));
+			String nuevaPass = new String(Base64.getDecoder().decode(jsonObject.getString("pass")));
+			// String nuevaPass = new
+			// String(Base64.getDecoder().decode(hashedpass.getBytes()));
 			LOGGER.info("Pass deshasheada  en REST: " + nuevaPass);
 			String token = cookie.getValue();
 			String ci = null;
@@ -59,7 +64,9 @@ public class GestionUsuariosRWS {
 						"No se ha obtenido ci de Cookie/Token");
 			LOGGER.info("Cedula obtenida en REST: " + ci);
 			l.updateUserPass(ci, nuevaPass);
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 		}
 		return ResponseBuilder.createResponse(Response.Status.OK, "Password cambiada con exito");
