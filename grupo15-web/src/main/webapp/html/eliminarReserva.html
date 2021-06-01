@@ -58,10 +58,10 @@
       <form>
 
         <div>
-          <label for="fecha"  style="font-size: medium; text-align: center;" >Fecha-Hora / Enfermedad / Vacuna </label>
-          <select class="form-control" v-model=reserva id="reserva">
+          <label for="fecha"  style="font-size: medium; text-align: center;" >Fecha-Hora / Enfermedad / Vacuna / Lugar</label>
+          <select class="form-control" v-model=reserva id="reserva" @change="updateIndex($event, $event.target.selectedIndex)">
             <option disabled value="">Seleccione la reserva a eliminar:</option>
-            <option v-for="item in listaReservas" @click="aEliminar">{{item.fecha}}, {{item.enfermedad}}, {{item.vacuna}} </option>
+            <option v-for="item in listaReservas" >{{item.fecha}}, {{item.enfermedad}}, {{item.vacuna}}, {{item.puesto}} </option>
           </select>
         </div>
         
