@@ -7,7 +7,7 @@ var vac = new Vue({
       listadoProximas: [],
       
       
-    },
+    }, 
     
     mounted() {
        this.getVigentes();
