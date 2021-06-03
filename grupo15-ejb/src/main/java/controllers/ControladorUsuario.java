@@ -24,6 +24,7 @@ import datatypes.DtVacunador;
 import datatypes.Rol;
 import datatypes.Sexo;
 import datatypes.TipoUsuario;
+import entities.CertificadoVacunacion;
 import entities.Ciudadano;
 import entities.Usuario;
 import entities.UsuarioInterno;
@@ -150,7 +151,8 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		Ciudadano usu = new Ciudadano(IdUsuario, nombre, apellido, fechaNac, email, direccion, sexo, TipoSector,
 				autenticado);
 		// mu.agregarUsuario(usu);
-
+		CertificadoVacunacion cv = new CertificadoVacunacion();
+		usu.setCertificado(cv);
 		em.persist(usu);
 
 	}
