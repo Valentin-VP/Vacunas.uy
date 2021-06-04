@@ -149,8 +149,8 @@ public class InitTest {
 			
 			//agd.agregarAgenda("vact1", LocalDate.now());
 			
-			cert.agregarCertificadoVacunacion(21111111, new ArrayList<DtConstancia>());
-			cert.agregarCertificadoVacunacion(21111112, new ArrayList<DtConstancia>());
+			//cert.agregarCertificadoVacunacion(21111111, new ArrayList<DtConstancia>());
+			//cert.agregarCertificadoVacunacion(21111112, new ArrayList<DtConstancia>());
 			pst.agregarPuesto("puesto1vact1", "vact1");
 			pst.agregarPuesto("puesto2vact1", "vact1");
 			pst.agregarPuesto("puesto3vact1", "vact1");
@@ -166,7 +166,7 @@ public class InitTest {
 			vc.asignarVacunadorAVacunatorio(11111114, "vact3", LocalDate.now().plusDays(1));*/
 			cr.confirmarReserva(48585559, "virus1", 1, "vact1", LocalDate.now().plusDays(1), LocalTime.of(23, 30, 00));
 			return Response.ok().build();
-		} catch (EnfermedadRepetida | VacunatorioCargadoException | UsuarioExistente | LaboratorioRepetido | TransportistaRepetido | VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | PlanVacunacionRepetido | EtapaRepetida | PlanVacunacionInexistente | VacunatorioNoCargadoException | ReglasCuposCargadoException | CertificadoRepetido | ConstanciaInexistente | PuestoCargadoException | AccionInvalida | VacunaInexistente | UsuarioInexistente | CupoInexistente | EtapaInexistente e) {
+		} catch (EnfermedadRepetida | VacunatorioCargadoException | UsuarioExistente | LaboratorioRepetido | TransportistaRepetido | VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | PlanVacunacionRepetido | EtapaRepetida | PlanVacunacionInexistente | VacunatorioNoCargadoException | ReglasCuposCargadoException |  PuestoCargadoException | AccionInvalida | VacunaInexistente | UsuarioInexistente | CupoInexistente | EtapaInexistente e) {
 			// TODO Auto-generated catch block
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
 		}
