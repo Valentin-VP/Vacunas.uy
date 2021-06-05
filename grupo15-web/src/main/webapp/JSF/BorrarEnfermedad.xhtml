@@ -51,17 +51,19 @@
 <h:form>
 
 <div>
+<p:messages id="messages" showDetail="true" closable="true">
+            <p:autoUpdate/>
+</p:messages>
 <p:outputLabel style="width:50%" >Seleccione enfermedad:    </p:outputLabel>
  <h:selectOneMenu value="#{BorrarEnfermedad.nombre}">
-	<f:selectItems value="#{BorrarEnfermedad.listaEnfermedades}" />
+	<f:selectItems value="#{BorrarEnfermedad.enfermedades}" />
 
 </h:selectOneMenu>
 
 
 </div>
 
-<p:commandButton action="#{CrearEnfermedad.crearEnfermedad}" value="Eliminar"  > </p:commandButton>
-
+<p:commandButton id="button" action="#{BorrarEnfermedad.borrarEnfermedad}" value="Eliminar" > </p:commandButton>
 
 </h:form>
  </div>
