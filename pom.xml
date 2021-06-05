@@ -253,7 +253,8 @@
 				  <groupId>org.jacoco</groupId>
 				  <artifactId>jacoco-maven-plugin</artifactId>
 				  <version>0.8.7</version>
-				  <type>maven-plugin</type>
+				  <!-- --> <type>maven-plugin</type>
+				  <scope>test</scope>
 				</dependency>
 				<dependency>
 				    <groupId>org.jboss.arquillian.extension</groupId>
@@ -267,12 +268,7 @@
 				    <version>1.2.2</version>
 				    <scope>test</scope>
 				</dependency>
-				<dependency>
-				    <groupId>org.jboss.arquillian.extension</groupId>
-				    <artifactId>arquillian-transaction-api</artifactId>
-				    <version>1.0.5</version>
-				    <scope>test</scope>
-				</dependency>
+
 
 			</dependencies>
 			<build>
