@@ -150,7 +150,7 @@ public class GestionVacunasRWS {
 	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
 			LOGGER.info("Cedula obtenida en REST: " + ci);
 			cv.eliminarVacuna(vacuna);
-			return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha eliminado la vacuna");
+			return ResponseBuilder.createResponse(Response.Status.OK, "Se ha eliminado la vacuna");
 		} catch (AccionInvalida | VacunaInexistente e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					e.getMessage());

@@ -1,7 +1,6 @@
 package servlets;
 
 import java.io.Serializable;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -10,43 +9,43 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
 import javax.servlet.http.Cookie;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import datatypes.DtEnfermedad;
-import exceptions.AccionInvalida;
-import exceptions.EnfermedadInexistente;
+import datatypes.DtVacuna;
 
-@Named("BorrarEnfermedad")
+@Named("BorrarVacuna")
 @RequestScoped
-public class JSFBorrarEnfermedadBean implements Serializable{
+public class JSFBorrarVacunaBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 	private String token; 
 	
-	@EJB
-	interfaces.IEnfermedadLocal iControlador;
-	
 	private String nombre;
-	private List<String> enfermedades = new ArrayList<String>();
-	private List<DtEnfermedad> dtenfermedades = new ArrayList<DtEnfermedad>();
+	private List<String> vacunas = new ArrayList<String>();
+	private List<DtVacuna> dtvacunas = new ArrayList<DtVacuna>();
+	
+	@EJB
+	interfaces.IControladorVacunaLocal iControlador;
+	
+	public JSFBorrarVacunaBean() {}
 
-	public JSFBorrarEnfermedadBean() {}
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
 
 	public String getNombre() {
 		return nombre;
@@ -56,12 +55,20 @@ public class JSFBorrarEnfermedadBean implements Serializable{
 		this.nombre = nombre;
 	}
 
-	public List<String> getEnfermedades() {
-		return enfermedades;
+	public List<String> getVacunas() {
+		return vacunas;
 	}
 
-	public void setEnfermedades(List<String> enfermedades) {
-		this.enfermedades = enfermedades;
+	public void setVacunas(List<String> vacunas) {
+		this.vacunas = vacunas;
+	}
+
+	public List<DtVacuna> getDtvacunas() {
+		return dtvacunas;
+	}
+
+	public void setDtvacunas(List<DtVacuna> dtvacunas) {
+		this.dtvacunas = dtvacunas;
 	}
 
 	@PostConstruct
@@ -73,26 +80,15 @@ public class JSFBorrarEnfermedadBean implements Serializable{
 	        	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 	        }
 			Client conexion = ClientBuilder.newClient();
-			WebTarget webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/enfermedad/listar");
+			WebTarget webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/vacunas/listar");
 			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
 			Response response = invocation.invoke();
 			LOGGER.info("Respuesta: " + response.getStatus());
 			if (response.getStatus() == 200) {
-				
-				dtenfermedades = response.readEntity(new GenericType<List<DtEnfermedad>>() {});
-				for(DtEnfermedad dt: dtenfermedades) {
-					this.enfermedades.add(dt.getNombre());
+				dtvacunas = response.readEntity(new GenericType<List<DtVacuna>>() {});
+				for(DtVacuna dt: dtvacunas) {
+					this.vacunas.add(dt.getNombre());
 				}
-//				String jsonString = response.readEntity(String.class);
-//				JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
-//				JsonArray jsonArray = jsonReader.readArray();
-//				int i = 0;
-//				while(i < jsonArray.size()) {
-//					JsonObject each = jsonArray.getJsonObject(i);
-//					String enfermedad = each.getString("nombre");
-//				}
-//				JsonObject reply = jsonReader.readObject();
-//				String message = reply.getString("message");
 			}
 		} catch (Exception e) {
 			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
@@ -100,7 +96,7 @@ public class JSFBorrarEnfermedadBean implements Serializable{
 		
 	}
 	
-	public void borrarEnfermedad() {
+	public void borrarVacuna() {
 		try {
 			Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
 	        if (cookie != null) {
@@ -109,12 +105,12 @@ public class JSFBorrarEnfermedadBean implements Serializable{
 	        }
 	        // http://omnifaces-fans.blogspot.com/2015/10/jax-rs-consume-restful-web-service-from.html
 			Client conexion = ClientBuilder.newClient();
-			WebTarget webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/enfermedad/eliminar").queryParam("enf", this.nombre);
+			WebTarget webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/vacunas/eliminar").queryParam("vac", this.nombre);
 			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildDelete();
 			Response response = invocation.invoke();
 			LOGGER.info("Respuesta: " + response.getStatus());
 			if (response.getStatus() == 200) {
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Borrar:", "Enfermedad eliminada"));
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Borrar:", "Vacuna eliminada"));
 			}else {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "" + response.getStatus()));
 			}

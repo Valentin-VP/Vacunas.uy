@@ -27,7 +27,7 @@
             <a class="nav-link" href="/grupo15-web/html/registroInterno.html">Registrar Usuario Interno</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/grupo15-web/JSF/CrearEnfermedad.xhtml">Crear Enfermedad></a>
+            <a class="nav-link" href="/grupo15-web/JSF/CrearEnfermedad.xhtml">Crear Enfermedad</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href=""></a>
@@ -53,13 +53,15 @@
 <div>
 <p:outputLabel style="width:50%" >Seleccione Vacuna:    </p:outputLabel>
  <h:selectOneMenu value="#{BorrarVacuna.nombre}">
-	<f:selectItems value="#{BorrarVacuna.listaVacunas}" />
+	<f:selectItems value="#{BorrarVacuna.vacunas}" />
 
 </h:selectOneMenu>
 
 
 </div>
-
+<p:messages id="messages" showDetail="true" closable="true">
+            <p:autoUpdate/>
+</p:messages>
 <p:commandButton action="#{BorrarVacuna.borrarVacuna}" value="Eliminar"  > </p:commandButton>
 
 
