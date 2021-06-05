@@ -17,7 +17,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import org.jose4j.jwt.consumer.InvalidJwtException;
@@ -27,6 +26,7 @@ import exceptions.AccionInvalida;
 import exceptions.LaboratorioInexistente;
 import exceptions.LaboratorioRepetido;
 import interfaces.ILaboratorioLocal;
+import rest.filter.ResponseBuilder;
 import rest.filter.TokenSecurity;
 
 @DeclareRoles({"vacunador", "ciudadano", "administrador", "autoridad"})
@@ -52,14 +52,17 @@ public class GestionLaboratorioRWS {
 				try {
 					ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
 				} catch (InvalidJwtException e) {
-					e.printStackTrace();
+					return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+							e.getMessage());
 				}
 		        if( ci == null)
-		            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
+		        	return ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED,
+		        			"No se encuentra CI en token de Cookie - Unauthorized!");
 				LOGGER.info("Cedula obtenida en REST: " + ci);
 				return Response.ok(cl.listarLaboratorios()).build();
 			} catch (LaboratorioInexistente e) {
-				return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+						e.getMessage());
 			}
 		}
 		
@@ -69,8 +72,8 @@ public class GestionLaboratorioRWS {
 		@Path("/obtener")
 		public Response obtenerLaboratorio(@CookieParam("x-access-token") Cookie cookie, @QueryParam("lab") String lab) {
 			if (lab==null) {
-				ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
-				return rb.build();
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+						"No se ha recibido laboratorio");
 			}
 			try {
 				String token = cookie.getValue();
@@ -78,14 +81,17 @@ public class GestionLaboratorioRWS {
 				try {
 					ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
 				} catch (InvalidJwtException e) {
-					e.printStackTrace();
+					return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+							e.getMessage());
 				}
 		        if( ci == null)
-		            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
+		        	return ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED,
+		        			"No se encuentra CI en token de Cookie - Unauthorized!");
 				LOGGER.info("Cedula obtenida en REST: " + ci);
 				return Response.ok(cl.obtenerLaboratorio(lab)).build();
 			} catch ( LaboratorioInexistente e) {
-				return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+						e.getMessage());
 			}
 		}
 		
@@ -95,8 +101,8 @@ public class GestionLaboratorioRWS {
 		@Path("/agregar")
 		public Response agregarLaboratorio(@CookieParam("x-access-token") Cookie cookie, String lab) {
 			if (lab==null) {
-				ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
-				return rb.build();
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+						"No se ha recibido el laboratorio");
 			}
 			try {
 				String token = cookie.getValue();
@@ -104,15 +110,18 @@ public class GestionLaboratorioRWS {
 				try {
 					ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
 				} catch (InvalidJwtException e) {
-					e.printStackTrace();
+					return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+							e.getMessage());
 				}
 		        if( ci == null)
-		            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
+		        	return ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED,
+		        			"No se encuentra CI en token de Cookie - Unauthorized!");
 				LOGGER.info("Cedula obtenida en REST: " + ci);
 				cl.agregarLaboratorio(lab);
-				return Response.ok().build();
+				return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha creado el laboratorio");
 			} catch (LaboratorioRepetido e) {
-				return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+						e.getMessage());
 			}
 		}
 		
@@ -122,8 +131,8 @@ public class GestionLaboratorioRWS {
 		@Path("/eliminar")
 		public Response eliminarLaboratorio(@CookieParam("x-access-token") Cookie cookie, @QueryParam("lab") String lab) {
 			if (lab==null) {
-				ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
-				return rb.build();
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+						"No se ha recibido laboratorio");
 			}
 			try {
 				String token = cookie.getValue();
@@ -131,15 +140,17 @@ public class GestionLaboratorioRWS {
 				try {
 					ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
 				} catch (InvalidJwtException e) {
-					e.printStackTrace();
+					return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+							e.getMessage());
 				}
 		        if( ci == null)
 		            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
 				LOGGER.info("Cedula obtenida en REST: " + ci);
 				cl.eliminarLaboratorio(lab);
-				return Response.ok().build();
+				return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha eliminado el laboratorio");
 			} catch (AccionInvalida | LaboratorioInexistente e) {
-				return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+						e.getMessage());
 			}
 		}
 }

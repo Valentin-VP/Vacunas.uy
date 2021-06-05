@@ -149,7 +149,7 @@ public class EnfermedadRWS {
 	        			"No se encuentra CI en token de Cookie - Unauthorized!");
 			LOGGER.info("Cedula obtenida en REST: " + ci);
 			ce.eliminarEnfermedad(enfermedad);
-			return ResponseBuilder.createResponse(Response.Status.OK);
+			return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha eliminado la enfermedad");
 		} catch (EnfermedadInexistente | AccionInvalida e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					e.getMessage());
