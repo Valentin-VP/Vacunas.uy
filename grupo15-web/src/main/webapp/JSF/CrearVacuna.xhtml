@@ -3,8 +3,7 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html" 
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:rich="http://primefaces.org/ui"> 
+      xmlns:p="http://primefaces.org/ui"> 
       
 
 <h:head> <link href="/grupo15-web/css/styles.css" type="text/css" rel="stylesheet" media="all" /> </h:head> 
@@ -74,19 +73,22 @@
 <div>
 <p:outputLabel style="width:40%" >Enfermedad:    </p:outputLabel>
  <h:selectOneMenu value="#{CrearVacuna.enfermedad}">
-	<f:selectItems value="#{CrearVacuna.listaEnfermedades}" />
+	<f:selectItems value="#{CrearVacuna.enfermedades}" />
 </h:selectOneMenu>
 </div>
 
 <div>
+
 <p:outputLabel style="width:40%" >Laboratorio:    </p:outputLabel>
  <h:selectOneMenu value="#{CrearVacuna.laboratorio}">
-	<f:selectItems value="#{CrearVacuna.listaLaboratorios}" />
+	<f:selectItems value="#{CrearVacuna.laboratorios}" />
 </h:selectOneMenu>
 </div>
 
-
-<p:commandButton action="#{CrearVacuna.crearVacuna}" value="Crear"> </p:commandButton>
+<p:messages id="messages" showDetail="true" closable="true">
+            <p:autoUpdate/>
+</p:messages>
+<p:commandButton id="confirmar" action="#{CrearVacuna.crearVacuna}" value="Crear"> </p:commandButton>
 
 
 </h:form>

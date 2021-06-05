@@ -35,8 +35,6 @@ public class JSFCrearEnfermedadBean implements Serializable {
 	@EJB
 	interfaces.IEnfermedadLocal iControlador;
 	
-	private UIComponent button;
-	
 	private String nombre;
 	
 	public String getNombre() {
@@ -45,14 +43,6 @@ public class JSFCrearEnfermedadBean implements Serializable {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
-	}
-
-	public UIComponent getButton() {
-		return button;
-	}
-
-	public void setButton(UIComponent button) {
-		this.button = button;
 	}
 
 	
@@ -71,9 +61,6 @@ public class JSFCrearEnfermedadBean implements Serializable {
 			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildPost(Entity.entity(this.nombre, MediaType.APPLICATION_JSON));
 			Response response = invocation.invoke();
 			LOGGER.info("Respuesta: " + response.getStatus());
-//			FacesMessage message = new FacesMessage("Enfermedad generada con éxito");
-//            FacesContext context = FacesContext.getCurrentInstance();
-//            context.addMessage(null, message);
 			if (response.getStatus() == 201) {
 				String jsonString = response.readEntity(String.class);
 				JsonReader jsonReader = Json.createReader(new StringReader(jsonString));

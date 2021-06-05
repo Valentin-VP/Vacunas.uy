@@ -116,7 +116,7 @@ public class JSFBorrarEnfermedadBean implements Serializable{
 			if (response.getStatus() == 200) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Crear:", "Enfermedad eliminada"));
 			}else {
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", "" + response.getStatus()));
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "" + response.getStatus()));
 			}
 			cargaInicial();
 		} catch (Exception e) {
