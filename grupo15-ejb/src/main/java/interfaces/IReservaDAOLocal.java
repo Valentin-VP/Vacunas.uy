@@ -23,9 +23,7 @@ import exceptions.VacunatoriosNoCargadosException;
 
 @Local
 public interface IReservaDAOLocal {
-	public ArrayList<DtEnfermedad> listarEnfermedades() throws EnfermedadInexistente;
 	public ArrayList<DtPlanVacunacion> seleccionarEnfermedad(String enfermedad) throws PlanVacunacionInexistente, EnfermedadInexistente;
-	public ArrayList<DtVacunatorio> listarVacunatorios() throws VacunatoriosNoCargadosException;
 	public ArrayList<DtEtapa> seleccionarPlanVacunacion(int idPlan, int idUser) throws PlanVacunacionInexistente, EtapaInexistente, UsuarioInexistente;
 	public ArrayList<String> seleccionarFecha(LocalDate fecha, String idVacunatorio, int idPlan, int idCiudadano) throws VacunatorioNoCargadoException, PlanVacunacionInexistente, UsuarioInexistente, EtapaInexistente, CupoInexistente;
 	public void confirmarReserva(int idCiudadano, String idEnfermedad, int idPlan, String idVacunatorio,

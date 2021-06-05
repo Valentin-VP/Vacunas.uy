@@ -88,22 +88,6 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		// TODO Auto-generated constructor stub
 	}
 
-	//TODO: ELIMINAR ESTO
-	public ArrayList<DtEnfermedad> listarEnfermedades() throws EnfermedadInexistente {
-		Query query = em.createQuery("SELECT e FROM Enfermedad e ORDER BY nombre ASC");
-		@SuppressWarnings("unchecked")
-		List<Enfermedad> enfermedades = query.getResultList();
-		if (!enfermedades.isEmpty()) {
-			ArrayList<DtEnfermedad> dtEnfs = new ArrayList<>();
-			for (Enfermedad e : enfermedades) {
-				dtEnfs.add(new DtEnfermedad(e.getNombre()));
-			}
-			return dtEnfs;
-		} else {
-			throw new EnfermedadInexistente("No existen Enfermedades registradas");
-		}
-	}
-
 	public ArrayList<DtPlanVacunacion> seleccionarEnfermedad(String enfermedad) throws PlanVacunacionInexistente, EnfermedadInexistente {
 		if (em.find(Enfermedad.class, enfermedad)==null)
 			throw new EnfermedadInexistente("No existe esa enfermedad.");
@@ -113,7 +97,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		if (!pVacs.isEmpty()) {
 			ArrayList<DtPlanVacunacion> dtPlanVacs = new ArrayList<>();
 			for (PlanVacunacion pV : pVacs) {
-				if (pV.getEnfermedad().equals(em.find(Enfermedad.class, enfermedad)))
+				if (pV.getEnfermedad()!=null && pV.getEnfermedad().equals(em.find(Enfermedad.class, enfermedad)))
 					dtPlanVacs.add(pV.toDtPlanVacunacion());
 			}
 			return dtPlanVacs;
@@ -157,29 +141,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 				
 			}
 		}
-		return retorno;
-	}
-	
-	//TODO: ELIMINAR ESTO
-	public ArrayList<DtVacunatorio> listarVacunatorios() throws VacunatoriosNoCargadosException {
-		Query query = em.createQuery("SELECT v FROM Vacunatorio v");
-		@SuppressWarnings("unchecked")
-		List<Vacunatorio> aux = query.getResultList();
-		ArrayList<DtVacunatorio> vac = new ArrayList<DtVacunatorio>();
-		if (aux.isEmpty()) {
-			throw new VacunatoriosNoCargadosException("No existen vacunatorios en el sistema.");
-		} else {
-			for (Vacunatorio v : aux) {
-				DtVacunatorio dtVac = new DtVacunatorio(v.getId(), v.getNombre(), v.getDtDir(), v.getTelefono(),
-														v.getLatitud(), v.getLongitud());
-				vac.add(dtVac);
-			}
-			return vac;
-		}
-	}
-	
-	public void seleccionarEtapa(int idEtapa) {
-		
+		return new ArrayList<DtEtapa>();
 	}
 	
 	public ArrayList<String> seleccionarFecha(LocalDate fecha, String idVacunatorio, int idPlan, int idCiudadano) throws VacunatorioNoCargadoException, PlanVacunacionInexistente, UsuarioInexistente, EtapaInexistente, CupoInexistente{

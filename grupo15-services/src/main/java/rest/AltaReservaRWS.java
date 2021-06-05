@@ -182,7 +182,7 @@ public class AltaReservaRWS implements Serializable {
 	        if( ci == null)
 	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
 			LOGGER.info("Cedula obtenida en REST: " + ci);
-			return Response.ok(rs.listarEnfermedades()).build();
+			return Response.ok(es.listarEnfermedades()).build();
 		} catch (EnfermedadInexistente e) {
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
 		}
