@@ -32,20 +32,24 @@
         <!-- By default, Arquillian will use the JBOSS_HOME environment variable to find the WildFly / JBoss EAP installation.
              If you prefer not to define the JBOSS_HOME environment variable, alternatively you can uncomment the
              following `jbossHome` property and replace EAP_HOME with the path to your WildFly / JBoss EAP installation. -->
-        <!--<configuration>
-            <property name="jbossHome">EAP_HOME</property>
-        </configuration> -->
+        <configuration>
+            <property name="jbossHome">C:\wildfly-21.0.0.Final</property>
+        </configuration> 
     </container>
     
     <!-- Example configuration for a remote WildFly / JBoss EAP instance -->
-    <container qualifier="remote">
+    <container qualifier="remote" default="true">
         <!-- Arquillian will deploy to this WildFly server. -->
         <configuration>
             <property name="managementAddress">127.0.0.1</property>
             <property name="managementPort">9990</property>
             <!-- If deploying to a remote server, you have to specify username/password here -->
-            <!-- <property name="username">admin</property>
-            <property name="password">admin</property> -->
+            <property name="username">admin</property>
+            <property name="password">admin</property>
         </configuration>
     </container>
+    
+    <extension qualifier="transaction">
+	    <property name="manager">java:/test</property>
+	  </extension>
 </arquillian>
