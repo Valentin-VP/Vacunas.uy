@@ -146,4 +146,17 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 		else
 			return null;
 	}
+	
+	//retorna el numero de constancias en este periodo no las constancias
+	public int listarConstanciasPeriodo(int dias) {
+		Query query = em.createQuery("SELECT c FROM ConstanciaVacuna c WHERE fechaUltimaDosis BETWEEN :start AND :end");
+		query.setParameter("start", LocalDate.now().minusDays(dias));
+		query.setParameter("end", LocalDate.now());
+		
+		ArrayList<ConstanciaVacuna> result = (ArrayList<ConstanciaVacuna>) query.getResultList();
+//		System.out.println(LocalDate.now().minusDays(dias) + " menos " + LocalDate.now());
+		int retorno = result.size();
+		System.out.println(retorno);
+		return retorno;
+	}
 }

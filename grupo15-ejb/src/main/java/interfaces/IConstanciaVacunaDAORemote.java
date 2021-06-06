@@ -18,4 +18,5 @@ public interface IConstanciaVacunaDAORemote {
 	public void modificarConstanciaVacuna(int idConst, String vacuna, int periodoInmunidad, int dosisRecibidas, LocalDate fechaUltimaDosis, int idUser, int idEtapa) throws UsuarioExistente, ReservaInexistente, CertificadoInexistente, ConstanciaInexistente;
 	public DtConstancia obtenerConstancia(int idConst) throws ConstanciaInexistente;
 	public ArrayList<DtConstancia> listarConstancias() throws ConstanciaInexistente;
+	public int listarConstanciasPeriodo(int dias);
 }
