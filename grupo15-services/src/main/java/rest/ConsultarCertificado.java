@@ -41,7 +41,7 @@ public class ConsultarCertificado {
 		
 		@GET
 		@Path("/certificado")
-		@RolesAllowed({"ciudadano"})
+		@RolesAllowed("ciudadano")
 		public Response getCertificado(@CookieParam("x-access-token") Cookie cookie) {
 			String token = cookie.getValue();
 			String ci = null;
