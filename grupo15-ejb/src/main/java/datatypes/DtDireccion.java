@@ -55,4 +55,43 @@ public class DtDireccion implements Serializable {
 		jsonObject.put("departamento", this.departamento);
 		return jsonObject;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((barrio == null) ? 0 : barrio.hashCode());
+		result = prime * result + ((departamento == null) ? 0 : departamento.hashCode());
+		result = prime * result + ((direccion == null) ? 0 : direccion.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DtDireccion other = (DtDireccion) obj;
+		if (barrio == null) {
+			if (other.barrio != null)
+				return false;
+		} else if (!barrio.equals(other.barrio))
+			return false;
+		if (departamento == null) {
+			if (other.departamento != null)
+				return false;
+		} else if (!departamento.equals(other.departamento))
+			return false;
+		if (direccion == null) {
+			if (other.direccion != null)
+				return false;
+		} else if (!direccion.equals(other.direccion))
+			return false;
+		return true;
+	}
+	
+	
 }
