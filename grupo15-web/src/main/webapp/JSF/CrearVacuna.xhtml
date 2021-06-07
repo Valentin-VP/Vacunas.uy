@@ -46,7 +46,7 @@
   </nav>
 
 
- <div class="formulario">
+ <div class="formulario" style="width: 50%">
 <h:form>
 
 <div>
@@ -72,7 +72,7 @@
 
 <div>
 <p:outputLabel style="width:40%" >Enfermedad:    </p:outputLabel>
- <p:selectOneMenu value="#{CrearVacuna.enfermedad}">
+ <p:selectOneMenu value="#{CrearVacuna.enfermedad}"  style="border-width: thin">
 	<f:selectItems value="#{CrearVacuna.enfermedades}" />
 </p:selectOneMenu>
 </div>
@@ -80,7 +80,7 @@
 <div>
 
 <p:outputLabel style="width:40%" >Laboratorio:    </p:outputLabel>
- <p:selectOneMenu value="#{CrearVacuna.laboratorio}">
+ <p:selectOneMenu value="#{CrearVacuna.laboratorio}"  style="border-width: thin">
 	<f:selectItems value="#{CrearVacuna.laboratorios}" />
 </p:selectOneMenu>
 </div>

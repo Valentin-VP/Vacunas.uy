@@ -55,8 +55,10 @@
             <p:autoUpdate/>
 </p:messages>
 <p:outputLabel style="width:60%" >Seleccione Plan de Vacunación:    </p:outputLabel>
- <p:selectOneMenu value="#{BorrarPlan.nombre}">
+ <p:selectOneMenu value="#{BorrarPlan.nombre}" style="border-width: thin" >
+ <p:ajax event="itemSelect" update="@this"   />
 	<f:selectItems value="#{BorrarPlan.nombres}" />
+	<p:ajax event="itemSelect" update="@this"   />
 
 </p:selectOneMenu>
 

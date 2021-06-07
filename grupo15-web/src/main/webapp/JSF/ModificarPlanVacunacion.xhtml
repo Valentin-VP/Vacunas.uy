@@ -68,14 +68,14 @@
 
 <div>
 <p:outputLabel style="width:40%" >Enfermedad:    </p:outputLabel>
- <p:selectOneMenu value="#{ModificarPlan.enfermedad}">
+ <p:selectOneMenu value="#{ModificarPlan.enfermedad}" style="border-width: thin" >
 	<f:selectItems value="#{ModificarPlan.enfermedades}" />
 </p:selectOneMenu>
 </div>
 
 <div>
 <p:outputLabel style="width:40%" >Etapas:    </p:outputLabel>
-<p:selectCheckboxMenu id="etapa" value="#{ModificarPlan.etapa}"
+<p:selectCheckboxMenu id="etapa" value="#{ModificarPlan.etapa}" style="border-width: thin"
                     filter="true" filterMatchMode="startsWith" panelStyle="width: 25rem" scrollHeight="250">
    <f:selectItems value="#{ModificarPlan.etapas}"/>
 </p:selectCheckboxMenu>
@@ -84,7 +84,7 @@
 <p:messages id="messages" showDetail="true" closable="true">
             <p:autoUpdate/>
 </p:messages>
-<p:commandButton id="confirmar" action="#{ModificarPlan.modificarPlan}" value="Modificar Datos"> </p:commandButton>
+<p:commandButton id="confirmar" action="#{ModificarPlan.modificarPlan}" value="Modificar"> </p:commandButton>
 
 
 </h:form>

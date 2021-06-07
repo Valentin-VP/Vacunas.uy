@@ -47,7 +47,7 @@
   </nav>
 
 
- <div class="formulario">
+ <div class="formulario" style="width:30%">
 <h:form>
 
 <div>
@@ -55,16 +55,19 @@
             <p:autoUpdate/>
 </p:messages>
 <p:outputLabel style="width:50%" >Seleccione enfermedad:    </p:outputLabel>
- <p:selectOneMenu value="#{BorrarEnfermedad.nombre}">
-	<f:selectItems value="#{BorrarEnfermedad.enfermedades}" />
+ <p:selectOneMenu value="#{BorrarEnfermedad.nombre}" style="border-width: thin"  >
+<p:ajax event="itemSelect" update="@this"   />
+
+	<f:selectItems value="#{BorrarEnfermedad.enfermedades}"  />
+<p:ajax event="itemSelect" update="@this" />
 
 </p:selectOneMenu>
 
 
 </div>
 
-<p:commandButton id="button" action="#{BorrarEnfermedad.borrarEnfermedad}" value="Eliminar" > </p:commandButton>
-
+<p:commandButton id="button" action="#{BorrarEnfermedad.borrarEnfermedad}" value="Eliminar"  > </p:commandButton>
+<p:autoUpdate/>
 </h:form>
  </div>
 	

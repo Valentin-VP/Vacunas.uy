@@ -68,14 +68,14 @@
 
 <div>
 <p:outputLabel style="width:40%" >Enfermedad:    </p:outputLabel>
- <p:selectOneMenu value="#{CrearPlan.enfermedad}">
+ <p:selectOneMenu value="#{CrearPlan.enfermedad}" style="border-width: thin" >
 	<f:selectItems value="#{CrearPlan.enfermedades}" />
 </p:selectOneMenu>
 </div>
 
 <div>
 <p:outputLabel style="width:40%" >Etapas:    </p:outputLabel>
-<p:selectCheckboxMenu id="etapa" value="#{CrearPlan.etapa}"
+<p:selectCheckboxMenu id="etapa" value="#{CrearPlan.etapa}" style="border-width: thin"
                     filter="true" filterMatchMode="startsWith" panelStyle="width: 25rem" scrollHeight="250">
    <f:selectItems value="#{CrearPlan.etapas}"/>
 </p:selectCheckboxMenu>
