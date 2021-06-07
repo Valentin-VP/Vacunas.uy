@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Certificado de Vacunación</title>
+  <link href="/grupo15-web/css/styles.css" rel="stylesheet" type="text/css" media="all">
+  <link rel="shortcut icon" href="#">
+
+</head>
+
+<body>
+
+  <div id="vac">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/grupo15-web/html/MenuCiudadano.html">Menú Ciudadano</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+
+            <li class="nav-item">
+              <a class="nav-link" href="/grupo15-web/html/Reserva.html">Realizar una reserva</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/grupo15-web/html/registroCiudadano.html">Registrar ciudadano</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/grupo15-web/html/consultarReserva.html">Consultar Reserva</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/grupo15-web/html/eliminarReserva.html">Eliminar Reserva</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/grupo15-web/html/certificadoVacunacion.html">Obtener Certificado</a>
+            </li>
+          </ul>
+        </div>
+        <div class="collapse navbar-collapse justify-content-between"></div>
+        <ul class="navbar-nav">
+          <li class="nav-right">
+            <a class="nav-link" href="">Cerrar Sesión</a>
+          </li>
+        </ul>
+      </div>
+
+
+
+
+    </nav>
+
+    <div class="formulario">
+
+
+
+
+
+
+      <div>
+        <label for="enf" style="font-size: medium">Seleccione una Enfermedad:</label>
+        <select class="form-control" id="idVac" v-model=idVac>
+          <option v-for="item in listaConstancias">{{item.Enfermedad}}</option>
+
+        </select>
+      </div>
+
+    </div>
+    <div class="formulario">
+
+
+      <label for="idVac" style="font-size: medium">Certificado de Vacunación</label>
+      <div>
+         <label for="enfermedad" style="font-size: medium">Enfermedad: </label>
+        <output type="text" v-model=enfermedad class="form-control" id="enfermedad" placeholder="Enfermedad">
+      </div>
+      <div>
+      <label for="id" style="font-size: medium">Cédula: </label>
+        <output type="text" v-model=id class="form-control" id="id" placeholder="Cedula">
+      </div>
+      <div>
+      <label for="inmunidad" style="font-size: medium">Período de Inmunidad: </label>
+        <output type="text" v-model=inmunidad class="form-control" id="inmunidad" placeholder="Período de Inmunidad">
+      </div>
+      <div>
+        <label for="totalDosis" style="font-size: medium">Total de Dosis: </label>
+        <output type="text" v-model=totalDosis class="form-control" id="totalDosis" placeholder="Dosis Recibidas">
+      </div>
+      <div>
+        <label for="ultimaDosis" style="font-size: medium">Ultima Dosis: </label>
+        <output type="text" v-model=ultimaDosis class="form-control" id="ultimaDosis" placeholder="Última Dosis">
+      </div>
+      <div>
+        <label for="vacuna" style="font-size: medium">Vacuna: </label>
+        <output type="text" v-model=vacuna class="form-control" id="vacuna" placeholder="Vacuna">
+      </div>
+
+
+
+
+
+
+    </div>
+
+
+  </div>
+
+  </div>
+  </div>
+  <!-- development version, includes helpful console warnings -->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="/grupo15-web/js/consultarPuestos.js"></script>
+
+</body>
+
+</html>
