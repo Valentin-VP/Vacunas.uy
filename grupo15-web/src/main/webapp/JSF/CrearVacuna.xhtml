@@ -72,17 +72,17 @@
 
 <div>
 <p:outputLabel style="width:40%" >Enfermedad:    </p:outputLabel>
- <h:selectOneMenu value="#{CrearVacuna.enfermedad}">
+ <p:selectOneMenu value="#{CrearVacuna.enfermedad}">
 	<f:selectItems value="#{CrearVacuna.enfermedades}" />
-</h:selectOneMenu>
+</p:selectOneMenu>
 </div>
 
 <div>
 
 <p:outputLabel style="width:40%" >Laboratorio:    </p:outputLabel>
- <h:selectOneMenu value="#{CrearVacuna.laboratorio}">
+ <p:selectOneMenu value="#{CrearVacuna.laboratorio}">
 	<f:selectItems value="#{CrearVacuna.laboratorios}" />
-</h:selectOneMenu>
+</p:selectOneMenu>
 </div>
 
 <p:messages id="messages" showDetail="true" closable="true">

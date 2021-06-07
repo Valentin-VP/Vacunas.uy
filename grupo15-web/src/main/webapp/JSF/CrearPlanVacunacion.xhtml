@@ -3,8 +3,7 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html" 
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:rich="http://primefaces.org/ui"> 
+      xmlns:p="http://primefaces.org/ui"> 
       
 
 <h:head> <link href="/grupo15-web/css/styles.css" type="text/css" rel="stylesheet" media="all" /> </h:head> 
@@ -27,7 +26,7 @@
             <a class="nav-link" href="/grupo15-web/html/registroInterno.html">Registrar Usuario Interno</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/grupo15-web/JSF/CrearEnfermedad.xhtml">Crear Enfermedad</a>
+            <a class="nav-link" href=""></a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href=""></a>
@@ -51,18 +50,41 @@
 <h:form>
 
 <div>
-<p:outputLabel style="width:50%" >Seleccione Vacuna:    </p:outputLabel>
- <p:selectOneMenu value="#{BorrarVacuna.nombre}">
-	<f:selectItems Value="#{BorrarVacuna.vacunas}" />
+<p:outputLabel style="width:40%" >Identificador:    </p:outputLabel>
+<p:inputText id="id" required="true" value="#{CrearPlan.id}" style="width:60%" > </p:inputText>
+</div>
 
- </p:selectOneMenu>
-
+<div>
+<p:outputLabel style="width:40%" >Nombre:    </p:outputLabel>
+<p:inputText id="nombre" required="true" value="#{CrearPlan.nombre}" style="width:60%" > </p:inputText>
 
 </div>
+
+<div>
+<p:outputLabel style="width:40%">Descripcion:    </p:outputLabel>
+<p:inputText id="descripcion" required="true" value="#{CrearPlan.descripcion}" style="width:60%" > </p:inputText>
+</div>
+
+
+<div>
+<p:outputLabel style="width:40%" >Enfermedad:    </p:outputLabel>
+ <p:selectOneMenu value="#{CrearPlan.enfermedad}">
+	<f:selectItems value="#{CrearPlan.enfermedades}" />
+</p:selectOneMenu>
+</div>
+
+<div>
+<p:outputLabel style="width:40%" >Etapas:    </p:outputLabel>
+<p:selectCheckboxMenu id="etapa" value="#{CrearPlan.etapa}"
+                    filter="true" filterMatchMode="startsWith" panelStyle="width: 25rem" scrollHeight="250">
+   <f:selectItems value="#{CrearPlan.etapas}"/>
+</p:selectCheckboxMenu>
+</div>
+
 <p:messages id="messages" showDetail="true" closable="true">
             <p:autoUpdate/>
 </p:messages>
-<p:commandButton action="#{BorrarVacuna.borrarVacuna}" value="Eliminar"  > </p:commandButton>
+<p:commandButton id="confirmar" action="#{CrearPlan.crearPlan}" value="Crear"> </p:commandButton>
 
 
 </h:form>
