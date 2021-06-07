@@ -19,4 +19,5 @@ public interface IConstanciaVacunaDAORemote {
 	public DtConstancia obtenerConstancia(int idConst) throws ConstanciaInexistente;
 	public ArrayList<DtConstancia> listarConstancias() throws ConstanciaInexistente;
 	public int listarConstanciasPeriodo(int dias);
+	public int listarConstanciasPeriodoEnfermedad(int dias, String enfermedad);
 }

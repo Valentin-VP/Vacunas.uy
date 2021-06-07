@@ -17,6 +17,7 @@ import entities.Ciudadano;
 import entities.ConstanciaVacuna;
 import entities.Reserva;
 import entities.Usuario;
+import entities.Vacuna;
 import exceptions.CertificadoInexistente;
 import exceptions.ConstanciaInexistente;
 import exceptions.ReservaInexistente;
@@ -154,9 +155,30 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 		query.setParameter("end", LocalDate.now());
 		
 		ArrayList<ConstanciaVacuna> result = (ArrayList<ConstanciaVacuna>) query.getResultList();
-//		System.out.println(LocalDate.now().minusDays(dias) + " menos " + LocalDate.now());
 		int retorno = result.size();
 		System.out.println(retorno);
 		return retorno;
+	}
+	
+	//retorna el numero de constancias en este periodo para una enfermedad no las constancias
+	public int listarConstanciasPeriodoEnfermedad(int dias, String enfermedad) {
+		ArrayList<ConstanciaVacuna> constancias = new ArrayList<ConstanciaVacuna>();
+		
+		//primero obtengo las vacunas de la enfermedad
+		Query query1 = em.createQuery("SELECT v FROM Vacuna v WHERE enfermedad_nombre= :enf");
+		query1.setParameter("enf", enfermedad);
+		
+		@SuppressWarnings("unchecked")
+		ArrayList<Vacuna> vacunas = (ArrayList<Vacuna>) query1.getResultList();
+		for(int i=0; i<vacunas.size(); i++) {
+			Query query2 = em.createQuery("SELECT c FROM ConstanciaVacuna c WHERE vacuna = :vac AND fechaUltimaDosis BETWEEN :start AND :end");
+			query2.setParameter("vac", vacunas.get(i).getNombre());
+			query2.setParameter("start", LocalDate.now().minusDays(dias));
+			query2.setParameter("end", LocalDate.now());
+			ArrayList<ConstanciaVacuna> result = (ArrayList<ConstanciaVacuna>) query2.getResultList();
+			constancias.addAll(result);
+		}
+		
+			return constancias.size();
 	}
 }

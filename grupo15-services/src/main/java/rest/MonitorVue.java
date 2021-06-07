@@ -9,6 +9,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -33,11 +34,30 @@ public class MonitorVue {
 	@Path("/vacunados")
 	@PermitAll
 	public Response getVacunados() { //retorna todos los vacunados por mes dia y año
-		int dia, mes, anio;
 		LOGGER.info("Entro a getVacunados");
-			dia = IConstancia.listarConstanciasPeriodo(1); //para setear el dia
-			mes = IConstancia.listarConstanciasPeriodo(30); //para setear el mes
-			anio = IConstancia.listarConstanciasPeriodo(365); //para setear el anio
+			int dia = IConstancia.listarConstanciasPeriodo(1); //para setear el dia
+			int mes = IConstancia.listarConstanciasPeriodo(30); //para setear el mes
+			int anio = IConstancia.listarConstanciasPeriodo(365); //para setear el anio
+		
+		JSONObject datos = new JSONObject();
+        try {
+            datos.put("dia", dia);
+            datos.put("mes", mes);
+            datos.put("anio", anio);
+            return ResponseBuilder.createResponse(Response.Status.OK, datos);                       
+        } catch (JSONException e) {
+            return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+                    e.getMessage());
+        }
+	}
+	
+	@GET
+	@Path("/vacunadose")
+	@PermitAll
+	public Response getVacunadosEnf(@QueryParam("enf") String enfermedad) {
+		int dia = IConstancia.listarConstanciasPeriodoEnfermedad(1, enfermedad); //para setear el dia
+		int mes = IConstancia.listarConstanciasPeriodoEnfermedad(30, enfermedad); //para setear el mes
+		int anio = IConstancia.listarConstanciasPeriodoEnfermedad(365, enfermedad); //para setear el anio
 		
 		JSONObject datos = new JSONObject();
         try {
