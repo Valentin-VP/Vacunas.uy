@@ -50,6 +50,20 @@
 <h:form>
 
 <div>
+
+<p:outputLabel style="width:60%" >Seleccione Plan de Vacunación:    </p:outputLabel>
+ <p:selectOneMenu value="#{ModificarPlan.nombre}" style="border-width: thin" >
+ <p:ajax event="itemSelect" update="@this"   />
+	<f:selectItems value="#{ModificarPlan.nombres}" />
+	<p:ajax event="itemSelect" update="@this"   />
+
+</p:selectOneMenu>
+
+
+</div>
+
+
+<div>
 <p:outputLabel style="width:40%" >Identificador:    </p:outputLabel>
 <p:inputText id="id" required="true" value="#{ModificarPlan.id}" style="width:60%" > </p:inputText>
 </div>
