@@ -2,6 +2,22 @@
 // So we don't have ridiculous errors.
 window.onload = function() {
  
+    var mensaje;
+
+        axios.get('http://localhost:8080/grupo15-services/rest/chat/vacunador', {
+          responseType: 'json'
+        })
+          .then(function(res) {
+            if(res.status==200) {
+              console.log(res.data);
+              mensaje = res.data;
+            }
+          })
+          .catch(function(err) {
+            console.log(err);
+          });
+      
+
 
     var firebaseConfig = {
       apiKey: "AIzaSyDHuqcdBuZ8NUVDh2wJCNirxL3AbdEe1FM",
