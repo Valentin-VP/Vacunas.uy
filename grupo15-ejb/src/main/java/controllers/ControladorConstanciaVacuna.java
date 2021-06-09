@@ -2,6 +2,8 @@ package controllers;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -165,11 +167,11 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 		ArrayList<ConstanciaVacuna> constancias = new ArrayList<ConstanciaVacuna>();
 		
 		//primero obtengo las vacunas de la enfermedad
-		Query query1 = em.createQuery("SELECT v FROM Vacuna v WHERE enfermedad_nombre= :enf");
+		Query query1 = em.createQuery("SELECT v FROM Vacuna v WHERE enfermedad_nombre = :enf");
 		query1.setParameter("enf", enfermedad);
-		
 		@SuppressWarnings("unchecked")
 		ArrayList<Vacuna> vacunas = (ArrayList<Vacuna>) query1.getResultList();
+		
 		for(int i=0; i<vacunas.size(); i++) {
 			Query query2 = em.createQuery("SELECT c FROM ConstanciaVacuna c WHERE vacuna = :vac AND fechaUltimaDosis BETWEEN :start AND :end");
 			query2.setParameter("vac", vacunas.get(i).getNombre());
@@ -181,4 +183,18 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 		
 			return constancias.size();
 	}
+	
+	public Map<String, String> listarConstanciaPorVacuna(){
+		Map<String, String> constancias = new HashMap<>(); 
+		Query query1 = em.createQuery("SELECT nombre FROM Vacuna");
+		@SuppressWarnings("unchecked")
+		ArrayList<String> vacunas = (ArrayList<String>)query1.getResultList();
+		for(String v: vacunas) {
+			Query query2 = em.createQuery("SELECT c FROM ConstanciaVacuna c WHERE nombre = :vac");
+			query2.setParameter("vac", v);
+			constancias.put(v, String.valueOf(query2.getResultList().size()));
+		}
+		return constancias;
+	}
+	
 }

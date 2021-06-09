@@ -2,6 +2,7 @@ package interfaces;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.ejb.Remote;
 
@@ -20,4 +21,5 @@ public interface IConstanciaVacunaDAORemote {
 	public ArrayList<DtConstancia> listarConstancias() throws ConstanciaInexistente;
 	public int listarConstanciasPeriodo(int dias);
 	public int listarConstanciasPeriodoEnfermedad(int dias, String enfermedad);
+	public Map<String, String> listarConstanciaPorVacuna();
 }

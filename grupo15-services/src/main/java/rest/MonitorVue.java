@@ -1,5 +1,6 @@
 package rest;
 
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.annotation.security.DeclareRoles;
@@ -31,7 +32,7 @@ public class MonitorVue {
 	public MonitorVue(){}
 	
 	@GET
-	@Path("/vacunados")
+	@Path("/vacunadosdma")
 	@PermitAll
 	public Response getVacunados() { //retorna todos los vacunados por mes dia y año
 		LOGGER.info("Entro a getVacunados");
@@ -52,8 +53,8 @@ public class MonitorVue {
 	}
 	
 	@GET
-	@Path("/vacunadose")
-	@PermitAll
+	@Path("/vacunadosdmae")
+	@PermitAll        //retorna los vacunados por dia mes anio de una enfermedad
 	public Response getVacunadosEnf(@QueryParam("enf") String enfermedad) {
 		int dia = IConstancia.listarConstanciasPeriodoEnfermedad(1, enfermedad); //para setear el dia
 		int mes = IConstancia.listarConstanciasPeriodoEnfermedad(30, enfermedad); //para setear el mes
@@ -71,4 +72,17 @@ public class MonitorVue {
         }
 	}
 
+	@GET
+	@Path("/vacunadosporvacs")
+	@PermitAll
+	public Response getVacunadosPorVacunas() {
+		Map<String, String> vacunas= IConstancia.listarConstanciaPorVacuna();
+		try {
+			JSONObject datos = new JSONObject(vacunas);
+			return ResponseBuilder.createResponse(Response.Status.OK, datos);
+		} catch (JSONException e) {
+            return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+                    e.getMessage());
+        }
+	}	
 }
