@@ -20,8 +20,6 @@ public class ConstanciaVacuna {
 	private int dosisRecibidas;
 	private LocalDate fechaUltimaDosis;
 	private String vacuna;
-	@ManyToMany
-	private List<LoteDosis> lote = new ArrayList<LoteDosis>();
 	
 	@OneToOne
 	private Reserva reserva;
@@ -92,14 +90,6 @@ public class ConstanciaVacuna {
 		this.reserva = reserva;
 	}
 
-	public List<LoteDosis> getLote() {
-		return lote;
-	}
-
-	public void setLote(List<LoteDosis> lote) {
-		this.lote = lote;
-	}
-	
 	
 	
 }

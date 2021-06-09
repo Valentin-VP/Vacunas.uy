@@ -20,10 +20,15 @@ import datatypes.EstadoLote;
 import datatypes.TransportistaInexistente;
 import exceptions.LoteInexistente;
 import exceptions.LoteRepetido;
+import exceptions.VacunaInexistente;
+import exceptions.VacunatorioNoCargadoException;
 import interfaces.ILoteDosisDaoLocal;
 import interfaces.ILoteDosisDaoRemote;
+import persistence.LoteDosisID;
 import entities.LoteDosis;
 import entities.Transportista;
+import entities.Vacuna;
+import entities.Vacunatorio;
 
 @Stateless
 public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoLocal {
@@ -32,22 +37,30 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 	private EntityManager em;
 
 	@Override
-	public void agregarLoteDosis(Integer idLote, Integer cantidadTotal, float temperatura) throws LoteRepetido {
+	public void agregarLoteDosis(Integer idLote, String idVacunatorio, String idVacuna, Integer cantidadTotal, float temperatura) throws LoteRepetido, VacunatorioNoCargadoException, VacunaInexistente {
+		Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorio);
+		if (vacunatorio == null) {
+			throw new VacunatorioNoCargadoException("No existe el vacunatorio con ID " + idVacunatorio);
+		}
+		Vacuna vacuna = em.find(Vacuna.class, idVacuna);
+		if (vacuna == null) {
+			throw new VacunaInexistente("No existe la vacuna con ID " + idVacuna);
+		}
 		try {
-			obtenerLoteDosis(idLote);
+			obtenerLoteDosis(idLote, idVacunatorio, idVacuna);
 		} catch (LoteInexistente e) {
-			LoteDosis loteDosis = new LoteDosis(idLote, cantidadTotal, 0, 0, temperatura);
+			LoteDosis loteDosis = new LoteDosis(idLote, vacunatorio, vacuna, cantidadTotal, 0, 0, temperatura);
 			em.persist(loteDosis);
 		}
 
 	}
 
 	@Override
-	public DtLoteDosis obtenerLoteDosis(Integer idLote) throws LoteInexistente {
+	public DtLoteDosis obtenerLoteDosis(Integer idLote, String idVacunatorio, String idVacuna) throws LoteInexistente {
 		DtLoteDosis dtLoteDosis = null;
-		LoteDosis lote = em.find(LoteDosis.class, idLote);
+		LoteDosis lote = em.find(LoteDosis.class, new LoteDosisID(idLote, idVacunatorio, idVacuna));
 		if (lote != null) {
-			dtLoteDosis = new DtLoteDosis(lote.getIdLote(), lote.getCantidadTotal(), lote.getCantidadEntregada(),
+			dtLoteDosis = new DtLoteDosis(lote.getIdLote(), lote.getVacunatorio().getId(), lote.getVacuna().getNombre(), lote.getCantidadTotal(), lote.getCantidadEntregada(),
 					lote.getCantidadDescartada(), lote.getEstadoLote().toString(), lote.getTemperatura());
 		} else {
 			throw new LoteInexistente("No se encontró un Lote con ese ID");
@@ -62,7 +75,7 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 		@SuppressWarnings("unchecked")
 		List<LoteDosis> lotesDosis = (List<LoteDosis>) query.getResultList();
 		for (LoteDosis lote : lotesDosis) {
-			DtLoteDosis dtLoteDosis = new DtLoteDosis(lote.getIdLote(), lote.getCantidadTotal(),
+			DtLoteDosis dtLoteDosis = new DtLoteDosis(lote.getIdLote(), lote.getVacunatorio().getId(), lote.getVacuna().getNombre(), lote.getCantidadTotal(),
 					lote.getCantidadEntregada(), lote.getCantidadDescartada(), lote.getEstadoLote().toString(),
 					lote.getTemperatura());
 			dtLotesDosis.add(dtLoteDosis);
@@ -71,12 +84,12 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 	}
 
 	@Override
-	public void setTransportistaToLoteDosis(Integer idTransportista, Integer idLote) throws TransportistaInexistente {
+	public void setTransportistaToLoteDosis(Integer idTransportista, Integer idLote, String idVacunatorio, String idVacuna) throws TransportistaInexistente {
 		// Asocia un Transportista a un LoteDosis.
 		// PRE: Ya debe existir el LoteDosis y el transportista
 		// El 
-		if (existeLoteDosis(idLote)) {
-			LoteDosis lote = em.find(LoteDosis.class, idLote);
+		if (existeLoteDosis(idLote, idVacunatorio, idVacuna)) {
+			LoteDosis lote = em.find(LoteDosis.class, new LoteDosisID(idLote, idVacunatorio, idVacuna));
 			Transportista transportista = null;
 			transportista = em.find(Transportista.class, idTransportista);
 			if (transportista != null) {
@@ -90,9 +103,9 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 	}
 
 	@Override
-	public Integer getTransportistaIdFromLoteDosis(Integer idLote) {
+	public Integer getTransportistaIdFromLoteDosis(Integer idLote, String idVacunatorio, String idVacuna) {
 		Integer idTransportista = 0;
-		LoteDosis lote = em.find(LoteDosis.class, idLote);
+		LoteDosis lote = em.find(LoteDosis.class, new LoteDosisID(idLote, idVacunatorio, idVacuna));
 		if (lote != null) {
 			idTransportista = lote.getTransportista().getId();
 		}
@@ -101,10 +114,10 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 	}
 
 	@Override
-	public void modificarLoteDosis(Integer idLote, Integer cantidadTotal, Integer cantidadEntregada,
+	public void modificarLoteDosis(Integer idLote, String idVacunatorio, String idVacuna, Integer cantidadTotal, Integer cantidadEntregada,
 			Integer cantidadDescartada, String estadoLote, float temperatura, Integer transportista)
 			throws LoteInexistente, TransportistaInexistente {
-		LoteDosis lote = em.find(LoteDosis.class, idLote);
+		LoteDosis lote = em.find(LoteDosis.class, new LoteDosisID(idLote, idVacunatorio, idVacuna));
 		if (lote != null) {
 			try {
 				
@@ -134,8 +147,8 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 	}
 	
 	@Override
-	public void eliminarLoteDosis(Integer idLote) throws LoteInexistente {
-		LoteDosis lote = em.find(LoteDosis.class, idLote);
+	public void eliminarLoteDosis(Integer idLote, String idVacunatorio, String idVacuna) throws LoteInexistente {
+		LoteDosis lote = em.find(LoteDosis.class, new LoteDosisID(idLote, idVacunatorio, idVacuna));
 		if (lote != null) {
 			em.remove(lote);
 		}else {
@@ -144,9 +157,9 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 		
 	}
 
-	private boolean existeLoteDosis(Integer idLoteDosis) {
+	private boolean existeLoteDosis(Integer idLoteDosis, String idVacunatorio, String idVacuna) {
 		for (DtLoteDosis lote : listarLotesDosis()) {
-			if (lote.getIdLote() == idLoteDosis) {
+			if (lote.getIdLote() == idLoteDosis && lote.getIdVacuna().equals(idVacuna) && lote.getIdVacunatorio().equals(idVacunatorio)) {
 				return true;
 			}
 		}

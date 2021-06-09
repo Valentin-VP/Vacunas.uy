@@ -7,17 +7,22 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import datatypes.DtLoteDosis;
 import datatypes.DtStock;
+import entities.LoteDosis;
 import entities.Stock;
 import entities.Vacuna;
 import entities.Vacunatorio;
 import exceptions.CantidadNula;
+import exceptions.LoteInexistente;
 import exceptions.StockVacunaVacunatorioExistente;
 import exceptions.StockVacunaVacunatorioInexistente;
 import exceptions.VacunaInexistente;
 import exceptions.VacunatorioNoCargadoException;
 import interfaces.IStockDaoLocal;
 import interfaces.IStockDaoRemote;
+import persistence.LoteDosisID;
+import persistence.StockID;
 
 @Stateless
 public class ControladorStock implements IStockDaoLocal, IStockDaoRemote {
@@ -110,22 +115,15 @@ public class ControladorStock implements IStockDaoLocal, IStockDaoRemote {
 	@Override
 	public DtStock obtenerStock(String idVacunatorio, String idVacuna)
 			throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente {
-		Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorio);
-		if (vacunatorio == null) {
-			throw new VacunatorioNoCargadoException("No existe el vacunatorio con ID " + idVacunatorio);
+		DtStock dtStock = null;
+		Stock stock = em.find(Stock.class, new StockID(idVacunatorio, idVacuna));
+		if (stock != null) {
+			dtStock = new DtStock(stock.getVacunatorio().getNombre(), stock.getVacuna().getNombre(),
+					stock.getCantidad(), stock.getDescartadas(), stock.getDisponibles(), stock.getAdministradas());
+		} else {
+			throw new StockVacunaVacunatorioInexistente(String.format("No se encontro Stock de la Vacuna %s en el Vacunatorio %s", idVacuna, idVacunatorio));
 		}
-		Vacuna vacuna = em.find(Vacuna.class, idVacuna);
-		if (vacuna == null) {
-			throw new VacunaInexistente("No existe la vacuna con ID " + idVacuna);
-		}
-		for (Stock stock : vacunatorio.getStock()) {
-			if (stock.getVacuna().getNombre().equals(idVacuna)) {
-				return new DtStock(stock.getVacunatorio().getNombre(), stock.getVacuna().getNombre(),
-						stock.getCantidad(), stock.getDescartadas(), stock.getDisponibles(), stock.getAdministradas());
-			}
-		}
-		throw new StockVacunaVacunatorioInexistente(
-				String.format("No se encontro Stock de la Vacuna %s en el Vacunatorio %s", idVacuna, idVacunatorio));
+		return dtStock;
 	}
 
 	@Override

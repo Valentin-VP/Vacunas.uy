@@ -5,15 +5,39 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import datatypes.EstadoLote;
+import persistence.LoteDosisID;
+import persistence.StockID;
 
 @Entity
+@IdClass(LoteDosisID.class)
 public class LoteDosis {
 	
 	@Id @Column(nullable=false)
 	private Integer idLote;
+	
+	@Id
+	@ManyToOne
+	@JoinColumn(
+			insertable=false,
+			updatable=false,
+			name="vacunatorio"
+	)
+	private Vacunatorio vacunatorio;
+	
+	@Id
+	@ManyToOne
+	@JoinColumn(
+			insertable=false,
+			updatable=false,
+			nullable=false,
+			name="vacuna"
+	)
+	private Vacuna vacuna;
 	
 	@Column(nullable=false)
 	private Integer cantidadTotal;
@@ -30,10 +54,12 @@ public class LoteDosis {
 		super();
 	}
 	
-	public LoteDosis(Integer idLote, Integer cantidadTotal, Integer cantidadEntregada, Integer cantidadDescartada,
+	public LoteDosis(Integer idLote, Vacunatorio vacunatorio, Vacuna vacuna, Integer cantidadTotal, Integer cantidadEntregada, Integer cantidadDescartada,
 			float temperatura) {
 		super();
 		this.idLote = idLote;
+		this.vacunatorio = vacunatorio;
+		this.vacuna = vacuna;
 		this.cantidadTotal = cantidadTotal;
 		this.cantidadEntregada = cantidadEntregada;
 		this.cantidadDescartada = cantidadDescartada;
@@ -43,10 +69,12 @@ public class LoteDosis {
 	}
 
 	
-	public LoteDosis(Integer idLote, Integer cantidadTotal, Integer cantidadEntregada, Integer cantidadDescartada,
+	public LoteDosis(Integer idLote, Vacunatorio vacunatorio, Vacuna vacuna, Integer cantidadTotal, Integer cantidadEntregada, Integer cantidadDescartada,
 			EstadoLote estadoLote, float temperatura, Transportista transportista) {
 		super();
 		this.idLote = idLote;
+		this.vacunatorio = vacunatorio;
+		this.vacuna = vacuna;
 		this.cantidadTotal = cantidadTotal;
 		this.cantidadEntregada = cantidadEntregada;
 		this.cantidadDescartada = cantidadDescartada;
@@ -109,6 +137,22 @@ public class LoteDosis {
 
 	public void setTransportista(Transportista transportista) {
 		this.transportista = transportista;
+	}
+
+	public Vacunatorio getVacunatorio() {
+		return vacunatorio;
+	}
+
+	public void setVacunatorio(Vacunatorio vacunatorio) {
+		this.vacunatorio = vacunatorio;
+	}
+
+	public Vacuna getVacuna() {
+		return vacuna;
+	}
+
+	public void setVacuna(Vacuna vacuna) {
+		this.vacuna = vacuna;
 	}
 
 	

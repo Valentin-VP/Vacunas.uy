@@ -34,6 +34,9 @@ public class Vacunatorio {
 	private List<Stock> stock = new ArrayList<Stock>();
 	@OneToMany(mappedBy = "vacunatorio", cascade = CascadeType.ALL)
 	private List<Agenda> agenda = new ArrayList<Agenda>();
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<LoteDosis> lote = new ArrayList<LoteDosis>();
 
 	public Vacunatorio(String id, String nombre, DtDireccion dtDir, Integer telefono, Float latitud, Float longitud) {
 		super();
@@ -129,6 +132,14 @@ public class Vacunatorio {
 
 	public void setAgenda(ArrayList<Agenda> agenda) {
 		this.agenda = agenda;
+	}
+
+	public List<LoteDosis> getLote() {
+		return lote;
+	}
+
+	public void setLote(List<LoteDosis> lote) {
+		this.lote = lote;
 	}
 
 }
