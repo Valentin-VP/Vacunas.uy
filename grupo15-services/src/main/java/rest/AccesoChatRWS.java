@@ -38,6 +38,7 @@ public class AccesoChatRWS {
 	@PermitAll
 	//@RolesAllowed({"vacunador"})
 	public Response getCedulaJWT(@CookieParam("x-access-token") Cookie cookie) {
+		LOGGER.info("Accediendo a REST chat Vacunador");
 		String token = cookie.getValue();
 		String ci = null;
 		String tipoUsuario = null;
@@ -45,13 +46,14 @@ public class AccesoChatRWS {
 		try {
 			ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
 			tipoUsuario = TokenSecurity.getTipoUsuarioClaim(TokenSecurity.validateJwtToken(token)).toLowerCase();
+			LOGGER.info("Parametros obtenidos del Vacunador: CI=" + ci + " // tipoUsuario=" + tipoUsuario);
 		} catch (InvalidJwtException e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					e.getMessage());
 		}
-        if( ci == null || tipoUsuario != "vacunador")
-        	return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-        			"No se encuentra CI en token de Cookie o el usuario no es vacunador - Unauthorized!");
+        if( ci == null || !tipoUsuario.equals("vacunador")) {
+        	return ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED, "No se encuentra CI en token de Cookie o el usuario no es vacunador - Unauthorized!");
+        }
 		LOGGER.info("Cedula obtenida en REST: " + ci);
 		try {
 			nombre = IUsuarioLocal.buscarVacunador(Integer.parseInt(ci)).getNombre();
@@ -62,6 +64,7 @@ public class AccesoChatRWS {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					e.getMessage());
 		}
+		LOGGER.info("Retornando Nombre desde el REST: " + nombre);
 		return ResponseBuilder.createResponse(Response.Status.OK, nombre);
 	}
 
