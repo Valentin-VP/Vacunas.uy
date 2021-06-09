@@ -17,6 +17,7 @@ import datatypes.DtVacuna;
 import entities.Enfermedad;
 import entities.Etapa;
 import entities.Laboratorio;
+import entities.LoteDosis;
 import entities.PlanVacunacion;
 import entities.Stock;
 import entities.Vacuna;
@@ -101,6 +102,11 @@ public class ControladorVacuna implements IControladorVacunaLocal, IControladorV
 			for (Vacunatorio v: vacunatorios) {
 				for (Stock s: v.getStock()) {
 					if (s.getVacuna().equals(vac)) {
+						throw new AccionInvalida("Hay un vacunatorio de ID '" + v.getId() + "' y nombre '" + v.getNombre() + "' que esta asociado a esa vacuna.");
+					}
+				}
+				for (LoteDosis ld: v.getLote()) {
+					if (ld.getVacuna().equals(vac)) {
 						throw new AccionInvalida("Hay un vacunatorio de ID '" + v.getId() + "' y nombre '" + v.getNombre() + "' que esta asociado a esa vacuna.");
 					}
 				}
