@@ -1,7 +1,7 @@
 // We enclose this in window.onload.
 // So we don't have ridiculous errors.
 window.onload = function() {
-
+ 
 
     var firebaseConfig = {
       apiKey: "AIzaSyDHuqcdBuZ8NUVDh2wJCNirxL3AbdEe1FM",
