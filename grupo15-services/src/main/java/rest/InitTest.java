@@ -136,7 +136,7 @@ public class InitTest {
 			uc.agregarUsuarioCiudadano(21111113, "Ciudadano", "DeTest Tres", LocalDate.of(1900, 1, 1), "c@3", new DtDireccion("Av. Cdd 2003", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			uc.agregarUsuarioCiudadano(21111114, "Ciudadano", "DeTest Cuatro", LocalDate.of(1995, 1, 1), "c@4", new DtDireccion("Av. Cdd 2004", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			uc.agregarUsuarioCiudadano(54657902, "Nicolás", "Méndez", LocalDate.of(1995, 1, 1), "nicolas@mendez", new DtDireccion("Av. Cdd NNNN", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
-			//uc.agregarUsuarioCiudadano(49457795, "Valentin", "Vasconcellos", LocalDate.of(1995, 1, 1), "valentin@vasconcellos", new DtDireccion("Av. Cdd VVVV", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
+			uc.agregarUsuarioCiudadano(49457795, "Valentin", "Vasconcellos", LocalDate.of(1995, 1, 1), "valentin@vasconcellos", new DtDireccion("Av. Cdd VVVV", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			uc.agregarUsuarioCiudadano(48585559, "Nohelia", "Yanibelli", LocalDate.of(1995, 1, 1), "nohelia@yanibelli", new DtDireccion("Av. Cdd YYYY", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			lab.agregarLaboratorio("lab1");
 			lab.agregarLaboratorio("lab2");
@@ -148,6 +148,7 @@ public class InitTest {
 			plan.agregarPlanVacunacion(1, "plan1virus1", "descripcion plan1virus1");
 			plan.agregarPlanVacunacion(2, "plan2virus1", "descripcion plan2virus1");
 			plan.agregarPlanVacunacion(3, "plan3virus2", "descripcion plan3virus2");
+			//plan.agregarPlanVacunacion(id, nombre, descripcion);
 			plan.agregarEnfermedadPlan(1, "virus1");
 			plan.agregarEnfermedadPlan(2, "virus1");
 			plan.agregarEnfermedadPlan(3, "virus2");
@@ -155,6 +156,7 @@ public class InitTest {
 			etapa.agregarEtapa(2, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "51|80", 1, "vacuna1Virus1");
 			etapa.agregarEtapa(3, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|50", 2, "vacuna1Virus1");
 			etapa.agregarEtapa(4, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|500", 3, "vacuna2Virus2");
+			//etapa.agregarEtapa(idEtapa, fIni, fFin, cond, idPlan, nombreVacuna);
 			
 			//agd.agregarAgenda("vact1", LocalDate.now());
 			
@@ -173,13 +175,20 @@ public class InitTest {
 			vc.asignarVacunadorAVacunatorio(11111113, "vact3", LocalDate.now());
 			vc.asignarVacunadorAVacunatorio(11111112, "vact2", LocalDate.now().plusDays(1));
 			vc.asignarVacunadorAVacunatorio(11111114, "vact3", LocalDate.now().plusDays(1));*/
+			//cr.confirmarReserva(idCiudadano, idEnfermedad, idPlan, idVacunatorio, fecha, hora);
 			cr.confirmarReserva(48585559, "virus1", 1, "vact1", LocalDate.now().plusDays(1), LocalTime.of(23, 30, 00));
 			cr.confirmarReserva(48585559, "virus2", 3, "vact1", LocalDate.now().plusDays(330), LocalTime.of(13, 30, 00));
+			
+			cr.confirmarReserva(49457795, "virus1", 1, "vact1", LocalDate.now().plusDays(1), LocalTime.of(23, 30, 00));
+			cr.confirmarReserva(49457795, "virus2", 3, "vact1", LocalDate.now().plusDays(330), LocalTime.of(13, 30, 00));
 			
 			//creo las constancias
 			try {
 				cv.agregarConstanciaVacuna("virus1", 4, 2, LocalDate.now().plusDays(100), 48585559, 1);
-				cv.agregarConstanciaVacuna("vacuna2", 5, 2, LocalDate.now().plusDays(250), 48585559, 3);
+				cv.agregarConstanciaVacuna("vacuna2", 5, 2, LocalDate.now().plusDays(250), 48585559, 4);
+				cv.agregarConstanciaVacuna("virus1", 4, 2, LocalDate.now().plusDays(100), 49457795, 1);
+				cv.agregarConstanciaVacuna("vacuna2", 5, 2, LocalDate.now().plusDays(250), 49457795, 4);
+				//cv.agregarConstanciaVacuna(vacuna, periodoInmunidad, dosisRecibidas, fechaUltimaDosis, idUser, idEtapa);
 			} catch (ReservaInexistente e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
