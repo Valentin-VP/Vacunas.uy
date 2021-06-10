@@ -17,10 +17,33 @@ public class DtReserva implements Serializable {
 	private String vacuna;
 	private String usuario;
 	private String puesto;
+	private String vacunatorio = null;
 	public DtReserva() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	public DtReserva(String fecha, EstadoReserva estado, String etapa, String usuario, String puesto) {
+		super();
+		this.fecha = fecha;
+		this.estado = estado;
+		this.etapa = etapa;
+		this.vacuna = null;
+		this.usuario = usuario;
+		this.puesto = puesto;
+	}
+	
+	public DtReserva(String fecha, String vacunatorio, EstadoReserva estado, String etapa, String usuario, String puesto) {
+		super();
+		this.fecha = fecha;
+		this.estado = estado;
+		this.etapa = etapa;
+		this.vacuna = null;
+		this.usuario = usuario;
+		this.puesto = puesto;
+		this.setVacunatorio(vacunatorio);
+	}
+	
 	public DtReserva(String fecha, EstadoReserva estado, String etapa, String vacuna, String usuario, String puesto) {
 		super();
 		this.fecha = fecha;
@@ -65,6 +88,14 @@ public class DtReserva implements Serializable {
 	}
 	public void setPuesto(String puesto) {
 		this.puesto = puesto;
+	}
+
+	public String getVacunatorio() {
+		return vacunatorio;
+	}
+
+	public void setVacunatorio(String vacunatorio) {
+		this.vacunatorio = vacunatorio;
 	}
 	
 

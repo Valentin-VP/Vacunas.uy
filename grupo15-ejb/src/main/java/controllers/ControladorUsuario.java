@@ -15,17 +15,23 @@ import interfaces.IUsuarioLocal;
 import interfaces.IUsuarioRemote;
 import exceptions.UsuarioExistente;
 import exceptions.UsuarioInexistente;
+import datatypes.DtCertificadoVac;
 import datatypes.DtCiudadano;
+import datatypes.DtConstancia;
 import datatypes.DtDireccion;
+import datatypes.DtReserva;
 import datatypes.DtUsuario;
 import datatypes.DtUsuarioInterno;
 import datatypes.DtUsuarioSoap;
 import datatypes.DtVacunador;
+import datatypes.EstadoReserva;
 import datatypes.Rol;
 import datatypes.Sexo;
 import datatypes.TipoUsuario;
 import entities.CertificadoVacunacion;
 import entities.Ciudadano;
+import entities.ConstanciaVacuna;
+import entities.Reserva;
 import entities.Usuario;
 import entities.UsuarioInterno;
 import entities.Vacunador;
@@ -35,7 +41,6 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 
 	@PersistenceContext(name = "test")
 	private EntityManager em;
-	private DtUsuario usuario;
 
 	@Override
 	public ArrayList<DtCiudadano> listarCiudadanos() {
@@ -171,9 +176,28 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		if (ciudadano == null) {
 			throw new UsuarioInexistente("No se encuentra el ciudadano con ID " + id);
 		}
+		// Reservas
+		List<DtReserva> reservas = new ArrayList<DtReserva>();
+		for (Reserva res: ciudadano.getReservas()) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			reservas.add(new DtReserva(res.getFechaRegistro().format(formatter), res.getPuesto().getVacunatorio().getId() ,res.getEstado(), 
+					Integer.toString(res.getEtapa().getId()), Integer.toString(res.getCiudadano().getIdUsuario()),
+					res.getPuesto().getId()));
+		}
+		// Certificado
+		ArrayList<DtConstancia> constancias = new ArrayList<DtConstancia>();
+		for(ConstanciaVacuna constancia: ciudadano.getCertificado().getConstancias()) {
+			constancias.add(new DtConstancia(constancia.getIdConstVac(), constancia.getPeriodoInmunidad(),
+					constancia.getDosisRecibidas(), constancia.getFechaUltimaDosis(), constancia.getVacuna(), 
+					constancia.getReserva().getDtReserva()));
+		}
+		DtCertificadoVac certificado = new DtCertificadoVac(ciudadano.getCertificado().getIdCert(), constancias);
+		
+		// Ciudadano
 		DtCiudadano dt = new DtCiudadano(ciudadano.getIdUsuario(), ciudadano.getNombre(), ciudadano.getApellido(),
 				ciudadano.getFechaNac(), ciudadano.getEmail(), ciudadano.getDireccion(), ciudadano.getSexo(),
-				ciudadano.getToken(), ciudadano.getTipoSector(), ciudadano.isAutenticado());
+				ciudadano.getToken(), ciudadano.getTipoSector(), ciudadano.isAutenticado(), ciudadano.getMobiletoken(),
+				reservas, certificado);
 		return dt;
 	}
 

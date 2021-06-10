@@ -21,11 +21,12 @@ public class Ciudadano extends Usuario {
 
 	private String TipoSector;
 	private boolean autenticado;
+	private String mobiletoken = null;
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Reserva> reservas = new ArrayList<>();
 	@OneToOne (cascade = CascadeType.ALL)
-	CertificadoVacunacion certificado;
+	CertificadoVacunacion certificado = null;
 	public Ciudadano() {
 		super();
 	}
@@ -67,6 +68,14 @@ public class Ciudadano extends Usuario {
 
 	public void setCertificado(CertificadoVacunacion certificado) {
 		this.certificado = certificado;
+	}
+
+	public String getMobiletoken() {
+		return mobiletoken;
+	}
+
+	public void setMobiletoken(String mobiletoken) {
+		this.mobiletoken = mobiletoken;
 	}
 	
 	

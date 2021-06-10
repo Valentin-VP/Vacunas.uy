@@ -42,6 +42,7 @@ import datatypes.DtEnfermedad;
 import datatypes.DtEtapa;
 import datatypes.DtHora;
 import datatypes.DtPlanVacunacion;
+import datatypes.DtTareaNotificacion;
 import datatypes.DtVacunatorio;
 import datatypes.ErrorInfo;
 import exceptions.CupoInexistente;
@@ -54,6 +55,7 @@ import exceptions.VacunatoriosNoCargadosException;
 import interfaces.IControladorVacunatorioLocal;
 import interfaces.IEnfermedadLocal;
 import interfaces.IReservaDAOLocal;
+import interfaces.IUsuarioLocal;
 import rest.filter.AuthenticationFilter;
 import rest.filter.TokenSecurity;
 
@@ -71,6 +73,9 @@ public class AltaReservaRWS implements Serializable {
 	
 	@EJB
 	IEnfermedadLocal es;
+	
+	@EJB(lookup = "java:global/grupo15/grupo15-ejb/ControladorUsuario!interfaces.IUsuarioLocal")
+	private IUsuarioLocal IUsuarioLocal;
 	
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 	
@@ -314,6 +319,11 @@ public class AltaReservaRWS implements Serializable {
 			rs.confirmarReserva(Integer.parseInt(ci), dtr.getIdEnfermedad(), dtr.getIdPlan(), dtr.getIdVacunatorio(),
 					f,//LocalDate.from(Instant.from(f).atZone(ZoneId.systemDefault()).toLocalDate()),
 					h);//LocalTime.from(Instant.from(h).atZone(ZoneId.systemDefault()).toLocalTime()));
+			
+			// Se agrega pedido de push notification en caso que el Ciudadano tenga la app instalada
+//			if (IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci)).getMobileToken() != null) {
+//				DtTareaNotificacion task = new DtTareaNotificacion(reserva.getPuesto(), mobileToken, reserva.getVacunatorio(), fecha, hora);
+//			}
 			return Response.ok().build();
 		} catch (DateTimeException | UsuarioInexistente | PlanVacunacionInexistente | VacunatorioNoCargadoException | EnfermedadInexistente
 				| CupoInexistente | EtapaInexistente e) {

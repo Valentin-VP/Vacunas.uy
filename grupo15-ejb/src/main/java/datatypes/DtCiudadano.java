@@ -1,7 +1,8 @@
 package datatypes;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DtCiudadano extends DtUsuario {
 
@@ -11,25 +12,41 @@ public class DtCiudadano extends DtUsuario {
 	private static final long serialVersionUID = 1L;
 	private String TipoSector;
 	private boolean autenticado;
-	
+	private String mobileToken = null;
+	private List<DtReserva> reservas = new ArrayList<DtReserva>();
+	private DtCertificadoVac certificado = null;
+
 	public DtCiudadano() {
 		super();
 	}
-	
-	public DtCiudadano( int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo, String TipoSector, Boolean autenticado) {
+
+	public DtCiudadano(int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email,
+			DtDireccion direccion, Sexo sexo, String TipoSector, Boolean autenticado) {
 		super(nombre, apellido, fechaNac, IdUsuario, email, direccion, sexo);
 		this.autenticado = autenticado;
 		this.TipoSector = TipoSector;
-		
+
 	}
 
-	public DtCiudadano( int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo, String token, String TipoSector, Boolean autenticado) {
+	public DtCiudadano(int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email,
+			DtDireccion direccion, Sexo sexo, String token, String TipoSector, Boolean autenticado) {
 		super(nombre, apellido, fechaNac, IdUsuario, email, direccion, sexo, token);
 		this.autenticado = autenticado;
 		this.TipoSector = TipoSector;
-		
+
 	}
-	
+
+	public DtCiudadano(int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email,
+			DtDireccion direccion, Sexo sexo, String token, String TipoSector, Boolean autenticado,
+			String mobileToken, List<DtReserva> reservas, DtCertificadoVac certificado) {
+		super(nombre, apellido, fechaNac, IdUsuario, email, direccion, sexo, token);
+		this.autenticado = autenticado;
+		this.TipoSector = TipoSector;
+		this.mobileToken = mobileToken;
+		this.setReservas(reservas);
+		this.certificado = certificado;
+	}
+
 	public String getTipoSector() {
 		return TipoSector;
 	}
@@ -46,33 +63,28 @@ public class DtCiudadano extends DtUsuario {
 		this.autenticado = autenticado;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((TipoSector == null) ? 0 : TipoSector.hashCode());
-		result = prime * result + (autenticado ? 1231 : 1237);
-		return result;
+	public DtCertificadoVac getCertificado() {
+		return certificado;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		DtCiudadano other = (DtCiudadano) obj;
-		if (TipoSector == null) {
-			if (other.TipoSector != null)
-				return false;
-		} else if (!TipoSector.equals(other.TipoSector))
-			return false;
-		if (autenticado != other.autenticado)
-			return false;
-		return true;
+	public void setCertificado(DtCertificadoVac certificado) {
+		this.certificado = certificado;
 	}
-	
-	
+
+	public List<DtReserva> getReservas() {
+		return reservas;
+	}
+
+	public void setReservas(List<DtReserva> reservas) {
+		this.reservas = reservas;
+	}
+
+	public String getMobileToken() {
+		return mobileToken;
+	}
+
+	public void setMobileToken(String mobileToken) {
+		this.mobileToken = mobileToken;
+	}
+
 }
