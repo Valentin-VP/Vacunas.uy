@@ -18,6 +18,7 @@ import datatypes.DtDireccion;
 import datatypes.ErrorInfo;
 import datatypes.Sexo;
 import exceptions.AccionInvalida;
+import exceptions.CertificadoInexistente;
 import exceptions.CertificadoRepetido;
 import exceptions.ConstanciaInexistente;
 import exceptions.CupoInexistente;
@@ -32,6 +33,7 @@ import exceptions.PlanVacunacionInexistente;
 import exceptions.PlanVacunacionRepetido;
 import exceptions.PuestoCargadoException;
 import exceptions.ReglasCuposCargadoException;
+import exceptions.ReservaInexistente;
 import exceptions.SinPuestosLibres;
 import exceptions.TransportistaRepetido;
 import exceptions.UsuarioExistente;
@@ -42,6 +44,7 @@ import exceptions.VacunatorioCargadoException;
 import exceptions.VacunatorioNoCargadoException;
 import interfaces.IAgendaDAOLocal;
 import interfaces.ICertificadoVacunacionDAOLocal;
+import interfaces.IConstanciaVacunaDAOLocal;
 import interfaces.IControladorPuestoLocal;
 import interfaces.IControladorReglasCuposLocal;
 import interfaces.IControladorVacunaLocal;
@@ -91,7 +94,8 @@ public class InitTest {
 	@EJB
 	IControladorVacunadorLocal vc;
 	
-	
+	@EJB
+	IConstanciaVacunaDAOLocal cv;
 	
 	@EJB
 	ITransportistaDaoLocal trs;
@@ -114,6 +118,11 @@ public class InitTest {
 			//vact.agregarReglasCupos("vact2", "2", 20,  LocalTime.of(10, 0, 0),  LocalTime.of(22, 0, 0));
 			//vact.agregarVacunatorio("vact3", "Nest3", new DtDireccion("Av. Italia 1113", "Brooks", "Melbourne"), 1555897235, 1.0f, 1.0f);
 			//vact.agregarReglasCupos("vact3", "3", 30,  LocalTime.of(10, 0, 0),  LocalTime.of(20, 0, 0));
+			vact.agregarVacunatorio("terminal", "Terminal tres cruces", null, 24088601, Float.parseFloat("-34.893906"), Float.parseFloat("-56.166912"));				
+			vact.agregarVacunatorio("1234", "Palacio legislativo", null, 12091274, Float.parseFloat("-34.892418"), Float.parseFloat("-56.186604"));
+			vact.agregarVacunatorio("carrasco", "Aeropuerto de Carrasco", null, 26040329, Float.parseFloat("-34.837273"), Float.parseFloat("-56.016018"));
+			vact.agregarVacunatorio("Clinicas", "Hospital de Clinicas", null, 45745, Float.parseFloat("-34.890743"), Float.parseFloat("-56.15231"));
+									
 			
 			uc.agregarUsuarioVacunador(11111111, "Vacunador", "DeTest Uno", LocalDate.now(), "v@1", new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Otro);
 			uc.agregarUsuarioVacunador(11111112, "Vacunador", "DeTest Dos", LocalDate.now(), "v@2", new DtDireccion("Av. Vcd 1002", "Brooks", "Melbourne"), Sexo.Otro);
@@ -127,7 +136,7 @@ public class InitTest {
 			uc.agregarUsuarioCiudadano(21111113, "Ciudadano", "DeTest Tres", LocalDate.of(1900, 1, 1), "c@3", new DtDireccion("Av. Cdd 2003", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			uc.agregarUsuarioCiudadano(21111114, "Ciudadano", "DeTest Cuatro", LocalDate.of(1995, 1, 1), "c@4", new DtDireccion("Av. Cdd 2004", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			uc.agregarUsuarioCiudadano(54657902, "Nicolás", "Méndez", LocalDate.of(1995, 1, 1), "nicolas@mendez", new DtDireccion("Av. Cdd NNNN", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
-			uc.agregarUsuarioCiudadano(49457795, "Valentin", "Vasconcellos", LocalDate.of(1995, 1, 1), "valentin@vasconcellos", new DtDireccion("Av. Cdd VVVV", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
+			//uc.agregarUsuarioCiudadano(49457795, "Valentin", "Vasconcellos", LocalDate.of(1995, 1, 1), "valentin@vasconcellos", new DtDireccion("Av. Cdd VVVV", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			uc.agregarUsuarioCiudadano(48585559, "Nohelia", "Yanibelli", LocalDate.of(1995, 1, 1), "nohelia@yanibelli", new DtDireccion("Av. Cdd YYYY", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			lab.agregarLaboratorio("lab1");
 			lab.agregarLaboratorio("lab2");
@@ -165,6 +174,21 @@ public class InitTest {
 			vc.asignarVacunadorAVacunatorio(11111112, "vact2", LocalDate.now().plusDays(1));
 			vc.asignarVacunadorAVacunatorio(11111114, "vact3", LocalDate.now().plusDays(1));*/
 			cr.confirmarReserva(48585559, "virus1", 1, "vact1", LocalDate.now().plusDays(1), LocalTime.of(23, 30, 00));
+			cr.confirmarReserva(48585559, "virus2", 3, "vact1", LocalDate.now().plusDays(330), LocalTime.of(13, 30, 00));
+			
+			//creo las constancias
+			try {
+				cv.agregarConstanciaVacuna("virus1", 4, 2, LocalDate.now().plusDays(100), 48585559, 1);
+				cv.agregarConstanciaVacuna("vacuna2", 5, 2, LocalDate.now().plusDays(250), 48585559, 3);
+			} catch (ReservaInexistente e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (CertificadoInexistente e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			//
 			return Response.ok().build();
 		} catch (EnfermedadRepetida | VacunatorioCargadoException | UsuarioExistente | LaboratorioRepetido | TransportistaRepetido | VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | PlanVacunacionRepetido | EtapaRepetida | PlanVacunacionInexistente | VacunatorioNoCargadoException | ReglasCuposCargadoException |  PuestoCargadoException | AccionInvalida | VacunaInexistente | UsuarioInexistente | CupoInexistente | EtapaInexistente e) {
 			// TODO Auto-generated catch block
