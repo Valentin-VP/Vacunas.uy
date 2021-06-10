@@ -76,15 +76,15 @@
 
       <label for="idVac" style="font-size: medium">Certificado de Vacunación</label>
       <div>
-         <label for="enfermedad" style="font-size: medium">Enfermedad: </label>
+        <label for="enfermedad" style="font-size: medium">Enfermedad: </label>
         <output type="text" v-model=enfermedad class="form-control" id="enfermedad" placeholder="Enfermedad">
       </div>
       <div>
-      <label for="id" style="font-size: medium">Cédula: </label>
+        <label for="id" style="font-size: medium">Cédula: </label>
         <output type="text" v-model=id class="form-control" id="id" placeholder="Cedula">
       </div>
       <div>
-      <label for="inmunidad" style="font-size: medium">Período de Inmunidad: </label>
+        <label for="inmunidad" style="font-size: medium">Período de Inmunidad: </label>
         <output type="text" v-model=inmunidad class="form-control" id="inmunidad" placeholder="Período de Inmunidad">
       </div>
       <div>
@@ -101,12 +101,15 @@
       </div>
 
 
-
-
-
-
+      <div class="formulario">
+      </div>
+      <div class="fb-share-button" data-href="http://localhost:8080/grupo15-web/html/index.html" data-layout="button"
+        data-size="large"><a target="_blank"
+          href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A8080%2Fgrupo15-web%2Fhtml%2FconsultarPuestos.html&amp;src=sdkpreparse"
+          class="fb-xfbml-parse-ignore">Compartir</a></div>
+          <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="¡YO me vacuné!" data-url="http://localhost:8080/grupo15-web/html/consultarPuestos.html" data-lang="es" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     </div>
-
+  </div>
 
   </div>
 
@@ -115,8 +118,10 @@
   <!-- development version, includes helpful console warnings -->
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="/grupo15-web/js/consultarPuestos.js"></script>
-
+  <script src="/grupo15-web/js/certificadoVacunacion.js"></script>
+  <div id="fb-root"></div>
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_ES/sdk.js#xfbml=1&version=v11.0"
+    nonce="RwxpCfIp"></script>
 </body>
 
 </html>
