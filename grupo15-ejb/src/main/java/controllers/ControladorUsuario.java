@@ -184,14 +184,17 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 					Integer.toString(res.getEtapa().getId()), Integer.toString(res.getCiudadano().getIdUsuario()),
 					res.getPuesto().getId()));
 		}
-		// Certificado
+		// Certificado --> si es != null
 		ArrayList<DtConstancia> constancias = new ArrayList<DtConstancia>();
-		for(ConstanciaVacuna constancia: ciudadano.getCertificado().getConstancias()) {
-			constancias.add(new DtConstancia(constancia.getIdConstVac(), constancia.getPeriodoInmunidad(),
-					constancia.getDosisRecibidas(), constancia.getFechaUltimaDosis(), constancia.getVacuna(), 
-					constancia.getReserva().getDtReserva()));
+		DtCertificadoVac certificado = null;
+		if (ciudadano.getCertificado() != null) {
+			for(ConstanciaVacuna constancia: ciudadano.getCertificado().getConstancias()) {
+				constancias.add(new DtConstancia(constancia.getIdConstVac(), constancia.getPeriodoInmunidad(),
+						constancia.getDosisRecibidas(), constancia.getFechaUltimaDosis(), constancia.getVacuna(), 
+						constancia.getReserva().getDtReserva()));
+			}
+			certificado = new DtCertificadoVac(ciudadano.getCertificado().getIdCert(), constancias);
 		}
-		DtCertificadoVac certificado = new DtCertificadoVac(ciudadano.getCertificado().getIdCert(), constancias);
 		
 		// Ciudadano
 		DtCiudadano dt = new DtCiudadano(ciudadano.getIdUsuario(), ciudadano.getNombre(), ciudadano.getApellido(),
