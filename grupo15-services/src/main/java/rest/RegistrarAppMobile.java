@@ -77,12 +77,13 @@ public class RegistrarAppMobile {
 					DateTimeFormatter fechaFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 					LocalDate fechaActual = LocalDate.now();
 					for(DtReserva reserva: ciudadano.getReservas()) {
-						LocalDate fechaReserva = LocalDate.parse(reserva.getFecha(), fechaFormatter);
+						String fragmentos[] = reserva.getFecha().split(" ");
+						LocalDate fechaReserva = LocalDate.parse(fragmentos[0], fechaFormatter);
 						if (fechaReserva.compareTo(fechaActual) > 0) {
 							//generar push por esta reserva
 							LOGGER.info("Realizando pedido de push para Reserva...");
 							DateTimeFormatter horaFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-							LocalDate horaReserva = LocalDate.parse(reserva.getFecha(), horaFormatter);
+							LocalDate horaReserva = LocalDate.parse(fragmentos[1], horaFormatter);
 							String fecha = fechaReserva.format(fechaFormatter);
 							String hora = horaReserva.format(horaFormatter);
 							DtTareaNotificacion task = new DtTareaNotificacion(reserva.getPuesto(), mobileToken, reserva.getVacunatorio(), fecha, hora);
