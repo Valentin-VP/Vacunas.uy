@@ -310,6 +310,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		ciu.setFechaNac(ciudadano.getFechaNac());
 		ciu.setSexo(ciudadano.getSexo());
 		ciu.setToken(ciudadano.getToken());
+		ciu.setMobiletoken(ciudadano.getMobileToken());
 		em.persist(ciu);
 
 	}

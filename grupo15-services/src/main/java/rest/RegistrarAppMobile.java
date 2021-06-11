@@ -24,6 +24,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
+import org.jose4j.json.internal.json_simple.JSONObject;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 
 import datatypes.DtCiudadano;
@@ -51,7 +52,7 @@ public class RegistrarAppMobile {
 	@POST
 	@Path("/registrar")
 	@RolesAllowed({"ciudadano"})
-	public Response registrarMobileToken(@CookieParam("x-access-token") Cookie cookie, @Context HttpHeaders headers, String mobileToken) {
+	public Response registrarMobileToken(@CookieParam("x-access-token") Cookie cookie, @Context HttpHeaders headers, JSONObject mobileTokenJson) {
 		if (cookie != null) {
 			String token = cookie.getValue();
 			String ci = null;
@@ -61,12 +62,14 @@ public class RegistrarAppMobile {
 				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "Error procesando JWT");
 			}
 			LOGGER.info("Cedula obtenida en REST: " + ci);
+			String mobileToken = (String) mobileTokenJson.get("mobileToken");
 			LOGGER.info("MobileToken obtenido en REST: " + mobileToken);
 			if (ci == null)
 				return ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED, "No se ha obtenido ci de Cookie/Token");
 			try {
 				DtCiudadano ciudadano = IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci));
 				String oldToken = ciudadano.getMobileToken();
+				LOGGER.info("oldToken: " + oldToken);
 				if (oldToken == null) {
 					// Nuevo usuario mobile, se deben generar notificaciones de todas sus reservas
 					ciudadano.setMobileToken(mobileToken);
@@ -78,7 +81,7 @@ public class RegistrarAppMobile {
 						if (fechaReserva.compareTo(fechaActual) > 0) {
 							//generar push por esta reserva
 							LOGGER.info("Realizando pedido de push para Reserva...");
-							DateTimeFormatter horaFormatter = DateTimeFormatter.ofPattern("HH:mm");
+							DateTimeFormatter horaFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 							LocalDate horaReserva = LocalDate.parse(reserva.getFecha(), horaFormatter);
 							String fecha = fechaReserva.format(fechaFormatter);
 							String hora = horaReserva.format(horaFormatter);
