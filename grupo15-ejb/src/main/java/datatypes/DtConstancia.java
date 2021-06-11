@@ -18,6 +18,7 @@ public class DtConstancia  implements Serializable{
 	private int dosisRecibidas;
 	private LocalDate fechaUltimaDosis;
 	private String vacuna;
+	private String enfermedad; //lo agrego para poder enviar al fron de que enfermedad es esta vacuna
 	////TODO:List<DtLoteDosis> lote = new ArrayList<DtLoteDosis>();
 	
 	private DtReserva reserva;
@@ -36,6 +37,18 @@ public class DtConstancia  implements Serializable{
 		this.fechaUltimaDosis = fechaUltimaDosis;
 		this.vacuna = vacuna;
 		this.reserva = reserva;
+	}
+	
+
+	public DtConstancia(int idConstVac, int periodoInmunidad, int dosisRecibidas, LocalDate fechaUltimaDosis,
+			String vacuna, String enfermedad) {
+		super();
+		this.idConstVac = idConstVac;
+		this.periodoInmunidad = periodoInmunidad;
+		this.dosisRecibidas = dosisRecibidas;
+		this.fechaUltimaDosis = fechaUltimaDosis;
+		this.vacuna = vacuna;
+		this.enfermedad = enfermedad;
 	}
 
 	public int getIdConstVac() {
@@ -85,6 +98,15 @@ public class DtConstancia  implements Serializable{
 	public void setReserva(DtReserva reserva) {
 		this.reserva = reserva;
 	}
+
+	public String getEnfermedad() {
+		return enfermedad;
+	}
+
+	public void setEnfermedad(String enfermedad) {
+		this.enfermedad = enfermedad;
+	}
+	
 	
 	
 }
