@@ -18,6 +18,7 @@ import datatypes.DtDireccion;
 import datatypes.ErrorInfo;
 import datatypes.Sexo;
 import exceptions.AccionInvalida;
+import exceptions.CantidadNula;
 import exceptions.CertificadoInexistente;
 import exceptions.CertificadoRepetido;
 import exceptions.ConstanciaInexistente;
@@ -35,6 +36,8 @@ import exceptions.PuestoCargadoException;
 import exceptions.ReglasCuposCargadoException;
 import exceptions.ReservaInexistente;
 import exceptions.SinPuestosLibres;
+import exceptions.StockVacunaVacunatorioExistente;
+import exceptions.StockVacunaVacunatorioInexistente;
 import exceptions.TransportistaRepetido;
 import exceptions.UsuarioExistente;
 import exceptions.UsuarioInexistente;
@@ -55,6 +58,7 @@ import interfaces.IEtapaRemote;
 import interfaces.ILaboratorioLocal;
 import interfaces.IPlanVacunacionLocal;
 import interfaces.IReservaDAOLocal;
+import interfaces.IStockDaoLocal;
 import interfaces.ITransportistaDaoLocal;
 import interfaces.IUsuarioLocal;
 
@@ -78,6 +82,8 @@ public class InitTest {
 	
 	@EJB
 	IControladorVacunaLocal vch;
+	@EJB
+	IStockDaoLocal csl;
 	
 	@EJB
 	IPlanVacunacionLocal plan;
@@ -145,6 +151,11 @@ public class InitTest {
 			vch.agregarVacuna("vacuna1Virus1", 1, 60, 1999, "lab1", "virus1");
 			vch.agregarVacuna("vacuna2Virus2", 3, 60, 1999, "lab1", "virus2");
 			
+			csl.agregarStock("vact1", "vacuna1Virus1", 200);
+			csl.modificarStock("vact1", "vacuna1Virus1", 200, 0, 0, 200);
+			csl.agregarStock("vact1", "vacuna2Virus2", 100);
+			csl.modificarStock("vact1", "vacuna2Virus2", 100, 0, 0, 100);
+			
 			plan.agregarPlanVacunacion(1, "plan1virus1", "descripcion plan1virus1");
 			plan.agregarPlanVacunacion(2, "plan2virus1", "descripcion plan2virus1");
 			plan.agregarPlanVacunacion(3, "plan3virus2", "descripcion plan3virus2");
@@ -177,6 +188,9 @@ public class InitTest {
 			vc.asignarVacunadorAVacunatorio(11111112, "vact2", LocalDate.now().plusDays(1));
 			vc.asignarVacunadorAVacunatorio(11111114, "vact3", LocalDate.now().plusDays(1));*/
 			//cr.confirmarReserva(idCiudadano, idEnfermedad, idPlan, idVacunatorio, fecha, hora);
+			cr.confirmarReserva(54657902, "virus1", 1, "vact1", LocalDate.now().plusDays(1), LocalTime.of(20, 00, 00));
+			cr.confirmarReserva(54657902, "virus2", 3, "vact1", LocalDate.now().plusDays(1), LocalTime.of(22, 00, 00));
+			
 			cr.confirmarReserva(48585559, "virus1", 1, "vact1", LocalDate.now().plusDays(1), LocalTime.of(23, 30, 00));
 			cr.confirmarReserva(48585559, "virus2", 3, "vact1", LocalDate.now().plusDays(330), LocalTime.of(13, 30, 00));
 			
@@ -200,7 +214,7 @@ public class InitTest {
 			
 			//
 			return Response.ok().build();
-		} catch (EnfermedadRepetida | VacunatorioCargadoException | UsuarioExistente | LaboratorioRepetido | TransportistaRepetido | VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | PlanVacunacionRepetido | EtapaRepetida | PlanVacunacionInexistente | VacunatorioNoCargadoException | ReglasCuposCargadoException |  PuestoCargadoException | AccionInvalida | VacunaInexistente | UsuarioInexistente | CupoInexistente | EtapaInexistente e) {
+		} catch (EnfermedadRepetida | VacunatorioCargadoException | UsuarioExistente | LaboratorioRepetido | TransportistaRepetido | VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | PlanVacunacionRepetido | EtapaRepetida | PlanVacunacionInexistente | VacunatorioNoCargadoException | ReglasCuposCargadoException |  PuestoCargadoException | AccionInvalida | VacunaInexistente | UsuarioInexistente | CupoInexistente | EtapaInexistente | CantidadNula | StockVacunaVacunatorioExistente | StockVacunaVacunatorioInexistente e) {
 			// TODO Auto-generated catch block
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
 		}

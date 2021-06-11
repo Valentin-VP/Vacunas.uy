@@ -1,5 +1,7 @@
 package soap;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javax.ejb.EJB;
@@ -8,6 +10,7 @@ import javax.jws.WebService;
 
 import datatypes.DtStock;
 import datatypes.DtUsuarioSoap;
+import datatypes.EstadoReserva;
 import exceptions.EtapaInexistente;
 import exceptions.PuestoNoCargadosException;
 import exceptions.ReservaInexistente;
@@ -57,7 +60,8 @@ public class NodoVac {
 	}
 	
 	@WebMethod
-	public void actualizarReserva(ArrayList<String> reservas) throws ReservaInexistente, UsuarioInexistente, EtapaInexistente {
-		//cr.modificarReservaSoap(reservas);
+	public void actualizarReserva(String idUser, String fecha, String estado, String idVacunatorio) throws ReservaInexistente, UsuarioInexistente, EtapaInexistente {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		//cr.cambiarEstadoReserva(Integer.parseInt(idUser), LocalDateTime.parse(fecha, formatter), EstadoReserva.valueOf(estado));
 	}
 }

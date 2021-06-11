@@ -25,6 +25,7 @@ import datatypes.DtVacunatorio;
 import datatypes.EstadoReserva;
 import entities.Agenda;
 import entities.Ciudadano;
+import entities.ConstanciaVacuna;
 import entities.Enfermedad;
 import entities.Etapa;
 import entities.PlanVacunacion;
@@ -32,6 +33,7 @@ import entities.Puesto;
 import entities.ReglasCupos;
 import entities.Reserva;
 import entities.Vacunatorio;
+import exceptions.AccionInvalida;
 import exceptions.CupoInexistente;
 import exceptions.EnfermedadInexistente;
 import exceptions.EtapaInexistente;
@@ -454,6 +456,34 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 					throw new ReservaInexistente("No existe esa reserva.");
 				}
 			}
+		}
+	}
+	
+	public void cambiarEstadoReserva(int idCiudadano, LocalDateTime fecha, EstadoReserva estado) throws AccionInvalida {
+		Boolean bien = false;
+    	Ciudadano c = em.find(Ciudadano.class, idCiudadano);
+		if (c != null) {
+			List<Reserva> lr= c.getReservas();
+			if (!lr.isEmpty()) {
+				for (Reserva r: lr) {
+					if (r.getEstado().equals(EstadoReserva.EnProceso) && r.getFechaRegistro().isEqual(fecha)) { //&& r.getEtapa().getPlanVacunacion().getEnfermedad().getNombre().equals(idEnfermedad)) {
+						r.setEstado(estado);
+						em.merge(r);
+						if (estado.equals(EstadoReserva.Completada)) {
+							//c.getCertificado().getConstancias().add(new ConstanciaVacuna(""));
+						}
+						bien = true;
+						break;
+					}
+				}
+				if (!bien) {
+					throw new AccionInvalida("No se puede cambiar esa reserva. Contacte al administrador del sistema.");
+				}
+			}else {
+				throw new AccionInvalida("El ciudadano no tiene reservas. Contacte al administrador del sistema.");
+			}
+		}else {
+			throw new AccionInvalida("El ciudadano no existe. Contacte al administrador del sistema.");
 		}
 	}
 	// enfermedad => plan, vacunatorio, fecha => horas libres
