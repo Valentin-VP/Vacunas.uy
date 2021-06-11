@@ -1,5 +1,6 @@
 package rest;
 
+import java.time.LocalDate;
 import java.util.Base64;
 import java.util.List;
 import java.util.logging.Logger;
@@ -22,10 +23,15 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 
+import datatypes.DtCiudadano;
+import datatypes.DtDireccion;
 import datatypes.DtUsuarioExterno;
+import datatypes.Sexo;
+import exceptions.UsuarioInexistente;
 import interfaces.ILdapLocal;
 import interfaces.IUsuarioLocal;
 import rest.filter.ResponseBuilder;
@@ -108,4 +114,66 @@ public class GestionUsuariosRWS {
 		return Response.ok(resultados).build();
 	}
 
+	@PermitAll
+	@POST
+	@Path("/modificarc")
+	public Response modificarUsuario(@CookieParam("x-access-token") Cookie cookie, String datos) {
+		JSONObject jsonObject;
+		try {
+			jsonObject = new JSONObject(datos);
+			LOGGER.info("Nombre recibido en el rest: " + jsonObject.getString("nombre"));
+			String token = cookie.getValue();
+			String ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+			DtCiudadano ciudadano = IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci));
+			//int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo, String TipoSector, Boolean autenticado
+			ciudadano.setNombre(jsonObject.getString("nombre"));
+			ciudadano.setApellido(jsonObject.getString("apellido"));
+			LocalDate fechaNac = LocalDate.parse(jsonObject.getString("FechaNac"));//convierto la fecha para pasarla
+			ciudadano.setFechaNac(fechaNac);
+			ciudadano.setEmail(jsonObject.getString("email"));
+			JSONObject jsonDir = jsonObject.getJSONObject("direccion");
+			DtDireccion dir = new DtDireccion(jsonDir.getString("direccion"), jsonDir.getString("barrio"), jsonDir.getString("departamento"));
+			ciudadano.setDireccion(dir);
+			Sexo s = Sexo.valueOf(jsonObject.getString("sexo"));
+			ciudadano.setSexo(s);
+			ciudadano.setTipoSector(jsonObject.getString("tipoSector"));
+			IUsuarioLocal.ModificarCiudadano(ciudadano);
+			
+			return ResponseBuilder.createResponse(Response.Status.OK, "Se modifico el usuario correctamente");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+		}catch (InvalidJwtException e) {
+			// TODO Auto-generated catch block
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+		} catch (UsuarioInexistente e) {
+			// TODO Auto-generated catch block
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+		}
+		
+	}
+	
+	//ESTE REST SE PUEDE BORRAR PARA NO TESTEARLO
+	//SI ALGUIEN USA ESTE REST BORRE ESTOS COMENTARIOS
+	@PermitAll
+	@GET
+	@Path("/buscar") //obtiene el usuario del cookie obtenido
+	public Response getUsuario(@CookieParam("x-access-token") Cookie cookie) {
+		System.out.println("entro al buscar");
+		LOGGER.info(cookie.getValue());
+		String token = cookie.getValue();
+		String ci;
+		try {
+			ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+			DtCiudadano ciudadano = IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci));
+			return Response.ok(ciudadano).build();
+		} catch (InvalidJwtException | NumberFormatException | UsuarioInexistente e) {
+			// TODO Auto-generated catch block
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+		}
+		
+	}
 }
