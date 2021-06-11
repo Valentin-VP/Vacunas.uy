@@ -45,26 +45,19 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
     
     public void agregarConstanciaVacuna(String vacuna, int periodoInmunidad, int dosisRecibidas, LocalDate fechaUltimaDosis, int idUser, int idEtapa) throws UsuarioExistente, ReservaInexistente, CertificadoInexistente {
     	Ciudadano u = em.find(Ciudadano.class, idUser);
-    	System.out.println("##################################");
     	if (u==null)
     		throw new UsuarioExistente("No existe ese usuario.");
     	else {
-    		System.out.println("##################################");
     		Reserva r = buscarReservaUsuarioEtapa(idUser, idEtapa);
-    		System.out.println("##################################");
     		if (r==null) {
     			throw new ReservaInexistente("No existe una reserva para ese usuario y esa etapa.");
     		}else {
     			CertificadoVacunacion cert = u.getCertificado();
-    			System.out.println("##################################");
     			if (cert==null) {
     				throw new CertificadoInexistente("No existe un certificado para ese usuario.");
     			}else {
-    				System.out.println("##################################");
     				ConstanciaVacuna cv = new ConstanciaVacuna(periodoInmunidad, dosisRecibidas, fechaUltimaDosis, vacuna, r);
-    				System.out.println("##################################");
     				cert.getConstancias().add(cv);
-    				System.out.println("##################################");
     				em.persist(cert);
     				em.persist(cv);
     			}
@@ -141,7 +134,6 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 	private Reserva buscarReservaUsuarioEtapa(int idUser, int idEtapa){
 		Ciudadano c = em.find(Ciudadano.class, idUser);
 		if (c!=null) {
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 			List<Reserva> temp = c.getReservas();
 			for (Reserva r: temp) {
 				if (r.getEtapa().getId() == idEtapa)

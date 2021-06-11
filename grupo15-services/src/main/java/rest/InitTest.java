@@ -152,6 +152,7 @@ public class InitTest {
 			plan.agregarEnfermedadPlan(1, "virus1");
 			plan.agregarEnfermedadPlan(2, "virus1");
 			plan.agregarEnfermedadPlan(3, "virus2");
+			//plan.agregarEnfermedadPlan(id, nombre);
 			etapa.agregarEtapa(1, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|50", 1, "vacuna1Virus1");
 			etapa.agregarEtapa(2, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "51|80", 1, "vacuna1Virus1");
 			etapa.agregarEtapa(3, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|50", 2, "vacuna1Virus1");
@@ -184,10 +185,10 @@ public class InitTest {
 			
 			//creo las constancias
 			try {
-				cv.agregarConstanciaVacuna("virus1", 4, 2, LocalDate.now().plusDays(100), 48585559, 1);
-				cv.agregarConstanciaVacuna("vacuna2", 5, 2, LocalDate.now().plusDays(250), 48585559, 4);
-				cv.agregarConstanciaVacuna("virus1", 4, 2, LocalDate.now().plusDays(100), 49457795, 1);
-				cv.agregarConstanciaVacuna("vacuna2", 5, 2, LocalDate.now().plusDays(250), 49457795, 4);
+				cv.agregarConstanciaVacuna("vacuna1Virus1", 4, 2, LocalDate.now().plusDays(100), 48585559, 1);
+				cv.agregarConstanciaVacuna("vacuna2Virus2", 5, 2, LocalDate.now().plusDays(250), 48585559, 4);
+				cv.agregarConstanciaVacuna("vacuna1Virus1", 4, 2, LocalDate.now().plusDays(100), 49457795, 1);
+				cv.agregarConstanciaVacuna("vacuna2Virus2", 5, 2, LocalDate.now().plusDays(250), 49457795, 4);
 				//cv.agregarConstanciaVacuna(vacuna, periodoInmunidad, dosisRecibidas, fechaUltimaDosis, idUser, idEtapa);
 			} catch (ReservaInexistente e) {
 				// TODO Auto-generated catch block

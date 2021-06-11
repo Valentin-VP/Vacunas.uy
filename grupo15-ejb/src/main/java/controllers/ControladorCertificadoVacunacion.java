@@ -1,5 +1,6 @@
 package controllers;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import datatypes.DtCertificadoVac;
 import datatypes.DtCiudadano;
@@ -16,6 +18,7 @@ import entities.CertificadoVacunacion;
 import entities.Ciudadano;
 import entities.ConstanciaVacuna;
 import entities.Usuario;
+import entities.Vacuna;
 import exceptions.CertificadoInexistente;
 import exceptions.CertificadoRepetido;
 import exceptions.ConstanciaInexistente;
@@ -98,8 +101,13 @@ public class ControladorCertificadoVacunacion implements ICertificadoVacunacionD
     		if (temp != null) {
     			ArrayList<DtConstancia> dtc= new ArrayList<DtConstancia>();
     			for (ConstanciaVacuna c: temp.getConstancias()) {
+    				String vac = c.getVacuna();//obtengo la vacuna para poder pasar la enfermedad
+    				System.out.println(vac);
+    				Query query = em.createQuery("SELECT v FROM Vacuna v WHERE nombre = :nom");
+    				query.setParameter("nom", vac);
+    				Vacuna v = (Vacuna) query.getSingleResult();
     				dtc.add(new DtConstancia(c.getIdConstVac(), c.getPeriodoInmunidad(), c.getDosisRecibidas(), c.getFechaUltimaDosis(), c.getVacuna(), 
-    						c.getReserva().getDtReserva()));
+    						c.getReserva().getDtReserva(), v.getNombre()));
     			}
     			DtCertificadoVac retorno = new DtCertificadoVac(temp.getIdCert(), dtc);
 

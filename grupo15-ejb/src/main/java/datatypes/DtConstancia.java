@@ -41,13 +41,14 @@ public class DtConstancia  implements Serializable{
 	
 
 	public DtConstancia(int idConstVac, int periodoInmunidad, int dosisRecibidas, LocalDate fechaUltimaDosis,
-			String vacuna, String enfermedad) {
+			String vacuna, DtReserva reserva, String enfermedad) {
 		super();
 		this.idConstVac = idConstVac;
 		this.periodoInmunidad = periodoInmunidad;
 		this.dosisRecibidas = dosisRecibidas;
 		this.fechaUltimaDosis = fechaUltimaDosis;
 		this.vacuna = vacuna;
+		this.reserva = reserva;
 		this.enfermedad = enfermedad;
 	}
 
