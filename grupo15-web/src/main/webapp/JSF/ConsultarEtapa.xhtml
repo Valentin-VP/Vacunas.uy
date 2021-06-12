@@ -52,9 +52,9 @@
 
 <div>
 
-<p:outputLabel style="width:40%" >Seleccione Plan:    </p:outputLabel>
- <p:selectOneMenu value="#{ConsultarPlan.plan}"  style="border-width: thin">
-	<f:selectItems value="#{ConsultarPlan.planes}" />
+<p:outputLabel style="width:40%" >Seleccione etapa:    </p:outputLabel>
+ <p:selectOneMenu value="#{CrearEtapa.etapa}"  style="border-width: thin">
+	<f:selectItems value="#{CrearEtapa.etapas}" />
 </p:selectOneMenu>
 </div>
 
@@ -63,7 +63,7 @@
 <p:messages id="messages" showDetail="true" closable="true">
             <p:autoUpdate/>
 </p:messages>
-<p:commandButton id="confirmar" action="#{ConsultarPlan.consultarPlan}" value="Consultar"> </p:commandButton>
+<p:commandButton id="confirmar" action="#{ConsultarEtapa.consultarEtapa}" value="Consultar"> </p:commandButton>
 
 
 </h:form>

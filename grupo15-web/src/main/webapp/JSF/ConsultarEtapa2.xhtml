@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head></h:head> 
+<body> 
+ <div class="formulario">
+  
+<p:dataTable id="planes" value="#{ConsultarPlan.getListaEtapas()}" var="etapa">
+<p:column>
+	<f:facet name="header">Id</f:facet>
+		#{etapa.id}
+		</p:column>
+<p:column>
+<f:facet name="header">Fecha de Inicio</f:facet>
+#{etapa.fechaInicio}
+</p:column>
+<p:column>
+<f:facet name="header">Fecha de Finalización</f:facet>
+#{etapa.fechaFin}
+</p:column>
+<p:column>
+<f:facet name="header">Condicion</f:facet>
+#{etapa.condicion}
+</p:column>
+<p:column>
+<f:facet name="header">Plan de Vacunacion</f:facet>
+#{etapa.plan}
+</p:column>
+<p:column>
+<f:facet name="header">Vacuna</f:facet>
+#{etapa.vacuna}
+</p:column>
+</p:dataTable>
+</div>
+</body> 
+</html>

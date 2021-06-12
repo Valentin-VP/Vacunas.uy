@@ -56,7 +56,7 @@
 </p:messages>
 <p:outputLabel style="width:50%" >Seleccione enfermedad:    </p:outputLabel>
  <p:selectOneMenu value="#{BorrarEnfermedad.nombre}" style="border-width: thin"  >
-<p:ajax event="itemSelect" update="@this"   />
+<p:ajax event="itemSelect" update="@this"  />
 
 	<f:selectItems value="#{BorrarEnfermedad.enfermedades}"  />
 <p:ajax event="itemSelect" update="@this" />

@@ -3,7 +3,8 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html" 
-      xmlns:p="http://primefaces.org/ui"> 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:rich="http://primefaces.org/ui"> 
       
 
 <h:head> <link href="/grupo15-web/css/styles.css" type="text/css" rel="stylesheet" media="all" /> </h:head> 
@@ -26,7 +27,7 @@
             <a class="nav-link" href="/grupo15-web/html/registroInterno.html">Registrar Usuario Interno</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href=""></a>
+            <a class="nav-link" href="/grupo15-web/JSF/CrearEnfermedad.xhtml">Crear Enfermedad</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href=""></a>
@@ -46,24 +47,24 @@
   </nav>
 
 
- <div class="formulario" style="width: 30%">
+ <div class="formulario">
 <h:form>
 
-
 <div>
+<p:outputLabel style="width:50%" >Seleccione Etapa:    </p:outputLabel>
+ <p:selectOneMenu value="#{BorrarEtapa.nombre}"  style="border-width: thin">
+ <p:ajax event="itemSelect" update="@this" />
+	<f:selectItems Value="#{BorrarEtapa.etapas}" />
+	<p:ajax event="itemSelect" update="@this" />
 
-<p:outputLabel style="width:40%" >Seleccione Plan:    </p:outputLabel>
- <p:selectOneMenu value="#{ConsultarPlan.plan}"  style="border-width: thin">
-	<f:selectItems value="#{ConsultarPlan.planes}" />
-</p:selectOneMenu>
+ </p:selectOneMenu>
+
+
 </div>
-
-
-
 <p:messages id="messages" showDetail="true" closable="true">
             <p:autoUpdate/>
 </p:messages>
-<p:commandButton id="confirmar" action="#{ConsultarPlan.consultarPlan}" value="Consultar"> </p:commandButton>
+<p:commandButton action="#{BorrarEtapa.borrarEtapa}" value="Eliminar"  > </p:commandButton>
 
 
 </h:form>

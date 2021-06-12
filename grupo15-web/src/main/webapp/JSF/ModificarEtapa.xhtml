@@ -49,21 +49,52 @@
  <div class="formulario" style="width: 30%">
 <h:form>
 
-
 <div>
-
-<p:outputLabel style="width:40%" >Seleccione Plan:    </p:outputLabel>
- <p:selectOneMenu value="#{ConsultarPlan.plan}"  style="border-width: thin">
-	<f:selectItems value="#{ConsultarPlan.planes}" />
+<p:outputLabel style="width:40%" >Seleccione una etapa:    </p:outputLabel>
+ <p:selectOneMenu value="#{ModificaeEtapa.nombre}"  style="border-width: thin" >
+	<f:selectItems value="#{ModificarEtapa.nombres}" />
 </p:selectOneMenu>
 </div>
 
 
+<div>
+<p:outputLabel style="width:40%" >Fecha de Inicio:    </p:outputLabel>
+<p:inputText id="fechaInicio"  value="#{ModificarEtapa.fechaInicio}" style="width:60%" > </p:inputText>
+</div>
+
+<div>
+<p:outputLabel style="width:40%">Fecha de Finalizacion:    </p:outputLabel>
+<p:inputText id="fechaFin"  value="#{ModificarEtapa.fechaFin}" style="width:60%" > </p:inputText>
+</div>
+
+
+<div>
+<p:outputLabel style="width:40%" >Condicion:    </p:outputLabel>
+ <p:selectOneMenu value="#{ModificarEtapa.condicion}"  style="border-width: thin" >
+	<f:selectItems value="#{ModificarEtapa.condiciones}" />
+</p:selectOneMenu>
+</div>
+
+<div>
+
+<p:outputLabel style="width:40%" >Plan de Vacunacion:    </p:outputLabel>
+ <p:selectOneMenu value="#{ModificarEtapa.plan}"  style="border-width: thin">
+	<f:selectItems value="#{ModificarEtapa.planes}" />
+</p:selectOneMenu>
+</div>
+
+<div>
+
+<p:outputLabel style="width:40%" >Vacuna:    </p:outputLabel>
+ <p:selectOneMenu value="#{ModificarEtapa.vacuna}"  style="border-width: thin">
+	<f:selectItems value="#{ModificarEtapa.vacunas}" />
+</p:selectOneMenu>
+</div>
 
 <p:messages id="messages" showDetail="true" closable="true">
             <p:autoUpdate/>
 </p:messages>
-<p:commandButton id="confirmar" action="#{ConsultarPlan.consultarPlan}" value="Consultar"> </p:commandButton>
+<p:commandButton id="confirmar" action="#{ModificarEtapa.modificarEtapa}" value="Modificar"> </p:commandButton>
 
 
 </h:form>
