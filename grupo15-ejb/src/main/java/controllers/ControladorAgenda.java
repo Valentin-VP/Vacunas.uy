@@ -121,7 +121,10 @@ public class ControladorAgenda implements IAgendaDAORemote, IAgendaDAOLocal {
 		Vacunatorio v = em.find(Vacunatorio.class, vacunatorio);
 		if (v != null){
 			ArrayList<DtAgenda> retorno = new ArrayList<>();
-			ArrayList<Agenda> result = (ArrayList<Agenda>) v.getAgenda();
+			ArrayList<Agenda> result = new ArrayList<>();
+			for(Agenda a: v.getAgenda()) {
+				result.add(a);
+			}
 			
 			if (!result.isEmpty()) {
 				for (Agenda a: result) {
