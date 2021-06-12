@@ -11,6 +11,7 @@ import javax.jws.WebService;
 import datatypes.DtStock;
 import datatypes.DtUsuarioSoap;
 import datatypes.EstadoReserva;
+import exceptions.AccionInvalida;
 import exceptions.EtapaInexistente;
 import exceptions.PuestoNoCargadosException;
 import exceptions.ReservaInexistente;
@@ -60,8 +61,23 @@ public class NodoVac {
 	}
 	
 	@WebMethod
-	public void actualizarReserva(String idUser, String fecha, String estado, String idVacunatorio) throws ReservaInexistente, UsuarioInexistente, EtapaInexistente {
+	public void actualizarReserva(String idUser, String fecha, String estado, String idVacunatorio) throws NumberFormatException, AccionInvalida {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		//cr.cambiarEstadoReserva(Integer.parseInt(idUser), LocalDateTime.parse(fecha, formatter), EstadoReserva.valueOf(estado));
+		EstadoReserva estadoReal;
+		switch (estado){
+		case "EN_PROCESO":
+			estadoReal = EstadoReserva.EnProceso;
+			break;
+		case "COMPLETADA":
+			estadoReal = EstadoReserva.Completada;
+			break;
+		case "CANCELADA":
+			estadoReal = EstadoReserva.Cancelada;
+			break;
+		default:
+			estadoReal = EstadoReserva.Cancelada;
+			break;
+		}
+		cr.cambiarEstadoReserva(Integer.parseInt(idUser), LocalDateTime.parse(fecha, formatter), estadoReal);
 	}
 }

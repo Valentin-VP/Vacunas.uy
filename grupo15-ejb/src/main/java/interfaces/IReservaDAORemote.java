@@ -12,6 +12,8 @@ import datatypes.DtEtapa;
 import datatypes.DtPlanVacunacion;
 import datatypes.DtReservaCompleto;
 import datatypes.DtVacunatorio;
+import datatypes.EstadoReserva;
+import exceptions.AccionInvalida;
 import exceptions.CupoInexistente;
 import exceptions.EnfermedadInexistente;
 import exceptions.EtapaInexistente;
@@ -32,4 +34,5 @@ public interface IReservaDAORemote   {
 	public DtReservaCompleto obtenerReserva(int ciudadano, int plan, int etapa, LocalDateTime fecha) throws ReservaInexistente, UsuarioInexistente, EtapaInexistente;
 	public ArrayList<DtReservaCompleto> listarReservasCiudadano(int ciudadano) throws ReservaInexistente, UsuarioInexistente;
 	public void eliminarReserva(int ciudadano, LocalDateTime fecha, String enfermedad) throws ReservaInexistente, UsuarioInexistente, EnfermedadInexistente ;
+	public void cambiarEstadoReserva(int idCiudadano, LocalDateTime fecha, EstadoReserva estado) throws AccionInvalida;
 }

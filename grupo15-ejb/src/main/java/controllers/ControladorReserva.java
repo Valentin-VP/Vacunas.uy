@@ -470,7 +470,34 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 						r.setEstado(estado);
 						em.merge(r);
 						if (estado.equals(EstadoReserva.Completada)) {
-							//c.getCertificado().getConstancias().add(new ConstanciaVacuna(""));
+							boolean habiaConstancia = false;
+							for (ConstanciaVacuna cv: c.getCertificado().getConstancias()) { //busco si existe una constancia con esa vacuna
+								if (cv.getVacuna().equals(r.getEtapa().getVacuna().getNombre())) { //si existe seteo los datos, significa que tenia mas de una dosis
+									cv.setDosisRecibidas(cv.getDosisRecibidas()+1);
+									cv.setFechaUltimaDosis(r.getFechaRegistro().toLocalDate());
+									if (r.getEtapa().getVacuna().getCantDosis()==cv.getDosisRecibidas()) {
+										cv.setPeriodoInmunidad(r.getEtapa().getVacuna().getExpira());
+									}else {
+										cv.setPeriodoInmunidad(0); //no deberia ser necesario porque ya deberia haber sido creado con este valor en 0
+									}
+									em.merge(cv);
+									habiaConstancia = true;
+									break;
+								}
+							}
+							if (!habiaConstancia) { //si no encontre constancia, es la primera dosis, o es una sola dosis
+								if (r.getEtapa().getVacuna().getCantDosis()>1) { //si es de multiples dosis el tiempo de inmunidad es 0 meses
+									ConstanciaVacuna cv =new ConstanciaVacuna(0, 1, r.getFechaRegistro().toLocalDate(), r.getEtapa().getVacuna().getNombre(), null);
+									c.getCertificado().getConstancias().add(cv);
+									em.persist(cv);
+									em.merge(c.getCertificado());
+								}else {
+									ConstanciaVacuna cv =new ConstanciaVacuna(r.getEtapa().getVacuna().getExpira(), 1, r.getFechaRegistro().toLocalDate(), r.getEtapa().getVacuna().getNombre(), null);
+									c.getCertificado().getConstancias().add(cv);
+									em.persist(cv);
+									em.merge(c.getCertificado());
+								}
+							}
 						}
 						bien = true;
 						break;
