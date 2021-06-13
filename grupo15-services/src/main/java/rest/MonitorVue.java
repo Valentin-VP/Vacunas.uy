@@ -14,6 +14,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -78,8 +79,15 @@ public class MonitorVue {
 	public Response getVacunadosPorVacunas() {
 		Map<String, String> vacunas= IConstancia.listarConstanciaPorVacuna();
 		try {
-			JSONObject datos = new JSONObject(vacunas);
-			return ResponseBuilder.createResponse(Response.Status.OK, datos);
+			JSONArray datos = new JSONArray();
+			for (Map.Entry<String, String> entry : vacunas.entrySet()) {
+			    System.out.println(entry.getKey()+": " + entry.getValue());
+			    JSONObject dato = new JSONObject();
+			    dato.put("idEnfermedad", entry.getKey());
+			    dato.put("vacunados", entry.getValue());
+			    datos.put(dato);
+			}
+			return Response.ok(datos.toString()).build();
 		} catch (JSONException e) {
             return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
                     e.getMessage());

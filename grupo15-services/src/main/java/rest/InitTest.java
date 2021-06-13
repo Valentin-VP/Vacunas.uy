@@ -189,8 +189,8 @@ public class InitTest {
 			vc.asignarVacunadorAVacunatorio(11111112, "vact2", LocalDate.now().plusDays(1));
 			vc.asignarVacunadorAVacunatorio(11111114, "vact3", LocalDate.now().plusDays(1));*/
 			//cr.confirmarReserva(idCiudadano, idEnfermedad, idPlan, idVacunatorio, fecha, hora);
-			cr.confirmarReserva(54657902, "virus1", 1, "vact1", LocalDate.now().plusDays(1), LocalTime.of(20, 00, 00), new DtUsuarioExterno("54657902", "", "industria", false));
-			cr.confirmarReserva(54657902, "virus2", 3, "vact1", LocalDate.now().plusDays(1), LocalTime.of(22, 00, 00), new DtUsuarioExterno("54657902", "", "industria", false));
+			//cr.confirmarReserva(54657902, "virus1", 1, "vact1", LocalDate.now().plusDays(1), LocalTime.of(20, 00, 00), new DtUsuarioExterno("54657902", "", "industria", false));
+			//cr.confirmarReserva(54657902, "virus2", 3, "vact1", LocalDate.now().plusDays(1), LocalTime.of(22, 00, 00), new DtUsuarioExterno("54657902", "", "industria", false));
 			
 			cr.confirmarReserva(48585559, "virus1", 1, "vact1", LocalDate.now().plusDays(1), LocalTime.of(23, 30, 00), new DtUsuarioExterno("48585559", "", "salud", true));
 			cr.confirmarReserva(48585559, "virus2", 3, "vact1", LocalDate.now().plusDays(330), LocalTime.of(13, 30, 00), new DtUsuarioExterno("48585559", "", "industria", false));

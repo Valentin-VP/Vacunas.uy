@@ -186,12 +186,13 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 	}
 	
 	public Map<String, String> listarConstanciaPorVacuna(){
-		Map<String, String> constancias = new HashMap<>(); 
+		Map<String, String> constancias = new HashMap<String,String>();
 		Query query1 = em.createQuery("SELECT nombre FROM Vacuna");
 		@SuppressWarnings("unchecked")
 		ArrayList<String> vacunas = (ArrayList<String>)query1.getResultList();
 		for(String v: vacunas) {
-			Query query2 = em.createQuery("SELECT c FROM ConstanciaVacuna c WHERE nombre = :vac");
+			System.out.println(v);
+			Query query2 = em.createQuery("SELECT c FROM ConstanciaVacuna c WHERE vacuna = :vac");
 			query2.setParameter("vac", v);
 			constancias.put(v, String.valueOf(query2.getResultList().size()));
 		}
