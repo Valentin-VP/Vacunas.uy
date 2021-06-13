@@ -1,6 +1,8 @@
 package datatypes;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -16,6 +18,7 @@ public class DtStock implements Serializable {
 	// Identidad del Stock: vacuna + vacunatorio (tipo asociativo)
 	private String vacuna;
 	private String vacunatorio;
+	private List <DtHistoricoStock> historicos = new ArrayList<DtHistoricoStock>();
 
 	public DtStock() {
 	}
@@ -77,6 +80,14 @@ public class DtStock implements Serializable {
 
 	public void setVacunatorio(String vacunatorio) {
 		this.vacunatorio = vacunatorio;
+	}
+
+	public List <DtHistoricoStock> getHistoricos() {
+		return historicos;
+	}
+
+	public void setHistoricos(List <DtHistoricoStock> historicos) {
+		this.historicos = historicos;
 	}
 
 }

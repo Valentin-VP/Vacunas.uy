@@ -1,5 +1,7 @@
 package controllers;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,21 +9,19 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import datatypes.DtLoteDosis;
+import datatypes.DtHistoricoStock;
 import datatypes.DtStock;
-import entities.LoteDosis;
+import entities.Historico;
 import entities.Stock;
 import entities.Vacuna;
 import entities.Vacunatorio;
 import exceptions.CantidadNula;
-import exceptions.LoteInexistente;
 import exceptions.StockVacunaVacunatorioExistente;
 import exceptions.StockVacunaVacunatorioInexistente;
 import exceptions.VacunaInexistente;
 import exceptions.VacunatorioNoCargadoException;
 import interfaces.IStockDaoLocal;
 import interfaces.IStockDaoRemote;
-import persistence.LoteDosisID;
 import persistence.StockID;
 
 @Stateless
@@ -120,6 +120,16 @@ public class ControladorStock implements IStockDaoLocal, IStockDaoRemote {
 		if (stock != null) {
 			dtStock = new DtStock(stock.getVacunatorio().getNombre(), stock.getVacuna().getNombre(),
 					stock.getCantidad(), stock.getDescartadas(), stock.getDisponibles(), stock.getAdministradas());
+			if (stock.getHistoricos().size() > 0) {
+				for (Historico historico: stock.getHistoricos()) {
+					DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
+					String strDate = dateFormat.format(historico.getFecha());  
+					DtHistoricoStock dtHistorico = new DtHistoricoStock(strDate, historico.getCantidad(),
+							historico.getDescartadas(), historico.getDisponibles(), historico.getAdministradas(), 
+							historico.getStock().getVacuna().getNombre(), historico.getStock().getVacunatorio().getId());
+					dtStock.getHistoricos().add(dtHistorico);
+				}
+			}
 		} else {
 			throw new StockVacunaVacunatorioInexistente(String.format("No se encontro Stock de la Vacuna %s en el Vacunatorio %s", idVacuna, idVacunatorio));
 		}
@@ -134,8 +144,19 @@ public class ControladorStock implements IStockDaoLocal, IStockDaoRemote {
 			throw new VacunatorioNoCargadoException("No existe el vacunatorio con ID " + idVacunatorio);
 		}
 		for (Stock stock : vacunatorio.getStock()) {
-			stockVacunatorio.add(new DtStock(stock.getVacunatorio().getNombre(), stock.getVacuna().getNombre(),
-						stock.getCantidad(), stock.getDescartadas(), stock.getDisponibles(), stock.getAdministradas()));
+			DtStock dtStock = new DtStock(stock.getVacunatorio().getNombre(), stock.getVacuna().getNombre(),
+					stock.getCantidad(), stock.getDescartadas(), stock.getDisponibles(), stock.getAdministradas());
+			if (stock.getHistoricos().size() > 0) {
+				for (Historico historico: stock.getHistoricos()) {
+					DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
+					String strDate = dateFormat.format(historico.getFecha());  
+					DtHistoricoStock dtHistorico = new DtHistoricoStock(strDate, historico.getCantidad(),
+							historico.getDescartadas(), historico.getDisponibles(), historico.getAdministradas(), 
+							historico.getStock().getVacuna().getNombre(), historico.getStock().getVacunatorio().getId());
+					dtStock.getHistoricos().add(dtHistorico);
+				}
+			}
+			stockVacunatorio.add(dtStock);
 		}
 		return stockVacunatorio;
 	}

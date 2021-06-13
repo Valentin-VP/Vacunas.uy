@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DtHistoricoStock implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private Date fecha;
+	private String fecha;
 	private Integer cantidad;
 	private Integer descartadas;
 	private Integer disponibles;
@@ -21,7 +21,7 @@ public class DtHistoricoStock implements Serializable {
 	
 	public DtHistoricoStock() {}
 	
-	public DtHistoricoStock(Date fecha, Integer cantidad, Integer descartadas, Integer disponibles,
+	public DtHistoricoStock(String fecha, Integer cantidad, Integer descartadas, Integer disponibles,
 			Integer administradas, String vacuna, String vacunatorio) {
 		super();
 		this.fecha = fecha;
@@ -33,11 +33,11 @@ public class DtHistoricoStock implements Serializable {
 		this.vacunatorio = vacunatorio;
 	}
 
-	public Date getFecha() {
+	public String getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(Date fecha) {
+	public void setFecha(String fecha) {
 		this.fecha = fecha;
 	}
 

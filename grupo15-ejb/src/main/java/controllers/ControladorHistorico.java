@@ -1,5 +1,7 @@
 package controllers;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -126,7 +128,9 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 			if (stock.getVacuna().getNombre().equals(idVacunaStock)) {
 				for (Historico historico : stock.getHistoricos()) {
 					if (historico.getFecha().compareTo(fecha) == 0) {
-						return (new DtHistoricoStock(historico.getFecha(), historico.getCantidad(),
+						DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
+						String strDate = dateFormat.format(historico.getFecha());
+						return (new DtHistoricoStock(strDate, historico.getCantidad(),
 								historico.getDescartadas(), historico.getDisponibles(), historico.getAdministradas(),
 								historico.getStock().getVacuna().getNombre(),
 								historico.getStock().getVacunatorio().getNombre()));
@@ -152,7 +156,9 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 		for (Stock stock : vacunatorio.getStock()) {
 			if (stock.getVacuna().getNombre().equals(idVacunaStock)) {
 				for (Historico historico : stock.getHistoricos()) {
-					historicos.add(new DtHistoricoStock(historico.getFecha(), historico.getCantidad(),
+					DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
+					String strDate = dateFormat.format(historico.getFecha());
+					historicos.add(new DtHistoricoStock(strDate, historico.getCantidad(),
 							historico.getDescartadas(), historico.getDisponibles(), historico.getAdministradas(),
 							historico.getStock().getVacuna().getNombre(),
 							historico.getStock().getVacunatorio().getNombre()));
