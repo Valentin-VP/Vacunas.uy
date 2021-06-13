@@ -174,7 +174,7 @@ public class EnfermedadTest {
 	public void testEliminarEnfermedadConPlan() throws EnfermedadInexistente, AccionInvalida {
 		try {
 			utx.begin();
-			PlanVacunacion pv = new PlanVacunacion(1, "pv_n1", "pv_d1");
+			PlanVacunacion pv = new PlanVacunacion("pv_n1", "pv_d1");
 			Query queryE = em.createQuery("SELECT e FROM Enfermedad e WHERE e.nombre = 'virus2'");
 			Enfermedad e = (Enfermedad) queryE.getSingleResult();
 			pv.setEnfermedad(e);

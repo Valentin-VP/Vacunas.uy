@@ -14,7 +14,7 @@ import exceptions.PlanVacunacionRepetido;
 @Local
 public interface IPlanVacunacionLocal {
 	
-	public void agregarPlanVacunacion(int id, String nombre, String descripcion) throws PlanVacunacionRepetido;
+	public void agregarPlanVacunacion(String nombre, String descripcion);
 	
 	public ArrayList<DtPlanVacunacion> listarPlanesVacunacion() throws PlanVacunacionInexistente;
 	

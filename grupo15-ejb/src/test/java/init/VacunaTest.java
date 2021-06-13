@@ -106,7 +106,7 @@ public class VacunaTest {
 		LoteDosis lote = new LoteDosis(1, vacunatorio, vac2, 1, 1, 1, 1.0f);
 		LocalDate tempInicio = LocalDate.of(1,2,3);
 		LocalDate tempFinal = LocalDate.of(2, 3, 4);
-		PlanVacunacion pv = new PlanVacunacion(1, "a", "b");
+		PlanVacunacion pv = new PlanVacunacion("a", "b");
 		Etapa e = new Etapa(1, tempInicio, tempFinal, "a", pv);
 		Stock s = new Stock(vacunatorio, vac2, 1, 1, 1, 1);
 		e.setVacuna(vac2);

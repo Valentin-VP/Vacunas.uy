@@ -102,7 +102,7 @@ public class AgendaTest {
 		//DtDireccion tempDir = new DtDireccion("g","h","i");
 		Sexo s1 = Sexo.valueOf("Masculino");
 		Ciudadano c1 = new Ciudadano(1, "c1", "ap1", tempDate, "mail", null, s1, "sector1", true);
-		PlanVacunacion pv1 = new PlanVacunacion(1, "plan1", "plan1");
+		PlanVacunacion pv1 = new PlanVacunacion("plan1", "plan1");
 		LocalDate tempDateInicio = LocalDate.of(4,5,6);
 		LocalDate tempDateFin = LocalDate.of(4,5,6);
 		Etapa e1 = new Etapa(1, tempDateInicio, tempDateFin, "activa", pv1);

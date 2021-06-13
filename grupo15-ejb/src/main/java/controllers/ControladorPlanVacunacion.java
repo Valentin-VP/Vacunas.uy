@@ -33,12 +33,9 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 	@PersistenceContext(name = "test")
 	private EntityManager em;
 	
-	public void agregarPlanVacunacion(int id, String nombre, String descripcion) throws PlanVacunacionRepetido{
-		if(em.find(PlanVacunacion.class, id) == null) {
-			PlanVacunacion pV = new PlanVacunacion(id, nombre, descripcion);
-			em.persist(pV);
-		}else
-			throw new PlanVacunacionRepetido("Ya existe un plan de vacunacion con esa id");
+	public void agregarPlanVacunacion(String nombre, String descripcion){
+		PlanVacunacion pV = new PlanVacunacion(nombre, descripcion);
+		em.persist(pV);
 	}
 	
 	public void agregarEnfermedadPlan(int id, String nombre) throws PlanVacunacionInexistente, EnfermedadInexistente, AccionInvalida {

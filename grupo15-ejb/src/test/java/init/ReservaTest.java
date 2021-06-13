@@ -134,9 +134,9 @@ public class ReservaTest {
 			Enfermedad e1 = em.find(Enfermedad.class, "virus1");
 			Laboratorio l = new Laboratorio("lab1");
 			Vacuna v = new Vacuna("vac1", 1, 1, 1, l, e1);
-			PlanVacunacion pv1 = new PlanVacunacion(1, "pv_n1", "pv_d1");
-			PlanVacunacion pv2 = new PlanVacunacion(2, "pv_n2", "pv_d2");
-			PlanVacunacion pv3 = new PlanVacunacion(3, "pv_n3", "pv_d3");
+			PlanVacunacion pv1 = new PlanVacunacion("pv_n1", "pv_d1");
+			PlanVacunacion pv2 = new PlanVacunacion("pv_n2", "pv_d2");
+			PlanVacunacion pv3 = new PlanVacunacion("pv_n3", "pv_d3");
 			Etapa e_pv1 = new Etapa(1, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "1|30|industria|no", pv1);
 			Etapa e_pv3 = new Etapa(3, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "100|300|todos|si", pv3);
 			e_pv1.setVacuna(v);
