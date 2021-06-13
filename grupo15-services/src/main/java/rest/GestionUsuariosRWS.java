@@ -30,6 +30,8 @@ import org.jose4j.jwt.consumer.InvalidJwtException;
 import datatypes.DtCiudadano;
 import datatypes.DtDireccion;
 import datatypes.DtUsuarioExterno;
+import datatypes.DtUsuarioInterno;
+import datatypes.DtVacunador;
 import datatypes.Sexo;
 import exceptions.UsuarioInexistente;
 import interfaces.ILdapLocal;
@@ -116,8 +118,8 @@ public class GestionUsuariosRWS {
 
 	@PermitAll
 	@POST
-	@Path("/modificarc")
-	public Response modificarUsuario(@CookieParam("x-access-token") Cookie cookie, String datos) {
+	@Path("/ciudadano/modificar")
+	public Response modificarCiudadano(@CookieParam("x-access-token") Cookie cookie, String datos) {
 		JSONObject jsonObject;
 		try {
 			jsonObject = new JSONObject(datos);
@@ -156,24 +158,90 @@ public class GestionUsuariosRWS {
 		
 	}
 	
-	//ESTE REST SE PUEDE BORRAR PARA NO TESTEARLO
-	//SI ALGUIEN USA ESTE REST BORRE ESTOS COMENTARIOS
 	@PermitAll
 	@GET
-	@Path("/buscar") //obtiene el usuario del cookie obtenido
-	public Response getUsuario(@CookieParam("x-access-token") Cookie cookie) {
-		System.out.println("entro al buscar");
-		LOGGER.info(cookie.getValue());
-		String token = cookie.getValue();
-		String ci;
-		try {
-			ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-			DtCiudadano ciudadano = IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci));
-			return Response.ok(ciudadano).build();
-		} catch (InvalidJwtException | NumberFormatException | UsuarioInexistente e) {
-			// TODO Auto-generated catch block
-			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+	@Path("/ciudadano/buscar") //obtiene el usuario del cookie obtenido
+	public Response obtenerCiudadano(@CookieParam("x-access-token") Cookie cookie) {
+		if (cookie != null) {
+			LOGGER.info(cookie.getValue());
+			String token = cookie.getValue();
+			String ci;
+			try {
+				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+				DtCiudadano ciudadano = IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci));
+				return Response.ok(ciudadano).build();
+			} catch (InvalidJwtException | NumberFormatException | UsuarioInexistente e) {
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+			}
 		}
+		return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "No se obtuvo ciudadano");
+	}
+	
+	@PermitAll
+	@GET
+	@Path("/interno/buscar") //obtiene el usuario del cookie obtenido
+	public Response obtenerInterno(@CookieParam("x-access-token") Cookie cookie) {
+		if (cookie != null) {
+			String token = cookie.getValue();
+			String ci = null;
+			try {
+				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+				LOGGER.info("Cedula obtenida en REST: " + ci);
+				DtUsuarioInterno interno = IUsuarioLocal.buscarUsuarioInterno(Integer.parseInt(ci));
+				
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("email", interno.getEmail());
+				jsonObject.put("barrio", interno.getDireccion().getBarrio());
+				jsonObject.put("direccion", interno.getDireccion().getDireccion());
+				jsonObject.put("departamento", interno.getDireccion().getDepartamento());
+				return Response.ok(jsonObject.toString()).build();
+			} catch (InvalidJwtException | NumberFormatException | UsuarioInexistente | JSONException e) {
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+			}
+		}
+		return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "No se obtuvo interno");
+	}
 		
+	@PermitAll
+	@GET
+	@Path("/vacunador/buscar") //obtiene el usuario del cookie obtenido
+	public Response obtenerVacunador(@CookieParam("x-access-token") Cookie cookie) {
+		if (cookie != null) {
+			String token = cookie.getValue();
+			String ci = null;
+			try {
+				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+				LOGGER.info("Cedula obtenida en REST: " + ci);
+				DtVacunador interno = IUsuarioLocal.buscarVacunador(Integer.parseInt(ci));
+				return Response.ok(interno).build();
+			} catch (InvalidJwtException | NumberFormatException | UsuarioInexistente e) {
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+			}
+		}
+		return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "No se obtuvo interno");
+	}
+	
+	@PermitAll
+	@POST
+	@Path("/interno/modificar")
+	public Response modificarInterno(@CookieParam("x-access-token") Cookie cookie, String datos) {
+		if (cookie != null) {
+			try {
+				JSONObject datosInterno = new JSONObject(datos);
+				String token = cookie.getValue();
+				String ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+				DtUsuarioInterno interno = IUsuarioLocal.buscarUsuarioInterno(Integer.parseInt(ci));
+				//String nombre, String apellido, LocalDate fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo
+				interno.setEmail(datosInterno.getString("email"));
+				JSONObject jsonDir = datosInterno.getJSONObject("direccion");
+				DtDireccion dir = new DtDireccion(jsonDir.getString("direccion"), jsonDir.getString("barrio"), jsonDir.getString("departamento"));
+				interno.setDireccion(dir);
+				IUsuarioLocal.ModificarUsuarioInterno(interno);
+				return ResponseBuilder.createResponse(Response.Status.CREATED, "Se modifico el usuario correctamente");
+			} catch (JSONException | InvalidJwtException | NumberFormatException | UsuarioInexistente e) {
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+			}
+		}
+		return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "No se ha seteado la Cookie");
 	}
 }
