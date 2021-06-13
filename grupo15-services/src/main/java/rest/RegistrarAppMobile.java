@@ -2,6 +2,7 @@ package rest;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Logger;
 
@@ -83,15 +84,15 @@ public class RegistrarAppMobile {
 							//generar push por esta reserva
 							LOGGER.info("Realizando pedido de push para Reserva...");
 							DateTimeFormatter horaFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-							LocalDate horaReserva = LocalDate.parse(fragmentos[1], horaFormatter);
+							LocalTime horaReserva = LocalTime.parse(fragmentos[1], horaFormatter);
 							String fecha = fechaReserva.format(fechaFormatter);
 							String hora = horaReserva.format(horaFormatter);
 							DtTareaNotificacion task = new DtTareaNotificacion(reserva.getPuesto(), mobileToken, reserva.getVacunatorio(), fecha, hora);
 							
 							String origin = headers.getHeaderString("Origin");
-							if (origin == null)
+							if (origin == null || origin == "") 
 								origin = "http://localhost:8080";
-							String url = headers.getHeaderString("Origin") + "/grupo15-services/rest/firestore/notificacion";
+							String url = origin + "/grupo15-services/rest/firestore/notificacion";
 							URI uri = UriBuilder.fromPath(url).build();
 							LOGGER.severe("Uri para REST Firestore: " + uri.toString());
 							
