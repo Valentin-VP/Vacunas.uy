@@ -38,6 +38,7 @@ import datatypes.DtEnfermedad;
 import datatypes.DtEtapa;
 import datatypes.DtPlanVacunacion;
 import datatypes.DtReserva;
+import datatypes.DtUsuarioExterno;
 import datatypes.EstadoReserva;
 import datatypes.Sexo;
 import entities.Ciudadano;
@@ -60,6 +61,17 @@ import exceptions.VacunatorioNoCargadoException;
 import interfaces.IReservaDAORemote;
 import persistence.EtapaID;
 import persistence.ReservaID;
+//ARREGLAR TESTS QUE CAMBIARON!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//ARREGLAR TESTS QUE CAMBIARON!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//ARREGLAR TESTS QUE CAMBIARON!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//ARREGLAR TESTS QUE CAMBIARON!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//ARREGLAR TESTS QUE CAMBIARON!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//ARREGLAR TESTS QUE CAMBIARON!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//ARREGLAR TESTS QUE CAMBIARON!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//ARREGLAR TESTS QUE CAMBIARON!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//ARREGLAR TESTS QUE CAMBIARON!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//ARREGLAR TESTS QUE CAMBIARON!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//ARREGLAR TESTS QUE CAMBIARON!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 @RunWith(Arquillian.class)
 public class ReservaTest {
@@ -125,8 +137,8 @@ public class ReservaTest {
 			PlanVacunacion pv1 = new PlanVacunacion(1, "pv_n1", "pv_d1");
 			PlanVacunacion pv2 = new PlanVacunacion(2, "pv_n2", "pv_d2");
 			PlanVacunacion pv3 = new PlanVacunacion(3, "pv_n3", "pv_d3");
-			Etapa e_pv1 = new Etapa(1, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "1|30", pv1);
-			Etapa e_pv3 = new Etapa(3, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "100|300", pv3);
+			Etapa e_pv1 = new Etapa(1, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "1|30|industria|no", pv1);
+			Etapa e_pv3 = new Etapa(3, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "100|300|todos|si", pv3);
 			e_pv1.setVacuna(v);
 			e_pv3.setVacuna(v);
 			Ciudadano c1 = new Ciudadano(21111111, "Ciudadano", "DeTest Uno", LocalDate.of(2000, 1, 1), "c@1", null, Sexo.Otro, "Sector123456789" , false);
@@ -172,28 +184,28 @@ public class ReservaTest {
 	@Test(expected=PlanVacunacionInexistente.class)
 	@InSequence(7)
 	public void testSeleccionarPlanInexistente() throws EtapaInexistente, UsuarioInexistente, PlanVacunacionInexistente {
-		cr.seleccionarPlanVacunacion(0, 0);
+		cr.seleccionarPlanVacunacion(0, 0, new DtUsuarioExterno("21111111", "", "industria", false));
 	}
 	
 	@OperateOnDeployment("normal")
 	@Test(expected=EtapaInexistente.class)
 	@InSequence(8)
 	public void testSeleccionarPlanSinEtapas() throws EtapaInexistente, UsuarioInexistente, PlanVacunacionInexistente {
-		cr.seleccionarPlanVacunacion(2, 0);
+		cr.seleccionarPlanVacunacion(2, 0, new DtUsuarioExterno("21111111", "", "industria", false));
 	}
 	
 	@OperateOnDeployment("normal")
 	@Test(expected=UsuarioInexistente.class)
 	@InSequence(9)
 	public void testSeleccionarPlanUsuarioInexistente() throws EtapaInexistente, UsuarioInexistente, PlanVacunacionInexistente {
-		cr.seleccionarPlanVacunacion(1, 0);
+		cr.seleccionarPlanVacunacion(1, 0, new DtUsuarioExterno("21111111", "", "industria", false));
 	}
 	
 	@OperateOnDeployment("normal")
 	@Test(expected=EtapaInexistente.class)
 	@InSequence(10)
 	public void testSeleccionarPlanUsuarioInabilitado() throws EtapaInexistente, UsuarioInexistente, PlanVacunacionInexistente {
-		cr.seleccionarPlanVacunacion(1, 21111112);
+		cr.seleccionarPlanVacunacion(1, 21111112, new DtUsuarioExterno("21111112", "", "industria", false));
 	}
 	
 	@OperateOnDeployment("normal")
@@ -211,7 +223,7 @@ public class ReservaTest {
 			em.merge(r1);
 			utx.commit();
 			
-			cr.seleccionarPlanVacunacion(1, 21111111);
+			cr.seleccionarPlanVacunacion(1, 21111111, new DtUsuarioExterno("21111111", "", "industria", false));
 			
 
 		} catch (NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
@@ -238,14 +250,14 @@ public class ReservaTest {
 			e.printStackTrace();
 		}
 		
-		assertArrayEquals(new DtEtapa[0], cr.seleccionarPlanVacunacion(1, 21111111).toArray());
+		assertArrayEquals(new DtEtapa[0], cr.seleccionarPlanVacunacion(1, 21111111, new DtUsuarioExterno("21111111", "", "industria", false)).toArray());
 	}
 	
 	@OperateOnDeployment("normal")
 	@Test(expected=VacunatorioNoCargadoException.class)
 	@InSequence(13)
 	public void testSeleccionarFechaSinVacunatorio() throws VacunatorioNoCargadoException, PlanVacunacionInexistente, UsuarioInexistente, EtapaInexistente, CupoInexistente{
-			cr.seleccionarFecha(LocalDate.now().plusDays(1), "", 1, 21111111);
+			cr.seleccionarFecha(LocalDate.now().plusDays(1), "", 1, 21111111, new DtUsuarioExterno("21111111", "", "industria", false));
 	}
 	
 	@OperateOnDeployment("normal")
@@ -264,42 +276,42 @@ public class ReservaTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		cr.seleccionarFecha(LocalDate.now().plusDays(1), "vact1", 0, 21111111);
+		cr.seleccionarFecha(LocalDate.now().plusDays(1), "vact1", 0, 21111111, new DtUsuarioExterno("21111111", "", "industria", false));
 	}
 	
 	@OperateOnDeployment("normal")
 	@Test(expected=EtapaInexistente.class)
 	@InSequence(15)
 	public void testSeleccionarFechaPlanSinEtapas() throws VacunatorioNoCargadoException, PlanVacunacionInexistente, UsuarioInexistente, EtapaInexistente, CupoInexistente{
-		cr.seleccionarFecha(LocalDate.now().plusDays(1), "vact1", 2, 21111111);
+		cr.seleccionarFecha(LocalDate.now().plusDays(1), "vact1", 2, 21111111, new DtUsuarioExterno("21111111", "", "industria", false));
 	}
 	
 	@OperateOnDeployment("normal")
 	@Test(expected=UsuarioInexistente.class)
 	@InSequence(16)
 	public void testSeleccionarFechaUsuarioInexistente() throws VacunatorioNoCargadoException, PlanVacunacionInexistente, UsuarioInexistente, EtapaInexistente, CupoInexistente{
-		cr.seleccionarFecha(LocalDate.now().plusDays(1), "vact1", 1, 0);
+		cr.seleccionarFecha(LocalDate.now().plusDays(1), "vact1", 1, 0, new DtUsuarioExterno("21111111", "", "industria", false));
 	}
 	
 	@OperateOnDeployment("normal")
 	@Test(expected=EtapaInexistente.class)
 	@InSequence(17)
 	public void testSeleccionarFechaUsuarioInabilitado() throws VacunatorioNoCargadoException, PlanVacunacionInexistente, UsuarioInexistente, EtapaInexistente, CupoInexistente{
-		cr.seleccionarFecha(LocalDate.now().plusDays(1), "vact1", 1, 21111112);
+		cr.seleccionarFecha(LocalDate.now().plusDays(1), "vact1", 1, 21111112, new DtUsuarioExterno("21111112", "", "industria", false));
 	}
 	
 	@OperateOnDeployment("normal")
 	@Test(expected=CupoInexistente.class)
 	@InSequence(18)
 	public void testSeleccionarFechaIncorrecta() throws VacunatorioNoCargadoException, PlanVacunacionInexistente, UsuarioInexistente, EtapaInexistente, CupoInexistente{
-		cr.seleccionarFecha(LocalDate.now(), "vact1", 1, 21111111);
+		cr.seleccionarFecha(LocalDate.now(), "vact1", 1, 21111111, new DtUsuarioExterno("21111112", "", "industria", false));
 	}
 	
 	@OperateOnDeployment("normal")
 	@Test
 	@InSequence(19)
 	public void testSeleccionarFechaSinPuestos() throws VacunatorioNoCargadoException, PlanVacunacionInexistente, UsuarioInexistente, EtapaInexistente, CupoInexistente{
-		assertArrayEquals(new String[0], cr.seleccionarFecha(LocalDate.now().plusDays(1), "vact1", 1, 21111111).toArray());
+		assertArrayEquals(new String[0], cr.seleccionarFecha(LocalDate.now().plusDays(1), "vact1", 1, 21111111, new DtUsuarioExterno("21111111", "", "industria", false)).toArray());
 	}
 	
 	@OperateOnDeployment("normal")
@@ -326,7 +338,7 @@ public class ReservaTest {
 			temp.add(init.format(formatter));
 		}
 		
-		assertArrayEquals(temp.toArray(), cr.seleccionarFecha(LocalDate.now().plusDays(1), "vact1", 1, 21111111).toArray());
+		assertArrayEquals(temp.toArray(), cr.seleccionarFecha(LocalDate.now().plusDays(1), "vact1", 1, 21111111, new DtUsuarioExterno("21111111", "", "industria", false)).toArray());
 	}
 	
 	@OperateOnDeployment("normal")

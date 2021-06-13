@@ -21,6 +21,8 @@ import datatypes.DtEtapa;
 import datatypes.DtPlanVacunacion;
 import datatypes.DtReserva;
 import datatypes.DtReservaCompleto;
+import datatypes.DtTareaNotificacion;
+import datatypes.DtUsuarioExterno;
 import datatypes.DtVacunatorio;
 import datatypes.EstadoReserva;
 import entities.Agenda;
@@ -109,7 +111,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 	}
 
 	
-	public ArrayList<DtEtapa> seleccionarPlanVacunacion(int idPlan, int idUser) throws PlanVacunacionInexistente, EtapaInexistente, UsuarioInexistente{
+	public ArrayList<DtEtapa> seleccionarPlanVacunacion(int idPlan, int idUser, DtUsuarioExterno datosExternosUsuario) throws PlanVacunacionInexistente, EtapaInexistente, UsuarioInexistente{
 		ArrayList<DtEtapa> retorno = new ArrayList<DtEtapa>();
 		PlanVacunacion pv = em.find(PlanVacunacion.class, idPlan);
 		if (pv == null)
@@ -125,7 +127,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 				if (c==null) {
 					throw new UsuarioInexistente("El usuario no existe.");
 				}else {
-					Etapa etapaSelect = getEtapaHabilitadoDePlan(pv, c);
+					Etapa etapaSelect = getEtapaHabilitadoDePlan(pv, c, datosExternosUsuario);
 					if (etapaSelect == null) {
 						throw new EtapaInexistente("No hay una etapa a la cual el usuario pueda registrarse.");
 					}
@@ -146,7 +148,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		return new ArrayList<DtEtapa>();
 	}
 	
-	public ArrayList<String> seleccionarFecha(LocalDate fecha, String idVacunatorio, int idPlan, int idCiudadano) throws VacunatorioNoCargadoException, PlanVacunacionInexistente, UsuarioInexistente, EtapaInexistente, CupoInexistente{
+	public ArrayList<String> seleccionarFecha(LocalDate fecha, String idVacunatorio, int idPlan, int idCiudadano, DtUsuarioExterno datosExternosUsuario) throws VacunatorioNoCargadoException, PlanVacunacionInexistente, UsuarioInexistente, EtapaInexistente, CupoInexistente{
 		ArrayList<LocalTime> libresFinal = new ArrayList<LocalTime>();
 		Vacunatorio v = em.find(Vacunatorio.class, idVacunatorio);
 		if (v == null)
@@ -163,7 +165,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 					if (c == null) {
 						throw new UsuarioInexistente("El usuario seleccionado no existe.");
 					} else {
-						Etapa etapaSelect = getEtapaHabilitadoDePlan(pv, c);
+						Etapa etapaSelect = getEtapaHabilitadoDePlan(pv, c, datosExternosUsuario);
 						if (etapaSelect == null) {
 							throw new EtapaInexistente("No hay una etapa a la cual el usuario pueda registrarse.");
 						}
@@ -255,8 +257,9 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		}
 	}
 	// TODO: controlar stock, y condiciones de etapa
-	public void confirmarReserva(int idCiudadano, String idEnfermedad, int idPlan, String idVacunatorio,
-			LocalDate fecha, LocalTime hora)
+	// devolver DtN
+	public ArrayList<DtTareaNotificacion> confirmarReserva(int idCiudadano, String idEnfermedad, int idPlan, String idVacunatorio,
+			LocalDate fecha, LocalTime hora, DtUsuarioExterno datosExternosUsuario)
 			throws UsuarioInexistente, PlanVacunacionInexistente, VacunatorioNoCargadoException, EnfermedadInexistente, CupoInexistente, EtapaInexistente {
 		Ciudadano c = em.find(Ciudadano.class, idCiudadano);
 		if (c == null) {
@@ -284,7 +287,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 									throw new CupoInexistente("Fecha incorrecta.");
 								}
 								//Primero compruebo el pipe de condicion que tiene las edades, y el comienzo y fin de la etapa. Si dio bien, me traigo una etapa.
-								Etapa etapaSelect = getEtapaHabilitadoDePlan(pv, c);
+								Etapa etapaSelect = getEtapaHabilitadoDePlan(pv, c, datosExternosUsuario);
 								if (etapaSelect == null) {
 									throw new EtapaInexistente("No hay una etapa a la cual el usuario pueda registrarse.");
 								}
@@ -329,6 +332,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 									System.out.println("Corto por contieneLocalTime.");
 									throw new CupoInexistente("No hay cupos para esa hora.");
 								}
+								ArrayList<DtTareaNotificacion> retorno = new ArrayList<>();
 								for (Agenda a: agendas) {
 									//para cada agenda (dia), veo que puesto me toca en esa hora
 									ArrayList<Reserva> reservas = getReservasTurno(a, hora);
@@ -345,10 +349,14 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 										em.merge(c);
 										em.merge(v);
 										em.merge(r);
+										DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+										DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("HH:mm:ss");
+										retorno.add(new DtTareaNotificacion(p.getId(), null, v.getNombre(), a.getFecha().format(formatter), hora.format(formatter2)));
 									}else {
 										throw new CupoInexistente("No hay cupos para esa hora.");
 									}
 								}
+								return retorno;
 							}
 							// si cuento la cantidad de reservas que apuntan a un puesto, y ese numero es
 							// mayor que los turnos diarios del vacunatorio, no puedo reservar para ese
@@ -485,13 +493,13 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 									break;
 								}
 							}
-							if (!habiaConstancia) { //si no encontre constancia, es la primera dosis, o es una sola dosis
+							if (!habiaConstancia) { //si no encontre constancia, es porque es la primera dosis, o es una sola dosis
 								if (r.getEtapa().getVacuna().getCantDosis()>1) { //si es de multiples dosis el tiempo de inmunidad es 0 meses
 									ConstanciaVacuna cv =new ConstanciaVacuna(0, 1, r.getFechaRegistro().toLocalDate(), r.getEtapa().getVacuna().getNombre(), null);
 									c.getCertificado().getConstancias().add(cv);
 									em.persist(cv);
 									em.merge(c.getCertificado());
-								}else {
+								}else {	//si es de una dosis, la inmunidad va directo de la vacuna
 									ConstanciaVacuna cv =new ConstanciaVacuna(r.getEtapa().getVacuna().getExpira(), 1, r.getFechaRegistro().toLocalDate(), r.getEtapa().getVacuna().getNombre(), null);
 									c.getCertificado().getConstancias().add(cv);
 									em.persist(cv);
@@ -645,7 +653,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		for (Reserva r : list) {
 			if (r.getFechaRegistro().toLocalTime().equals(hora)) { //hago uso del toLocalTime()
 				retorno.add(r);
-				System.out.println("getReservasTurno: A la hora " + hora.toString() + " el dia " + a.getFecha().toString() + " tengo una reserva en el puesto " + r.getPuesto().getId());
+				//System.out.println("getReservasTurno: A la hora " + hora.toString() + " el dia " + a.getFecha().toString() + " tengo una reserva en el puesto " + r.getPuesto().getId());
 			}
 		}
 		return retorno;
@@ -664,7 +672,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		for (int i=1; i<turnosTotales; i++) {
 			if (f.isAfter(LocalDate.now()) || hora.plusMinutes(turno*i).isAfter(LocalTime.now())) {
 				horas.add(hora.plusMinutes(turno*i));
-				System.out.println("calcularHorasSegunReglas: Agrego hora " + hora.plusMinutes(turno*i).toString() + " el dia " + f.toString());
+				//System.out.println("calcularHorasSegunReglas: Agrego hora " + hora.plusMinutes(turno*i).toString() + " el dia " + f.toString());
 			}
 				
 		}
@@ -681,11 +689,11 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 		retorno.addAll(libres);
 		
 		for (LocalTime lt: libres) {
-			System.out.println("calcularHorasLibresVacunatorio: Check hora " + lt.toString() + " de Vacunatorio " + v.getId() + " el dia " + a.getFecha().toString());
+			//System.out.println("calcularHorasLibresVacunatorio: Check hora " + lt.toString() + " de Vacunatorio " + v.getId() + " el dia " + a.getFecha().toString());
 			//para cada turno, me fijo que reservas hay en esa agenda
 			ArrayList<Reserva> reservas = getReservasTurno(a, lt);
 			if (reservas.size() >= v.getPuesto().size()){ //si tengo igual/mas reservas a esa hora que puestos en el vacunatorio, no hay lugar
-				System.out.println("calcularHorasLibresVacunatorio: Borro hora " + lt.toString() + " de Vacunatorio " + v.getId() + " el dia " + a.getFecha().toString());
+				//System.out.println("calcularHorasLibresVacunatorio: Borro hora " + lt.toString() + " de Vacunatorio " + v.getId() + " el dia " + a.getFecha().toString());
 				retorno.remove(lt);	//saco esa hora (porque no habian puestos libres para el turno)
 			}
 			/*if (reservas.size() < v.getPuesto().size()) { //si tengo menos reservas a esa hora que puestos en el vacunatorio, tengo lugar
@@ -726,9 +734,9 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 	
 	private boolean contieneLocalTime(ArrayList<LocalTime> horas, LocalTime horaComprobada) {
 		for (LocalTime h: horas) {
-			System.out.println("contieneLocalTime: Será" + h.toString() + "igual a mi "+ horaComprobada.toString()+"?");
+			//System.out.println("contieneLocalTime: Será" + h.toString() + "igual a mi "+ horaComprobada.toString()+"?");
 			if (h.equals(horaComprobada)) {
-				System.out.println("contieneLocalTime: "+h.toString() + " era igual a mi "+ horaComprobada.toString());
+				//System.out.println("contieneLocalTime: "+h.toString() + " era igual a mi "+ horaComprobada.toString());
 				return true;
 			}
 				
@@ -737,19 +745,31 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 	}
 	
 	//veo entre la edad de la etapa (condicion con pipe), y la fecha de inicio/fin de la etapa, si un determinado ciudadano esta habilitado para alguna etapa de un plan
-	private Etapa getEtapaHabilitadoDePlan(PlanVacunacion pv, Ciudadano c) {
+	private Etapa getEtapaHabilitadoDePlan(PlanVacunacion pv, Ciudadano c, DtUsuarioExterno datosExternosUsuario) {
 		String[] temp;
 		for (Etapa e: pv.getEtapas()) {
 			temp = e.getCondicion().split("\\Q|\\E");
 			int edadInit = Integer.parseInt(temp[0]);
 			int edadFin = Integer.parseInt(temp[1]);
+			String sector = temp[2];
+			String permitidoEnf = temp[3]; //puede tener enfermedades previas?
 			int edad = Period.between(c.getFechaNac(), LocalDate.now()).getYears();
 			
-			if (edad >= edadInit && edad <= edadFin) {
+			if ((edad >= edadInit && edad <= edadFin)) { //cumple con la edad necesaria?
 				System.out.println("getEtapaHabilitadoDePlan: Edad: " + edad);
-				if ( e.getFechaInicio().isBefore(LocalDate.now()) && e.getFechaFin().isAfter(LocalDate.now())){
+				if ( e.getFechaInicio().isBefore(LocalDate.now()) && e.getFechaFin().isAfter(LocalDate.now())){ //esta la etapa en un periodo activo?
 					System.out.println("getEtapaHabilitadoDePlan: Edad: " + edad);
-					return e;
+					if (sector.equals("todos")  || datosExternosUsuario.getTipoSector().equals(sector)) { //es el ciudadano del sector correcto (si se requiere)?
+						System.out.println("getEtapaHabilitadoDePlan: Sector Ciudadano: " + datosExternosUsuario.getTipoSector() + " . El necesario es " + sector);
+						System.out.println("getEtapaHabilitadoDePlan: Previas Ciudadano: " + datosExternosUsuario.isEnfermedadesPrevias() + " . Puede? " + permitidoEnf);
+						if (permitidoEnf.equals("no")) { //si la etapa no permite enfermedades previas:_
+							if (!datosExternosUsuario.isEnfermedadesPrevias()) {                     //no tiene ese ciudadano enfermedades previas?
+								return e;	//si todo se cumple retorno esa etapa
+							}
+						}else {
+							return e; //si permite enfermedades previas y llegue aca entonces lo otro se cumple, retorno esa etapa
+						}
+					}
 				}
 			}
 		}

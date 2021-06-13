@@ -1,6 +1,7 @@
 package rest;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -27,11 +28,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
@@ -43,6 +48,7 @@ import datatypes.DtEtapa;
 import datatypes.DtHora;
 import datatypes.DtPlanVacunacion;
 import datatypes.DtTareaNotificacion;
+import datatypes.DtUsuarioExterno;
 import datatypes.DtVacunatorio;
 import datatypes.ErrorInfo;
 import exceptions.CupoInexistente;
@@ -254,7 +260,15 @@ public class AltaReservaRWS implements Serializable {
 	        if( ci == null)
 	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
 			LOGGER.info("Cedula obtenida en REST: " + ci);
-			return Response.ok(rs.seleccionarPlanVacunacion(plan, Integer.parseInt(ci))).build();
+			
+			String url = "https://rcastro.pythonanywhere.com/api/usuarios/" + 12547968 + "/";
+			LOGGER.info("Ejecutando call REST: " + url);
+			Client conexion = ClientBuilder.newClient();
+			DtUsuarioExterno externo = conexion.target(url)
+					.request(MediaType.APPLICATION_JSON)
+					.get(DtUsuarioExterno.class);
+			
+			return Response.ok(rs.seleccionarPlanVacunacion(plan, Integer.parseInt(ci), externo)).build();
 		} catch (PlanVacunacionInexistente | EtapaInexistente | UsuarioInexistente e) {
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
 		}
@@ -282,9 +296,17 @@ public class AltaReservaRWS implements Serializable {
 			LOGGER.info("Cedula obtenida en REST: " + ci);
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 			LocalDate f = LocalDate.parse(fecha, formatter);
+			
+			String url = "https://rcastro.pythonanywhere.com/api/usuarios/" + 12547968 + "/";
+			LOGGER.info("Ejecutando call REST: " + url);
+			Client conexion = ClientBuilder.newClient();
+			DtUsuarioExterno externo = conexion.target(url)
+					.request(MediaType.APPLICATION_JSON)
+					.get(DtUsuarioExterno.class);
+			
 			//LocalDate f = LocalDate.from(fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 			//Date nuevaFecha = Date.from(f.atStartOfDay(ZoneId.systemDefault()).toInstant());
-			return Response.ok(rs.seleccionarFecha(f, idVacunatorio, plan, Integer.parseInt(ci))).build();
+			return Response.ok(rs.seleccionarFecha(f, idVacunatorio, plan, Integer.parseInt(ci), externo)).build();
 		} catch (DateTimeException | VacunatorioNoCargadoException | PlanVacunacionInexistente | UsuarioInexistente | EtapaInexistente | NumberFormatException | CupoInexistente e) {
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
 		}
@@ -294,7 +316,7 @@ public class AltaReservaRWS implements Serializable {
 	//@PermitAll
 	@POST
 	@Path("/confirmar")
-	public Response confirmarReserva(@CookieParam("x-access-token") Cookie cookie, DtDatosReserva dtr){
+	public Response confirmarReserva(@CookieParam("x-access-token") Cookie cookie, @Context HttpHeaders headers, DtDatosReserva dtr){
 		if (dtr.getIdEnfermedad()==null || dtr.getIdVacunatorio()==null || dtr.getFecha()==null || dtr.getHora()==null) {
 			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
 			return rb.build();
@@ -315,10 +337,16 @@ public class AltaReservaRWS implements Serializable {
 			LocalDate f = LocalDate.parse(dtr.getFecha(), formatter);
 			LocalTime h = LocalTime.parse(dtr.getHora(), formatter2);
 			
-			//return Response.ok(LocalTime.from(hora.toInstant().atZone(ZoneId.systemDefault()).toLocalTime())).build();
-			rs.confirmarReserva(Integer.parseInt(ci), dtr.getIdEnfermedad(), dtr.getIdPlan(), dtr.getIdVacunatorio(),
-					f,//LocalDate.from(Instant.from(f).atZone(ZoneId.systemDefault()).toLocalDate()),
-					h);//LocalTime.from(Instant.from(h).atZone(ZoneId.systemDefault()).toLocalTime()));
+			String url = "https://rcastro.pythonanywhere.com/api/usuarios/" + 12547968 + "/";
+			LOGGER.info("Ejecutando call REST: " + url);
+			Client conexion = ClientBuilder.newClient();
+			DtUsuarioExterno externo = conexion.target(url)
+					.request(MediaType.APPLICATION_JSON)
+					.get(DtUsuarioExterno.class);
+			//Como puede haber vacunas que requieran de mas de una dosis, se puede generar potencialmente mas de una reserva, por lo que devuelve un arreglo de DT
+			ArrayList<DtTareaNotificacion> tasks = rs.confirmarReserva(Integer.parseInt(ci), dtr.getIdEnfermedad(), dtr.getIdPlan(), dtr.getIdVacunatorio(),
+					f,
+					h, externo);
 			
 			// Se agrega pedido de push notification en caso que el Ciudadano tenga la app instalada
 //			if (IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci)).getMobileToken() != null) {

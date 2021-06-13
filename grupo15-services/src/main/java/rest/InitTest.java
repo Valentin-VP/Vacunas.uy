@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 
 import datatypes.DtConstancia;
 import datatypes.DtDireccion;
+import datatypes.DtUsuarioExterno;
 import datatypes.ErrorInfo;
 import datatypes.Sexo;
 import exceptions.AccionInvalida;
@@ -164,10 +165,10 @@ public class InitTest {
 			plan.agregarEnfermedadPlan(2, "virus1");
 			plan.agregarEnfermedadPlan(3, "virus2");
 			//plan.agregarEnfermedadPlan(id, nombre);
-			etapa.agregarEtapa(1, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|50", 1, "vacuna1Virus1");
-			etapa.agregarEtapa(2, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "51|80", 1, "vacuna1Virus1");
-			etapa.agregarEtapa(3, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|50", 2, "vacuna1Virus1");
-			etapa.agregarEtapa(4, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|500", 3, "vacuna2Virus2");
+			etapa.agregarEtapa(1, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|50|todos|si", 1, "vacuna1Virus1");
+			etapa.agregarEtapa(2, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "51|80|industria|si", 1, "vacuna1Virus1");
+			etapa.agregarEtapa(3, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|50|salud|si", 2, "vacuna1Virus1");
+			etapa.agregarEtapa(4, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|500|industria|no", 3, "vacuna2Virus2");
 			//etapa.agregarEtapa(idEtapa, fIni, fFin, cond, idPlan, nombreVacuna);
 			
 			//agd.agregarAgenda("vact1", LocalDate.now());
@@ -188,14 +189,14 @@ public class InitTest {
 			vc.asignarVacunadorAVacunatorio(11111112, "vact2", LocalDate.now().plusDays(1));
 			vc.asignarVacunadorAVacunatorio(11111114, "vact3", LocalDate.now().plusDays(1));*/
 			//cr.confirmarReserva(idCiudadano, idEnfermedad, idPlan, idVacunatorio, fecha, hora);
-			cr.confirmarReserva(54657902, "virus1", 1, "vact1", LocalDate.now().plusDays(1), LocalTime.of(20, 00, 00));
-			cr.confirmarReserva(54657902, "virus2", 3, "vact1", LocalDate.now().plusDays(1), LocalTime.of(22, 00, 00));
+			cr.confirmarReserva(54657902, "virus1", 1, "vact1", LocalDate.now().plusDays(1), LocalTime.of(20, 00, 00), new DtUsuarioExterno("54657902", "", "industria", false));
+			cr.confirmarReserva(54657902, "virus2", 3, "vact1", LocalDate.now().plusDays(1), LocalTime.of(22, 00, 00), new DtUsuarioExterno("54657902", "", "industria", false));
 			
-			cr.confirmarReserva(48585559, "virus1", 1, "vact1", LocalDate.now().plusDays(1), LocalTime.of(23, 30, 00));
-			cr.confirmarReserva(48585559, "virus2", 3, "vact1", LocalDate.now().plusDays(330), LocalTime.of(13, 30, 00));
+			cr.confirmarReserva(48585559, "virus1", 1, "vact1", LocalDate.now().plusDays(1), LocalTime.of(23, 30, 00), new DtUsuarioExterno("48585559", "", "salud", true));
+			cr.confirmarReserva(48585559, "virus2", 3, "vact1", LocalDate.now().plusDays(330), LocalTime.of(13, 30, 00), new DtUsuarioExterno("48585559", "", "industria", false));
 			
-			cr.confirmarReserva(49457795, "virus1", 1, "vact1", LocalDate.now().plusDays(1), LocalTime.of(23, 30, 00));
-			cr.confirmarReserva(49457795, "virus2", 3, "vact1", LocalDate.now().plusDays(330), LocalTime.of(13, 30, 00));
+			cr.confirmarReserva(49457795, "virus1", 1, "vact1", LocalDate.now().plusDays(1), LocalTime.of(23, 30, 00), new DtUsuarioExterno("49457795", "", "salud", false));
+			cr.confirmarReserva(49457795, "virus2", 3, "vact1", LocalDate.now().plusDays(330), LocalTime.of(13, 30, 00), new DtUsuarioExterno("49457795", "", "industria", false));
 			
 			//creo las constancias
 			try {
