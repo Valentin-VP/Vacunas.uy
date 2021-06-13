@@ -49,48 +49,29 @@
  <div class="formulario" style="width: 30%">
 <h:form>
 
-<div>
-<p:outputLabel style="width:40%" >Identificador:    </p:outputLabel>
-<p:inputText id="id" required="true" value="#{CrearEtapa.nombre}" style="width:60%" > </p:inputText>
 
+<div>
+<p:outputLabel style="width:40%" >Fecha:    </p:outputLabel>
+<p:inputText id="fecha" required="true" value="#{CrearAgenda.fecha}" style="width:60%" > </p:inputText>
 </div>
 
 <div>
-<p:outputLabel style="width:40%" >Fecha de Inicio:    </p:outputLabel>
-<p:inputText id="fechaInicio" required="true" value="#{CrearEtapa.fechaInicio}" style="width:60%" > </p:inputText>
+<p:outputLabel style="width:40%">Vacunatorio:    </p:outputLabel>
+<p:inputText id="vacunatorio" required="true" value="#{CrearAgenda.vacunatorio}" style="width:60%" > </p:inputText>
 </div>
 
 <div>
-<p:outputLabel style="width:40%">Fecha de Finalizacion:    </p:outputLabel>
-<p:inputText id="fechaFin" required="true" value="#{CrearEtapa.fechaFin}" style="width:60%" > </p:inputText>
-</div>
-
-
-<div>
-<p:outputLabel style="width:40%" >Condicion:    </p:outputLabel>
-<p:inputText id="condicion" required="true" value="#{CrearEtapa.condicion}" style="width:60%" > </p:inputText>
-</div>
-
-<div>
-
-<p:outputLabel style="width:40%" >Plan de Vacunacion:    </p:outputLabel>
- <p:selectOneMenu value="#{CrearEtapa.plan}"  style="border-width: thin">
-	<f:selectItems value="#{CrearEtapa.planes}" />
-</p:selectOneMenu>
-</div>
-
-<div>
-
-<p:outputLabel style="width:40%" >Vacuna:    </p:outputLabel>
- <p:selectOneMenu value="#{CrearEtapa.vacuna}"  style="border-width: thin">
-	<f:selectItems value="#{CrearEtapa.vacunas}" />
-</p:selectOneMenu>
+<p:outputLabel style="width:40%" >Reservas:    </p:outputLabel>
+<p:selectCheckboxMenu id="etapa" value="#{CrearAgenda.reserva}" style="border-width: thin"
+                    filter="true" filterMatchMode="startsWith" panelStyle="width: 25rem" scrollHeight="250">
+   <f:selectItems value="#{CrearAgenda.reservas}"/>
+</p:selectCheckboxMenu>
 </div>
 
 <p:messages id="messages" showDetail="true" closable="true">
             <p:autoUpdate/>
 </p:messages>
-<p:commandButton id="confirmar" action="#{CrearEtapa.crearEtapa}" value="Crear"> </p:commandButton>
+<p:commandButton id="confirmar" action="#{CrearAgenda.crearAgenda}" value="Crear"> </p:commandButton>
 
 
 </h:form>

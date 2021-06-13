@@ -3,7 +3,8 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html" 
-      xmlns:p="http://primefaces.org/ui"> 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:rich="http://primefaces.org/ui"> 
       
 
 <h:head> <link href="/grupo15-web/css/styles.css" type="text/css" rel="stylesheet" media="all" /> </h:head> 
@@ -26,7 +27,7 @@
             <a class="nav-link" href="/grupo15-web/html/registroInterno.html">Registrar Usuario Interno</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href=""></a>
+            <a class="nav-link" href="/grupo15-web/JSF/CrearEnfermedad.xhtml">Crear Enfermedad</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href=""></a>
@@ -46,51 +47,30 @@
   </nav>
 
 
- <div class="formulario" style="width: 30%">
+ <div class="formulario">
 <h:form>
 
 <div>
-<p:outputLabel style="width:40%" >Identificador:    </p:outputLabel>
-<p:inputText id="id" required="true" value="#{CrearEtapa.nombre}" style="width:60%" > </p:inputText>
-
-</div>
-
-<div>
-<p:outputLabel style="width:40%" >Fecha de Inicio:    </p:outputLabel>
-<p:inputText id="fechaInicio" required="true" value="#{CrearEtapa.fechaInicio}" style="width:60%" > </p:inputText>
-</div>
-
-<div>
-<p:outputLabel style="width:40%">Fecha de Finalizacion:    </p:outputLabel>
-<p:inputText id="fechaFin" required="true" value="#{CrearEtapa.fechaFin}" style="width:60%" > </p:inputText>
+<p:outputLabel style="width:40%" >Fecha:    </p:outputLabel>
+<p:inputText id="fecha" required="true" value="#{BorrarAgenda.fecha}" style="width:60%" > </p:inputText>
 </div>
 
 
 <div>
-<p:outputLabel style="width:40%" >Condicion:    </p:outputLabel>
-<p:inputText id="condicion" required="true" value="#{CrearEtapa.condicion}" style="width:60%" > </p:inputText>
+<p:outputLabel style="width:40%" >Vacunatorio:    </p:outputLabel>
+ <p:selectOneMenu value="#{BorrarAgenda.vacunatorio}"  style="border-width: thin">
+ <p:ajax event="itemSelect" update="@this" />
+	<f:selectItems Value="#{BorrarAgenda.vacuntarios}" />
+	<p:ajax event="itemSelect" update="@this" />
+
+ </p:selectOneMenu>
+
+
 </div>
-
-<div>
-
-<p:outputLabel style="width:40%" >Plan de Vacunacion:    </p:outputLabel>
- <p:selectOneMenu value="#{CrearEtapa.plan}"  style="border-width: thin">
-	<f:selectItems value="#{CrearEtapa.planes}" />
-</p:selectOneMenu>
-</div>
-
-<div>
-
-<p:outputLabel style="width:40%" >Vacuna:    </p:outputLabel>
- <p:selectOneMenu value="#{CrearEtapa.vacuna}"  style="border-width: thin">
-	<f:selectItems value="#{CrearEtapa.vacunas}" />
-</p:selectOneMenu>
-</div>
-
 <p:messages id="messages" showDetail="true" closable="true">
             <p:autoUpdate/>
 </p:messages>
-<p:commandButton id="confirmar" action="#{CrearEtapa.crearEtapa}" value="Crear"> </p:commandButton>
+<p:commandButton action="#{BorrarAgenda.borrarAgenda}" value="Eliminar"  > </p:commandButton>
 
 
 </h:form>

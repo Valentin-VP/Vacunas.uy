@@ -50,47 +50,46 @@
 <h:form>
 
 <div>
-<p:outputLabel style="width:40%" >Identificador:    </p:outputLabel>
-<p:inputText id="id" required="true" value="#{CrearEtapa.nombre}" style="width:60%" > </p:inputText>
 
-</div>
+<p:outputLabel style="width:60%" >Seleccione Vacunador:    </p:outputLabel>
+ <p:selectOneMenu value="#{ModificarVacunador.id}" style="border-width: thin" >
+ <p:ajax event="itemSelect" update="@this"   />
+	<f:selectItems value="#{ModificarVacunador.ids}" />
+	<p:ajax event="itemSelect" update="@this"   />
 
-<div>
-<p:outputLabel style="width:40%" >Fecha de Inicio:    </p:outputLabel>
-<p:inputText id="fechaInicio" required="true" value="#{CrearEtapa.fechaInicio}" style="width:60%" > </p:inputText>
-</div>
-
-<div>
-<p:outputLabel style="width:40%">Fecha de Finalizacion:    </p:outputLabel>
-<p:inputText id="fechaFin" required="true" value="#{CrearEtapa.fechaFin}" style="width:60%" > </p:inputText>
-</div>
-
-
-<div>
-<p:outputLabel style="width:40%" >Condicion:    </p:outputLabel>
-<p:inputText id="condicion" required="true" value="#{CrearEtapa.condicion}" style="width:60%" > </p:inputText>
-</div>
-
-<div>
-
-<p:outputLabel style="width:40%" >Plan de Vacunacion:    </p:outputLabel>
- <p:selectOneMenu value="#{CrearEtapa.plan}"  style="border-width: thin">
-	<f:selectItems value="#{CrearEtapa.planes}" />
 </p:selectOneMenu>
+
+
 </div>
 
 <div>
+<p:outputLabel style="width:30%" >Email:    </p:outputLabel>
+<p:inputText id="email"  value="#{ModificarVacunador.email}" style="width:70%" > </p:inputText>
 
-<p:outputLabel style="width:40%" >Vacuna:    </p:outputLabel>
- <p:selectOneMenu value="#{CrearEtapa.vacuna}"  style="border-width: thin">
-	<f:selectItems value="#{CrearEtapa.vacunas}" />
-</p:selectOneMenu>
 </div>
+
+<div>
+<p:outputLabel style="width:30%" >Departamento:    </p:outputLabel>
+<p:inputText id="departamento" value="#{ModificarVacunador.departamento}" style="width:70%" > </p:inputText>
+</div>
+
+<div>
+<p:outputLabel style="width:30%">Barrio:    </p:outputLabel>
+<p:inputText id="barrio"  value="#{ModificarVacunador.barrio}" style="width:70%" > </p:inputText>
+</div>
+
+<div>
+<p:outputLabel style="width:30%">Direccion:    </p:outputLabel>
+<p:inputText id="direccion"  value="#{ModificarVacunador.direccion}"  style="width:70%"> </p:inputText>
+</div>
+
+
+
 
 <p:messages id="messages" showDetail="true" closable="true">
             <p:autoUpdate/>
 </p:messages>
-<p:commandButton id="confirmar" action="#{CrearEtapa.crearEtapa}" value="Crear"> </p:commandButton>
+<p:commandButton id="confirmar" action="#{ModificarVacunador.modificarVacunador}" value="Modificar"> </p:commandButton>
 
 
 </h:form>
