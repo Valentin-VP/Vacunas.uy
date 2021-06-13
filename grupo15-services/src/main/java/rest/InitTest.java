@@ -2,7 +2,6 @@ package rest;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
@@ -13,7 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import datatypes.DtConstancia;
 import datatypes.DtDireccion;
 import datatypes.DtUsuarioExterno;
 import datatypes.ErrorInfo;
@@ -21,22 +19,17 @@ import datatypes.Sexo;
 import exceptions.AccionInvalida;
 import exceptions.CantidadNula;
 import exceptions.CertificadoInexistente;
-import exceptions.CertificadoRepetido;
-import exceptions.ConstanciaInexistente;
 import exceptions.CupoInexistente;
 import exceptions.EnfermedadInexistente;
 import exceptions.EnfermedadRepetida;
 import exceptions.EtapaInexistente;
 import exceptions.EtapaRepetida;
-import exceptions.FechaIncorrecta;
 import exceptions.LaboratorioInexistente;
 import exceptions.LaboratorioRepetido;
 import exceptions.PlanVacunacionInexistente;
-import exceptions.PlanVacunacionRepetido;
 import exceptions.PuestoCargadoException;
 import exceptions.ReglasCuposCargadoException;
 import exceptions.ReservaInexistente;
-import exceptions.SinPuestosLibres;
 import exceptions.StockVacunaVacunatorioExistente;
 import exceptions.StockVacunaVacunatorioInexistente;
 import exceptions.TransportistaRepetido;
@@ -157,9 +150,9 @@ public class InitTest {
 			csl.agregarStock("vact1", "vacuna2Virus2", 100);
 			csl.modificarStock("vact1", "vacuna2Virus2", 100, 0, 0, 100);
 			
-			plan.agregarPlanVacunacion(1, "plan1virus1", "descripcion plan1virus1");
-			plan.agregarPlanVacunacion(2, "plan2virus1", "descripcion plan2virus1");
-			plan.agregarPlanVacunacion(3, "plan3virus2", "descripcion plan3virus2");
+			plan.agregarPlanVacunacion("plan1virus1", "descripcion plan1virus1");
+			plan.agregarPlanVacunacion("plan2virus1", "descripcion plan2virus1");
+			plan.agregarPlanVacunacion("plan3virus2", "descripcion plan3virus2");
 			//plan.agregarPlanVacunacion(id, nombre, descripcion);
 			plan.agregarEnfermedadPlan(1, "virus1");
 			plan.agregarEnfermedadPlan(2, "virus1");
@@ -215,7 +208,7 @@ public class InitTest {
 			
 			//
 			return Response.ok().build();
-		} catch (EnfermedadRepetida | VacunatorioCargadoException | UsuarioExistente | LaboratorioRepetido | TransportistaRepetido | VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | PlanVacunacionRepetido | EtapaRepetida | PlanVacunacionInexistente | VacunatorioNoCargadoException | ReglasCuposCargadoException |  PuestoCargadoException | AccionInvalida | VacunaInexistente | UsuarioInexistente | CupoInexistente | EtapaInexistente | CantidadNula | StockVacunaVacunatorioExistente | StockVacunaVacunatorioInexistente e) {
+		} catch (EnfermedadRepetida | VacunatorioCargadoException | UsuarioExistente | LaboratorioRepetido | TransportistaRepetido | VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | EtapaRepetida | PlanVacunacionInexistente | VacunatorioNoCargadoException | ReglasCuposCargadoException |  PuestoCargadoException | AccionInvalida | VacunaInexistente | UsuarioInexistente | CupoInexistente | EtapaInexistente | CantidadNula | StockVacunaVacunatorioExistente | StockVacunaVacunatorioInexistente e) {
 			// TODO Auto-generated catch block
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
 		}
