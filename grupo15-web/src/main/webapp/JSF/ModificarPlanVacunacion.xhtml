@@ -64,11 +64,6 @@
 
 
 <div>
-<p:outputLabel style="width:40%" >Identificador:    </p:outputLabel>
-<p:inputText id="id"  value="#{ModificarPlan.id}" style="width:60%" > </p:inputText>
-</div>
-
-<div>
 <p:outputLabel style="width:40%" >Nombre:    </p:outputLabel>
 <p:inputText id="nombre"  value="#{ModificarPlan.nombre}" style="width:60%" > </p:inputText>
 
@@ -77,22 +72,6 @@
 <div>
 <p:outputLabel style="width:40%">Descripcion:    </p:outputLabel>
 <p:inputText id="descripcion"  value="#{ModificarPlan.descripcion}" style="width:60%" > </p:inputText>
-</div>
-
-
-<div>
-<p:outputLabel style="width:40%" >Enfermedad:    </p:outputLabel>
- <p:selectOneMenu value="#{ModificarPlan.enfermedad}" style="border-width: thin" >
-	<f:selectItems value="#{ModificarPlan.enfermedades}" />
-</p:selectOneMenu>
-</div>
-
-<div>
-<p:outputLabel style="width:40%" >Etapas:    </p:outputLabel>
-<p:selectCheckboxMenu id="etapa" value="#{ModificarPlan.etapa}" style="border-width: thin"
-                    filter="true" filterMatchMode="startsWith" panelStyle="width: 25rem" scrollHeight="250">
-   <f:selectItems value="#{ModificarPlan.etapas}"/>
-</p:selectCheckboxMenu>
 </div>
 
 <p:messages id="messages" showDetail="true" closable="true">
