@@ -43,9 +43,6 @@ public class JSFCrearPlanVacunacionBean implements Serializable {
 	private List<String> enfermedades = new ArrayList<String>();
 	private List<DtEnfermedad> dtEnfermedades = new ArrayList<DtEnfermedad>();
 	private String enfermedad;
-	private List<String> etapas = new ArrayList<String>();
-	private List<DtEtapa> dtEtapas = new ArrayList<DtEtapa>();
-	private String etapa;
 
 	public JSFCrearPlanVacunacionBean() {}
 
@@ -89,30 +86,6 @@ public class JSFCrearPlanVacunacionBean implements Serializable {
 		this.enfermedad = enfermedad;
 	}
 
-	public List<String> getEtapas() {
-		return etapas;
-	}
-
-	public void setEtapas(List<String> etapas) {
-		this.etapas = etapas;
-	}
-
-	public List<DtEtapa> getDtEtapas() {
-		return dtEtapas;
-	}
-
-	public void setDtEtapas(List<DtEtapa> dtEtapas) {
-		this.dtEtapas = dtEtapas;
-	}
-
-	public String getEtapa() {
-		return etapa;
-	}
-
-	public void setEtapa(String etapa) {
-		this.etapa = etapa;
-	}
-
 	public String getToken() {
 		return token;
 	}
@@ -142,18 +115,6 @@ public class JSFCrearPlanVacunacionBean implements Serializable {
 					this.enfermedades.add(dt.getNombre());
 				}
 			}
-			conexion = ClientBuilder.newClient();
-			webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/lab/listar");
-			invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
-			response = invocation.invoke();
-			LOGGER.info("Respuesta: " + response.getStatus());
-			if (response.getStatus() == 200) {
-				dtEtapas = response.readEntity(new GenericType<List<DtEtapa>>() {
-				});
-				for (DtEtapa dt : dtEtapas) {
-					this.etapas.add(Integer.toString(dt.getId()));
-				}
-			}
 		} catch (Exception e) {
 			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
 		}
@@ -168,22 +129,10 @@ public class JSFCrearPlanVacunacionBean implements Serializable {
 		}
 		// int id, String nombre, String descripcion, ArrayList<DtEtapa> etapa
 		JSONObject plan = new JSONObject();
-		for (DtEtapa each : this.getDtEtapas()) {
-			if (Integer.toString(each.getId()).equals(this.getEtapa())) {
-				DtEtapa etapaSeleccionada = each;
-				try {
-					plan.put("etapa", etapaSeleccionada);
-				} catch (JSONException e) {
-					LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
-				}
-				break;
-			}
-		}
 		try {
 			plan.put("nombre", this.getNombre());
 			plan.put("descripcion", this.getDescripcion());
-			
+			plan.put("enfermedad", this.getEnfermedad());
 			Client conexion = ClientBuilder.newClient();
 			WebTarget webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/plan/agregar");
 			LOGGER.severe("Conectando a : " + webTarget.getUri());
