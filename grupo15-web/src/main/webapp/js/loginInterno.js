@@ -41,7 +41,7 @@ var int = new Vue({
         }
         )
         .catch(error => {
-          if (error.response.status === 401) {
+          if (error.response.status === 400) {
    		    console.log("Acceso no permitido. Verifique credenciales");
            this.error401="Acceso no permitido. Verifique credenciales";
  		  }
