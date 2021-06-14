@@ -82,14 +82,14 @@
 <p:outputLabel style="width:40%" >Fecha de Inicio:    </p:outputLabel>
 <!-- <p:inputText id="fechaInicio" required="true" value="#{CrearEtapa.fechaInicio}" style="width:60%" > </p:inputText> -->
 <p:datePicker id="fechaInicio" value="#{CrearEtapa.fechaInicio}" locale="es" monthNavigator="true"
-                          pattern="dd-MMM-yyyy"/>
+                          pattern="yyyy-MMM-dd"/>
 </div>
 
 <div>
 <p:outputLabel style="width:40%">Fecha de Finalizacion:    </p:outputLabel>
 <!-- <p:inputText id="fechaFin" required="true" value="#{CrearEtapa.fechaFin}" style="width:60%" > </p:inputText> -->
 <p:datePicker id="fechaFin" value="#{CrearEtapa.fechaFin}" locale="es" monthNavigator="true"
-                          pattern="dd-MMM-yyyy"/>
+                          pattern="yyyy-MMM-dd"/>
 </div>
 
 
@@ -100,10 +100,16 @@
 
 <div>
 
+<!-- <p:outputLabel style="width:40%" >Plan de Vacunacion:    </p:outputLabel> -->
+<!--  <p:selectOneMenu value="#{CrearEtapa.plan}"  style="border-width: thin"> -->
+<!-- 	<f:selectItems value="#{CrearEtapa.planes}" /> -->
+<!-- </p:selectOneMenu> -->
 <p:outputLabel style="width:40%" >Plan de Vacunacion:    </p:outputLabel>
  <p:selectOneMenu value="#{CrearEtapa.plan}"  style="border-width: thin">
-	<f:selectItems value="#{CrearEtapa.planes}" />
+ <f:selectItems value="#{CrearEtapa.planes}" var="p" itemValue="#{p.id}" itemLabel="#{p.id} - #{p.nombre}"   />
+
 </p:selectOneMenu>
+
 </div>
 
 <div>

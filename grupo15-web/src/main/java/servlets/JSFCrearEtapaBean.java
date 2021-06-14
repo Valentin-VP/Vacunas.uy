@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,12 +46,12 @@ public class JSFCrearEtapaBean implements Serializable {
 
 	private String token;
 	private String nombre;
-	private Date fechaInicio;
-	private Date fechaFin;
+	private LocalDate fechaInicio;
+	private LocalDate fechaFin;
 	private String condicion;
 	//private List<String> planes = new ArrayList<String>();
 	private List<DtPlanVacunacion> planes = new ArrayList<DtPlanVacunacion>();
-	private DtPlanVacunacion plan;
+	private String plan;
 	private List<String> vacunas = new ArrayList<String>();
 	private List<DtVacuna> dtVacunas = new ArrayList<DtVacuna>();
 	private String vacuna;
@@ -79,22 +80,22 @@ public class JSFCrearEtapaBean implements Serializable {
 	}
 
 
-	public Date getFechaInicio() {
+	public LocalDate getFechaInicio() {
 		return fechaInicio;
 	}
 
 
-	public void setFechaInicio(Date fechaInicio) {
+	public void setFechaInicio(LocalDate fechaInicio) {
 		this.fechaInicio = fechaInicio;
 	}
 
 
-	public Date getFechaFin() {
+	public LocalDate getFechaFin() {
 		return fechaFin;
 	}
 
 
-	public void setFechaFin(Date fechaFin) {
+	public void setFechaFin(LocalDate fechaFin) {
 		this.fechaFin = fechaFin;
 	}
 
@@ -129,12 +130,12 @@ public class JSFCrearEtapaBean implements Serializable {
 	}
 
 
-	public DtPlanVacunacion getPlan() {
+	public String getPlan() {
 		return plan;
 	}
 
 
-	public void setPlan(DtPlanVacunacion plan) {
+	public void setPlan(String plan) {
 		this.plan = plan;
 	}
 
@@ -240,19 +241,20 @@ public class JSFCrearEtapaBean implements Serializable {
 			}
 		}
 		try {
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");  
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MMM-dd");  
 			String fechaInicio = dateFormat.format(this.getFechaInicio()); 
 			etapa.put("fechaInicio", fechaInicio); 
 			String fechaFin = dateFormat.format(this.getFechaFin()); 
 			etapa.put("fechaFin", fechaFin);
 			etapa.put("condicion", this.getCondicion());
-			etapa.put("plan", this.getPlan().getId());
+			etapa.put("plan", this.getPlan());
 			etapa.put("vacuna", vacunaSeleccionada.getNombre());
 			
 			Client conexion = ClientBuilder.newClient();
 			WebTarget webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/etapa/agregar");
-			LOGGER.severe("Conectando a : " + webTarget.getUri());
-			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildPost(Entity.entity(plan.toString(), MediaType.APPLICATION_JSON));
+			LOGGER.info("Conectando a : " + webTarget.getUri());
+			LOGGER.info("Enviando JSON: " + etapa.toString());
+			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildPost(Entity.entity(etapa.toString(), MediaType.APPLICATION_JSON));
 			Response response = invocation.invoke();
 			LOGGER.info("Respuesta: " + response.getStatus());
 			if (response.getStatus() == 201) {
