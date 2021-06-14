@@ -45,20 +45,20 @@ public class EnfermedadRWS {
 	@PermitAll
 	@GET
 	@Path("/listar")
-	public Response listarEnfermedades(@CookieParam("x-access-token") Cookie cookie) {
+	public Response listarEnfermedades(/*@CookieParam("x-access-token") Cookie cookie*/) {
 		try {
-			String token = cookie.getValue();
-			String ci = null;
-			try {
-				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-			} catch (InvalidJwtException e) {
-				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-						e.getMessage());
-			}
-	        if( ci == null)
-	        	return ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED,
-	        			"No se encuentra CI en token de Cookie - Unauthorized!");
-			LOGGER.info("Cedula obtenida en REST: " + ci);
+//			String token = cookie.getValue();
+//			String ci = null;
+//			try {
+//				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+//			} catch (InvalidJwtException e) {
+//				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+//						e.getMessage());
+//			}
+//	        if( ci == null)
+//	        	return ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED,
+//	        			"No se encuentra CI en token de Cookie - Unauthorized!");
+//			LOGGER.info("Cedula obtenida en REST: " + ci);
 			return Response.ok(ce.listarEnfermedades()).build();
 		} catch (EnfermedadInexistente e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
