@@ -1,9 +1,7 @@
 package entities;
 
 import java.time.LocalDate;
-import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -11,7 +9,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import datatypes.DtEtapa;
-import datatypes.DtPlanVacunacion;
 import persistence.EtapaID;
 
 @Entity
@@ -86,7 +83,7 @@ public class Etapa {
 	}
 	
 	public DtEtapa toDtEtapa() {
-		DtEtapa dtEtapa = new DtEtapa(this.id, this.fechaInicio, this.fechaFin,new DtPlanVacunacion(planVacunacion.getId(), "","", null));
+		DtEtapa dtEtapa = new DtEtapa(this.id, this.fechaInicio, this.fechaFin, this.condicion, this.planVacunacion.getId(), this.vacuna.getNombre());
 		return dtEtapa;
 	}
 

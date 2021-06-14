@@ -3,8 +3,6 @@ package datatypes;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class DtEtapa implements Serializable {
@@ -14,17 +12,22 @@ public class DtEtapa implements Serializable {
 	private int id;
 	private LocalDate fechaInicio;
 	private LocalDate fechaFin;
-	private DtPlanVacunacion DtPvac;
+	private String condicion;
+	private int planVac;
+	private String vacuna;
+	
 	
 	public DtEtapa() {
 	}
 
-	public DtEtapa(int id, LocalDate fechaInicio, LocalDate fechaFin, DtPlanVacunacion dtPvac) {
+	public DtEtapa(int id, LocalDate fechaInicio, LocalDate fechaFin, String condicion, int planVac, String vacuna) {
 		super();
 		this.id = id;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
-		DtPvac = dtPvac;
+		this.condicion = condicion;
+		this.planVac = planVac;
+		this.vacuna = vacuna;
 	}
 
 	public int getId() {
@@ -51,53 +54,24 @@ public class DtEtapa implements Serializable {
 		this.fechaFin = fechaFin;
 	}
 
-	public DtPlanVacunacion getDtPvac() {
-		return DtPvac;
+	public int getPlanVac() {
+		return planVac;
 	}
 
-	public void setDtPvac(DtPlanVacunacion dtPvac) {
-		DtPvac = dtPvac;
+	public void setDtPvac(int planVac) {
+		this.planVac = planVac;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((DtPvac == null) ? 0 : DtPvac.hashCode());
-		result = prime * result + ((fechaFin == null) ? 0 : fechaFin.hashCode());
-		result = prime * result + ((fechaInicio == null) ? 0 : fechaInicio.hashCode());
-		result = prime * result + id;
-		return result;
+	public String getCondicion() {
+		return condicion;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		DtEtapa other = (DtEtapa) obj;
-		if (DtPvac == null) {
-			if (other.DtPvac != null)
-				return false;
-		} else if (!DtPvac.equals(other.DtPvac))
-			return false;
-		if (fechaFin == null) {
-			if (other.fechaFin != null)
-				return false;
-		} else if (!fechaFin.equals(other.fechaFin))
-			return false;
-		if (fechaInicio == null) {
-			if (other.fechaInicio != null)
-				return false;
-		} else if (!fechaInicio.equals(other.fechaInicio))
-			return false;
-		if (id != other.id)
-			return false;
-		return true;
+	public void setCondicion(String condicion) {
+		this.condicion = condicion;
 	}
-	
+
+	public String getVacuna() {
+		return vacuna;
+	}
 	
 }

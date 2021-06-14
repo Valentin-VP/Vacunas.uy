@@ -121,7 +121,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 				throw new EtapaInexistente("No hay etapas de vacunación asociadas a ese plan.");
 			else {
 				for (Etapa e: pv.getEtapas()) {
-					retorno.add(new DtEtapa(e.getId(), e.getFechaInicio(), e.getFechaFin(), pv.toDtPlanVacunacion()));
+					retorno.add(e.toDtEtapa());
 				}
 				Ciudadano c = em.find(Ciudadano.class, idUser);
 				if (c==null) {
