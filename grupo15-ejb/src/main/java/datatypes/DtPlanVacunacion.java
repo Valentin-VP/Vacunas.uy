@@ -14,6 +14,7 @@ public class DtPlanVacunacion implements Serializable {
 	private String nombre;
 	private String descripcion;
 	private ArrayList<DtEtapa> etapa = new ArrayList<>();
+	private String enfermedad;
 	
 	public DtPlanVacunacion() {
 	}
@@ -24,6 +25,25 @@ public class DtPlanVacunacion implements Serializable {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.etapa = etapa;
+	}
+
+	
+	
+	public DtPlanVacunacion(int id, String nombre, String descripcion, ArrayList<DtEtapa> etapa, String enfermedad) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.etapa = etapa;
+		this.enfermedad = enfermedad;
+	}
+
+	public String getEnfermedad() {
+		return enfermedad;
+	}
+
+	public void setEnfermedad(String enfermedad) {
+		this.enfermedad = enfermedad;
 	}
 
 	public int getId() {
@@ -63,6 +83,7 @@ public class DtPlanVacunacion implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((descripcion == null) ? 0 : descripcion.hashCode());
+		result = prime * result + ((enfermedad == null) ? 0 : enfermedad.hashCode());
 		result = prime * result + ((etapa == null) ? 0 : etapa.hashCode());
 		result = prime * result + id;
 		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
@@ -83,6 +104,11 @@ public class DtPlanVacunacion implements Serializable {
 				return false;
 		} else if (!descripcion.equals(other.descripcion))
 			return false;
+		if (enfermedad == null) {
+			if (other.enfermedad != null)
+				return false;
+		} else if (!enfermedad.equals(other.enfermedad))
+			return false;
 		if (etapa == null) {
 			if (other.etapa != null)
 				return false;
@@ -97,6 +123,8 @@ public class DtPlanVacunacion implements Serializable {
 			return false;
 		return true;
 	}
+
+	
 	
 	
 }

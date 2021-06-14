@@ -13,13 +13,13 @@ import exceptions.PlanVacunacionInexistente;
 @Local
 public interface IPlanVacunacionLocal {
 	
-	public void agregarPlanVacunacion(String nombre, String descripcion);
+	public void agregarPlanVacunacion(String nombre, String descripcion, String idEnfermedad) throws EnfermedadInexistente;
 	
 	public ArrayList<DtPlanVacunacion> listarPlanesVacunacion() throws PlanVacunacionInexistente;
 	
 	public DtPlanVacunacion obtenerPlanVacunacion(int id) throws PlanVacunacionInexistente;
 	
-	public void agregarEnfermedadPlan(int id, String nombre) throws PlanVacunacionInexistente, EnfermedadInexistente, AccionInvalida;
+	//public void agregarEnfermedadPlan(int id, String nombre) throws PlanVacunacionInexistente, EnfermedadInexistente, AccionInvalida;
 	
 	public void eliminarPlanVacunacion(int id) throws PlanVacunacionInexistente, AccionInvalida ;
 	

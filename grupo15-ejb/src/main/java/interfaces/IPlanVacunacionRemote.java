@@ -13,20 +13,18 @@ import exceptions.PlanVacunacionInexistente;
 @Remote
 public interface IPlanVacunacionRemote {
 
-	public interface IPlanVacunacionLocal {
-		
-		public void agregarPlanVacunacion(String nombre, String descripcion);
-		
-		public ArrayList<DtPlanVacunacion> listarPlanesVacunacion() throws PlanVacunacionInexistente;
-		
-		public DtPlanVacunacion obtenerPlanVacunacion(int id) throws PlanVacunacionInexistente;
-		
-		public void agregarEnfermedadPlan(int id, String nombre) throws PlanVacunacionInexistente, EnfermedadInexistente;
-		
-		public void eliminarPlanVacunacion(int id) throws PlanVacunacionInexistente, AccionInvalida ;
-		
-		public ArrayList<DtPlanFecha> listarAgendasAbiertas() throws PlanVacunacionInexistente;
-		
-		public ArrayList<DtPlanFecha> listarAgendasProximas() throws PlanVacunacionInexistente;
-	}
+	public void agregarPlanVacunacion(String nombre, String descripcion, String idEnfermedad) throws EnfermedadInexistente;
+	
+	public ArrayList<DtPlanVacunacion> listarPlanesVacunacion() throws PlanVacunacionInexistente;
+	
+	public DtPlanVacunacion obtenerPlanVacunacion(int id) throws PlanVacunacionInexistente;
+	
+	//public void agregarEnfermedadPlan(int id, String nombre) throws PlanVacunacionInexistente, EnfermedadInexistente;
+	
+	public void eliminarPlanVacunacion(int id) throws PlanVacunacionInexistente, AccionInvalida ;
+	
+	public ArrayList<DtPlanFecha> listarAgendasAbiertas() throws PlanVacunacionInexistente;
+	
+	public ArrayList<DtPlanFecha> listarAgendasProximas() throws PlanVacunacionInexistente;
+	
 }

@@ -32,11 +32,17 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 	@PersistenceContext(name = "test")
 	private EntityManager em;
 	
-	public void agregarPlanVacunacion(String nombre, String descripcion){
-		PlanVacunacion pV = new PlanVacunacion(nombre, descripcion);
-		em.persist(pV);
+	public void agregarPlanVacunacion(String nombre, String descripcion, String idEnfermedad) throws EnfermedadInexistente{
+		Enfermedad e = em.find(Enfermedad.class, nombre);
+		if (e==null) {
+			throw new EnfermedadInexistente("No existe esa enfermedad.");
+		}else {
+			PlanVacunacion pV = new PlanVacunacion(nombre, descripcion);
+			pV.setEnfermedad(e);
+			em.persist(pV);
+		}
 	}
-	
+	/*
 	public void agregarEnfermedadPlan(int id, String nombre) throws PlanVacunacionInexistente, EnfermedadInexistente, AccionInvalida {
 		PlanVacunacion pv = em.find(PlanVacunacion.class, id);
 		if (pv==null) {
@@ -67,6 +73,7 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 		}
 		
 	}
+	*/
 	
 	public ArrayList<DtPlanVacunacion> listarPlanesVacunacion() throws PlanVacunacionInexistente{
 		Query query = em.createQuery("SELECT p FROM PlanVacunacion p ORDER BY nombre ASC");

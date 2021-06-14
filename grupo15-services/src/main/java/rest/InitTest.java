@@ -150,13 +150,13 @@ public class InitTest {
 			csl.agregarStock("vact1", "vacuna2Virus2", 100);
 			csl.modificarStock("vact1", "vacuna2Virus2", 100, 0, 0, 100);
 			
-			plan.agregarPlanVacunacion("plan1virus1", "descripcion plan1virus1");
-			plan.agregarPlanVacunacion("plan2virus1", "descripcion plan2virus1");
-			plan.agregarPlanVacunacion("plan3virus2", "descripcion plan3virus2");
+			plan.agregarPlanVacunacion("plan1virus1", "descripcion plan1virus1", "virus1");
+			plan.agregarPlanVacunacion("plan2virus1", "descripcion plan2virus1", "virus1");
+			plan.agregarPlanVacunacion("plan3virus2", "descripcion plan3virus2", "virus2");
 			//plan.agregarPlanVacunacion(id, nombre, descripcion);
-			plan.agregarEnfermedadPlan(8, "virus1");
-			plan.agregarEnfermedadPlan(9, "virus1");
-			plan.agregarEnfermedadPlan(10, "virus2");
+			//plan.agregarEnfermedadPlan(8, "virus1");
+			//plan.agregarEnfermedadPlan(9, "virus1");
+			//plan.agregarEnfermedadPlan(10, "virus2");
 			//plan.agregarEnfermedadPlan(id, nombre);
 			etapa.agregarEtapa(1, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|50|todos|si", 8, "vacuna1Virus1");
 			etapa.agregarEtapa(2, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "51|80|industria|si", 8, "vacuna1Virus1");
