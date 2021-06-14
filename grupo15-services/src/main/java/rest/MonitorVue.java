@@ -146,9 +146,8 @@ public class MonitorVue {
 			}else {
 				ArrayList<String> planes = new ArrayList<String>();
 				for(DtPlanVacunacion dtP: pv.listarPlanesVacunacion()) {
-					if(dtP.getEnfermedad().equals(enfermedad)) {
+					if(dtP.getEnfermedad().equals(enfermedad))
 						planes.add(dtP.getId() + "-" + dtP.getNombre());
-					}
 				}
 				return Response.ok(planes).build();
 			}
