@@ -7,60 +7,38 @@ var res = new Vue({
         listaEnfermedades: [],
         listaPlanes: [],
         listaVacunas: [],
+        listVacPorVac: [],
         listEnfHardC: [
             {
-            idEnfermedad: "covid",
-            vacunados:10  
-          },
-          {
-            idEnfermedad: "fiebre amarilla",
-            vacunados:30
-          },
-          {
-            idEnfermedad: "meningitis",
-            vacunados:20  
-          },
-          {
-            idEnfermedad: "hepatitis",
-            vacunados:150  
-          },
-          {
-            idEnfermedad: "tuberculosis",
-            vacunados:80  
-          },
-          {
-            idEnfermedad: "gripe",
-            vacunados: 5  
-          }
+                idEnfermedad: "covid",
+                vacunados: 10
+            },
+            {
+                idEnfermedad: "fiebre amarilla",
+                vacunados: 30
+            },
+            {
+                idEnfermedad: "meningitis",
+                vacunados: 20
+            },
+            {
+                idEnfermedad: "hepatitis",
+                vacunados: 150
+            },
+            {
+                idEnfermedad: "tuberculosis",
+                vacunados: 80
+            },
+            {
+                idEnfermedad: "gripe",
+                vacunados: 5
+            }
         ],
 
-        vacunaVac: [
-            {
-            idVacuna: "Pfizer",
-            vacunados:10  
-          },
-          {
-            idVacuna: "Astrazeneca",
-            vacunados:30
-          },
-          {
-            idVacuna: "Sinovac",
-            vacunados:20  
-          },
-          {
-            idVacuna: "Sinopharm",
-            vacunados:150  
-          },
-          {
-            idVacuna: "Moderna",
-            vacunados:80  
-          },
-          
-        ],
-        etiquetas:[], 
-        valores: [], 
-        etiquetas2:[], 
-        valores2: [], 
+        etiquetas: [],
+        valores: [],
+        etiquetas2: [],
+        valores2: [],
         nroDia: '400',
         nroMes: '200',
         nroAnio: '1000',
@@ -74,8 +52,9 @@ var res = new Vue({
 
 
         this.CargarEnfermedades();
-       this.setGrafica1();
-       this.Grafica2();
+        this.setGrafica1();
+        this.CargarVacunadosPorVacuna();
+        
     },
 
     methods:
@@ -86,16 +65,16 @@ var res = new Vue({
             // Obtener una referencia al elemento canvas del DOM
             const $grafica = document.querySelector("#grafica");
             // Las etiquetas son las que van en el eje X. 
-        
+
             for (i in this.listEnfHardC) {
 
-              this.etiquetas.push(this.listEnfHardC[i].idEnfermedad)
-                };
+                this.etiquetas.push(this.listEnfHardC[i].idEnfermedad)
+            };
 
-             for (i in this.listEnfHardC) {
+            for (i in this.listEnfHardC) {
 
-                    this.valores.push(this.listEnfHardC[i].vacunados)
-                      } ;     
+                this.valores.push(this.listEnfHardC[i].vacunados)
+            };
 
             console.log("Lista Enfermedades", this.etiquetas);
             // Podemos tener varios conjuntos de datos. Comencemos con uno
@@ -135,12 +114,27 @@ var res = new Vue({
             console.log("IdPlan:" + this.IdPlan);
             IdVac = this.IdVac;
             console.log("IdVac:" + this.IdVac);
-            
+
         },
 
+       
+
+
+        CargarVacunadosPorVacuna() {
+
+            axios.get("http://localhost:8080/grupo15-services/rest/monitor/vacunadosporvacs")
+                .then((response => {
+                    console.log("GET Vacunados Por Vac: ", response.data)
+                    this.listVacPorVac = response.data;
+                    console.log("List Vacunados Por Vacuna: ", this.listVacPorVac);
+                    this.Grafica2();
+                }))
+
+        },
+      
         CargarEnfermedades() {
 
-            axios.get("http://localhost:8080/grupo15-services/rest/reservas/enf/")
+            axios.get("http://localhost:8080/grupo15-services/rest/enfermedad/listar")
                 .then((response => {
                     console.log("GET enfermedades: ", response.data)
                     this.listaEnfermedades = response.data;
@@ -150,11 +144,12 @@ var res = new Vue({
 
         SeleccionarEnfermedades() {
             IdEnf = this.IdEnf;
-            axios.get("http://localhost:8080/grupo15-services/rest/reservas/enf/" + this.IdEnf.toString())
+            axios.get("http://localhost:8080/grupo15-services/rest/monitor/enf/" + this.IdEnf.toString())
                 .then((response => {
                     console.log("GET planes: ", response.data)
                     this.listaPlanes = response.data
-                    console.log("planes: " + this.listaPlanes.nombre);
+                    console.log("planes: " + this.listaPlanes);
+                    this.SeleccionarPlanes();
                 }))
 
         },
@@ -162,70 +157,66 @@ var res = new Vue({
 
         SeleccionarPlanes() {
 
-            IdPlan = this.IdPlan;
-            axios.get("http://localhost:8080/grupo15-services/rest/reservas/pv" + "?p=" + this.IdPlan.toString())
-            this.CargarVacunas();
+            
+            axios.get("http://localhost:8080/grupo15-services/rest/monitor/pv/"+ this.IdEnf.toString() + "/" + this.IdPlan.toString())
+            .then((response => {
+                console.log("GET vacunas: ", response.data)
+                this.listaVacunas = response.data
+                console.log("List vacunas: ", listaVacunas)
+            }))
+           
+        
 
         },
 
-        CargarVacunas() {
+      
 
-            axios.get("http://localhost:8080/grupo15-services/rest/reservas/vac/")
-                .then((response => {
-                    console.log("GET vacunas: ", response.data)
-                    this.listaVacunas = response.data
-                }))
-
-        },
-
-        SeleccionarVacunas() {
-            IdVac = this.IdVac;
-        },
+      
 
         Grafica2() {
             // Obtener una referencia al elemento canvas del DOM
-const $grafica2 = document.querySelector("#grafica2");
-// Las etiquetas son las porciones de la gráfica
+            const $grafica2 = document.querySelector("#grafica2");
+            // Las etiquetas son las porciones de la gráfica
+            console.log("Entre a grafica2");
 
+            for (i in this.listVacPorVac) {
 
-for (i in this.vacunaVac) {
+                this.etiquetas2.push(this.listVacPorVac[i].idVacuna)
+            };
 
-    this.etiquetas2.push(this.vacunaVac[i].idVacuna)
-      };
+            for (i in this.listVacPorVac) {
 
-   for (i in this.vacunaVac) {
+                this.valores2.push(this.listVacPorVac[i].vacunados)
+            };
 
-          this.valores2.push(this.vacunaVac[i].vacunados)
-            } ;     
-
-// Podemos tener varios conjuntos de datos. Comencemos con uno
-const datosIngresos = {
-    data: this.valores2, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
-    // Ahora debería haber tantos background colors como datos, es decir, para este ejemplo, 4
-    backgroundColor: [
-        'rgba(163,221,203,0.2)',
-        'rgba(232,233,161,0.2)',
-        'rgba(230,181,102,0.2)',
-        'rgba(229,112,126,0.2)',
-    ],// Color de fondo
-    borderColor: [
-        'rgba(163,221,203,1)',
-        'rgba(232,233,161,1)',
-        'rgba(230,181,102,1)',
-        'rgba(229,112,126,1)',
-    ],// Color del borde
-    borderWidth: 1,// Ancho del borde
-};
-new Chart($grafica2, {
-    type: 'pie',// Tipo de gráfica. Puede ser dougnhut o pie
-    data: {
-        labels: this.etiquetas2,
-        datasets: [
-            datosIngresos,
-            // Aquí más datos...
-        ]
-    },
-});
+            // Podemos tener varios conjuntos de datos. Comencemos con uno
+            const datosIngresos = {
+                data: this.valores2, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+                // Ahora debería haber tantos background colors como datos, es decir, para este ejemplo, 4
+                backgroundColor: [
+                    'rgba(163,221,203,0.2)',
+                    'rgba(232,233,161,0.2)',
+                    'rgba(230,181,102,0.2)',
+                    'rgba(229,112,126,0.2)',
+                ],// Color de fondo
+                borderColor: [
+                    'rgba(163,221,203,1)',
+                    'rgba(232,233,161,1)',
+                    'rgba(230,181,102,1)',
+                    'rgba(229,112,126,1)',
+                ],// Color del borde
+                borderWidth: 1,// Ancho del borde
+            };
+            new Chart($grafica2, {
+                type: 'pie',// Tipo de gráfica. Puede ser dougnhut o pie
+                data: {
+                    labels: this.etiquetas2,
+                    datasets: [
+                        datosIngresos,
+                        // Aquí más datos...
+                    ]
+                },
+            });
         }//cierra funcion
 
     }
