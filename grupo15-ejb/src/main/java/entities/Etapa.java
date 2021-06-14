@@ -3,6 +3,8 @@ package entities;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
@@ -15,7 +17,7 @@ import persistence.EtapaID;
 @IdClass(EtapaID.class)
 public class Etapa {
 	
-	@Id
+	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	private LocalDate fechaInicio;
 	private LocalDate fechaFin;
@@ -33,9 +35,8 @@ public class Etapa {
 		super();
 	}
 
-	public Etapa(int id, LocalDate fechaInicio, LocalDate fechaFin, String condicion, PlanVacunacion planVacunacion) {
+	public Etapa(LocalDate fechaInicio, LocalDate fechaFin, String condicion, PlanVacunacion planVacunacion) {
 		super();
-		this.id = id;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
 		this.condicion = condicion;

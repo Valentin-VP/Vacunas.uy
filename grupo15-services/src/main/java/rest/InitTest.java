@@ -158,10 +158,10 @@ public class InitTest {
 			//plan.agregarEnfermedadPlan(9, "virus1");
 			//plan.agregarEnfermedadPlan(10, "virus2");
 			//plan.agregarEnfermedadPlan(id, nombre);
-			etapa.agregarEtapa(1, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|50|todos|si", 8, "vacuna1Virus1");
-			etapa.agregarEtapa(2, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "51|80|industria|si", 8, "vacuna1Virus1");
-			etapa.agregarEtapa(3, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|50|salud|si", 9, "vacuna1Virus1");
-			etapa.agregarEtapa(4, LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|500|industria|no", 10, "vacuna2Virus2");
+			etapa.agregarEtapa(LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|50|todos|si", 8, "vacuna1Virus1");
+			etapa.agregarEtapa(LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "51|80|industria|si", 8, "vacuna1Virus1");
+			etapa.agregarEtapa(LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|50|salud|si", 9, "vacuna1Virus1");
+			etapa.agregarEtapa(LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|500|industria|no", 10, "vacuna2Virus2");
 			//etapa.agregarEtapa(idEtapa, fIni, fFin, cond, idPlan, nombreVacuna);
 			
 			//agd.agregarAgenda("vact1", LocalDate.now());

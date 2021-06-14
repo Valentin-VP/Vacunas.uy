@@ -20,9 +20,12 @@ import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 
 import datatypes.DtDatosEtapa;
+import datatypes.DtEtapa;
 import exceptions.AccionInvalida;
 import exceptions.EtapaInexistente;
 import exceptions.EtapaRepetida;
@@ -98,26 +101,13 @@ public class GestionEtapaRWS {
 		@PermitAll
 		@POST
 		@Path("/agregar")
-		public Response agregarEtapa(@CookieParam("x-access-token") Cookie cookie, DtDatosEtapa dte) {
-			if (dte==null || dte.getIdEtapa() == null || dte.getfIni() == null || dte.getfFin() == null || dte.getCond() == null  || dte.getIdPlan() == null  || dte.getIdVacuna() == null) {
-				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-						"No se han ingresado todos los parametros necesarios.");
-			}
+		public Response agregarEtapa(String datos) {
 			try {
+				JSONObject etapa = new JSONObject(datos);
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-				String token = cookie.getValue();
-				String ci = null;
-				try {
-					ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-				} catch (InvalidJwtException e) {
-					e.printStackTrace();
-				}
-		        if( ci == null)
-		            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
-				LOGGER.info("Cedula obtenida en REST: " + ci);
-				ce.agregarEtapa(Integer.parseInt(dte.getIdEtapa()), LocalDate.parse(dte.getfIni(), formatter), LocalDate.parse(dte.getfFin(), formatter), dte.getCond(), Integer.parseInt(dte.getIdPlan()), dte.getIdVacuna());
+				ce.agregarEtapa(LocalDate.parse(etapa.getString("fechaInicio"), formatter), LocalDate.parse(etapa.getString("fechaFin"), formatter), etapa.getString("condicion"), Integer.parseInt(etapa.getString("plan")), etapa.getString("vacuna"));
 				return Response.ok("Se ha agregado la etapa con exito.").build();
-			} catch ( NumberFormatException | EtapaRepetida | PlanVacunacionInexistente | VacunaInexistente | AccionInvalida e) {
+			} catch ( NumberFormatException | EtapaRepetida | PlanVacunacionInexistente | VacunaInexistente | AccionInvalida | JSONException e) {
 				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 						e.getMessage());
 			}

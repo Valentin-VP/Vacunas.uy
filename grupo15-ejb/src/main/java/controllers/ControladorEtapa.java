@@ -34,11 +34,10 @@ public class ControladorEtapa implements IEtapaLocal, IEtapaRemote{
 	@PersistenceContext(name = "test")
 	private EntityManager em;
 	
-	public void agregarEtapa(int idEtapa, LocalDate fIni, LocalDate fFin, String cond, int idPlan, String nombreVacuna) throws EtapaRepetida, PlanVacunacionInexistente, VacunaInexistente, AccionInvalida {
-		if(em.find(Etapa.class, new EtapaID(idEtapa, idPlan)) == null) {
+	public void agregarEtapa(LocalDate fIni, LocalDate fFin, String cond, int idPlan, String nombreVacuna) throws EtapaRepetida, PlanVacunacionInexistente, VacunaInexistente, AccionInvalida {
 			PlanVacunacion pV = em.find(PlanVacunacion.class, idPlan);
 			if(pV != null) {
-				Etapa etapa = new Etapa(idEtapa, fIni, fFin, cond, pV);
+				Etapa etapa = new Etapa(fIni, fFin, cond, pV);
 				Vacuna v = em.find(Vacuna.class, nombreVacuna);
 				if (v==null)
 					throw new VacunaInexistente("No existe esa vacuna");
@@ -50,8 +49,6 @@ public class ControladorEtapa implements IEtapaLocal, IEtapaRemote{
 				 em.persist(pV);
 			}else
 				throw new PlanVacunacionInexistente("No existe un plan de vacunacion con ese id");
-		}else
-			throw new EtapaRepetida("Ya existe una etapa con ese id");
 		
 	}
 	

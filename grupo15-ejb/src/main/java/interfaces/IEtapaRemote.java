@@ -13,7 +13,7 @@ import exceptions.VacunaInexistente;
 
 public interface IEtapaRemote {
 
-	public void agregarEtapa(int idEtapa, LocalDate fIni, LocalDate fFin, String cond, int idPlan, String nombreVacuna) throws EtapaRepetida, PlanVacunacionInexistente, VacunaInexistente, AccionInvalida;
+	public void agregarEtapa(LocalDate fIni, LocalDate fFin, String cond, int idPlan, String nombreVacuna) throws EtapaRepetida, PlanVacunacionInexistente, VacunaInexistente, AccionInvalida;
 	
 	public ArrayList<DtEtapa> listarEtapas() throws EtapaInexistente;
 	

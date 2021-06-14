@@ -59,18 +59,8 @@ public class GestionPlanRWS {
 	@PermitAll
 	@GET
 	@Path("/listar")
-	public Response listarPlanes(@CookieParam("x-access-token") Cookie cookie) {
+	public Response listarPlanes() {
 		try {
-			String token = cookie.getValue();
-			String ci = null;
-			try {
-				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-			} catch (InvalidJwtException e) {
-				e.printStackTrace();
-			}
-	        if( ci == null)
-	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
-			LOGGER.info("Cedula obtenida en REST: " + ci);
 			return Response.ok(cp.listarPlanesVacunacion()).build();
 		} catch (PlanVacunacionInexistente e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
@@ -82,22 +72,12 @@ public class GestionPlanRWS {
 	@PermitAll
 	@GET
 	@Path("/obtener")
-	public Response obtenerPlan(@CookieParam("x-access-token") Cookie cookie, @QueryParam("p") String plan) {
+	public Response obtenerPlan(@QueryParam("p") String plan) {
 		if (plan==null) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					"No se han ingresado todos los parametros necesarios.");
 		}
 		try {
-			String token = cookie.getValue();
-			String ci = null;
-			try {
-				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-			} catch (InvalidJwtException e) {
-				e.printStackTrace();
-			}
-	        if( ci == null)
-	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
-			LOGGER.info("Cedula obtenida en REST: " + ci);
 			return Response.ok(cp.obtenerPlanVacunacion(Integer.parseInt(plan))).build();
 		} catch ( NumberFormatException | PlanVacunacionInexistente e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
@@ -114,7 +94,7 @@ public class GestionPlanRWS {
 			JSONObject datosInterno = new JSONObject(datos);
 			cp.agregarPlanVacunacion(datosInterno.getString("nombre"), datosInterno.getString("descripcion"), datosInterno.getString("enfermedad"));
 			DtEtapa etapa = (DtEtapa) datosInterno.get("etapa");
-			controladorEtapa.agregarEtapa(etapa.getId(), etapa.getFechaInicio(), etapa.getFechaFin(), etapa.getCondicion(), etapa.getPlanVac(), etapa.getVacuna());
+			controladorEtapa.agregarEtapa(etapa.getFechaInicio(), etapa.getFechaFin(), etapa.getCondicion(), etapa.getPlanVac(), etapa.getVacuna());
 			return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha agregado el plan con exito.");
 		} catch ( NumberFormatException | JSONException | EtapaRepetida | PlanVacunacionInexistente | VacunaInexistente | AccionInvalida | EnfermedadInexistente e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
@@ -127,22 +107,12 @@ public class GestionPlanRWS {
 	@PermitAll
 	@DELETE
 	@Path("/eliminar")
-	public Response eliminarPlan(@CookieParam("x-access-token") Cookie cookie, @QueryParam("p") String plan) {
+	public Response eliminarPlan(@QueryParam("p") String plan) {
 		if (plan==null) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					"No se han ingresado todos los parametros necesarios.");
 		}
 		try {
-			String token = cookie.getValue();
-			String ci = null;
-			try {
-				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-			} catch (InvalidJwtException e) {
-				e.printStackTrace();
-			}
-	        if( ci == null)
-	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
-			LOGGER.info("Cedula obtenida en REST: " + ci);
 			cp.eliminarPlanVacunacion(Integer.parseInt(plan));
 			return Response.ok("Se ha eliminado el plan con exito.").build();
 		} catch (NumberFormatException | PlanVacunacionInexistente | AccionInvalida e) {
