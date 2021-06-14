@@ -33,7 +33,7 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 	private EntityManager em;
 	
 	public void agregarPlanVacunacion(String nombre, String descripcion, String idEnfermedad) throws EnfermedadInexistente{
-		Enfermedad e = em.find(Enfermedad.class, nombre);
+		Enfermedad e = em.find(Enfermedad.class, idEnfermedad);
 		if (e==null) {
 			throw new EnfermedadInexistente("No existe esa enfermedad.");
 		}else {
