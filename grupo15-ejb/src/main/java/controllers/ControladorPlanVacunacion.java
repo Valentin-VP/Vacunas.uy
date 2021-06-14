@@ -19,7 +19,6 @@ import entities.Reserva;
 import exceptions.AccionInvalida;
 import exceptions.EnfermedadInexistente;
 import exceptions.PlanVacunacionInexistente;
-import exceptions.PlanVacunacionRepetido;
 import interfaces.IPlanVacunacionLocal;
 import interfaces.IPlanVacunacionRemote;
 

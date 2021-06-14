@@ -9,7 +9,6 @@ import datatypes.DtPlanVacunacion;
 import exceptions.AccionInvalida;
 import exceptions.EnfermedadInexistente;
 import exceptions.PlanVacunacionInexistente;
-import exceptions.PlanVacunacionRepetido;
 
 @Local
 public interface IPlanVacunacionLocal {
