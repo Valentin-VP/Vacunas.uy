@@ -6,34 +6,25 @@ import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.CookieParam;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.jose4j.jwt.consumer.InvalidJwtException;
 
-import datatypes.DtEtapa;
 import exceptions.AccionInvalida;
 import exceptions.EnfermedadInexistente;
-import exceptions.EtapaRepetida;
 import exceptions.PlanVacunacionInexistente;
-import exceptions.VacunaInexistente;
 import interfaces.IEnfermedadLocal;
 import interfaces.IEtapaLocal;
 import interfaces.IPlanVacunacionLocal;
 import rest.filter.ResponseBuilder;
-import rest.filter.TokenSecurity;
 
 @DeclareRoles({"vacunador", "ciudadano", "administrador", "autoridad"})
 @Path("/plan")
@@ -93,10 +84,8 @@ public class GestionPlanRWS {
 		try {
 			JSONObject datosInterno = new JSONObject(datos);
 			cp.agregarPlanVacunacion(datosInterno.getString("nombre"), datosInterno.getString("descripcion"), datosInterno.getString("enfermedad"));
-			DtEtapa etapa = (DtEtapa) datosInterno.get("etapa");
-			controladorEtapa.agregarEtapa(etapa.getFechaInicio(), etapa.getFechaFin(), etapa.getCondicion(), etapa.getPlanVac(), etapa.getVacuna());
 			return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha agregado el plan con exito.");
-		} catch ( NumberFormatException | JSONException | EtapaRepetida | PlanVacunacionInexistente | VacunaInexistente | AccionInvalida | EnfermedadInexistente e) {
+		} catch ( NumberFormatException | JSONException | EnfermedadInexistente e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					e.getMessage());
 		}
