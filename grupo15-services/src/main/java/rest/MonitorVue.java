@@ -170,17 +170,19 @@ public class MonitorVue {
 						vacunas.add(dtVac.getNombre());
 					}
 				}
-				return Response.ok(vacunas.toString()).build();
+				return Response.ok(vacunas).build();
 			}else {
+				String[] id = plan.split("-");
+				String idPlan = id[0];
 				ArrayList<String> vacunas = new ArrayList<String>();
-				DtPlanVacunacion planVac = pv.obtenerPlanVacunacion(Integer.valueOf(plan));
+				DtPlanVacunacion planVac = pv.obtenerPlanVacunacion(Integer.valueOf(idPlan));
 				for(DtEtapa dtEtp: planVac.getEtapa()) {			
 					vacunas.add(dtEtp.getVacuna());
 				}
-				return Response.ok(vacunas.toString()).build();
+				return Response.ok(vacunas).build();
 			}
 		} catch ( VacunaInexistente | NumberFormatException | PlanVacunacionInexistente e) {
-			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 		}
 	}
 	
