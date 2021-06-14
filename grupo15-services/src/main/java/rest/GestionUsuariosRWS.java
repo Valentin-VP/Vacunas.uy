@@ -127,18 +127,30 @@ public class GestionUsuariosRWS {
 			String token = cookie.getValue();
 			String ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
 			DtCiudadano ciudadano = IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci));
-			//int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo, String TipoSector, Boolean autenticado
-			ciudadano.setNombre(jsonObject.getString("nombre"));
-			ciudadano.setApellido(jsonObject.getString("apellido"));
-			LocalDate fechaNac = LocalDate.parse(jsonObject.getString("FechaNac"));//convierto la fecha para pasarla
-			ciudadano.setFechaNac(fechaNac);
-			ciudadano.setEmail(jsonObject.getString("email"));
-			JSONObject jsonDir = jsonObject.getJSONObject("direccion");
-			DtDireccion dir = new DtDireccion(jsonDir.getString("direccion"), jsonDir.getString("barrio"), jsonDir.getString("departamento"));
+			DtDireccion oldDir = ciudadano.getDireccion();
+			DtDireccion dir = new DtDireccion();
+			//seteo email
+			if(jsonObject.getString("email") != null && !jsonObject.getString("email").isEmpty())
+				ciudadano.setEmail(jsonObject.getString("email"));
+			//seteo direccion
+			if(jsonObject.getString("direccion") != null && !jsonObject.getString("direccion").isEmpty()) {
+				dir.setDireccion(jsonObject.getString("direccion"));
+			}else {
+				dir.setDireccion(oldDir.getDireccion());
+			}
+			//seteo barrio
+			if(jsonObject.getString("barrio") != null && !jsonObject.getString("barrio").isEmpty()) {
+				dir.setBarrio(jsonObject.getString("barrio"));
+			}else {
+				dir.setBarrio(oldDir.getBarrio());
+			}
+			//seteo departamento
+			if(jsonObject.getString("departamento") != null && !jsonObject.getString("departamento").isEmpty()) {
+				dir.setDepartamento(jsonObject.getString("departamento"));
+			}else {
+				dir.setDepartamento(oldDir.getDepartamento());
+			}
 			ciudadano.setDireccion(dir);
-			Sexo s = Sexo.valueOf(jsonObject.getString("sexo"));
-			ciudadano.setSexo(s);
-			ciudadano.setTipoSector(jsonObject.getString("tipoSector"));
 			IUsuarioLocal.ModificarCiudadano(ciudadano);
 			
 			return ResponseBuilder.createResponse(Response.Status.OK, "Se modifico el usuario correctamente");
