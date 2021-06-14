@@ -68,15 +68,13 @@ public class ConsultarCertificado {
 		@RolesAllowed("ciudadano")
 		public Response getCertificadovue(@CookieParam("x-access-token") Cookie cookie) {
 			String token = cookie.getValue();
-			String ci = null;
-			try {
-				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-			} catch (InvalidJwtException e) {
-				e.printStackTrace();
-			}
+			String ci;
 			DtCertificadoVac dtCV;
 			try {
+				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+				System.out.println(ci);
 				dtCV = ICertVac.obtenerCertificadoVacunacion(Integer.parseInt(ci));
+				System.out.println(dtCV);
 				JSONArray certificado = new JSONArray();
 				for(DtConstancia c: dtCV.getConstancias()) {
 					JSONObject datos = new JSONObject();
@@ -86,9 +84,11 @@ public class ConsultarCertificado {
 					datos.put("pInmunidad", c.getPeriodoInmunidad());
 					datos.put("totalDosis", c.getDosisRecibidas());
 					datos.put("ultimaDosis", c.getFechaUltimaDosis().toString());
+					certificado.put(datos);
 				}
-				return Response.ok(certificado).build();
-			} catch (NumberFormatException | CertificadoInexistente | UsuarioExistente | JSONException error) {
+
+				return Response.ok(certificado.toString()).build();
+			} catch (NumberFormatException | CertificadoInexistente | UsuarioExistente | InvalidJwtException | JSONException error) {
 				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, error.getMessage());
 			}
 		}
