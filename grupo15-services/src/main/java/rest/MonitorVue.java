@@ -140,7 +140,7 @@ public class MonitorVue {
 			if(enfermedad.equals("Todos")) {
 				return Response.ok(pv.listarPlanesVacunacion()).build();
 			}else {
-				return Response.ok(rs.seleccionarEnfermedad(enfermedad)).build();
+				return Response.ok(rs.seleccionarEnfermedad(enfermedad).toString()).build();
 			}
 		} catch (EnfermedadInexistente | PlanVacunacionInexistente  e) {
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
@@ -160,14 +160,14 @@ public class MonitorVue {
 						vacunas.add(dtVac.getNombre());
 					}
 				}
-				return Response.ok(vacunas).build();
+				return Response.ok(vacunas.toString()).build();
 			}else {
 				ArrayList<String> vacunas = new ArrayList<String>();
 				DtPlanVacunacion planVac = pv.obtenerPlanVacunacion(Integer.valueOf(plan));
 				for(DtEtapa dtEtp: planVac.getEtapa()) {			
 					vacunas.add(dtEtp.getVacuna());
 				}
-				return Response.ok(vacunas).build();
+				return Response.ok(vacunas.toString()).build();
 			}
 		} catch ( VacunaInexistente | NumberFormatException | PlanVacunacionInexistente e) {
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
