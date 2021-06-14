@@ -3,7 +3,8 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html" 
-      xmlns:p="http://primefaces.org/ui"> 
+      xmlns:p="http://primefaces.org/ui">
+<!--       xmlns:rich="http://primefaces.org/ui">  -->
       
 
 <h:head> <link href="/grupo15-web/css/styles.css" type="text/css" rel="stylesheet" media="all" /> </h:head> 
@@ -26,7 +27,7 @@
             <a class="nav-link" href="/grupo15-web/html/registroInterno.html">Registrar Usuario Interno</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href=""></a>
+            <a class="nav-link" href="/grupo15-web/JSF/CrearEnfermedad.xhtml">Crear Enfermedad</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href=""></a>
@@ -47,35 +48,21 @@
 
 
  <div class="formulario">
+
 <h:form>
 
 <div>
-<p:outputLabel style="width:40%" >Nombre:    </p:outputLabel>
-<p:inputText id="nombre" required="true" value="#{CrearPlan.nombre}" style="width:60%" > </p:inputText>
-
-</div>
-
-<div>
-<p:outputLabel style="width:40%">Descripcion:    </p:outputLabel>
-<p:inputText id="descripcion" required="true" value="#{CrearPlan.descripcion}" style="width:60%" > </p:inputText>
-</div>
-
-
-<div>
-<p:outputLabel style="width:40%" >Enfermedad:    </p:outputLabel>
- <p:selectOneMenu value="#{CrearPlan.enfermedad}" style="border-width: thin" >
-	<f:selectItems value="#{CrearPlan.enfermedades}" />
-</p:selectOneMenu>
-</div>
-
 <p:messages id="messages" showDetail="true" closable="true">
             <p:autoUpdate/>
 </p:messages>
-<p:commandButton id="confirmar" action="#{CrearPlan.crearPlan}" value="Crear"> </p:commandButton>
+<p:outputLabel for="nombre" style="width:30%" value="Nombre"/>
+<p:inputText id="nombre" required="true" value="#{CrearLaboratorio.nombre}" style="width:70%"/>
 
+</div>
 
+<p:commandButton id="crear" action="#{CrearLaboratorio.crearLaboratorio}" value="Crear" styleClass="p-mr-2"/>
 </h:form>
  </div>
-	
+
 </body> 
 </html>

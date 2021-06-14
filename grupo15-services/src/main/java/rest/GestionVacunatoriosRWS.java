@@ -12,6 +12,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -21,6 +22,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 
 import datatypes.ErrorInfo;
@@ -89,6 +91,18 @@ public class GestionVacunatoriosRWS {
 		}
 	}
 	
-	
+	//@RolesAllowed({"autoridad"}) 
+//	@PermitAll
+//	@POST
+//	@Path("/agregar")
+//	public Response agregarVacunatorio(String datos){
+//		try {
+//			JSONObject datosInterno = new JSONObject(datos);
+//			// pendiente
+//		} catch (JSONException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 
 }
