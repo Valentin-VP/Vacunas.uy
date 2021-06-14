@@ -29,6 +29,7 @@ import exceptions.EnfermedadInexistente;
 import exceptions.EtapaRepetida;
 import exceptions.PlanVacunacionInexistente;
 import exceptions.VacunaInexistente;
+import interfaces.IEnfermedadLocal;
 import interfaces.IEtapaLocal;
 import interfaces.IPlanVacunacionLocal;
 import rest.filter.ResponseBuilder;
@@ -44,6 +45,9 @@ public class GestionPlanRWS {
 	
 	@EJB
 	IEtapaLocal controladorEtapa;
+	
+	@EJB
+	IEnfermedadLocal controladorEnfermedad;
 	
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 
@@ -108,43 +112,16 @@ public class GestionPlanRWS {
 	public Response agregarPlan(String datos) {
 		try {
 			JSONObject datosInterno = new JSONObject(datos);
-			cp.agregarPlanVacunacion(datosInterno.getString("nombre"), datosInterno.getString("descripcion"));
+			cp.agregarPlanVacunacion(datosInterno.getString("nombre"), datosInterno.getString("descripcion"), datosInterno.getString("enfermedad"));
 			DtEtapa etapa = (DtEtapa) datosInterno.get("etapa");
 			controladorEtapa.agregarEtapa(etapa.getId(), etapa.getFechaInicio(), etapa.getFechaFin(), etapa.getCondicion(), etapa.getPlanVac(), etapa.getVacuna());
 			return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha agregado el plan con exito.");
-		} catch ( NumberFormatException | JSONException | EtapaRepetida | PlanVacunacionInexistente | VacunaInexistente | AccionInvalida e) {
+		} catch ( NumberFormatException | JSONException | EtapaRepetida | PlanVacunacionInexistente | VacunaInexistente | AccionInvalida | EnfermedadInexistente e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					e.getMessage());
 		}
 	}
 	
-	//@RolesAllowed({"autoridad"}) 
-	@PermitAll
-	@PUT
-	@Path("/addenf")
-	public Response asignarEnfermedad(@CookieParam("x-access-token") Cookie cookie, @QueryParam("p") String plan, @QueryParam("e") String enfermedad) {
-		if (plan==null || enfermedad==null) {
-			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-					"No se han ingresado todos los parametros necesarios.");
-		}
-		try {
-			String token = cookie.getValue();
-			String ci = null;
-			try {
-				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-			} catch (InvalidJwtException e) {
-				e.printStackTrace();
-			}
-	        if( ci == null)
-	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
-			LOGGER.info("Cedula obtenida en REST: " + ci);
-			cp.agregarEnfermedadPlan(Integer.parseInt(plan), enfermedad);
-			return Response.ok("Se asigno la enfermedad con exito.").build();
-		} catch ( NumberFormatException | PlanVacunacionInexistente | EnfermedadInexistente | AccionInvalida e) {
-			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-					e.getMessage());
-		}
-	}
 	
 	//@RolesAllowed({"autoridad"}) 
 	@PermitAll
