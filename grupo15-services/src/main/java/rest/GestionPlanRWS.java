@@ -19,13 +19,17 @@ import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 
-import datatypes.DtDatosPlan;
+import datatypes.DtEtapa;
 import exceptions.AccionInvalida;
 import exceptions.EnfermedadInexistente;
+import exceptions.EtapaRepetida;
 import exceptions.PlanVacunacionInexistente;
-import exceptions.PlanVacunacionRepetido;
+import exceptions.VacunaInexistente;
+import interfaces.IEtapaLocal;
 import interfaces.IPlanVacunacionLocal;
 import rest.filter.ResponseBuilder;
 import rest.filter.TokenSecurity;
@@ -37,6 +41,9 @@ import rest.filter.TokenSecurity;
 public class GestionPlanRWS {
 	@EJB
 	IPlanVacunacionLocal cp;
+	
+	@EJB
+	IEtapaLocal controladorEtapa;
 	
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 
@@ -98,25 +105,14 @@ public class GestionPlanRWS {
 	@PermitAll
 	@POST
 	@Path("/agregar")
-	public Response agregarPlan(@CookieParam("x-access-token") Cookie cookie, DtDatosPlan dtp) {
-		if (dtp==null || dtp.getIdPlan() == null || dtp.getNombre() == null || dtp.getDesc() == null) {
-			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-					"No se han ingresado todos los parametros necesarios.");
-		}
+	public Response agregarPlan(String datos) {
 		try {
-			String token = cookie.getValue();
-			String ci = null;
-			try {
-				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-			} catch (InvalidJwtException e) {
-				e.printStackTrace();
-			}
-	        if( ci == null)
-	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
-			LOGGER.info("Cedula obtenida en REST: " + ci);
-			cp.agregarPlanVacunacion(Integer.parseInt(dtp.getIdPlan()), dtp.getNombre(), dtp.getDesc());
-			return Response.ok("Se ha agregado el plan con exito.").build();
-		} catch ( NumberFormatException | PlanVacunacionRepetido e) {
+			JSONObject datosInterno = new JSONObject(datos);
+			cp.agregarPlanVacunacion(datosInterno.getString("nombre"), datosInterno.getString("descripcion"));
+			DtEtapa etapa = (DtEtapa) datosInterno.get("etapa");
+			controladorEtapa.agregarEtapa(etapa.getId(), etapa.getFechaInicio(), etapa.getFechaFin(), etapa.getCondicion(), etapa.getPlanVac(), etapa.getVacuna());
+			return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha agregado el plan con exito.");
+		} catch ( NumberFormatException | JSONException | EtapaRepetida | PlanVacunacionInexistente | VacunaInexistente | AccionInvalida e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					e.getMessage());
 		}
