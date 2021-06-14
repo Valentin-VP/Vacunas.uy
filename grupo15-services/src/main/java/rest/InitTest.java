@@ -162,7 +162,7 @@ public class InitTest {
 			etapa.agregarEtapa(LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "51|80|industria|si", 8, "vacuna1Virus1");
 			etapa.agregarEtapa(LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|50|salud|si", 9, "vacuna1Virus1");
 			etapa.agregarEtapa(LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|500|industria|no", 10, "vacuna2Virus2");
-			//etapa.agregarEtapa(idEtapa, fIni, fFin, cond, idPlan, nombreVacuna);
+			//etapa.agregarEtapa(fIni, fFin, cond, idPlan, nombreVacuna);
 			
 			//agd.agregarAgenda("vact1", LocalDate.now());
 			
@@ -186,17 +186,21 @@ public class InitTest {
 			//cr.confirmarReserva(54657902, "virus2", 3, "vact1", LocalDate.now().plusDays(1), LocalTime.of(22, 00, 00), new DtUsuarioExterno("54657902", "", "industria", false));
 			
 			cr.confirmarReserva(48585559, "virus1", 8, "vact1", LocalDate.now().plusDays(1), LocalTime.of(23, 30, 00), new DtUsuarioExterno("48585559", "", "salud", true));
+			System.out.println("reserva 1");
 			cr.confirmarReserva(48585559, "virus2", 10, "vact1", LocalDate.now().plusDays(330), LocalTime.of(13, 30, 00), new DtUsuarioExterno("48585559", "", "industria", false));
+			System.out.println("reserva 2");
 			
 			cr.confirmarReserva(49457795, "virus1", 8, "vact1", LocalDate.now().plusDays(1), LocalTime.of(23, 30, 00), new DtUsuarioExterno("49457795", "", "salud", false));
+			System.out.println("reserva 3");
 			cr.confirmarReserva(49457795, "virus2", 10, "vact1", LocalDate.now().plusDays(330), LocalTime.of(13, 30, 00), new DtUsuarioExterno("49457795", "", "industria", false));
+			System.out.println("reserva 4");
 			
 			//creo las constancias
 			try {
-				cv.agregarConstanciaVacuna("vacuna1Virus1", 4, 2, LocalDate.now().plusDays(100), 48585559, 1);
-				cv.agregarConstanciaVacuna("vacuna2Virus2", 5, 2, LocalDate.now().plusDays(250), 48585559, 4);
-				cv.agregarConstanciaVacuna("vacuna1Virus1", 4, 2, LocalDate.now().plusDays(100), 49457795, 1);
-				cv.agregarConstanciaVacuna("vacuna2Virus2", 5, 2, LocalDate.now().plusDays(250), 49457795, 4);
+				cv.agregarConstanciaVacuna("vacuna1Virus1", 4, 2, LocalDate.now().plusDays(100), 48585559, 11);
+				cv.agregarConstanciaVacuna("vacuna2Virus2", 5, 2, LocalDate.now().plusDays(250), 48585559, 14);
+				cv.agregarConstanciaVacuna("vacuna1Virus1", 4, 2, LocalDate.now().plusDays(100), 49457795, 11);
+				cv.agregarConstanciaVacuna("vacuna2Virus2", 5, 2, LocalDate.now().plusDays(250), 49457795, 14);
 				//cv.agregarConstanciaVacuna(vacuna, periodoInmunidad, dosisRecibidas, fechaUltimaDosis, idUser, idEtapa);
 			} catch (ReservaInexistente e) {
 				// TODO Auto-generated catch block
