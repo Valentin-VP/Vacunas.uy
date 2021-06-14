@@ -67,7 +67,7 @@ public class PlanVacunacion {
 		for(Etapa e: this.etapas) {
 			dtEtapas.add(e.toDtEtapa());
 		}
-		DtPlanVacunacion dtPlanVacunacion = new DtPlanVacunacion(this.id, this.nombre, this.descripcion, dtEtapas);
+		DtPlanVacunacion dtPlanVacunacion = new DtPlanVacunacion(this.id, this.nombre, this.descripcion, dtEtapas, this.enfermedad.getNombre());
 		return dtPlanVacunacion;
 	}
 	public Enfermedad getEnfermedad() {
