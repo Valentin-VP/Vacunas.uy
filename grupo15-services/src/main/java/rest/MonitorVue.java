@@ -138,11 +138,21 @@ public class MonitorVue {
 	public Response seleccionarEnfermedad(@PathParam("e") String enfermedad){
 		try {
 			if(enfermedad.equals("Todos")) {
-				return Response.ok(pv.listarPlanesVacunacion()).build();
+				ArrayList<String> planes = new ArrayList<String>();
+				for(DtPlanVacunacion dtP: pv.listarPlanesVacunacion()) {
+					planes.add(dtP.getId() + "-" + dtP.getNombre());
+				}
+				return Response.ok(planes).build();
 			}else {
-				return Response.ok(rs.seleccionarEnfermedad(enfermedad).toString()).build();
+				ArrayList<String> planes = new ArrayList<String>();
+				for(DtPlanVacunacion dtP: pv.listarPlanesVacunacion()) {
+					if(dtP.getEnfermedad().equals(enfermedad)) {
+						planes.add(dtP.getId() + "-" + dtP.getNombre());
+					}
+				}
+				return Response.ok(planes).build();
 			}
-		} catch (EnfermedadInexistente | PlanVacunacionInexistente  e) {
+		} catch (PlanVacunacionInexistente  e) {
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
 		}
 	}
