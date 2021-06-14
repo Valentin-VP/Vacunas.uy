@@ -83,7 +83,7 @@ public class MonitorVue {
 			for (Map.Entry<String, String> entry : vacunas.entrySet()) {
 			    System.out.println(entry.getKey()+": " + entry.getValue());
 			    JSONObject dato = new JSONObject();
-			    dato.put("idEnfermedad", entry.getKey());
+			    dato.put("idVacuna", entry.getKey());
 			    dato.put("vacunados", entry.getValue());
 			    datos.put(dato);
 			}
