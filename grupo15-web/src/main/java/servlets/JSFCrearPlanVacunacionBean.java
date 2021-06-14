@@ -1,5 +1,6 @@
 package servlets;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -153,8 +154,8 @@ public class JSFCrearPlanVacunacionBean implements Serializable {
 				String message = reply.getString("message");
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Crear:", message));
 			}
-			cargaInicial();
-		} catch (JSONException e) {
+			FacesContext.getCurrentInstance().getExternalContext().redirect("/grupo15-web/JSF/CrearEtapa.xhtml");
+		} catch (JSONException | IOException e) {
 			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
 		}
