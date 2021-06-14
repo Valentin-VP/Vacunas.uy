@@ -1,26 +1,51 @@
 package rest;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.jose4j.jwt.consumer.InvalidJwtException;
 
-import exceptions.ConstanciaInexistente;
+import datatypes.DtEnfermedad;
+import datatypes.DtEtapa;
+import datatypes.DtPlanVacunacion;
+import datatypes.DtUsuarioExterno;
+import datatypes.DtVacuna;
+import datatypes.ErrorInfo;
+import exceptions.EnfermedadInexistente;
+import exceptions.EtapaInexistente;
+import exceptions.PlanVacunacionInexistente;
+import exceptions.UsuarioInexistente;
+import exceptions.VacunaInexistente;
 import interfaces.IConstanciaVacunaDAOLocal;
+import interfaces.IControladorVacunaLocal;
+import interfaces.IEnfermedadLocal;
+import interfaces.IEtapaLocal;
+import interfaces.IPlanVacunacionLocal;
+import interfaces.IReservaDAOLocal;
 import rest.filter.ResponseBuilder;
+import rest.filter.TokenSecurity;
 
 @DeclareRoles({"vacunador", "ciudadano", "administrador", "autoridad"})
 @Path("/monitor")
@@ -30,6 +55,19 @@ public class MonitorVue {
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 	@EJB(lookup = "java:global/grupo15/grupo15-ejb/ControladorConstanciaVacuna!interfaces.IConstanciaVacunaDAOLocal")
 	private IConstanciaVacunaDAOLocal IConstancia;
+	
+	@EJB
+	IReservaDAOLocal rs;
+	
+	@EJB
+	IPlanVacunacionLocal pv;
+	
+	@EJB
+	IControladorVacunaLocal vac;
+	
+	@EJB
+	IEtapaLocal et;
+	
 	public MonitorVue(){}
 	
 	@GET
@@ -92,5 +130,48 @@ public class MonitorVue {
             return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
                     e.getMessage());
         }
-	}	
+	}
+	
+	@PermitAll
+	@GET
+	@Path("/enf/{e}")
+	public Response seleccionarEnfermedad(@PathParam("e") String enfermedad){
+		try {
+			if(enfermedad.equals("Todos")) {
+				return Response.ok(pv.listarPlanesVacunacion()).build();
+			}else {
+				return Response.ok(rs.seleccionarEnfermedad(enfermedad)).build();
+			}
+		} catch (EnfermedadInexistente | PlanVacunacionInexistente  e) {
+			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
+		}
+	}
+	
+	 
+	@PermitAll
+	@GET
+	@Path("/pv/{e}/{p}")
+	public Response seleccionarPlan(@PathParam("e") String enfermedad, @PathParam("p") String plan){
+		try {
+			if(plan.equals("Todos")) {//si retorna un todos
+				ArrayList<String> vacunas = new ArrayList<String>();
+				for(DtVacuna dtVac: vac.listarVacunas()) {
+					if(dtVac.getDtEnf().equals(enfermedad)) {
+						vacunas.add(dtVac.getNombre());
+					}
+				}
+				return Response.ok(vacunas).build();
+			}else {
+				ArrayList<String> vacunas = new ArrayList<String>();
+				DtPlanVacunacion planVac = pv.obtenerPlanVacunacion(Integer.valueOf(plan));
+				for(DtEtapa dtEtp: planVac.getEtapa()) {			
+					vacunas.add(dtEtp.getVacuna());
+				}
+				return Response.ok(vacunas).build();
+			}
+		} catch ( VacunaInexistente | NumberFormatException | PlanVacunacionInexistente e) {
+			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
+		}
+	}
+	
 }
