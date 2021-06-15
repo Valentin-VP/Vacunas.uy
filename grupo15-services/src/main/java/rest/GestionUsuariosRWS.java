@@ -123,7 +123,6 @@ public class GestionUsuariosRWS {
 		JSONObject jsonObject;
 		try {
 			jsonObject = new JSONObject(datos);
-			LOGGER.info("Nombre recibido en el rest: " + jsonObject.getString("nombre"));
 			String token = cookie.getValue();
 			String ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
 			DtCiudadano ciudadano = IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci));
