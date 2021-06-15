@@ -170,6 +170,30 @@ public class GestionUsuariosRWS {
 	}
 	
 	@PermitAll
+	@POST
+	@Path("/ciudadano/datosModificar")
+	public Response datosModificarCiudadano(@CookieParam("x-access-token") Cookie cookie) {
+		
+		try {
+			String token = cookie.getValue();
+			String ci;
+			ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+			DtCiudadano ciudadano = IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci));
+			JSONObject retorno = new JSONObject();
+			retorno.put("direccion", ciudadano.getDireccion().getDireccion());
+			retorno.put("barrio", ciudadano.getDireccion().getBarrio());
+			retorno.put("departamento", ciudadano.getDireccion().getDireccion());
+			retorno.put("mail", ciudadano.getEmail());
+			return Response.ok(retorno).build();
+		} catch (InvalidJwtException | NumberFormatException | UsuarioInexistente | JSONException e) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+		}
+		
+			
+	}
+	
+	
+	@PermitAll
 	@GET
 	@Path("/ciudadano/buscar") //obtiene el usuario del cookie obtenido
 	public Response obtenerCiudadano(@CookieParam("x-access-token") Cookie cookie) {
