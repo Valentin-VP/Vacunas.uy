@@ -171,24 +171,6 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 		return (ArrayList<Vacuna>) query1.getResultList();
 	}
 	
-	//retorna el numero de constancias en este periodo para una enfermedad no las constancias
-	public int listarConstanciasPeriodoEnfermedad(int dias, String enfermedad) {
-		ArrayList<ConstanciaVacuna> constancias = new ArrayList<ConstanciaVacuna>();
-		//primero obtengo las vacunas de la enfermedad
-		ArrayList<Vacuna> vacunas = getVacunasEnfermedad(enfermedad);
-		for(int i=0; i<vacunas.size(); i++) {
-			Query query2 = em.createQuery("SELECT c FROM ConstanciaVacuna c WHERE vacuna = :vac AND fechaUltimaDosis BETWEEN :start AND :end");
-			query2.setParameter("vac", vacunas.get(i).getNombre());
-			query2.setParameter("start", LocalDate.now().minusDays(dias));
-			query2.setParameter("end", LocalDate.now());
-			ArrayList<ConstanciaVacuna> result = (ArrayList<ConstanciaVacuna>) query2.getResultList();
-			constancias.addAll(result);
-		}
-			return constancias.size();
-	}
-	
-
-	
 	public Map<String, String> listarConstanciaPorVacuna(){
 		Map<String, String> constancias = new HashMap<String,String>();
 		Query query1 = em.createQuery("SELECT nombre FROM Vacuna");
@@ -219,5 +201,34 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 			constancias.put(enf, String.valueOf(vacunados));
 		}
 		return constancias;
+	}
+	
+	
+	public int filtroPorVacuna(int dias, String vacuna) {
+		Query query = em.createQuery("SELECT c FROM ConstanciaVacuna c WHERE vacuna = :vac AND fechaUltimaDosis BETWEEN :start AND :end");
+		query.setParameter("start", LocalDate.now().minusDays(dias));
+		query.setParameter("end", LocalDate.now());
+		query.setParameter("vac", vacuna);
+		
+		ArrayList<ConstanciaVacuna> result = (ArrayList<ConstanciaVacuna>) query.getResultList();
+		int retorno = result.size();
+		return retorno;
+	}
+	
+	
+	//retorna el numero de constancias en este periodo para una enfermedad no las constancias
+	public int filtroPorEnfermedad(int dias, String enfermedad) {
+		ArrayList<ConstanciaVacuna> constancias = new ArrayList<ConstanciaVacuna>();
+		//primero obtengo las vacunas de la enfermedad
+		ArrayList<Vacuna> vacunas = getVacunasEnfermedad(enfermedad);
+		for(int i=0; i<vacunas.size(); i++) {
+			Query query2 = em.createQuery("SELECT c FROM ConstanciaVacuna c WHERE vacuna = :vac AND fechaUltimaDosis BETWEEN :start AND :end");
+			query2.setParameter("vac", vacunas.get(i).getNombre());
+			query2.setParameter("start", LocalDate.now().minusDays(dias));
+			query2.setParameter("end", LocalDate.now());
+			ArrayList<ConstanciaVacuna> result = (ArrayList<ConstanciaVacuna>) query2.getResultList();
+			constancias.addAll(result);
+		}
+			return constancias.size();
 	}
 }

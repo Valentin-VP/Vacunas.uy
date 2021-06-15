@@ -12,6 +12,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -29,6 +30,7 @@ import org.jose4j.jwt.consumer.InvalidJwtException;
 
 import datatypes.DtEnfermedad;
 import datatypes.DtEtapa;
+import datatypes.DtGetVacunados;
 import datatypes.DtPlanVacunacion;
 import datatypes.DtUsuarioExterno;
 import datatypes.DtVacuna;
@@ -70,47 +72,73 @@ public class MonitorVue {
 	
 	public MonitorVue(){}
 	
-	@GET
-	@Path("/vacunadosdma")
+	@POST
+	@Path("/vacunados")
 	@PermitAll
-	public Response getVacunados() { //retorna todos los vacunados por mes dia y año
-		LOGGER.info("Entro a getVacunados");
-			int dia = IConstancia.listarConstanciasPeriodo(1); //para setear el dia
-			int mes = IConstancia.listarConstanciasPeriodo(30); //para setear el mes
-			int anio = IConstancia.listarConstanciasPeriodo(365); //para setear el anio
+	public Response getVacunados(DtGetVacunados datos) {
+		String enfermedad = datos.getEnfermedad();
+		String[] aux = datos.getPlan().split("-");//el plan me llega como "id-nombre"
+		String plan = aux[0];
+		String vacuna = datos.getVacunal();
 		
-		JSONObject datos = new JSONObject();
-        try {
-            datos.put("dia", dia);
-            datos.put("mes", mes);
-            datos.put("anio", anio);
-            return ResponseBuilder.createResponse(Response.Status.OK, datos);                       
-        } catch (JSONException e) {
-            return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-                    e.getMessage());
-        }
+		int dia = 0;
+		int mes = 0;
+		int anio = 0;
+		
+		if(enfermedad.equals("Todosl")) {
+			if(plan.equals("Todos")) {
+				if(vacuna.equals("Todos")) {
+					//no filtro
+					dia = this.getVacunadosdma(1);
+					mes = this.getVacunadosdma(30);
+					anio = this.getVacunadosdma(365);
+				}else {
+					//filtro por vacuna
+					dia = this.filtroPorVacuna(1, vacuna);
+					mes = this.filtroPorVacuna(30, vacuna);
+					anio = this.filtroPorVacuna(365, vacuna);
+				}
+			}else {
+				if(vacuna.equals("Todos")) {
+					//filtro por plan
+				}else {
+					//filtro por plan y vacuna
+				}
+			}
+		}else {
+			if(plan.equals("Todos")) {
+				if(vacuna.equals("Todos")) {
+					//filtro por enfermedad
+					dia = this.filtroPorEnfermedad(1, enfermedad);
+					mes = this.filtroPorEnfermedad(30, enfermedad);
+					anio = this.filtroPorEnfermedad(365, enfermedad);
+				}else {
+					//filtro por enfermedad y vacuna
+				}
+			}else {
+				if(vacuna.equals("Todos")) {
+					//filtro por enfermedad y plan
+				}else {
+					//filtro por enfermedad plan y vacuna
+				}
+			}
+		}
+		//luego de settear los datos genero el JSONObject
+		JSONObject respuesta = new JSONObject();
+	    try {
+	        respuesta.put("dia", dia);
+	        respuesta.put("mes", mes);
+	        respuesta.put("anio", anio);
+	        return ResponseBuilder.createResponse(Response.Status.OK, datos.toString());                       
+	    } catch (JSONException e) {
+	        return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+	                e.getMessage());
+	    }
 	}
 	
-	@GET
-	@Path("/vacunadosdmae")
-	@PermitAll        //retorna los vacunados por dia mes anio de una enfermedad
-	public Response getVacunadosEnf(@QueryParam("enf") String enfermedad) {
-		int dia = IConstancia.listarConstanciasPeriodoEnfermedad(1, enfermedad); //para setear el dia
-		int mes = IConstancia.listarConstanciasPeriodoEnfermedad(30, enfermedad); //para setear el mes
-		int anio = IConstancia.listarConstanciasPeriodoEnfermedad(365, enfermedad); //para setear el anio
-		
-		JSONObject datos = new JSONObject();
-        try {
-            datos.put("dia", dia);
-            datos.put("mes", mes);
-            datos.put("anio", anio);
-            return ResponseBuilder.createResponse(Response.Status.OK, datos);                       
-        } catch (JSONException e) {
-            return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-                    e.getMessage());
-        }
-	}
-
+	
+	
+	//retorna los vacunados de cada vacuna
 	@GET
 	@Path("/vacunadosporvacs")
 	@PermitAll
@@ -132,6 +160,9 @@ public class MonitorVue {
         }
 	}
 	
+	
+	
+	//retorna los vacunados de cada enfermedad
 	@GET
 	@Path("/vacunadosporenf")
 	@PermitAll
@@ -152,6 +183,9 @@ public class MonitorVue {
         }
 	}
 	
+	
+	
+	//retorna los los planes que tienen la enfermedad
 	@PermitAll
 	@GET
 	@Path("/enf/{e}")
@@ -178,6 +212,7 @@ public class MonitorVue {
 	}
 	
 	 
+	//retorna las vacunas de una enfermedad, de un plan o de un plan y una enfermedad
 	@PermitAll
 	@GET
 	@Path("/pv/{e}/{p}")
@@ -206,4 +241,21 @@ public class MonitorVue {
 		}
 	}
 	
+	
+	//retorna todos los vacunados por mes dia y año
+	public int getVacunadosdma(int dia) { 
+		LOGGER.info("Entro al no filtro");
+		return IConstancia.listarConstanciasPeriodo(dia);
+	}
+	
+	public int filtroPorVacuna(int dias, String vacuna) {
+		LOGGER.info("Entro a filtroPorVacuna");
+		return IConstancia.filtroPorVacuna(dias, vacuna);
+	}
+	
+
+	public int filtroPorEnfermedad(int dias, String enfermedad) {
+		LOGGER.info("Entro a filtoporEnfermedad");
+		return IConstancia.filtroPorEnfermedad(dias, enfermedad);
+	}
 }
