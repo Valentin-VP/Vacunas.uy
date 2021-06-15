@@ -183,7 +183,7 @@ public class GestionUsuariosRWS {
 			retorno.put("barrio", ciudadano.getDireccion().getBarrio());
 			retorno.put("departamento", ciudadano.getDireccion().getDepartamento());
 			retorno.put("mail", ciudadano.getEmail());
-			return Response.ok(retorno).build();
+			return Response.ok(retorno.toString()).build();
 		} catch (InvalidJwtException | NumberFormatException | UsuarioInexistente | JSONException e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 		}	
