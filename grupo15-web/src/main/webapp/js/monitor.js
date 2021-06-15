@@ -8,32 +8,8 @@ var res = new Vue({
         listaPlanes: [],
         listaVacunas: [],
         listVacPorVac: [],
-        listEnfHardC: [
-            {
-                idEnfermedad: "covid",
-                vacunados: 10
-            },
-            {
-                idEnfermedad: "fiebre amarilla",
-                vacunados: 30
-            },
-            {
-                idEnfermedad: "meningitis",
-                vacunados: 20
-            },
-            {
-                idEnfermedad: "hepatitis",
-                vacunados: 150
-            },
-            {
-                idEnfermedad: "tuberculosis",
-                vacunados: 80
-            },
-            {
-                idEnfermedad: "gripe",
-                vacunados: 5
-            }
-        ],
+        listVacPorEnf: [],
+       
 
         etiquetas: [],
         valores: [],
@@ -42,7 +18,7 @@ var res = new Vue({
         nroDia: '400',
         nroMes: '200',
         nroAnio: '1000',
-        variablePrueba: '50%',
+       
     }),
 
 
@@ -54,6 +30,7 @@ var res = new Vue({
         this.CargarEnfermedades();
         this.setGrafica1();
         this.CargarVacunadosPorVacuna();
+        this.CargarVacunadosPorEnf();
         
     },
 
@@ -66,14 +43,14 @@ var res = new Vue({
             const $grafica = document.querySelector("#grafica");
             // Las etiquetas son las que van en el eje X. 
 
-            for (i in this.listEnfHardC) {
+            for (i in this.listVacPorEnf) {
 
-                this.etiquetas.push(this.listEnfHardC[i].idEnfermedad)
+                this.etiquetas.push(this.listVacPorEnf[i].idEnfermedad)
             };
 
-            for (i in this.listEnfHardC) {
+            for (i in this.listVacPorEnf) {
 
-                this.valores.push(this.listEnfHardC[i].vacunados)
+                this.valores.push(this.listVacPorEnf[i].vacunados)
             };
 
             console.log("Lista Enfermedades", this.etiquetas);
@@ -114,6 +91,7 @@ var res = new Vue({
             console.log("IdPlan:" + this.IdPlan);
             IdVac = this.IdVac;
             console.log("IdVac:" + this.IdVac);
+            this.cargarDiaMesAnio();
 
         },
 
@@ -162,16 +140,39 @@ var res = new Vue({
             .then((response => {
                 console.log("GET vacunas: ", response.data)
                 this.listaVacunas = response.data
-                console.log("List vacunas: ", listaVacunas)
+                console.log("List vacunas: ", this.listaVacunas)
             }))
            
         
 
         },
 
-      
+        CargarVacunadosPorEnf() {
 
-      
+            axios.get("http://localhost:8080/grupo15-services/rest/monitor/vacunadosporenf")
+                .then((response => {
+                    console.log("GET Vacunados Por Enf: ", response.data)
+                    this.listVacPorEnf = response.data;
+                    console.log("List Vacunados Por Enf: ", this.listVacPorEnf);
+                    this.setGrafica1();
+                }))
+                
+
+        },
+        cargarDiaMesAnio() {
+        axios.post("http://localhost:8080/grupo15-services/rest/monitor/vacunados", {
+            enfermedad : this.IdEnf.toString(),
+            plan : this.IdPlan.toString(),
+            vacuna : this.IdVac.toString(),
+            
+          })
+          .then((response => {
+            console.log("GET vacunas: ", response.data)
+         
+           
+        }))
+          
+        },
 
         Grafica2() {
             // Obtener una referencia al elemento canvas del DOM
