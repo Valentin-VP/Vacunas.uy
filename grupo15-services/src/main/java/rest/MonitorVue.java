@@ -132,6 +132,26 @@ public class MonitorVue {
         }
 	}
 	
+	@GET
+	@Path("/vacunadosporenf")
+	@PermitAll
+	public Response getVacunadosPorEnfermedad() {
+		Map<String, String> vacunados= IConstancia.listarConstanciaPorEnfermedad();
+		try {
+			JSONArray datos = new JSONArray();
+			for (Map.Entry<String, String> entry : vacunados.entrySet()) {
+			    JSONObject dato = new JSONObject();
+			    dato.put("idEnfermedad", entry.getKey());
+			    dato.put("vacunados", entry.getValue());
+			    datos.put(dato);
+			}
+			return Response.ok(datos.toString()).build();
+		} catch (JSONException e) {
+            return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+                    e.getMessage());
+        }
+	}
+	
 	@PermitAll
 	@GET
 	@Path("/enf/{e}")

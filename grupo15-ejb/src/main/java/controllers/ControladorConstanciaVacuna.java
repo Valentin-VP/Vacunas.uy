@@ -163,16 +163,19 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 		return retorno;
 	}
 	
+	//retorna las vacunas de una enfermedad
+	@SuppressWarnings("unchecked")
+	private ArrayList<Vacuna> getVacunasEnfermedad(String enfermedad){
+		Query query1 = em.createQuery("SELECT v FROM Vacuna v WHERE enfermedad_nombre = :enf");
+		query1.setParameter("enf", enfermedad);
+		return (ArrayList<Vacuna>) query1.getResultList();
+	}
+	
 	//retorna el numero de constancias en este periodo para una enfermedad no las constancias
 	public int listarConstanciasPeriodoEnfermedad(int dias, String enfermedad) {
 		ArrayList<ConstanciaVacuna> constancias = new ArrayList<ConstanciaVacuna>();
-		
 		//primero obtengo las vacunas de la enfermedad
-		Query query1 = em.createQuery("SELECT v FROM Vacuna v WHERE enfermedad_nombre = :enf");
-		query1.setParameter("enf", enfermedad);
-		@SuppressWarnings("unchecked")
-		ArrayList<Vacuna> vacunas = (ArrayList<Vacuna>) query1.getResultList();
-		
+		ArrayList<Vacuna> vacunas = getVacunasEnfermedad(enfermedad);
 		for(int i=0; i<vacunas.size(); i++) {
 			Query query2 = em.createQuery("SELECT c FROM ConstanciaVacuna c WHERE vacuna = :vac AND fechaUltimaDosis BETWEEN :start AND :end");
 			query2.setParameter("vac", vacunas.get(i).getNombre());
@@ -181,9 +184,10 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 			ArrayList<ConstanciaVacuna> result = (ArrayList<ConstanciaVacuna>) query2.getResultList();
 			constancias.addAll(result);
 		}
-		
 			return constancias.size();
 	}
+	
+
 	
 	public Map<String, String> listarConstanciaPorVacuna(){
 		Map<String, String> constancias = new HashMap<String,String>();
@@ -199,4 +203,21 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 		return constancias;
 	}
 	
+	public Map<String, String> listarConstanciaPorEnfermedad(){
+		Map<String, String> constancias = new HashMap<String,String>();
+		Query query1 = em.createQuery("SELECT nombre FROM Enfermedad");
+		@SuppressWarnings("unchecked")
+		ArrayList<String> enfermedades = (ArrayList<String>)query1.getResultList();//obtengo las enfermedades
+		for(String enf: enfermedades) {
+			ArrayList<Vacuna> vacunas = getVacunasEnfermedad(enf);
+			int vacunados = 0;
+			for(Vacuna v: vacunas) {
+				Query query2 = em.createQuery("SELECT c FROM ConstanciaVacuna c WHERE vacuna = :vac");
+				query2.setParameter("vac", v.getNombre());
+				vacunados = vacunados + query2.getResultList().size();
+			}
+			constancias.put(enf, String.valueOf(vacunados));
+		}
+		return constancias;
+	}
 }
