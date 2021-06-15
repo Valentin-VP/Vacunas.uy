@@ -170,10 +170,9 @@ public class GestionUsuariosRWS {
 	}
 	
 	@PermitAll
-	@POST
+	@GET
 	@Path("/ciudadano/datosModificar")
-	public Response datosModificarCiudadano(@CookieParam("x-access-token") Cookie cookie) {
-		
+	public Response datosModificarCiudadano(@CookieParam("x-access-token") Cookie cookie) {	
 		try {
 			String token = cookie.getValue();
 			String ci;
@@ -187,9 +186,7 @@ public class GestionUsuariosRWS {
 			return Response.ok(retorno).build();
 		} catch (InvalidJwtException | NumberFormatException | UsuarioInexistente | JSONException e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
-		}
-		
-			
+		}	
 	}
 	
 	
