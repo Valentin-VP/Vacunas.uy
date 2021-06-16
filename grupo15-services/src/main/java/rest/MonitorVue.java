@@ -30,7 +30,6 @@ import org.jose4j.jwt.consumer.InvalidJwtException;
 
 import datatypes.DtEnfermedad;
 import datatypes.DtEtapa;
-import datatypes.DtGetVacunados;
 import datatypes.DtPlanVacunacion;
 import datatypes.DtUsuarioExterno;
 import datatypes.DtVacuna;
@@ -88,13 +87,14 @@ public class MonitorVue {
 		} catch (JSONException e1) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e1.getMessage());
 		}
+		
 		System.out.println(plan);
 		
 		int dia = -1;
 		int mes = -1;
 		int anio = -1;
 		
-		if(enfermedad.equals("Todosl")) {
+		if(enfermedad.equals("Todos")) {
 			if(plan.equals("Todos")) {
 				if(vacuna.equals("Todos")) {
 					//no filtro
@@ -192,7 +192,7 @@ public class MonitorVue {
 	        respuesta.put("dia", dia);
 	        respuesta.put("mes", mes);
 	        respuesta.put("anio", anio);
-	        return ResponseBuilder.createResponse(Response.Status.OK, datos.toString());                       
+	        return ResponseBuilder.createResponse(Response.Status.OK, respuesta.toString());                       
 	    } catch (JSONException e) {
 	        return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 	    }

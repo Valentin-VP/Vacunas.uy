@@ -159,7 +159,6 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 		
 		ArrayList<ConstanciaVacuna> result = (ArrayList<ConstanciaVacuna>) query.getResultList();
 		int retorno = result.size();
-		System.out.println(retorno);
 		return retorno;
 	}
 	
