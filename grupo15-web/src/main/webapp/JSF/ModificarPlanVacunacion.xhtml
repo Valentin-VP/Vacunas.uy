@@ -51,11 +51,11 @@
 
 <div>
 
-<p:outputLabel style="width:60%" >Seleccione Plan de Vacunación:    </p:outputLabel>
- <p:selectOneMenu value="#{ModificarPlan.nombre}" style="border-width: thin" >
- <p:ajax event="itemSelect" update="@this"   />
-	<f:selectItems value="#{ModificarPlan.nombres}" />
-	<p:ajax event="itemSelect" update="@this"   />
+<p:outputLabel style="width:40%" >Plan de Vacunacion:    </p:outputLabel>
+ <p:selectOneMenu value="#{ModificarPlan.plan}"  style="border-width: thin">
+ <f:selectItems value="#{ModificarPlan.dtPlanes}" var="p" itemValue="#{p.id}" itemLabel="#{p.id} - #{p.nombre}"   />
+<p:ajax event="itemSelect" update="selectedItemText" />
+<p:ajax event="itemSelect" update="selectedItemText2" />
 
 </p:selectOneMenu>
 
@@ -64,13 +64,19 @@
 
 
 <div>
-<p:outputLabel style="width:40%" >Nombre:    </p:outputLabel>
+
+<p:outputLabel style="width:40%" >Nombre Anterior: </p:outputLabel>
+<p:outputLabel id="selectedItemText" value="#{ModificarPlan.dtPlanes}" var="p" itemLabel="#{p.nombre}"></p:outputLabel><br></br>
+<p:outputLabel style="width:40%" >Nuevo Nombre:    </p:outputLabel>
 <p:inputText id="nombre"  value="#{ModificarPlan.nombre}" style="width:60%" > </p:inputText>
 
 </div>
 
+
 <div>
-<p:outputLabel style="width:40%">Descripcion:    </p:outputLabel>
+<p:outputLabel style="width:40%" >Descripcion Anterior: </p:outputLabel>
+<p:outputLabel id="selectedItemText2" value="#{ModificarPlan.dtPlanes}" var="p" itemLabel="#{p.descripcion}"></p:outputLabel><br></br>
+<p:outputLabel style="width:40%">Nueva Descripcion:    </p:outputLabel>
 <p:inputText id="descripcion"  value="#{ModificarPlan.descripcion}" style="width:60%" > </p:inputText>
 </div>
 

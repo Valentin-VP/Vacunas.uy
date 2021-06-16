@@ -53,40 +53,64 @@
 <p:outputLabel style="width:40%" >Seleccione Vacuna:    </p:outputLabel>
  <p:selectOneMenu value="#{ModificarVacuna.nombre}"  style="border-width: thin">
 	<f:selectItems value="#{ModificarVacuna.nombres}" />
+	<p:ajax event="itemSelect" update="selectedItemText" />
+<p:ajax event="itemSelect" update="selectedItemText2" />
+<p:ajax event="itemSelect" update="selectedItemText3" />
+<p:ajax event="itemSelect" update="selectedItemText4" />
+<p:ajax event="itemSelect" update="selectedItemText5" />
+<p:ajax event="itemSelect" update="selectedItemText6" />
 </p:selectOneMenu>
 </div>
 
 
 <div>
+
+<p:outputLabel style="width:40%" >Nombre Anterior: </p:outputLabel>
+<p:outputLabel id="selectedItemText" value="#{ModificarVacuna.nombres}" var="p" itemLabel="#{p.nombre}"></p:outputLabel><br></br>
 <p:outputLabel style="width:40%" >Nombre:    </p:outputLabel>
 <p:inputText id="nombre" value="#{ModificarVacuna.nombre}" style="width:60%" > </p:inputText>
 
 </div>
 
 <div>
+
+<p:outputLabel style="width:40%" >Cantidad de dosis anterior: </p:outputLabel>
+<p:outputLabel id="selectedItemText2" value="#{ModificarVacuna.nombres}" var="p" itemLabel="#{p.cantDosis}"></p:outputLabel><br></br>
 <p:outputLabel style="width:40%" >Cantidad de Dosis:    </p:outputLabel>
 <p:inputNumber id="cantDosis"  value="#{ModificarVacuna.cantDosis}" style="width:40%" > </p:inputNumber>
 </div>
 
 <div>
+
+<p:outputLabel style="width:40%" >Días de expiración anterior: </p:outputLabel>
+<p:outputLabel id="selectedItemText3" value="#{ModificarVacuna.nombres}" var="p" itemLabel="#{p.expira}"></p:outputLabel><br></br>
 <p:outputLabel style="width:40%">Expira:    </p:outputLabel>
 <p:inputNumber id="expira"  value="#{ModificarVacuna.expira}" style="width:40%" > </p:inputNumber>
+<p:outputLabel style="width:40%" >días</p:outputLabel>
 </div>
 
 <div>
+
+<p:outputLabel style="width:40%" >Tiempo entre dosis anterior: </p:outputLabel>
+<p:outputLabel id="selectedItemText4" value="#{ModificarVacuna.nombres}" var="p" itemLabel="#{p.tiempoEntreDosis}"></p:outputLabel><br></br>
 <p:outputLabel style="width:40%">Tiempo entre Dosis:    </p:outputLabel>
 <p:inputNumber id="tiempoEntreDosis"  value="#{ModificarVacuna.tiempoEntreDosis}"  style="width:40%"> </p:inputNumber>
+<p:outputLabel style="width:40%" >días </p:outputLabel>
 </div>
 
 <div>
-<p:outputLabel style="width:40%" >Enfermedad:    </p:outputLabel>
+
+<p:outputLabel style="width:40%" >Enfermedad anterior: </p:outputLabel>
+<p:outputLabel id="selectedItemText5" value="#{ModificarVacuna.nombres}" var="p" itemLabel="#{p.enfermedad}"></p:outputLabel><br></br>
+<p:outputLabel style="width:40%" >Enfermedad Nueva:    </p:outputLabel>
  <p:selectOneMenu value="#{ModificarVacuna.enfermedad}"  style="border-width: thin">
 	<f:selectItems value="#{ModificarVacuna.enfermedades}" />
 </p:selectOneMenu>
 </div>
 
 <div>
-
+<p:outputLabel style="width:40%" >Laboratorio anterior: </p:outputLabel>
+<p:outputLabel id="selectedItemText6" value="#{ModificarVacuna.nombres}" var="p" itemLabel="#{p.laboratorio}"></p:outputLabel><br></br>
 <p:outputLabel style="width:40%" >Laboratorio:    </p:outputLabel>
  <p:selectOneMenu value="#{ModificarVacuna.laboratorio}"  style="border-width: thin">
 	<f:selectItems value="#{ModificarVacuna.laboratorios}" />
