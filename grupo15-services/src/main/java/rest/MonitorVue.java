@@ -273,13 +273,21 @@ public class MonitorVue {
 	public Response seleccionarPlan(@PathParam("e") String enfermedad, @PathParam("p") String plan){
 		try {
 			if(plan.equals("Todos")) {//si retorna un todos
-				ArrayList<String> vacunas = new ArrayList<String>();
-				for(DtVacuna dtVac: vac.listarVacunas()) {
-					if(dtVac.getDtEnf().getNombre().equals(enfermedad)) {
+				if(enfermedad.equals("Todos")) {
+					ArrayList<String> vacunas = new ArrayList<String>();
+					for(DtVacuna dtVac: vac.listarVacunas()) {
 						vacunas.add(dtVac.getNombre());
 					}
+					return Response.ok(vacunas).build();
+				}else {
+					ArrayList<String> vacunas = new ArrayList<String>();
+					for(DtVacuna dtVac: vac.listarVacunas()) {
+						if(dtVac.getDtEnf().getNombre().equals(enfermedad)) {
+							vacunas.add(dtVac.getNombre());
+						}
+					}
+					return Response.ok(vacunas).build();
 				}
-				return Response.ok(vacunas).build();
 			}else {
 				String[] id = plan.split("-");
 				String idPlan = id[0];
