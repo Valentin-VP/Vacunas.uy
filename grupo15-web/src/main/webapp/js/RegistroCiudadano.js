@@ -50,7 +50,7 @@ var res = new Vue({
         .then(response => {
           if (response.status === 201) {
             console.log("Respuesta: " + response.status)
-            window.location.href = "http://localhost:8080/grupo15-web/html/MenuCiudadano.html";
+            window.location.href = "http://localhost:8080/grupo15-web/html/login.html";
           }
 
 
