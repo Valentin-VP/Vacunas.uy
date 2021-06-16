@@ -145,8 +145,7 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
     
 	private DtCiudadano getDtUsuario(Ciudadano u) {
 		if (u!=null)
-			return new DtCiudadano(
-					u.getIdUsuario(), u.getNombre(), u.getApellido(), u.getFechaNac(), u.getEmail(), u.getDireccion(), u.getSexo(), u.getTipoSector(), u.isAutenticado());
+			return new DtCiudadano(u.getIdUsuario(), u.getNombre(), u.getApellido(), u.getFechaNac(), u.getEmail(), u.getDireccion(), u.getSexo(), u.getTipoSector(), u.isAutenticado());
 		else
 			return null;
 	}
@@ -212,6 +211,7 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 		
 		ArrayList<ConstanciaVacuna> result = (ArrayList<ConstanciaVacuna>) query.getResultList();
 		int retorno = result.size();
+		System.out.println();
 		return retorno;
 	}
 	
@@ -237,9 +237,21 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 		Query query = em.createQuery("SELECT c FROM ConstanciaVacuna c WHERE reserva_etapa_planvacunacion_id = :plan AND fechaUltimaDosis BETWEEN :start AND :end");
 		query.setParameter("start", LocalDate.now().minusDays(dias));
 		query.setParameter("end", LocalDate.now());
-		query.setParameter("vac", plan);
+		query.setParameter("plan", Integer.valueOf(plan));
 		
 		ArrayList<ConstanciaVacuna> constancias = (ArrayList<ConstanciaVacuna>) query.getResultList();
 		return constancias.size();
 	}
+	
+	public int filtroPorPlanYVacuna(int dias, String plan, String vacuna) {
+		Query query = em.createQuery("SELECT c FROM ConstanciaVacuna c WHERE reserva_etapa_planvacunacion_id = :plan AND vacuna = :vac AND fechaUltimaDosis BETWEEN :start AND :end");
+		query.setParameter("start", LocalDate.now().minusDays(dias));
+		query.setParameter("end", LocalDate.now());
+		query.setParameter("plan", Integer.valueOf(plan));
+		query.setParameter("vac", vacuna);
+		
+		ArrayList<ConstanciaVacuna> constancias = (ArrayList<ConstanciaVacuna>) query.getResultList();
+		return constancias.size();
+	}
+	
 }

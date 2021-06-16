@@ -87,8 +87,7 @@ public class MonitorVue {
 		} catch (JSONException e1) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e1.getMessage());
 		}
-		
-		System.out.println(plan);
+		System.out.println(enfermedad + " " + plan + " " + vacuna);
 		
 		int dia = -1;
 		int mes = -1;
@@ -118,27 +117,13 @@ public class MonitorVue {
 					dia = IConstancia.filtroPorPlan(1, plan);
 					mes = IConstancia.filtroPorPlan(30, plan);
 					anio = IConstancia.filtroPorPlan(365, plan);
-					
 					//----------------------------------------------------------------------
 				}else {
 					//filtro por plan y vacuna
 					//----------------------------------------------------------------------
-					ArrayList<String> vacunas = new ArrayList<String>();
-					DtPlanVacunacion planVac;
-					try {
-						planVac = pv.obtenerPlanVacunacion(Integer.valueOf(plan));
-						for(DtEtapa dtEtp: planVac.getEtapa()) {			
-							vacunas.add(dtEtp.getVacuna());
-						}
-						if(!vacunas.isEmpty()) {
-							dia = IConstancia.filtroPorVacuna(1, vacuna);
-							mes = IConstancia.filtroPorVacuna(30, vacuna);
-							anio = IConstancia.filtroPorVacuna(365, vacuna);
-						}
-					} catch (NumberFormatException | PlanVacunacionInexistente e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					dia = IConstancia.filtroPorPlanYVacuna(1, plan, vacuna);
+					mes = IConstancia.filtroPorPlanYVacuna(30, plan, vacuna);
+					anio = IConstancia.filtroPorPlanYVacuna(365, plan, vacuna);
 					//----------------------------------------------------------------------
 				}
 			}
@@ -154,34 +139,25 @@ public class MonitorVue {
 				}else {
 					//filtro por enfermedad y vacuna
 					//----------------------------------------------------------------------
-					
+					dia = IConstancia.filtroPorVacuna(1, vacuna);
+					mes = IConstancia.filtroPorVacuna(30, vacuna);
+					anio = IConstancia.filtroPorVacuna(365, vacuna);
 					//----------------------------------------------------------------------
 				}
 			}else {
 				if(vacuna.equals("Todos")) {
 					//filtro por enfermedad y plan
 					//----------------------------------------------------------------------
-					ArrayList<String> planes = new ArrayList<String>();
-					try {
-						for(DtPlanVacunacion dtP: pv.listarPlanesVacunacion()) {
-							System.out.println(dtP.getEnfermedad());
-							if(dtP.getEnfermedad().equals(enfermedad))
-								planes.add(dtP.getId() + "-" + dtP.getNombre());
-						}
-						if(!planes.isEmpty()) {
-							dia = IConstancia.filtroPorPlan(1, plan);
-							mes = IConstancia.filtroPorPlan(30, plan);
-							anio = IConstancia.filtroPorPlan(365, plan);
-						}
-						
-					} catch (PlanVacunacionInexistente e) {
-						 return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
-					}
+					dia = IConstancia.filtroPorPlan(1, plan);
+					mes = IConstancia.filtroPorPlan(30, plan);
+					anio = IConstancia.filtroPorPlan(365, plan);
 					//----------------------------------------------------------------------
 				}else {
 					//filtro por enfermedad plan y vacuna
 					//----------------------------------------------------------------------
-					
+					dia = IConstancia.filtroPorPlanYVacuna(1, plan, vacuna);
+					mes = IConstancia.filtroPorPlanYVacuna(30, plan, vacuna);
+					anio = IConstancia.filtroPorPlanYVacuna(365, plan, vacuna);
 					//----------------------------------------------------------------------
 				}
 			}
@@ -192,7 +168,7 @@ public class MonitorVue {
 	        respuesta.put("dia", dia);
 	        respuesta.put("mes", mes);
 	        respuesta.put("anio", anio);
-	        return ResponseBuilder.createResponse(Response.Status.OK, respuesta.toString());                       
+	        return ResponseBuilder.createResponse(Response.Status.OK, respuesta);                       
 	    } catch (JSONException e) {
 	        return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 	    }
