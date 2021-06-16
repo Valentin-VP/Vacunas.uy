@@ -15,9 +15,9 @@ var res = new Vue({
         valores: [],
         etiquetas2: [],
         valores2: [],
-        nroDia: '400',
-        nroMes: '200',
-        nroAnio: '1000',
+        nroDia: '',
+        nroMes: '',
+        nroAnio: '',
        
     }),
 
@@ -161,14 +161,19 @@ var res = new Vue({
         },
         cargarDiaMesAnio() {
         axios.post("http://localhost:8080/grupo15-services/rest/monitor/vacunados", {
-            enfermedad : this.IdEnf.toString(),
-            plan : this.IdPlan.toString(),
-            vacuna : this.IdVac.toString(),
+            enfermedad: this.IdEnf.toString(),
+            plan: this.IdPlan.toString(),
+            vacuna: this.IdVac.toString(),
             
           })
           .then((response => {
             console.log("GET vacunas: ", response.data)
-         
+            this.nroDia= response.data.dia;
+            console.log("Dia: ", response.data.dia)
+            this.nroMes= response.data.mes;
+            console.log("Mes: ", response.data.mes)
+            this.nroAnio= response.data.anio;
+            console.log("Año: ", response.data.anio)
            
         }))
           
