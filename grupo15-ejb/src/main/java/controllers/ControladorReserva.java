@@ -448,13 +448,15 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 						boolean salgo = false;
 						if (!salgo) {
 							Agenda a = getAgendaFecha(v, fecha.toLocalDate());
-							for (Reserva reservaAComparar: a.getReservas()) {
-								if (reservaAComparar.equals(r)) {
-									a.getReservas().remove(reservaAComparar);
-									em.merge(reservaAComparar);
-									salgo = true;
-									break;
-								}
+							if (a!=null) {
+								for (Reserva reservaAComparar: a.getReservas()) {
+									if (reservaAComparar.equals(r)) {
+										a.getReservas().remove(reservaAComparar);
+										em.merge(reservaAComparar);
+										salgo = true;
+										break;
+									}
+								}	
 							}
 						}
 					}
