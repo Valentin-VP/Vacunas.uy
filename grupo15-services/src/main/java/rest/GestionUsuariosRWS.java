@@ -173,9 +173,10 @@ public class GestionUsuariosRWS {
 	@GET
 	@Path("/ciudadano/datosModificar")
 	public Response datosModificarCiudadano(@CookieParam("x-access-token") Cookie cookie) {	
+		System.out.println("entro al datosmodificar");
+		String token = cookie.getValue();
+		String ci;
 		try {
-			String token = cookie.getValue();
-			String ci;
 			ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
 			DtCiudadano ciudadano = IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci));
 			JSONObject retorno = new JSONObject();
