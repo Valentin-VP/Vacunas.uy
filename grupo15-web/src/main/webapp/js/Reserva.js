@@ -11,6 +11,7 @@ var res = new Vue({
       listaVacunatorios: [],
       listaPlanes: [],
       listaHoras: [],
+      ok200:''
 
     }),
 
@@ -49,7 +50,17 @@ var res = new Vue({
       idVacunatorio : this.IdVac.toString(),
       fecha : this.fecha.toString(),
       hora : this.Hora.toString(),
+    })
+    .then(response => {
+      if (response.status === 200) {
+        console.log("Respuesta: " + response.status)
+        this.ok200="Se realizó la reserva correctamente"
+        console.log("VariableRespuesta: " + this.ok200)
+      }
+
+
     });
+
     console.log(this.reserva);
 
       },
