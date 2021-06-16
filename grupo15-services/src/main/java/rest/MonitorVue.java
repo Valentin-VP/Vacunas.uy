@@ -80,46 +80,101 @@ public class MonitorVue {
 		String[] aux = datos.getPlan().split("-");//el plan me llega como "id-nombre"
 		String plan = aux[0];
 		String vacuna = datos.getVacunal();
+		System.out.println(plan);
 		
-		int dia = 0;
-		int mes = 0;
-		int anio = 0;
+		int dia = -1;
+		int mes = -1;
+		int anio = -1;
 		
 		if(enfermedad.equals("Todosl")) {
 			if(plan.equals("Todos")) {
 				if(vacuna.equals("Todos")) {
 					//no filtro
-					dia = this.getVacunadosdma(1);
-					mes = this.getVacunadosdma(30);
-					anio = this.getVacunadosdma(365);
+					//----------------------------------------------------------------------
+					dia = IConstancia.listarConstanciasPeriodo(1);
+					mes = IConstancia.listarConstanciasPeriodo(30);
+					anio = IConstancia.listarConstanciasPeriodo(365);
+					//----------------------------------------------------------------------
 				}else {
 					//filtro por vacuna
-					dia = this.filtroPorVacuna(1, vacuna);
-					mes = this.filtroPorVacuna(30, vacuna);
-					anio = this.filtroPorVacuna(365, vacuna);
+					//----------------------------------------------------------------------
+					dia = IConstancia.filtroPorVacuna(1, vacuna);
+					mes = IConstancia.filtroPorVacuna(30, vacuna);
+					anio = IConstancia.filtroPorVacuna(365, vacuna);
+					//----------------------------------------------------------------------
 				}
 			}else {
 				if(vacuna.equals("Todos")) {
 					//filtro por plan
+					//----------------------------------------------------------------------
+					dia = IConstancia.filtroPorPlan(1, plan);
+					mes = IConstancia.filtroPorPlan(30, plan);
+					anio = IConstancia.filtroPorPlan(365, plan);
+					
+					//----------------------------------------------------------------------
 				}else {
 					//filtro por plan y vacuna
+					//----------------------------------------------------------------------
+					ArrayList<String> vacunas = new ArrayList<String>();
+					DtPlanVacunacion planVac;
+					try {
+						planVac = pv.obtenerPlanVacunacion(Integer.valueOf(plan));
+						for(DtEtapa dtEtp: planVac.getEtapa()) {			
+							vacunas.add(dtEtp.getVacuna());
+						}
+						if(!vacunas.isEmpty()) {
+							dia = IConstancia.filtroPorVacuna(1, vacuna);
+							mes = IConstancia.filtroPorVacuna(30, vacuna);
+							anio = IConstancia.filtroPorVacuna(365, vacuna);
+						}
+					} catch (NumberFormatException | PlanVacunacionInexistente e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					//----------------------------------------------------------------------
 				}
 			}
 		}else {
 			if(plan.equals("Todos")) {
 				if(vacuna.equals("Todos")) {
 					//filtro por enfermedad
-					dia = this.filtroPorEnfermedad(1, enfermedad);
-					mes = this.filtroPorEnfermedad(30, enfermedad);
-					anio = this.filtroPorEnfermedad(365, enfermedad);
+					//----------------------------------------------------------------------
+					dia = IConstancia.filtroPorEnfermedad(1, enfermedad);
+					mes = IConstancia.filtroPorEnfermedad(30, enfermedad);
+					anio = IConstancia.filtroPorEnfermedad(365, enfermedad);
+					//----------------------------------------------------------------------
 				}else {
 					//filtro por enfermedad y vacuna
+					//----------------------------------------------------------------------
+					
+					//----------------------------------------------------------------------
 				}
 			}else {
 				if(vacuna.equals("Todos")) {
 					//filtro por enfermedad y plan
+					//----------------------------------------------------------------------
+					ArrayList<String> planes = new ArrayList<String>();
+					try {
+						for(DtPlanVacunacion dtP: pv.listarPlanesVacunacion()) {
+							System.out.println(dtP.getEnfermedad());
+							if(dtP.getEnfermedad().equals(enfermedad))
+								planes.add(dtP.getId() + "-" + dtP.getNombre());
+						}
+						if(!planes.isEmpty()) {
+							dia = IConstancia.filtroPorPlan(1, plan);
+							mes = IConstancia.filtroPorPlan(30, plan);
+							anio = IConstancia.filtroPorPlan(365, plan);
+						}
+						
+					} catch (PlanVacunacionInexistente e) {
+						 return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+					}
+					//----------------------------------------------------------------------
 				}else {
 					//filtro por enfermedad plan y vacuna
+					//----------------------------------------------------------------------
+					
+					//----------------------------------------------------------------------
 				}
 			}
 		}
@@ -131,8 +186,7 @@ public class MonitorVue {
 	        respuesta.put("anio", anio);
 	        return ResponseBuilder.createResponse(Response.Status.OK, datos.toString());                       
 	    } catch (JSONException e) {
-	        return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-	                e.getMessage());
+	        return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 	    }
 	}
 	
@@ -221,7 +275,7 @@ public class MonitorVue {
 			if(plan.equals("Todos")) {//si retorna un todos
 				ArrayList<String> vacunas = new ArrayList<String>();
 				for(DtVacuna dtVac: vac.listarVacunas()) {
-					if(dtVac.getDtEnf().equals(enfermedad)) {
+					if(dtVac.getDtEnf().getNombre().equals(enfermedad)) {
 						vacunas.add(dtVac.getNombre());
 					}
 				}
@@ -239,18 +293,6 @@ public class MonitorVue {
 		} catch ( VacunaInexistente | NumberFormatException | PlanVacunacionInexistente e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 		}
-	}
-	
-	
-	//retorna todos los vacunados por mes dia y año
-	public int getVacunadosdma(int dia) { 
-		LOGGER.info("Entro al no filtro");
-		return IConstancia.listarConstanciasPeriodo(dia);
-	}
-	
-	public int filtroPorVacuna(int dias, String vacuna) {
-		LOGGER.info("Entro a filtroPorVacuna");
-		return IConstancia.filtroPorVacuna(dias, vacuna);
 	}
 	
 

@@ -24,4 +24,5 @@ public interface IConstanciaVacunaDAOLocal {
 	public Map<String, String> listarConstanciaPorEnfermedad();
 	public int filtroPorVacuna(int dias, String vacuna);
 	public int filtroPorEnfermedad(int dias, String enfermedad);
+	public int filtroPorPlan(int dias, String plan);
 }

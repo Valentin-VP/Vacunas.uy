@@ -204,6 +204,7 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 	}
 	
 	
+	//retorna el numero de constancias en este periodo para una vacuna no las constancias
 	public int filtroPorVacuna(int dias, String vacuna) {
 		Query query = em.createQuery("SELECT c FROM ConstanciaVacuna c WHERE vacuna = :vac AND fechaUltimaDosis BETWEEN :start AND :end");
 		query.setParameter("start", LocalDate.now().minusDays(dias));
@@ -230,5 +231,16 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 			constancias.addAll(result);
 		}
 			return constancias.size();
+	}
+	
+	//retorna el numero de constancias en este periodo para un plan
+	public int filtroPorPlan(int dias, String plan) {
+		Query query = em.createQuery("SELECT c FROM ConstanciaVacuna c WHERE reserva_etapa_planvacunacion_id = :plan AND fechaUltimaDosis BETWEEN :start AND :end");
+		query.setParameter("start", LocalDate.now().minusDays(dias));
+		query.setParameter("end", LocalDate.now());
+		query.setParameter("vac", plan);
+		
+		ArrayList<ConstanciaVacuna> constancias = (ArrayList<ConstanciaVacuna>) query.getResultList();
+		return constancias.size();
 	}
 }
