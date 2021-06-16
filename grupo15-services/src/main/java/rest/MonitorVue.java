@@ -75,11 +75,19 @@ public class MonitorVue {
 	@POST
 	@Path("/vacunados")
 	@PermitAll
-	public Response getVacunados(DtGetVacunados datos) {
-		String enfermedad = datos.getEnfermedad();
-		String[] aux = datos.getPlan().split("-");//el plan me llega como "id-nombre"
-		String plan = aux[0];
-		String vacuna = datos.getVacunal();
+	public Response getVacunados(String datos) {
+		String enfermedad = "";
+		String plan = "";
+		String vacuna = "";
+		try {
+			JSONObject jsonObject = new JSONObject(datos);
+			enfermedad = jsonObject.getString("enfermedad");
+			String[] aux = jsonObject.getString("plan").split("-");//el plan me llega como "id-nombre"
+			plan = aux[0];
+			vacuna = jsonObject.getString("vacuna");
+		} catch (JSONException e1) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e1.getMessage());
+		}
 		System.out.println(plan);
 		
 		int dia = -1;
@@ -303,9 +311,4 @@ public class MonitorVue {
 		}
 	}
 	
-
-	public int filtroPorEnfermedad(int dias, String enfermedad) {
-		LOGGER.info("Entro a filtoporEnfermedad");
-		return IConstancia.filtroPorEnfermedad(dias, enfermedad);
-	}
 }
