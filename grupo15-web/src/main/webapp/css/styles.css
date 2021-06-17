@@ -10641,8 +10641,6 @@ flex-basis: 10%;
   margin-left:18%
 
 
- 
- 
 }
 
 .formulario6 {
@@ -10655,3 +10653,21 @@ border-width: 10px;
   box-shadow: 0 15px 20px 0 rgba(0,0,0,0.2);
 }
 
+
+.formulario8 {
+flex-basis: 10%;
+  width: 80%;
+  text-align:right;
+  margin-top:3%;
+  margin-left:30%
+
+
+}
+
+.formulario9 {
+
+  width: 80%;
+  text-align:left;
+
+  flex-basis: 80%;
+}
