@@ -277,4 +277,33 @@ public class GestionUsuariosRWS {
 		}
 		return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "No se ha seteado la Cookie");
 	}
+	
+	@PermitAll
+	@GET
+	@Path("/cerrarSesion")
+	public Response deleteToken(@CookieParam("x-access-token") Cookie cookie) {
+		String token = cookie.getValue();
+		try {
+			String ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+			IUsuarioLocal.borrarToken(ci);
+			return ResponseBuilder.createResponse(Response.Status.OK, "Sesion cerrada con exito");
+		} catch (InvalidJwtException | NumberFormatException | UsuarioInexistente e) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+		}
+	}
+	
+	@PermitAll
+	@GET
+	@Path("/checkToken")
+	public Response checktoken(@CookieParam("x-access-token") Cookie cookie) {
+		String token = cookie.getValue();
+		try {
+			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+			String ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+			return ResponseBuilder.createResponse(Response.Status.OK, "Existe token");
+		} catch (InvalidJwtException | NumberFormatException e) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "no existe token");
+		}
+	}
 }
