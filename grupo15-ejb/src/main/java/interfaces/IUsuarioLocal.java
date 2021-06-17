@@ -13,7 +13,6 @@ import datatypes.DtUsuarioSoap;
 import datatypes.DtVacunador;
 import datatypes.Rol;
 import datatypes.Sexo;
-import datatypes.TipoUsuario;
 import exceptions.UsuarioExistente;
 import exceptions.UsuarioInexistente;
 
