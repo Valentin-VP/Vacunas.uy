@@ -42,7 +42,7 @@ public class GestionVacunatoriosRWS {
 	
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 	
-	@EJB(lookup = "java:global/grupo15/grupo15-ejb/ControladorVacunatorio!interfaces.IControladorVacunatorioLocal")
+	@EJB
 	private IControladorVacunatorioLocal iControladorVacunatorio;
 
 	public GestionVacunatoriosRWS() {}

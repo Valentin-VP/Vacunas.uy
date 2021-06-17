@@ -45,7 +45,7 @@ public class RegistrarAppMobile {
 
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 	
-	@EJB(lookup = "java:global/grupo15/grupo15-ejb/ControladorUsuario!interfaces.IUsuarioLocal")
+	@EJB
 	private IUsuarioLocal IUsuarioLocal;
 	
 	public RegistrarAppMobile() {}

@@ -80,7 +80,7 @@ public class AltaReservaRWS implements Serializable {
 	@EJB
 	IEnfermedadLocal es;
 	
-	@EJB(lookup = "java:global/grupo15/grupo15-ejb/ControladorUsuario!interfaces.IUsuarioLocal")
+	@EJB
 	private IUsuarioLocal IUsuarioLocal;
 	
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());

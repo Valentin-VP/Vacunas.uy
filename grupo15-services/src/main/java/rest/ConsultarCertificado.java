@@ -37,10 +37,10 @@ public class ConsultarCertificado {
 
 	//private static final long serialVersionUID = 1L;
 		private final Logger LOGGER = Logger.getLogger(getClass().getName());
-		@EJB(lookup = "java:global/grupo15/grupo15-ejb/ControladorConstanciaVacuna!interfaces.IConstanciaVacunaDAOLocal")
+		@EJB
 		private IConstanciaVacunaDAOLocal IConstVac;
 		
-		@EJB(lookup = "java:global/grupo15/grupo15-ejb/ControladorCertificadoVacunacion!interfaces.ICertificadoVacunacionDAOLocal")
+		@EJB
 		private ICertificadoVacunacionDAOLocal ICertVac;
 		
 		@GET

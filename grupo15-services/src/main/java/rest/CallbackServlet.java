@@ -45,7 +45,7 @@ public class CallbackServlet extends HttpServlet {
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 	private final Auth0AuthenticationConfig config;
 
-	@EJB(lookup = "java:global/grupo15/grupo15-ejb/ControladorUsuario!interfaces.IUsuarioLocal")
+	@EJB
 	private IUsuarioLocal IUsuarioLocal;
 
 	@Inject

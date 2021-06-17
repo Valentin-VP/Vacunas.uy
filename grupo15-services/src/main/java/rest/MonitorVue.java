@@ -54,7 +54,7 @@ import rest.filter.TokenSecurity;
 @Produces(MediaType.APPLICATION_JSON)
 public class MonitorVue {
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
-	@EJB(lookup = "java:global/grupo15/grupo15-ejb/ControladorConstanciaVacuna!interfaces.IConstanciaVacunaDAOLocal")
+	@EJB
 	private IConstanciaVacunaDAOLocal IConstancia;
 	
 	@EJB

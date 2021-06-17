@@ -37,10 +37,10 @@ public class FirestoreRWS {
 
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 
-	@EJB(lookup = "java:global/grupo15/grupo15-ejb/FirestoreController!interfaces.IFirestoreLocal")
+	@EJB
 	private IFirestoreLocal FirestoreController;
 
-	@EJB(lookup = "java:global/grupo15/grupo15-ejb/ControladorUsuario!interfaces.IUsuarioLocal")
+	@EJB
 	private IUsuarioLocal IUsuarioLocal;
 
 	public FirestoreRWS() {
