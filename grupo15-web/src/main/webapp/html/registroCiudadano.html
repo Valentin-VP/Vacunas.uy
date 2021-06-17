@@ -53,16 +53,16 @@
       </nav>
 
   <div id="res">
-    <div class="formulario">
+    <div class="formulario" @submit.prevent="SetDatos">
       
       <form>
         
         <div>
-            <input type="text" v-model=id class="form-control" id="id" placeholder="Cedula">
+            <input type="text" v-model=id class="form-control" id="id" placeholder="Cedula" required>
          </div>
 
          <div>
-            <input type="text" v-model=nombre  class="form-control" id="nombre" placeholder="Nombre">
+            <input type="text" v-model=nombre  class="form-control" id="nombre" placeholder="Nombre" required>
          </div>
          <div>
             <input type="text" v-model=apellido  class="form-control" id="apellido" placeholder="Apellido">
