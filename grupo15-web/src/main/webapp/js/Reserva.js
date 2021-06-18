@@ -44,7 +44,7 @@ var res = new Vue({
         hora : this.Hora.toString(),
       };
       
-      axios.post("http://localhost:8080/grupo15-services/rest/reservas/confirmar", {
+      axios.post("/grupo15-services/rest/reservas/confirmar", {
       idEnfermedad : this.IdEnf.toString(),
       idPlan : this.IdPlan.toString(),
       idVacunatorio : this.IdVac.toString(),
@@ -67,7 +67,7 @@ var res = new Vue({
 
        CargarEnfermedades () {
         
-        axios.get("http://localhost:8080/grupo15-services/rest/reservas/enf/")
+        axios.get("/grupo15-services/rest/reservas/enf/")
         .then((response => {
           console.log("GET enfermedades: ", response.data)
           this.listaEnfermedades = response.data
@@ -77,7 +77,7 @@ var res = new Vue({
 
         SeleccionarEnfermedades () {
           IdEnf = this.IdEnf;
-          axios.get("http://localhost:8080/grupo15-services/rest/reservas/enf/" + this.IdEnf.toString())
+          axios.get("/grupo15-services/rest/reservas/enf/" + this.IdEnf.toString())
           .then((response => {
             console.log("GET planes: ", response.data)
             this.listaPlanes = response.data
@@ -90,14 +90,14 @@ var res = new Vue({
           SeleccionarPlanes () {
         
             IdPlan = this.IdPlan;
-            axios.get("http://localhost:8080/grupo15-services/rest/reservas/pv" + "?p="+ this.IdPlan.toString())
+            axios.get("/grupo15-services/rest/reservas/pv" + "?p="+ this.IdPlan.toString())
           this.CargarVacunatorios();
         
             },
 
         CargarVacunatorios () {
         
-          axios.get("http://localhost:8080/grupo15-services/rest/reservas/vac/")
+          axios.get("/grupo15-services/rest/reservas/vac/")
           .then((response => {
             console.log("GET vacunatorios: ", response.data)
             this.listaVacunatorios = response.data
@@ -110,7 +110,7 @@ var res = new Vue({
             },
           SeleccionarFecha() {
             fecha=this.fecha;
-            axios.get("http://localhost:8080/grupo15-services/rest/reservas/fecha" + "?vac="+ this.IdVac.toString() +"&date="+ this.fecha.toString()  +"&p="+ this.IdPlan.toString())
+            axios.get("/grupo15-services/rest/reservas/fecha" + "?vac="+ this.IdVac.toString() +"&date="+ this.fecha.toString()  +"&p="+ this.IdPlan.toString())
               .then((response => {
                 console.log("GET horas: ", response.data)
                 this.listaHoras = response.data

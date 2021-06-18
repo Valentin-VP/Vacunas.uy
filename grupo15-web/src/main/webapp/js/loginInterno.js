@@ -29,7 +29,7 @@ var int = new Vue({
         console.log("Basic:" + this.Basic);
         axios.defaults.headers.common["Authorization"] = Basic;
         let config = {"Authorization": this.Basic};
-       axios.post('http://localhost:8080/grupo15-services/rest/internalauth/login', {headers : {config}})
+       axios.post('/grupo15-services/rest/internalauth/login', {headers : {config}})
         .then(response =>{
           if (response.data.url){
             console.log("Respuesta: " + response.data.url)

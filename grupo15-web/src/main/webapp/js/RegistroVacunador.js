@@ -33,7 +33,7 @@ var res = new Vue({
       console.log("Barrio:" + this.barrio);
       departamento=this.departamento;
       console.log("Departamento:" + this.departamento);
-     axios.post("http://localhost:8080/grupo15-services/rest/registro/vacunador", {
+     axios.post("/grupo15-services/rest/registro/vacunador", {
       id : this.id.toString(),
       nombre : this.nombre.toString(),
       apellido : this.apellido.toString(),

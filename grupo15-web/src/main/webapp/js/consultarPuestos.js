@@ -23,7 +23,7 @@ var vac = new Vue({
 
     },
     cargarVacunatorios() {
-      axios.get("http://localhost:8080/grupo15-services/rest/puestovac/vac")
+      axios.get("/grupo15-services/rest/puestovac/vac")
         .then((response => {
 
           console.log(`lista Vacunatorios: `, response.data)
@@ -34,7 +34,7 @@ var vac = new Vue({
       },
     getData() {
   
-      axios.get("http://localhost:8080/grupo15-services/rest/puestovac/asignado?vact="+this.idVac.toString()+"&date="+this.fecha.toString())
+      axios.get("/grupo15-services/rest/puestovac/asignado?vact="+this.idVac.toString()+"&date="+this.fecha.toString())
         .then((response => {
 
           console.log(`VacPuesto: `, response.data)

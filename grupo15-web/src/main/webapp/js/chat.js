@@ -4,7 +4,7 @@ window.onload = function() {
  
     var mensaje;
 
-        axios.get('http://localhost:8080/grupo15-services/rest/chat/vacunador', {
+        axios.get('/grupo15-services/rest/chat/vacunador', {
           responseType: 'json'
         })
           .then(function(res) {

@@ -36,7 +36,7 @@ var res = new Vue({
       barrio = this.barrio;
       console.log("Barrio: " + this.barrio);
 
-      axios.post("http://localhost:8080/grupo15-services/rest/registro/ciudadano", {
+      axios.post("/grupo15-services/rest/registro/ciudadano", {
         id: this.id.toString(),
         nombre: this.nombre.toString(),
         apellido: this.apellido.toString(),
@@ -50,7 +50,7 @@ var res = new Vue({
         .then(response => {
           if (response.status === 201) {
             console.log("Respuesta: " + response.status)
-            window.location.href = "http://localhost:8080/grupo15-web/html/login.html";
+            window.location.href = "/grupo15-web/html/login.html";
           }
 
 

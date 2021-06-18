@@ -26,7 +26,7 @@ var vac = new Vue({
 
     },
     traerDatos() {
-      axios.get("http://localhost:8080/grupo15-services/rest/vacunaciones/certificadovue")
+      axios.get("/grupo15-services/rest/vacunaciones/certificadovue")
         .then((response => {
 
           console.log(`lista constancias: `, response.data)

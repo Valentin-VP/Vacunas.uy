@@ -19,7 +19,7 @@ var mod = new Vue({
   {
 
     SetDatos() {
-      axios.post("http://localhost:8080/grupo15-services/rest/usuario/ciudadano/modificar", {
+      axios.post("/grupo15-services/rest/usuario/ciudadano/modificar", {
 
         email: this.email.toString(),
         direccion: this.direccion.toString(),
@@ -30,7 +30,7 @@ var mod = new Vue({
 
     cargarDatosIniciales() {
       let _this = this
-      axios.get("http://localhost:8080/grupo15-services/rest/usuario/ciudadano/datosModificar")
+      axios.get("/grupo15-services/rest/usuario/ciudadano/datosModificar")
         .then((response => {
           console.log("GET rest: ", response.data)
           _this.barrio= response.data.barrio;

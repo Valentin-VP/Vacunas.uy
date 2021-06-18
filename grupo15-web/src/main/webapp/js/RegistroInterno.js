@@ -55,7 +55,7 @@ var res = new Vue({
       console.log("Basic:" + this.Basic);
       axios.defaults.headers.common["Authorization"] = Basic;
       let config = { "Authorization": this.Basic };
-      axios.post('http://localhost:8080/grupo15-services/rest/registro/interno/', 
+      axios.post('/grupo15-services/rest/registro/interno/', 
         {
           tipoUser: this.tipoUser.toString(),
           nombre: this.nombre.toString(),

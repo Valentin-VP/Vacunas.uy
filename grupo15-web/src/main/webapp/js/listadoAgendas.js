@@ -17,7 +17,7 @@ var vac = new Vue({
         
     getVigentes () {
         console.log("entre al vigentes")
-        axios.get("http://localhost:8080/grupo15-services/rest/planagenda/vigente")
+        axios.get("/grupo15-services/rest/planagenda/vigente")
             .then((response => {
             
                 console.log(`Get Vigente: `, response.data)
@@ -28,7 +28,7 @@ var vac = new Vue({
 
     getProximas () {
         console.log("entre al proximas")
-        axios.get("http://localhost:8080/grupo15-services/rest/planagenda/proxima"  )
+        axios.get("/grupo15-services/rest/planagenda/proxima"  )
         .then((response => {
                 
         console.log(`Get Proximas: `, response.data)

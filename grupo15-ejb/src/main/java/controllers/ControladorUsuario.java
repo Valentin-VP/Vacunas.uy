@@ -316,10 +316,11 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 	}
 
 	public void borrarToken(String ci) throws UsuarioInexistente {
-		Ciudadano ciudadano = em.find(Ciudadano.class, ci);
+		Ciudadano ciudadano = em.find(Ciudadano.class, Integer.valueOf(ci));
 		if (ciudadano != null) {
 			ciudadano.setToken(null);
-		}else {
+			em.persist(ciudadano);
+		}else{
 			throw new UsuarioInexistente("No se encuentra el ciudadano con ID " + ci);
 		}
 	}

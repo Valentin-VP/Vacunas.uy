@@ -9,7 +9,7 @@ var res = new Vue({
         listaVacunas: [],
         listVacPorVac: [],
         listVacPorEnf: [],
-       
+
 
         etiquetas: [],
         valores: [],
@@ -18,7 +18,7 @@ var res = new Vue({
         nroDia: '',
         nroMes: '',
         nroAnio: '',
-       
+
     }),
 
 
@@ -31,7 +31,7 @@ var res = new Vue({
         this.setGrafica1();
         this.CargarVacunadosPorVacuna();
         this.CargarVacunadosPorEnf();
-        
+
     },
 
     methods:
@@ -95,12 +95,12 @@ var res = new Vue({
 
         },
 
-       
+
 
 
         CargarVacunadosPorVacuna() {
 
-            axios.get("http://localhost:8080/grupo15-services/rest/monitor/vacunadosporvacs")
+            axios.get("/grupo15-services/rest/monitor/vacunadosporvacs")
                 .then((response => {
                     console.log("GET Vacunados Por Vac: ", response.data)
                     this.listVacPorVac = response.data;
@@ -109,10 +109,10 @@ var res = new Vue({
                 }))
 
         },
-      
+
         CargarEnfermedades() {
 
-            axios.get("http://localhost:8080/grupo15-services/rest/enfermedad/listar")
+            axios.get("/grupo15-services/rest/enfermedad/listar")
                 .then((response => {
                     console.log("GET enfermedades: ", response.data)
                     this.listaEnfermedades = response.data;
@@ -122,61 +122,59 @@ var res = new Vue({
 
         SeleccionarEnfermedades() {
             IdEnf = this.IdEnf;
-            axios.get("http://localhost:8080/grupo15-services/rest/monitor/enf/" + this.IdEnf.toString())
-                .then((response => {
-                    console.log("GET planes: ", response.data)
-                    this.listaPlanes = response.data
-                    console.log("planes: " + this.listaPlanes);
-                    this.SeleccionarPlanes();
-                }))
-
+            if (IdEnf != '') {
+                axios.get("/grupo15-services/rest/monitor/enf/" + this.IdEnf.toString())
+                    .then((response => {
+                        console.log("GET planes: ", response.data)
+                        this.listaPlanes = response.data
+                        console.log("planes: " + this.listaPlanes);
+                        this.SeleccionarPlanes();
+                    }))
+            }
         },
 
 
         SeleccionarPlanes() {
-
-            
-            axios.get("http://localhost:8080/grupo15-services/rest/monitor/pv/"+ this.IdEnf.toString() + "/" + this.IdPlan.toString())
-            .then((response => {
-                console.log("GET vacunas: ", response.data)
-                this.listaVacunas = response.data
-                console.log("List vacunas: ", this.listaVacunas)
-            }))
-           
-        
-
+            if(this.IdEnf != null && this.IdPlan != null){
+                axios.get("/grupo15-services/rest/monitor/pv/" + this.IdEnf.toString() + "/" + this.IdPlan.toString())
+                    .then((response => {
+                        console.log("GET vacunas: ", response.data)
+                        this.listaVacunas = response.data
+                        console.log("List vacunas: ", this.listaVacunas)
+                    }))
+            }              
         },
 
         CargarVacunadosPorEnf() {
 
-            axios.get("http://localhost:8080/grupo15-services/rest/monitor/vacunadosporenf")
+            axios.get("/grupo15-services/rest/monitor/vacunadosporenf")
                 .then((response => {
                     console.log("GET Vacunados Por Enf: ", response.data)
                     this.listVacPorEnf = response.data;
                     console.log("List Vacunados Por Enf: ", this.listVacPorEnf);
                     this.setGrafica1();
                 }))
-                
+
 
         },
         cargarDiaMesAnio() {
-        axios.post("http://localhost:8080/grupo15-services/rest/monitor/vacunados", {
-            enfermedad: this.IdEnf.toString(),
-            plan: this.IdPlan.toString(),
-            vacuna: this.IdVac.toString(),
-            
-          })
-          .then((response => {
-            console.log("GET vacunas: ", response.data)
-            this.nroDia= response.data.dia;
-            console.log("Dia: ", response.data.dia)
-            this.nroMes= response.data.mes;
-            console.log("Mes: ", response.data.mes)
-            this.nroAnio= response.data.anio;
-            console.log("Año: ", response.data.anio)
-           
-        }))
-          
+            axios.post("http://localhost:8080/grupo15-services/rest/monitor/vacunados", {
+                enfermedad: this.IdEnf.toString(),
+                plan: this.IdPlan.toString(),
+                vacuna: this.IdVac.toString(),
+
+            })
+                .then((response => {
+                    console.log("GET vacunas: ", response.data)
+                    this.nroDia = response.data.dia;
+                    console.log("Dia: ", response.data.dia)
+                    this.nroMes = response.data.mes;
+                    console.log("Mes: ", response.data.mes)
+                    this.nroAnio = response.data.anio;
+                    console.log("Año: ", response.data.anio)
+
+                }))
+
         },
 
         Grafica2() {

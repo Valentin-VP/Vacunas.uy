@@ -1,6 +1,7 @@
 package rest;
 
-import java.time.LocalDate;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Base64;
 import java.util.List;
 import java.util.logging.Logger;
@@ -21,6 +22,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONException;
@@ -32,7 +34,6 @@ import datatypes.DtDireccion;
 import datatypes.DtUsuarioExterno;
 import datatypes.DtUsuarioInterno;
 import datatypes.DtVacunador;
-import datatypes.Sexo;
 import exceptions.UsuarioInexistente;
 import interfaces.ILdapLocal;
 import interfaces.IUsuarioLocal;
@@ -286,8 +287,10 @@ public class GestionUsuariosRWS {
 		try {
 			String ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
 			IUsuarioLocal.borrarToken(ci);
-			return ResponseBuilder.createResponse(Response.Status.OK, "Sesion cerrada con exito");
-		} catch (InvalidJwtException | NumberFormatException | UsuarioInexistente e) {
+			NewCookie cookie2 = new NewCookie("x-access-token", "");
+			URI url = new URI("/grupo15-web/html/login.html");
+			return Response.temporaryRedirect(url).cookie(cookie2).build();
+		} catch (InvalidJwtException | NumberFormatException | UsuarioInexistente | URISyntaxException e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 		}
 	}
@@ -298,10 +301,8 @@ public class GestionUsuariosRWS {
 	public Response checktoken(@CookieParam("x-access-token") Cookie cookie) {
 		String token = cookie.getValue();
 		try {
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 			String ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-			return ResponseBuilder.createResponse(Response.Status.OK, "Existe token");
+			return ResponseBuilder.createResponse(Response.Status.OK, "existe el token");
 		} catch (InvalidJwtException | NumberFormatException e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "no existe token");
 		}
