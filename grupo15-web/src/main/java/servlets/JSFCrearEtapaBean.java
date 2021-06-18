@@ -21,6 +21,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -179,8 +180,11 @@ public class JSFCrearEtapaBean implements Serializable {
 				token = cookie.getValue();
 				LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 			}
+			HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+	        LOGGER.info("El server name es: " + hostname);
 			Client conexion = ClientBuilder.newClient();
-			WebTarget webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/plan/listar");
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/plan/listar");
 			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
 			Response response = invocation.invoke();
 			LOGGER.info("Respuesta: " + response.getStatus());
@@ -197,7 +201,7 @@ public class JSFCrearEtapaBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Crear:", message));
 			}
 			conexion = ClientBuilder.newClient();
-			webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/vacunas/listar");
+			webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunas/listar");
 			invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
 			response = invocation.invoke();
 			LOGGER.info("Respuesta: " + response.getStatus());
@@ -258,8 +262,11 @@ public class JSFCrearEtapaBean implements Serializable {
 			etapa.put("vacuna", vacunaSeleccionada.getNombre());
 			System.out.println("etapa" + etapa.toString());
 			
+			HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+	        LOGGER.info("El server name es: " + hostname);
 			Client conexion = ClientBuilder.newClient();
-			WebTarget webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/etapa/agregar");
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/etapa/agregar");
 			LOGGER.info("Conectando a : " + webTarget.getUri());
 			LOGGER.info("Enviando JSON: " + etapa.toString());
 	

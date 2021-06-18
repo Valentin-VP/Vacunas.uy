@@ -15,6 +15,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -84,8 +85,11 @@ public class JSFBorrarPlanVacunacionBean implements Serializable {
 				token = cookie.getValue();
 				LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 			}
+			HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+	        LOGGER.info("El server name es: " + hostname);
 			Client conexion = ClientBuilder.newClient();
-			WebTarget webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/plan/listar");
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/plan/listar");
 			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
 			Response response = invocation.invoke();
 			LOGGER.info("Respuesta: " + response.getStatus());
@@ -110,8 +114,11 @@ public class JSFBorrarPlanVacunacionBean implements Serializable {
 			token = cookie.getValue();
 			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 		}
+		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        LOGGER.info("El server name es: " + hostname);
 		Client conexion = ClientBuilder.newClient();
-		WebTarget webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/plan/eliminar?p=" + this.getPlan().getId() );
+		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/plan/eliminar?p=" + this.getPlan().getId() );
 		LOGGER.severe("Conectando a : " + webTarget.getUri());
 		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildDelete();
 		Response response = invocation.invoke();

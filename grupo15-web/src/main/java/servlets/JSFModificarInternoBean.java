@@ -13,6 +13,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -86,8 +87,11 @@ public class JSFModificarInternoBean implements Serializable{
 	        	token = cookie.getValue();
 	        	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 	        }
+	        HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+	        LOGGER.info("El server name es: " + hostname);
 			Client conexion = ClientBuilder.newClient();
-			WebTarget webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/usuario/interno/buscar");
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/usuario/interno/buscar");
 			Invocation invocation = webTarget.request(MediaType.APPLICATION_JSON).cookie("x-access-token", token).buildGet();
 			Response response = invocation.invoke();
 			LOGGER.info("Respuesta: " + response.getStatus());
@@ -123,8 +127,11 @@ public class JSFModificarInternoBean implements Serializable{
 	        datos.put("direccion", direccion);
 	        datos.put("email", this.getEmail());
 	        // http://omnifaces-fans.blogspot.com/2015/10/jax-rs-consume-restful-web-service-from.html
+	        HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+	        LOGGER.info("El server name es: " + hostname);
 			Client conexion = ClientBuilder.newClient();
-			WebTarget webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/usuario/interno/modificar");
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/usuario/interno/modificar");
 			LOGGER.severe("Conectando a : " + webTarget.getUri());
 			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildPost(Entity.entity(datos.toString(), MediaType.APPLICATION_JSON));
 			Response response = invocation.invoke();

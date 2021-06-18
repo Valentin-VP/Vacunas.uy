@@ -16,6 +16,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -149,8 +150,11 @@ public class JSFCrearVacunaBean implements Serializable {
 	        	token = cookie.getValue();
 	        	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 	        }
+	        HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+	        LOGGER.info("El server name es: " + hostname);
 			Client conexion = ClientBuilder.newClient();
-			WebTarget webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/enfermedad/listar");
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/enfermedad/listar");
 			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
 			Response response = invocation.invoke();
 			LOGGER.info("Respuesta: " + response.getStatus());
@@ -160,8 +164,11 @@ public class JSFCrearVacunaBean implements Serializable {
 					this.enfermedades.add(dt.getNombre());
 				}
 			}
+			origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+	        LOGGER.info("El server name es: " + hostname);
 			conexion = ClientBuilder.newClient();
-			webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/lab/listar");
+			webTarget = conexion.target(hostname + "/grupo15-services/rest/lab/listar");
 			invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
 			response = invocation.invoke();
 			LOGGER.info("Respuesta: " + response.getStatus());
@@ -191,8 +198,11 @@ public class JSFCrearVacunaBean implements Serializable {
 //	        vacuna.put("expira", this.getExpira());
 //	        vacuna.put("laboratorio", this.getLaboratorio());
 //	        vacuna.put("enfermedad", this.getEnfermedad());
+	        HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+	        LOGGER.info("El server name es: " + hostname);
 			Client conexion = ClientBuilder.newClient();
-			WebTarget webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/vacunas/agregar");
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunas/agregar");
 			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildPost(Entity.entity(vacuna, MediaType.APPLICATION_JSON));
 			Response response = invocation.invoke();
 			LOGGER.info("Respuesta: " + response.getStatus());
