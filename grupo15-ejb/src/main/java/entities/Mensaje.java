@@ -1,23 +1,29 @@
 package entities;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class Mensaje {
 
-	@Id
+	@Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer IdMensaje;
 	private String contenido;
 	
 	
-	@ManyToOne
-	private Vacunador vacunador;
+//	@ManyToOne
+//	private Vacunador vacunador;
 	
 	
 	public Mensaje() {
 		super();
+	}
+	
+	public Mensaje(String contenido) {
+		super();
+		this.contenido = contenido;
 	}
 	
 	public Mensaje(Integer IdMensaje, String contenido) {
@@ -26,19 +32,19 @@ public class Mensaje {
 		this.contenido = contenido;
 	}
 	
-	public Mensaje(Integer IdMensaje, String contenido, Chat chat) {
-		super();
-		this.IdMensaje = IdMensaje;
-		this.contenido = contenido;
+//	public Mensaje(Integer IdMensaje, String contenido, Chat chat) {
+//		super();
+//		this.IdMensaje = IdMensaje;
+//		this.contenido = contenido;
+//	
+//	}
 	
-	}
-	
-	public Mensaje(Integer IdMensaje, String contenido, Chat chat, Vacunador vacunador) {
-		super();
-		this.IdMensaje = IdMensaje;
-		this.contenido = contenido;
-		this.vacunador = vacunador;
-	}
+//	public Mensaje(Integer IdMensaje, String contenido, Chat chat, Vacunador vacunador) {
+//		super();
+//		this.IdMensaje = IdMensaje;
+//		this.contenido = contenido;
+//		this.vacunador = vacunador;
+//	}
 	
 	
 	public Integer getIdMensaje() {

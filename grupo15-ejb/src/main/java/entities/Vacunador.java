@@ -20,8 +20,8 @@ import datatypes.Sexo;
 @DiscriminatorValue("vacunador")
 public class Vacunador extends Usuario {
 
-	@ManyToMany (cascade = CascadeType.ALL)
-	private List<Chat> chats = new ArrayList<Chat>();
+	//@ManyToMany (cascade = CascadeType.ALL)
+	//private List<Chat> chats = new ArrayList<Chat>();
 
 	
 	@OneToMany(cascade = CascadeType.ALL)
@@ -36,13 +36,13 @@ public class Vacunador extends Usuario {
 	
 	}
 
-	public List<Chat> getChats() {
-		return chats;
-	}
+	//public List<Chat> getChats() {
+	//	return chats;
+	//}
 
-	public void setChats(List<Chat> chats) {
-		this.chats = chats;
-	}
+	//public void setChats(List<Chat> chats) {
+	//	this.chats = chats;
+	//}
 
 	public List<Asignado> getAsignado() {
 		return asignado;

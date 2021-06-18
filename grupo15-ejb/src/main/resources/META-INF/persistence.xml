@@ -13,10 +13,8 @@
 		<class>entities.Transportista</class>
 		<class>entities.Agenda</class>
 		<class>entities.CertificadoVacunacion</class>
-		<class>entities.Chat</class>
 		<class>entities.Ciudadano</class>
 		<class>entities.ConstanciaVacuna</class>
-		<class>entities.Cupo</class>
 		<class>entities.Enfermedad</class>
 		<class>entities.Etapa</class>
 		<class>entities.Historico</class>
