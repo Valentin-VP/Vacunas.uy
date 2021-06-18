@@ -51,18 +51,8 @@ public class GestionEtapaRWS {
 		@PermitAll
 		@GET
 		@Path("/listar")
-		public Response listarEtapas(@CookieParam("x-access-token") Cookie cookie) {
+		public Response listarEtapas() {
 			try {
-				String token = cookie.getValue();
-				String ci = null;
-				try {
-					ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-				} catch (InvalidJwtException e) {
-					e.printStackTrace();
-				}
-		        if( ci == null)
-		            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
-				LOGGER.info("Cedula obtenida en REST: " + ci);
 				return Response.ok(ce.listarEtapas()).build();
 			} catch (EtapaInexistente e) {
 				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
@@ -104,10 +94,11 @@ public class GestionEtapaRWS {
 		public Response agregarEtapa(String datos) {
 			try {
 				JSONObject etapa = new JSONObject(datos);
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 				ce.agregarEtapa(LocalDate.parse(etapa.getString("fechaInicio"), formatter), LocalDate.parse(etapa.getString("fechaFin"), formatter), etapa.getString("condicion"), Integer.parseInt(etapa.getString("plan")), etapa.getString("vacuna"));
-				return Response.ok("Se ha agregado la etapa con exito.").build();
+				return ResponseBuilder.createResponse(Response.Status.OK, "Se ha agregado la etapa con exito");
 			} catch ( NumberFormatException | EtapaRepetida | PlanVacunacionInexistente | VacunaInexistente | AccionInvalida | JSONException e) {
+				//
 				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 						e.getMessage());
 			}

@@ -252,7 +252,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
-			<plugin>
+<!-- 			<plugin>
 	            <groupId>org.codehaus.mojo</groupId>
 	            <artifactId>jaxws-maven-plugin</artifactId>
 	            <version>2.6</version>
@@ -272,7 +272,7 @@
 	                    </goals>
 	                </execution>
 	            </executions>
-	        </plugin>
+	        </plugin> -->
 		</plugins>
 	</build>
 </project>

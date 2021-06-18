@@ -247,7 +247,7 @@ public class JSFCrearEtapaBean implements Serializable {
 			}
 		}
 		try {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");  
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");  
 			String fechaInicio = dateFormat.format(this.getFechaInicio()); 
 			String fechaFin = dateFormat.format(this.getFechaFin()); 
 			System.out.println("Fecha del combo:" + this.getFechaInicio());		
@@ -287,7 +287,6 @@ public class JSFCrearEtapaBean implements Serializable {
 				String message = reply.getString("message");
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Crear:", message));
 			}
-			cargaInicial();
 		} catch (JSONException e) {
 			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
