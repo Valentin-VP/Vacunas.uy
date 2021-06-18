@@ -16,7 +16,7 @@ import exceptions.VacunatorioNoCargadoException;
 @Remote
 public interface ILoteDosisDaoRemote {
 
-	public void agregarLoteDosis(Integer idLote, String idVacunatorio, String idVacuna, Integer cantidadTotal, float temperatura) throws LoteRepetido, VacunatorioNoCargadoException, VacunaInexistente;
+	public void agregarLoteDosis(Integer idLote, String idVacunatorio, String idVacuna, Integer cantidadTotal) throws LoteRepetido, VacunatorioNoCargadoException, VacunaInexistente;
 	
 	public DtLoteDosis obtenerLoteDosis(Integer idLote, String idVacunatorio, String idVacuna) throws LoteInexistente;
 	

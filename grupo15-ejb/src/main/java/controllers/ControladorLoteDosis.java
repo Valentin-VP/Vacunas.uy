@@ -36,8 +36,7 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 	@PersistenceContext(name = "test")
 	private EntityManager em;
 
-	@Override
-	public void agregarLoteDosis(Integer idLote, String idVacunatorio, String idVacuna, Integer cantidadTotal, float temperatura) throws LoteRepetido, VacunatorioNoCargadoException, VacunaInexistente {
+	public void agregarLoteDosis(Integer idLote, String idVacunatorio, String idVacuna, Integer cantidadTotal) throws LoteRepetido, VacunatorioNoCargadoException, VacunaInexistente {
 		Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorio);
 		if (vacunatorio == null) {
 			throw new VacunatorioNoCargadoException("No existe el vacunatorio con ID " + idVacunatorio);
@@ -49,13 +48,12 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 		try {
 			obtenerLoteDosis(idLote, idVacunatorio, idVacuna);
 		} catch (LoteInexistente e) {
-			LoteDosis loteDosis = new LoteDosis(idLote, vacunatorio, vacuna, cantidadTotal, 0, 0, temperatura);
+			LoteDosis loteDosis = new LoteDosis(idLote, vacunatorio, vacuna, cantidadTotal, 0, 0, 0);
 			em.persist(loteDosis);
 		}
 
 	}
 
-	@Override
 	public DtLoteDosis obtenerLoteDosis(Integer idLote, String idVacunatorio, String idVacuna) throws LoteInexistente {
 		DtLoteDosis dtLoteDosis = null;
 		LoteDosis lote = em.find(LoteDosis.class, new LoteDosisID(idLote, idVacunatorio, idVacuna));
@@ -68,7 +66,6 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 		return dtLoteDosis;
 	}
 
-	@Override
 	public List<DtLoteDosis> listarLotesDosis() {
 		List<DtLoteDosis> dtLotesDosis = new ArrayList<DtLoteDosis>();
 		Query query = em.createQuery("select lote from LoteDosis lote");
@@ -83,7 +80,6 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 		return dtLotesDosis;
 	}
 
-	@Override
 	public void setTransportistaToLoteDosis(Integer idTransportista, Integer idLote, String idVacunatorio, String idVacuna) throws TransportistaInexistente {
 		// Asocia un Transportista a un LoteDosis.
 		// PRE: Ya debe existir el LoteDosis y el transportista
@@ -102,7 +98,6 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 
 	}
 
-	@Override
 	public Integer getTransportistaIdFromLoteDosis(Integer idLote, String idVacunatorio, String idVacuna) {
 		Integer idTransportista = 0;
 		LoteDosis lote = em.find(LoteDosis.class, new LoteDosisID(idLote, idVacunatorio, idVacuna));
@@ -113,7 +108,6 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 		return idTransportista;
 	}
 
-	@Override
 	public void modificarLoteDosis(Integer idLote, String idVacunatorio, String idVacuna, Integer cantidadTotal, Integer cantidadEntregada,
 			Integer cantidadDescartada, String estadoLote, float temperatura, Integer transportista)
 			throws LoteInexistente, TransportistaInexistente {
@@ -145,8 +139,7 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 			throw new LoteInexistente("No se encontró un Lote con ese ID");
 		}
 	}
-	
-	@Override
+
 	public void eliminarLoteDosis(Integer idLote, String idVacunatorio, String idVacuna) throws LoteInexistente {
 		LoteDosis lote = em.find(LoteDosis.class, new LoteDosisID(idLote, idVacunatorio, idVacuna));
 		if (lote != null) {

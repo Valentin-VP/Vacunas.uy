@@ -47,7 +47,7 @@ public class GestionLoteDosisRWS {
 		try {
 			JSONObject lote = new JSONObject(datos);
 			//Integer Integer idLote, String idVacunatorio, String idVacuna, Integer cantidadTotal, float temperatura
-			cld.agregarLoteDosis(Integer.getInteger(lote.getString("idLote")), lote.getString("idVacunatorio"), lote.getString("idVacuna"), Integer.getInteger(lote.getString("cantidadTotal")), Float.parseFloat(lote.getString("temperatura"))); 
+			cld.agregarLoteDosis(Integer.getInteger(lote.getString("idLote")), lote.getString("idVacunatorio"), lote.getString("idVacuna"), Integer.getInteger(lote.getString("cantidadTotal"))); 
 			try {
 				NodoCentralService socio = new NodoCentralService();
 				socio.getNodoCentralPort().recibirNuevoLote(lote.getString("idLote"), lote.getString("idVacunatorio"), lote.getString("idVacuna"), "0");
