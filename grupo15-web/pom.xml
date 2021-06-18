@@ -24,6 +24,11 @@
 	<name>grupo15 - web</name>
 	<description>This is the web POM file</description>
 
+
+		 <properties>
+   <itext.version>7.1.15</itext.version>
+</properties>
+
 	<dependencies>
 
 		<!-- Import the CDI API, we use provided scope as the API is included in 
@@ -144,7 +149,17 @@
 			<scope>provided</scope>
 		</dependency>
 		
-	</dependencies>
+
+	<!-- add all iText 7 modules -->
+    <dependency>
+        <groupId>com.itextpdf</groupId>
+        <artifactId>itext7-core</artifactId>
+        <version>7.1.3</version>
+        <type>pom</type>
+    </dependency>
+</dependencies>
+		
+
 
 	<build>
 		<!-- Tell Maven that the resulting file should not have a file name containing 

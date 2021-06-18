@@ -1,6 +1,5 @@
 package servlets;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,29 +16,22 @@ import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.BarChartModel;
-
 import org.primefaces.model.chart.CategoryAxis;
 import org.primefaces.model.chart.ChartSeries;
-
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.LineChartSeries;
-
 import org.primefaces.model.chart.PieChartModel;
+
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
 
 import datatypes.DtPlanVacunacion;
 
-import java.io.FileOutputStream;
-import java.io.StringReader;
-
-
-import com.itextpdf.kernel.pdf.*;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Paragraph;
-import java.io.*;
-
 @Named("ReporteActosVacunales")
 @RequestScoped
-public class JSFReporteActosVacunales implements Serializable {
+public class JSFReporteStock implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
@@ -55,9 +47,7 @@ public class JSFReporteActosVacunales implements Serializable {
     public void init() {
         createLineModels();
       
-        createPieModels();
-      
-        createBarModels();
+    
      
     }
     
@@ -76,14 +66,37 @@ public class JSFReporteActosVacunales implements Serializable {
     	  
     	}
  
-    public List<DtPlanVacunacion> getLista() {
+    public List<DtPlanVacunacion> getVacunas() {
 		return Lista;
 	}
 
-	public void setLista(List<DtPlanVacunacion> dtPlanes) {
-		this.Lista = dtPlanes;
+	public void setVacunas(List<DtPlanVacunacion> vacunas) {
+		this.Lista = vacunas;
 	}
+	
+	  public List<DtPlanVacunacion> getEnfermedades() {
+			return Lista;
+		}
 
+		public void setEnfermedades(List<DtPlanVacunacion> enfermedades) {
+			this.Lista = enfermedades;
+		}
+		
+		  public List<DtPlanVacunacion> getNombres() {
+				return Lista;
+			}
+
+			public void setNombres(List<DtPlanVacunacion> nombres) {
+				this.Lista = nombres;
+			}
+
+			   public List<DtPlanVacunacion> getLista() {
+					return Lista;
+				}
+
+				public void setLista(List<DtPlanVacunacion> dtPlanes) {
+					this.Lista = dtPlanes;
+				}
     
 
     public void itemSelect(ItemSelectEvent event) {
@@ -99,20 +112,7 @@ public class JSFReporteActosVacunales implements Serializable {
         return lineModel2;
     }
 
-   
-    public PieChartModel getPieModel1() {
-        return pieModel1;
-    }
 
-   
-
-    public BarChartModel getBarModel() {
-        return barModel;
-    }
-
-  
-
-  
     private LineChartModel initCategoryModel() {
         LineChartModel model = new LineChartModel();
 
@@ -154,46 +154,6 @@ public class JSFReporteActosVacunales implements Serializable {
     }
 
   
-
-    private BarChartModel initBarModel() {
-        BarChartModel model = new BarChartModel();
-
-        ChartSeries edad = new ChartSeries();
-        edad.setLabel("Edad");
-        edad.set("Hasta 17", 20000);
-        edad.set("18-45", 10000);
-        edad.set("45-60", 25000);
-        edad.set("61+", 65000);
-
-
-  
-        model.addSeries(edad);
-
-
-        return model;
-    }
-
-    private void createBarModels() {
-        createBarModel();
-      
-    }
-
-    private void createBarModel() {
-        barModel = initBarModel();
-
-        barModel.setTitle("Actos vacunales por edad");
-        barModel.setLegendPosition("ne");
-
-        Axis xAxis = barModel.getAxis(AxisType.X);
-        xAxis.setLabel("Edad");
-
-        Axis yAxis = barModel.getAxis(AxisType.Y);
-        yAxis.setLabel("Actos vacunales");
-        yAxis.setMin(0);
-        yAxis.setMax(2000000);
-    }
-
-  
     private LineChartModel initLinearModel() {
         LineChartModel model = new LineChartModel();
 
@@ -210,23 +170,6 @@ public class JSFReporteActosVacunales implements Serializable {
         return model;
     }
 
-    private void createPieModels() {
-        createPieModel1();
-  
-    }
-
-    private void createPieModel1() {
-        pieModel1 = new PieChartModel();
-
-        pieModel1.set("Masculino", 540);
-        pieModel1.set("Femenino", 325);
-     
-
-        pieModel1.setTitle("Actos Vacunales por sexo");
-        pieModel1.setLegendPosition("w");
-        pieModel1.setShadow(false);
-    }
-
-  
-
+   
 }
+  

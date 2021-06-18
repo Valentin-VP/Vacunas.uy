@@ -10655,19 +10655,20 @@ border-width: 10px;
 
 
 .formulario8 {
-flex-basis: 10%;
-  width: 80%;
+flex-basis: 50%;
+  width:40%;
   text-align:right;
   margin-top:3%;
-  margin-left:30%
+  margin-left: 3%;
+ 
 
 
 }
 
 .formulario9 {
 
-  width: 80%;
+  width:75%;
   text-align:left;
 
-  flex-basis: 80%;
+  flex-basis: 50%;
 }

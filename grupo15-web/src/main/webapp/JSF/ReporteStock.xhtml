@@ -50,50 +50,47 @@
  
 <h:form>
 
+<div>
+<p:outputLabel style="width:40%" >Enfermedad:    </p:outputLabel>
+ <p:selectOneMenu value="#{ReporteStock.enfemedad}"  style="border-width: thin" >
+	<f:selectItems value="#{ReporteStock.enfermedades}" />
+</p:selectOneMenu>
+
+<p:outputLabel style="width:40%" >Vacuna:    </p:outputLabel>
+ <p:selectOneMenu value="#{ReporteStock.vacuna}"  style="border-width: thin" >
+	<f:selectItems value="#{ReporteStock.vacunas}" />
+</p:selectOneMenu>
+
+<p:outputLabel style="width:40%" >Global o por Vacunatorio:    </p:outputLabel>
+ <p:selectOneMenu value="#{ReporteStock.nombre}"  style="border-width: thin" >
+	<f:selectItems value="#{ReporteStock.nombres}" />
+</p:selectOneMenu>
+</div>
+
 <div class="formulario6">
-      <div class="formulario9">
-    <p:chart type="bar" model="#{ReporteActosVacunales.barModel}" style="height:600px; width:700px"/>
-   </div>
-<div class="formulario8">
-    <p:dataTable id="rep" value="#{ReporteActosVacunales.getLista()}" var="rep">
+     
+
+    <p:dataTable id="rep2" value="#{ReporteStock.getLista()}" var="rep2">
+<p:outputLabel style="width:40%" >Stock de Vacunas actualmente   </p:outputLabel>
 <p:column>
-	<f:facet name="header">Vacunados</f:facet>
-		#{rep.vacunados}
+	<f:facet name="header">Stock</f:facet>
+		#{rep2.stock}
 		</p:column>
 <p:column>
-<f:facet name="header">Edades</f:facet>
-#{rep.edad}
+<f:facet name="header">Vacuna</f:facet>
+#{rep2.vacuna}
 </p:column>
 
 </p:dataTable>
 </div>
-</div>
+
 
 <div class="formulario6">
-      <div class="formulario9">
-    <p:chart type="pie" model="#{ReporteActosVacunales.pieModel1}" style="height:500px; width:700px"/>
- </div>
-<div class="formulario8">
-    <p:dataTable id="rep2" value="#{ReporteActosVacunales.getLista()}" var="rep2">
-<p:column>
-	<f:facet name="header">Vacunados</f:facet>
-		#{rep2.vacunados}
-		</p:column>
-<p:column>
-<f:facet name="header">Sexo</f:facet>
-#{rep2.sexo}
-</p:column>
-
-</p:dataTable>
-</div>
-</div>
-
-<div class="formulario6">
-    <p:chart type="line" model="#{ReporteActosVacunales.lineModel2}" style="height:600px; width:1300px"/>
+    <p:chart type="line" model="#{ReporteStock.lineModel2}" style="height:600px; width:1300px"/>
 
 </div>
 
-<p:commandButton id="crear" action="#{ReporteActosVacunales.pdf}" value="Descargar PDF" styleClass="p-mr-2"/>
+<p:commandButton id="crear" action="#{ReporteStock.pdf}" value="Descargar PDF" styleClass="p-mr-2"/>
 
 
 </h:form>
