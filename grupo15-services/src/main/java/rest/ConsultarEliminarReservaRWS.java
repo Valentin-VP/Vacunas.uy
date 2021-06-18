@@ -46,8 +46,8 @@ public class ConsultarEliminarReservaRWS {
 
 	}
 	
-	//@RolesAllowed({"ciudadano"}) 
-	@PermitAll
+	@RolesAllowed({"ciudadano"}) 
+	//@PermitAll
 	@GET
 	@Path("/listar")
 	public Response listarReservasCiudadano(@CookieParam("x-access-token") Cookie cookie) {
@@ -97,8 +97,8 @@ public class ConsultarEliminarReservaRWS {
 		}
 	}*/
 	
-	//@RolesAllowed({"ciudadano"}) 
-	@PermitAll
+	@RolesAllowed({"ciudadano"}) 
+	//@PermitAll
 	@DELETE
 	@Path("/eliminar")
 	public Response eliminarReservaCiudadano(@CookieParam("x-access-token") Cookie cookie, @QueryParam("e") String idEnfermedad, @QueryParam("date") String fecha) {

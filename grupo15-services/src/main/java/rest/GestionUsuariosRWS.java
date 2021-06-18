@@ -10,6 +10,7 @@ import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
@@ -19,10 +20,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONException;
@@ -117,7 +118,7 @@ public class GestionUsuariosRWS {
 		return Response.ok(resultados).build();
 	}
 
-	@PermitAll
+	@RolesAllowed({ "ciudadano" })
 	@POST
 	@Path("/ciudadano/modificar")
 	public Response modificarCiudadano(@CookieParam("x-access-token") Cookie cookie, String datos) {
@@ -170,7 +171,7 @@ public class GestionUsuariosRWS {
 		
 	}
 	
-	@PermitAll
+	@RolesAllowed({ "ciudadano" })
 	@GET
 	@Path("/ciudadano/datosModificar")
 	public Response datosModificarCiudadano(@CookieParam("x-access-token") Cookie cookie) {	
@@ -192,7 +193,7 @@ public class GestionUsuariosRWS {
 	}
 	
 	
-	@PermitAll
+	@RolesAllowed({ "ciudadano" })
 	@GET
 	@Path("/ciudadano/buscar") //obtiene el usuario del cookie obtenido
 	public Response obtenerCiudadano(@CookieParam("x-access-token") Cookie cookie) {
@@ -211,7 +212,7 @@ public class GestionUsuariosRWS {
 		return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "No se obtuvo ciudadano");
 	}
 	
-	@PermitAll
+	@RolesAllowed({ "administrador", "autoridad" })
 	@GET
 	@Path("/interno/buscar") //obtiene el usuario del cookie obtenido
 	public Response obtenerInterno(@CookieParam("x-access-token") Cookie cookie) {
@@ -236,7 +237,7 @@ public class GestionUsuariosRWS {
 		return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "No se obtuvo interno");
 	}
 		
-	@PermitAll
+	@RolesAllowed({ "vacunador" })
 	@GET
 	@Path("/vacunador/buscar") //obtiene el usuario del cookie obtenido
 	public Response obtenerVacunador(@CookieParam("x-access-token") Cookie cookie) {
@@ -255,7 +256,7 @@ public class GestionUsuariosRWS {
 		return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "No se obtuvo interno");
 	}
 	
-	@PermitAll
+	@RolesAllowed({"administrador", "autoridad" })
 	@POST
 	@Path("/interno/modificar")
 	public Response modificarInterno(@CookieParam("x-access-token") Cookie cookie, String datos) {
@@ -279,23 +280,24 @@ public class GestionUsuariosRWS {
 		return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "No se ha seteado la Cookie");
 	}
 	
-	@PermitAll
+	@RolesAllowed({ "vacunador", "ciudadano", "administrador", "autoridad" })
 	@GET
 	@Path("/cerrarSesion")
-	public Response deleteToken(@CookieParam("x-access-token") Cookie cookie) {
+	public Response deleteToken(@CookieParam("x-access-token") Cookie cookie, @Context HttpServletRequest request) {
 		String token = cookie.getValue();
 		try {
 			String ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
 			IUsuarioLocal.borrarToken(ci);
-			NewCookie cookie2 = new NewCookie("x-access-token", "");
-			URI url = new URI("/grupo15-web/html/login.html");
-			return Response.temporaryRedirect(url).cookie(cookie2).build();
+			String host = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+			System.out.println(host);
+			URI url = new URI(host + "/grupo15-web/html/login.html");
+			return Response.temporaryRedirect(url).build();
 		} catch (InvalidJwtException | NumberFormatException | UsuarioInexistente | URISyntaxException e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 		}
 	}
 	
-	@PermitAll
+	@RolesAllowed({"ciudadano"})
 	@GET
 	@Path("/checkToken")
 	public Response checktoken(@CookieParam("x-access-token") Cookie cookie) {
