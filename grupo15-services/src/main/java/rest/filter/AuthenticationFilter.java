@@ -123,6 +123,12 @@ public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequ
 						"Usuario no identificado en la Base de Datos"));
 				return;
 			}
+			if (user.getToken() == null) {
+				LOGGER.warning("Nohay token para este usuario (null)");
+				requestContext.abortWith(ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED,
+						"Token expired. Please authenticate again!"));
+				return;
+			}
 			// Si el token no coincide, se fuerza reautenticar
 			if (!user.getToken().equals(jwt)) {
 				LOGGER.warning("Token expired!");
