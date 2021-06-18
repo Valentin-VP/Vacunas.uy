@@ -66,13 +66,13 @@ public class FirestoreController implements IFirestoreLocal, IFirestoreRemote {
 		Map<String, Object> task = new HashMap<>();
 		Map<String, Object> expirationTask = new HashMap<>();
 		Map<String, Object> notification = new HashMap<>();
-		notification.put("Title", "Recordatorio VacunasUy");
+		notification.put("title", "Recordatorio VacunasUy");
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 		String body = "Le recordamos que tiene una reserva de vacunacion el dia " + fecha.format(dateFormatter)
 				+ " a las " + hora.format(timeFormatter) + ". Lugar: " + vacunatorio + ". Puesto: " + puesto
 				+ ". Recuerde asistir en hora.";
-		notification.put("Body", body);
+		notification.put("body", body);
 		expirationTask.put("notification", notification);
 		expirationTask.put("token", mobileToken);
 		task.put("expirationTask", expirationTask);
