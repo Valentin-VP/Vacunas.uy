@@ -29,7 +29,7 @@ import com.itextpdf.layout.element.Paragraph;
 
 import datatypes.DtPlanVacunacion;
 
-@Named("ReporteActosVacunales")
+@Named("ReporteStock")
 @RequestScoped
 public class JSFReporteStock implements Serializable {
 
