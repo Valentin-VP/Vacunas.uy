@@ -53,43 +53,43 @@
   </nav>
 
   <div id="res">
-    <div class="formulario">
+    <div class="formulario" @click="SetDatos">
       
       <form>
         
         <div>
-            <input type="text" v-model=id class="form-control" id="id" placeholder="Cedula">
+            <input type="number" v-model=id class="form-control" id="id" placeholder="Cedula" required>
          </div>
 
          <div>
-            <input type="text" v-model=nombre  class="form-control" id="nombre" placeholder="Nombre">
+            <input type="text" v-model=nombre  class="form-control" id="nombre" placeholder="Nombre" required>
          </div>
          <div>
-            <input type="text" v-model=apellido  class="form-control" id="apellido" placeholder="Apellido">
+            <input type="text" v-model=apellido  class="form-control" id="apellido" placeholder="Apellido" required>
          </div>
        
           <div>
-            <input type="date" v-model=fecha class="form-control" id="fecha" placeholder="Fecha de Nacimiento">
+            <input type="date" v-model=fecha class="form-control" id="fecha" placeholder="Fecha de Nacimiento" required>
          </div>
 
          <div>
-            <input type="text" v-model=direccion class="form-control" id="direccion" placeholder="Direccion">
+            <input type="text" v-model=direccion class="form-control" id="direccion" placeholder="Direccion" required>
          </div>
 
          <div>
-          <input type="text" v-model=barrio class="form-control" id="barrio" placeholder="Barrio">
+          <input type="text" v-model=barrio class="form-control" id="barrio" placeholder="Barrio" required>
        </div>
 
        <div>
-        <input type="text" v-model=departamento class="form-control" id="departamento" placeholder="Departamento">
+        <input type="text" v-model=departamento class="form-control" id="departamento" placeholder="Departamento" required>
      </div>
      
          <div>
-            <input type="text" v-model=email class="form-control" id="email" placeholder="E-mail">
+            <input type="email" v-model=email class="form-control" id="email" placeholder="E-mail" required>
          </div>
   
               <div>
-                <select class="form-control" v-model=sexo id="sexo">
+                <select class="form-control" v-model=sexo id="sexo" required>
                   <option disabled value="">Seleccione su sexo:</option>
                   <option>Masculino</option>
                   <option>Femenino</option>
@@ -98,9 +98,9 @@
                 </select>
               </div>
            
-   
+              <button class="btn btn-primary" type="submit"   style="width:33,33%">Registrar</button>
         </form>
-        <button class="btn btn-primary" type="submit" @click="SetDatos"  style="width:33,33%">Registrar</button>
+      
       </div>
     
    
