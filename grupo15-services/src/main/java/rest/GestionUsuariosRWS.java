@@ -289,8 +289,14 @@ public class GestionUsuariosRWS {
 			String ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
 			IUsuarioLocal.borrarToken(ci);
 			String host = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-			System.out.println(host);
-			URI url = new URI(host + "/grupo15-web/html/login.html");
+			String referer = request.getHeader("Referer");
+			URI url = new URI("");
+			if(referer.contains("/grupo15-web/html")) {
+				url = new URI(host + "/grupo15-web/html/login.html");
+			}else {
+				url = new URI(host + "/grupo15-web/html/loginInterno.html");
+			}
+			System.out.println(url);
 			return Response.temporaryRedirect(url).build();
 		} catch (InvalidJwtException | NumberFormatException | UsuarioInexistente | URISyntaxException e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
