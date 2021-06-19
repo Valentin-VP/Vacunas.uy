@@ -116,14 +116,22 @@ public class ControladorVacuna implements IControladorVacunaLocal, IControladorV
 			throw new VacunaInexistente("No existe una vacuna con ese nombre");
 	}
 	
-	public void modificarVacuna(String nombre, int cantDosis, int expira, int tiempoEntreDosis/*, Laboratorio laboratorio, Enfermedad enfermedad*/) throws VacunaInexistente {
+	public void modificarVacuna(String nombre, int cantDosis, int expira, int tiempoEntreDosis, String laboratorio, String enfermedad) throws VacunaInexistente, LaboratorioInexistente, EnfermedadInexistente{
 		Vacuna vac = em.find(Vacuna.class, nombre);
 		if(vac != null) {
 			vac.setCantDosis(cantDosis);
 			vac.setExpira(expira);
-			//vac.setLaboratorio(laboratorio);
-			//vac.setEnfermedad(enfermedad);
 			vac.setTiempoEntreDosis(tiempoEntreDosis);
+			Laboratorio lab = em.find(Laboratorio.class, laboratorio);
+			if(lab != null)
+				vac.setLaboratorio(lab);
+			else
+				throw new LaboratorioInexistente("No existe un laboratorio con ese nombre");
+			Enfermedad enf = em.find(Enfermedad.class, enfermedad);
+			if(enf != null)
+				vac.setEnfermedad(enf);
+			else
+				throw new EnfermedadInexistente("No existe una enfermedad con ese nombre");
 			em.persist(vac);
 		}else
 			throw new VacunaInexistente("No existe una vacuna con ese nombre");

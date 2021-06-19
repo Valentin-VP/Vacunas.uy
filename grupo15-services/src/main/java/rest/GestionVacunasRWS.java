@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
@@ -19,6 +20,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 
 import datatypes.DtDatosVacuna;
@@ -154,6 +157,31 @@ public class GestionVacunasRWS {
 		} catch (AccionInvalida | VacunaInexistente e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					e.getMessage());
+		}
+	}
+	
+	@RolesAllowed({ "autoridad", "administrador" }) 
+	@POST
+	@Path("/modificar")
+	public Response modificarVacuna(String vacuna) {
+		String nombre = "";
+		int cantDosis = -1;
+		int expira = -1;
+		int tiempoEntreDosis = -1;
+		String lab = "";
+		String enf = "";
+		try {
+			JSONObject jsonObject = new JSONObject(vacuna);
+			nombre = jsonObject.getString("nombre");
+			cantDosis = Integer.valueOf(jsonObject.getString("cantDosis"));
+			expira = Integer.valueOf(jsonObject.getString("expira"));
+			tiempoEntreDosis = Integer.valueOf(jsonObject.getString("tiempoEntreDosis"));
+			lab = jsonObject.getString("laboratorio");
+			enf = jsonObject.getString("enfermedad");
+			cv.modificarVacuna(nombre, cantDosis, expira, tiempoEntreDosis, lab, enf);
+			return Response.ok().build();
+		} catch (JSONException | VacunaInexistente | LaboratorioInexistente | EnfermedadInexistente e) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 		}
 	}
 }

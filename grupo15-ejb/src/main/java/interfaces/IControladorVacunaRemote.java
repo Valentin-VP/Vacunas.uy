@@ -24,7 +24,7 @@ public void agregarVacuna(String nombre, int cantDosis, int tiempoEntreDosis, in
 	
 	public DtVacuna obtenerVacuna(String nombre)throws VacunaInexistente;
 	
-	public void modificarVacuna(String nombre, int cantDosis, int expira, int tiempoEntreDosis) throws VacunaInexistente;
+	public void modificarVacuna(String nombre, int cantDosis, int expira, int tiempoEntreDosis, String laboratorio, String enfermedad) throws VacunaInexistente, LaboratorioInexistente, EnfermedadInexistente;
 	
 	public void eliminarVacuna(String nombre) throws VacunaInexistente, AccionInvalida;
 }
