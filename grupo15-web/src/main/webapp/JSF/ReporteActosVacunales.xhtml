@@ -69,7 +69,17 @@
           </p:dataTable>
         </div>
       </div>
-
+ <div class="formulario">
+  
+    <p:panel header="Para exportar los datos de la tabla anterior, haga click en el siguiente botón:" style="text-align: center">
+           
+    <h:commandLink> 
+          <p:commandButton value="Descargar"  />
+          <p:dataExporter type="pdf" target="rep" fileName="ReporteActosVacunales" />
+ 		
+      </h:commandLink>
+  </p:panel>
+ </div>
       <div class="formulario6">
         <div class="formulario9">
           <p:chart type="pie" model="#{ReporteActosVacunales.pieModel1}" style="height:500px; width:700px" />
@@ -88,6 +98,18 @@
           </p:dataTable>
         </div>
       </div>
+      
+       <div class="formulario">
+  
+    <p:panel header="Para exportar los datos de la tabla anterior, haga click en el siguiente botón:" style="text-align: center">
+           
+    <h:commandLink> 
+          <p:commandButton value="Descargar"  />
+          <p:dataExporter type="pdf" target="rep2" fileName="ReporteActosVacunales2" />
+ 		
+      </h:commandLink>
+  </p:panel>
+ </div>
 
       <div class="formulario6">
         <p:chart type="line" model="#{ReporteActosVacunales.lineModel2}" style="height:600px; width:1300px" />
@@ -95,15 +117,7 @@
       </div>
     
  
-  
-    <p:panel header="Export All Data">
-           
-      <h:commandLink>
-          <p:graphicImage value="/grupo15-web/media/icono-pdf.jpg" />
-          <p:dataExporter type="pdf" target="rep" fileName="mypdf" />
-      </h:commandLink>
-  </p:panel>
-
+     
   </h:form>
 
 </body>

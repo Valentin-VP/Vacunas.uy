@@ -49,22 +49,25 @@
 
  
 <h:form>
-
-<div>
-<p:outputLabel style="width:40%" >Enfermedad:    </p:outputLabel>
- <p:selectOneMenu value="#{ReporteStock.enfemedad}"  style="border-width: thin" >
-	<f:selectItems value="#{ReporteStock.enfermedades}" />
-</p:selectOneMenu>
-
-<p:outputLabel style="width:40%" >Vacuna:    </p:outputLabel>
- <p:selectOneMenu value="#{ReporteStock.vacuna}"  style="border-width: thin" >
-	<f:selectItems value="#{ReporteStock.vacunas}" />
-</p:selectOneMenu>
-
-<p:outputLabel style="width:40%" >Global o por Vacunatorio:    </p:outputLabel>
+ <div class="formulario6">
+    <div style="display: inline-block; width: 50%">
+<p:outputLabel style="width:60%" >Enfermedad:    </p:outputLabel>
  <p:selectOneMenu value="#{ReporteStock.nombre}"  style="border-width: thin" >
-	<f:selectItems value="#{ReporteStock.nombres}" />
+	<f:selectItems value="#{ReporteStock.lista}" />
+</p:selectOneMenu> </div>
+ 
+     <div style="display: inline-block; width: 50%">
+<p:outputLabel style="width:60%" >Vacuna:    </p:outputLabel>
+ <p:selectOneMenu value="#{ReporteStock.vacuna}"  style="border-width: thin" >
+	<f:selectItems value="#{ReporteStock.lista}" />
+</p:selectOneMenu> </div>
+
+    <div style="display: inline-block; width: 50%">
+<p:outputLabel style="width:70%" >Global o por Vacunatorio:    </p:outputLabel>
+ <p:selectOneMenu value="#{ReporteStock.nombre}"  style="border-width: thin" >
+	<f:selectItems value="#{ReporteStock.lista}" />
 </p:selectOneMenu>
+</div>
 </div>
 
 <div class="formulario6">
@@ -90,7 +93,17 @@
 
 </div>
 
-<p:commandButton id="crear" action="#{ReporteStock.pdf}" value="Descargar PDF" styleClass="p-mr-2"/>
+ <div class="formulario">
+  
+    <p:panel header="Para exportar los datos de la tabla anterior, haga click en el siguiente botón:" style="text-align: center">
+           
+    <h:commandLink> 
+          <p:commandButton value="Descargar"  />
+          <p:dataExporter type="pdf" target="rep2" fileName="ReporteStock" />
+ 		
+      </h:commandLink>
+  </p:panel>
+ </div>
 
 
 </h:form>

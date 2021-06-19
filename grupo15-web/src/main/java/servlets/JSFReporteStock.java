@@ -38,6 +38,9 @@ public class JSFReporteStock implements Serializable {
 
 	private List<DtPlanVacunacion> Lista = new ArrayList<DtPlanVacunacion>();
     private LineChartModel lineModel2;
+    private String enfermedad;
+    private String vacuna;
+    private String nombre;
    
     private BarChartModel barModel;
    
@@ -51,21 +54,31 @@ public class JSFReporteStock implements Serializable {
      
     }
     
-    public void pdf() throws IOException{
+    
+    public String getNombre() {
+		return nombre;
+	}
 
-    		final String DEST = "C:/temp/reporte.pdf";
-    	    PdfDocument pdf = new PdfDocument(new PdfWriter(DEST));
-    	    Document document = new Document(pdf);
-    	    String line = "Hello! Welcome to iTextPdf";
-    	    document.add(new Paragraph(line));
-    	    document.close();
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	
+	public String getVacuna() {
+		return vacuna;
+	}
 
-    	    System.out.println("Awesome PDF just got created.");
-    	    
-    	  
-    	  
-    	}
- 
+	public void setVacuna(String vacuna) {
+		this.vacuna = vacuna;
+	}
+	
+	public String getEnfermedad() {
+		return enfermedad;
+	}
+
+	public void setEnfermedad(String enfermedad) {
+		this.enfermedad = enfermedad;
+	}
+	
     public List<DtPlanVacunacion> getVacunas() {
 		return Lista;
 	}

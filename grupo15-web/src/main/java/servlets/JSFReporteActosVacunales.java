@@ -61,20 +61,7 @@ public class JSFReporteActosVacunales implements Serializable {
      
     }
     
-    public void pdf() throws IOException{
-
-    		final String DEST = "C:/temp/reporte.pdf";
-    	    PdfDocument pdf = new PdfDocument(new PdfWriter(DEST));
-    	    Document document = new Document(pdf);
-    	    String line = "Hello! Welcome to iTextPdf";
-    	    document.add(new Paragraph(line));
-    	    document.close();
-
-    	    System.out.println("Awesome PDF just got created.");
-    	    
-    	  
-    	  
-    	}
+  
  
     public List<DtPlanVacunacion> getLista() {
 		return Lista;
