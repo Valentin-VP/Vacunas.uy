@@ -16,7 +16,8 @@ import exceptions.VacunatoriosNoCargadosException;
 @Local
 public interface IControladorVacunatorioLocal {
 
-	public void agregarVacunatorio(String id, String nombre, DtDireccion dtDir, Integer telefono, Float latitud, Float longitud) throws VacunatorioCargadoException ;
+	public void agregarVacunatorio(String id, String nombre, DtDireccion dtDir, Integer telefono, Float latitud, Float longitud, String url) throws VacunatorioCargadoException ;
+	public void setURLtoVacunatorio(String id, String url) throws VacunatorioNoCargadoException;
 	public DtVacunatorio obtenerVacunatorio(String id) throws VacunatorioNoCargadoException;
 	public ArrayList<DtVacunatorio> listarVacunatorio()throws VacunatoriosNoCargadosException;
 	public void modificarVacunatorio(DtVacunatorio dtVac) throws VacunatorioNoCargadoException;

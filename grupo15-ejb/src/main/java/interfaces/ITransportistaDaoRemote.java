@@ -10,11 +10,11 @@ import exceptions.TransportistaRepetido;
 
 @Remote
 public interface ITransportistaDaoRemote {
+	public void agregarTransportista(Integer id, String url) throws TransportistaRepetido ;
 
-	public void agregarTransportista(Integer id)
-			throws TransportistaRepetido;
+	public void setURLtoTransportista(Integer id, String url) throws TransportistaInexistente;
+	
+	public DtTransportista obtenerTransportista(Integer id) throws TransportistaInexistente ;
 
-	public DtTransportista obtenerTransportista(Integer id) throws TransportistaInexistente;
-
-	public List<DtTransportista> listarTransportistas();
+	public List<DtTransportista> listarTransportistas() throws TransportistaInexistente;
 }

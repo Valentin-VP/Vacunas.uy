@@ -26,12 +26,12 @@ public class ControladorVacunatorio implements IControladorVacunatorioLocal, ICo
 	private EntityManager em;
 
 	public void agregarVacunatorio(String id, String nombre, DtDireccion dtDir, Integer telefono, Float latitud,
-			Float longitud) throws VacunatorioCargadoException {
+			Float longitud, String url) throws VacunatorioCargadoException {
 
 		Vacunatorio vac = em.find(Vacunatorio.class, id);
 
 		if (vac == null) {
-			Vacunatorio vacNew = new Vacunatorio(id, nombre, dtDir, telefono, latitud, longitud);
+			Vacunatorio vacNew = new Vacunatorio(id, nombre, dtDir, telefono, latitud, longitud, url);
 
 			em.persist(vacNew);
 
@@ -39,27 +39,37 @@ public class ControladorVacunatorio implements IControladorVacunatorioLocal, ICo
 			throw new VacunatorioCargadoException("El vacunatorio " + id + " ya existe en el sistema\n");
 
 		}
-
 	}
-
-	public void agregarReglasCupos(String idVac, String id, Integer duracionTurno, LocalTime horaApertura,
-		LocalTime horaCierre) throws VacunatorioNoCargadoException, ReglasCuposCargadoException {
-		Vacunatorio vac = em.find(Vacunatorio.class, idVac);
+	
+	public void setURLtoVacunatorio(String id, String url) throws VacunatorioNoCargadoException {
+		Vacunatorio vac = em.find(Vacunatorio.class, id);
 
 		if (vac == null) {
 			throw new VacunatorioNoCargadoException("El vacunatorio " + id + " no existe en el sistema");
 		}else {
-			if (vac.getReglasCupos()!=null) {
+			vac.setUrl(url);
+			em.merge(vac);
+		}
+	}
+
+	public void agregarReglasCupos(String idVac, String id, Integer duracionTurno, LocalTime horaApertura,
+			LocalTime horaCierre) throws VacunatorioNoCargadoException, ReglasCuposCargadoException {
+		Vacunatorio vac = em.find(Vacunatorio.class, idVac);
+
+		if (vac == null) {
+			throw new VacunatorioNoCargadoException("El vacunatorio " + id + " no existe en el sistema");
+		} else {
+			if (vac.getReglasCupos() != null) {
 				throw new ReglasCuposCargadoException("La regla de cupo ya existe en el sistema");
-			}else {
-				ReglasCupos reglasNew= new ReglasCupos(id, duracionTurno, horaApertura, horaCierre);
+			} else {
+				ReglasCupos reglasNew = new ReglasCupos(id, duracionTurno, horaApertura, horaCierre);
 				vac.setReglasCupos(reglasNew);
 				em.merge(vac);
 				em.persist(reglasNew);
 			}
 		}
 	}
-	
+
 	public DtVacunatorio obtenerVacunatorio(String id) throws VacunatorioNoCargadoException {
 
 		Vacunatorio vac = em.find(Vacunatorio.class, id);
@@ -70,7 +80,7 @@ public class ControladorVacunatorio implements IControladorVacunatorioLocal, ICo
 
 		} else {
 			DtVacunatorio dtVac = new DtVacunatorio(vac.getId(), vac.getNombre(), vac.getDtDir(), vac.getTelefono(),
-					vac.getLatitud(), vac.getLongitud());
+					vac.getLatitud(), vac.getLongitud(), vac.getUrl());
 			return dtVac;
 		}
 
@@ -85,7 +95,7 @@ public class ControladorVacunatorio implements IControladorVacunatorioLocal, ICo
 		for (Vacunatorio v : aux) {
 
 			DtVacunatorio dtVac = new DtVacunatorio(v.getId(), v.getNombre(), v.getDtDir(), v.getTelefono(),
-					v.getLatitud(), v.getLongitud());
+					v.getLatitud(), v.getLongitud(), v.getUrl());
 			vac.add(dtVac);
 		}
 		if (aux.isEmpty()) {

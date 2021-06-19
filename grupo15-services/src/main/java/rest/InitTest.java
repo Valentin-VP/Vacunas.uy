@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import datatypes.DtDireccion;
 import datatypes.DtUsuarioExterno;
 import datatypes.ErrorInfo;
+import datatypes.Rol;
 import datatypes.Sexo;
 import exceptions.AccionInvalida;
 import exceptions.CantidadNula;
@@ -112,16 +113,16 @@ public class InitTest {
 		try {
 			es.agregarEnfermedad("virus1");
 			es.agregarEnfermedad("virus2");
-			vact.agregarVacunatorio("vact1", "Nest1", new DtDireccion("Av. Italia 1111", "Brooks", "Melbourne"), 1555897235, 1.0f, 1.0f);
+			vact.agregarVacunatorio("vact1", "Nest1", new DtDireccion("Av. Italia 1111", "Brooks", "Melbourne"), 1555897235, 1.0f, 1.0f, "http://localhost:8180");
 			vact.agregarReglasCupos("vact1", "1", 15,  LocalTime.of(0, 0, 0),  LocalTime.of(23, 59, 59));
 			//vact.agregarVacunatorio("vact2", "Nest2", new DtDireccion("Av. Italia 1112", "Brooks", "Melbourne"), 1555897235, 1.0f, 1.0f);
 			//vact.agregarReglasCupos("vact2", "2", 20,  LocalTime.of(10, 0, 0),  LocalTime.of(22, 0, 0));
 			//vact.agregarVacunatorio("vact3", "Nest3", new DtDireccion("Av. Italia 1113", "Brooks", "Melbourne"), 1555897235, 1.0f, 1.0f);
 			//vact.agregarReglasCupos("vact3", "3", 30,  LocalTime.of(10, 0, 0),  LocalTime.of(20, 0, 0));
-			vact.agregarVacunatorio("terminal", "Terminal tres cruces", null, 24088601, Float.parseFloat("-34.893906"), Float.parseFloat("-56.166912"));				
-			vact.agregarVacunatorio("1234", "Palacio legislativo", null, 12091274, Float.parseFloat("-34.892418"), Float.parseFloat("-56.186604"));
-			vact.agregarVacunatorio("carrasco", "Aeropuerto de Carrasco", null, 26040329, Float.parseFloat("-34.837273"), Float.parseFloat("-56.016018"));
-			vact.agregarVacunatorio("Clinicas", "Hospital de Clinicas", null, 45745, Float.parseFloat("-34.890743"), Float.parseFloat("-56.15231"));
+			vact.agregarVacunatorio("terminal", "Terminal tres cruces", null, 24088601, Float.parseFloat("-34.893906"), Float.parseFloat("-56.166912"), "http://localhost:8180");				
+			vact.agregarVacunatorio("1234", "Palacio legislativo", null, 12091274, Float.parseFloat("-34.892418"), Float.parseFloat("-56.186604"), "http://localhost:8180");
+			vact.agregarVacunatorio("carrasco", "Aeropuerto de Carrasco", null, 26040329, Float.parseFloat("-34.837273"), Float.parseFloat("-56.016018"), "http://localhost:8180");
+			vact.agregarVacunatorio("Clinicas", "Hospital de Clinicas", null, 45745, Float.parseFloat("-34.890743"), Float.parseFloat("-56.15231"), "http://localhost:8180");
 									
 			
 			uc.agregarUsuarioVacunador(11111111, "Vacunador", "DeTest Uno", LocalDate.now(), "v@1", new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Otro);
@@ -138,10 +139,11 @@ public class InitTest {
 			uc.agregarUsuarioCiudadano(54657902, "Nicolás", "Méndez", LocalDate.of(1995, 1, 1), "nicolas@mendez", new DtDireccion("Av. Cdd NNNN", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			uc.agregarUsuarioCiudadano(49457795, "Valentin", "Vasconcellos", LocalDate.of(1995, 1, 1), "valentin@vasconcellos", new DtDireccion("Av. Cdd VVVV", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
 			uc.agregarUsuarioCiudadano(48585559, "Nohelia", "Yanibelli", LocalDate.of(1995, 1, 1), "nohelia@yanibelli", new DtDireccion("Av. Cdd YYYY", "Brooks", "Melbourne"), Sexo.Otro, "Sector123456789" , false);
+			uc.agregarUsuarioInterno(54657902, "Nicolás", "Méndez", LocalDate.of(1995, 1, 1), "nicolas@mendez", new DtDireccion("Av. Cdd NNNN", "Brooks", "Melbourne"), Sexo.Otro, Rol.Administrador);
 			lab.agregarLaboratorio("lab1");
 			lab.agregarLaboratorio("lab2");
-			trs.agregarTransportista(1);
-			trs.agregarTransportista(2);
+			trs.agregarTransportista(1, "http://localhost:8280");
+			trs.agregarTransportista(2, "http://localhost:8280");
 			vch.agregarVacuna("vacuna1Virus1", 1, 60, 1999, "lab1", "virus1");
 			vch.agregarVacuna("vacuna2Virus2", 3, 60, 1999, "lab1", "virus2");
 			

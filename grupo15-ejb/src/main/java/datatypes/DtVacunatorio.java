@@ -15,7 +15,7 @@ public class DtVacunatorio implements Serializable {
 	private Integer telefono;
 	private Float latitud;
 	private Float longitud;
-	
+	private String url;
 	
 	
 	public DtVacunatorio() {
@@ -33,6 +33,32 @@ public class DtVacunatorio implements Serializable {
 		this.telefono = telefono;
 		this.latitud = latitud;
 		this.longitud = longitud;
+	}
+
+
+
+	public DtVacunatorio(String id, String nombre, DtDireccion dtDir, Integer telefono, Float latitud, Float longitud,
+			String url) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.dtDir = dtDir;
+		this.telefono = telefono;
+		this.latitud = latitud;
+		this.longitud = longitud;
+		this.url = url;
+	}
+
+
+
+	public String getUrl() {
+		return url;
+	}
+
+
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 
@@ -115,6 +141,7 @@ public class DtVacunatorio implements Serializable {
 		jsonObject.put( "telefono", this.telefono );
 		jsonObject.put( "latitud", this.latitud );
 		jsonObject.put( "longitud", this.longitud );
+		jsonObject.put( "url", this.url );
 		return jsonObject;
 	}
 

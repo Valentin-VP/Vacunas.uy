@@ -38,6 +38,8 @@ public class Vacunatorio {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<LoteDosis> lote = new ArrayList<LoteDosis>();
 
+	private String url;
+	
 	public Vacunatorio(String id, String nombre, DtDireccion dtDir, Integer telefono, Float latitud, Float longitud) {
 		super();
 		this.id = id;
@@ -48,6 +50,22 @@ public class Vacunatorio {
 		this.longitud = longitud;
 
 	}
+
+	
+	
+	public Vacunatorio(String id, String nombre, DtDireccion dtDir, Integer telefono, Float latitud, Float longitud,
+			String url) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.dtDir = dtDir;
+		this.telefono = telefono;
+		this.latitud = latitud;
+		this.longitud = longitud;
+		this.url = url;
+	}
+
+
 
 	public Vacunatorio() {
 		super();
@@ -141,5 +159,15 @@ public class Vacunatorio {
 	public void setLote(List<LoteDosis> lote) {
 		this.lote = lote;
 	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	
+	
 
 }

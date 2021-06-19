@@ -9,6 +9,13 @@ private String contenido;
 		super();
 	}
 	
+	public DtMensaje(String contenido) {
+		super();
+		this.contenido = contenido;
+	}
+
+
+
 	public DtMensaje(int IdMensaje, String contenido) {
 		super();
 		this.IdMensaje = IdMensaje;
