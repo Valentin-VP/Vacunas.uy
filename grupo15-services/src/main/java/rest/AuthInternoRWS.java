@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.naming.NamingException;
@@ -45,9 +46,9 @@ public class AuthInternoRWS{
 	
 	public AuthInternoRWS() {}
 
+	@RolesAllowed({ "administrador", "autoridad" })
 	@POST
 	@Path("/login")
-	@PermitAll
 	public Response autenticarUsuario(@Context HttpHeaders headers) {
 		LOGGER.info("Accediendo a AuthInternoRWS");
 		// http://wiki.eclipse.org/Tutorial:_Extending_the_JaxRS_Remote_Services_Provider
