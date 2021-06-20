@@ -21,6 +21,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONException;
@@ -44,7 +45,6 @@ public class JSFModificarVacunaBean {
 	private List<DtVacuna> vacunas = new ArrayList();
 	private List<DtLaboratorio> laboratorios = new ArrayList();
 	private List<DtEnfermedad> enfermedades = new ArrayList();
-	private String nombre;
 	private int expira;
 	private int cantDosis;
 	private int tiempoEntreDosis;
@@ -97,14 +97,6 @@ public class JSFModificarVacunaBean {
 
 	public void setEnfermedades(List<DtEnfermedad> enfermedades) {
 		this.enfermedades = enfermedades;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
 	}
 
 	public int getExpira() {
@@ -180,7 +172,7 @@ public class JSFModificarVacunaBean {
 			datos.put("tiempoEntreDosis", String.valueOf(tiempoEntreDosis));
 			datos.put("laboratorio", laboratorio);
 			datos.put("enfermedad", enfermedad);
-			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildPost(Entity.json(datos));
+			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildPost(Entity.entity(datos.toString(),MediaType.APPLICATION_JSON));
 			Response response = invocation.invoke();
 			LOGGER.info("Respuesta: " + response.getStatus());
 			if (response.getStatus() == 201) {
