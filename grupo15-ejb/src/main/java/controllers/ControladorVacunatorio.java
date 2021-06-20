@@ -2,6 +2,7 @@ package controllers;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -51,6 +52,30 @@ public class ControladorVacunatorio implements IControladorVacunatorioLocal, ICo
 			em.merge(vac);
 		}
 	}
+	
+	public void generarTokenVacunatorio(String id) throws VacunatorioNoCargadoException {
+		Vacunatorio vac = em.find(Vacunatorio.class, id);
+
+		if (vac == null) {
+			throw new VacunatorioNoCargadoException("El vacunatorio " + id + " no existe en el sistema");
+		}else {
+			String encoded = Base64.getEncoder().encodeToString(id.getBytes());
+			vac.setToken(encoded);
+			em.merge(vac);
+		}
+	}
+	
+	public boolean isTokenCorrecto(String id, String token) throws VacunatorioNoCargadoException {
+		Vacunatorio vac = em.find(Vacunatorio.class, id);
+
+		if (vac == null) {
+			throw new VacunatorioNoCargadoException("El vacunatorio " + id + " no existe en el sistema");
+		}else {
+			if (vac.getToken().equals(token))
+				return true;
+			return false;
+		}
+	}
 
 	public void agregarReglasCupos(String idVac, String id, Integer duracionTurno, LocalTime horaApertura,
 			LocalTime horaCierre) throws VacunatorioNoCargadoException, ReglasCuposCargadoException {
@@ -80,7 +105,7 @@ public class ControladorVacunatorio implements IControladorVacunatorioLocal, ICo
 
 		} else {
 			DtVacunatorio dtVac = new DtVacunatorio(vac.getId(), vac.getNombre(), vac.getDtDir(), vac.getTelefono(),
-					vac.getLatitud(), vac.getLongitud(), vac.getUrl());
+					vac.getLatitud(), vac.getLongitud(), vac.getUrl(), vac.getToken());
 			return dtVac;
 		}
 
@@ -95,7 +120,7 @@ public class ControladorVacunatorio implements IControladorVacunatorioLocal, ICo
 		for (Vacunatorio v : aux) {
 
 			DtVacunatorio dtVac = new DtVacunatorio(v.getId(), v.getNombre(), v.getDtDir(), v.getTelefono(),
-					v.getLatitud(), v.getLongitud(), v.getUrl());
+					v.getLatitud(), v.getLongitud(), v.getUrl(), v.getToken());
 			vac.add(dtVac);
 		}
 		if (aux.isEmpty()) {

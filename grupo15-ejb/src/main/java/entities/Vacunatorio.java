@@ -39,6 +39,8 @@ public class Vacunatorio {
 	private List<LoteDosis> lote = new ArrayList<LoteDosis>();
 
 	private String url;
+	@Column(length = 1024)
+	private String token;
 	
 	public Vacunatorio(String id, String nombre, DtDireccion dtDir, Integer telefono, Float latitud, Float longitud) {
 		super();
@@ -63,6 +65,21 @@ public class Vacunatorio {
 		this.latitud = latitud;
 		this.longitud = longitud;
 		this.url = url;
+	}
+
+
+
+	public Vacunatorio(String id, String nombre, DtDireccion dtDir, Integer telefono, Float latitud, Float longitud,
+			String url, String token) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.dtDir = dtDir;
+		this.telefono = telefono;
+		this.latitud = latitud;
+		this.longitud = longitud;
+		this.url = url;
+		this.token = token;
 	}
 
 
@@ -166,6 +183,18 @@ public class Vacunatorio {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+
+
+	public String getToken() {
+		return token;
+	}
+
+
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 	
 	

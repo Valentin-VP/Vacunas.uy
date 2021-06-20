@@ -17,6 +17,7 @@ import datatypes.DtUsuarioExterno;
 import datatypes.ErrorInfo;
 import datatypes.Rol;
 import datatypes.Sexo;
+import datatypes.TransportistaInexistente;
 import exceptions.AccionInvalida;
 import exceptions.CantidadNula;
 import exceptions.CertificadoInexistente;
@@ -115,6 +116,7 @@ public class InitTest {
 			es.agregarEnfermedad("virus2");
 			vact.agregarVacunatorio("vact1", "Nest1", new DtDireccion("Av. Italia 1111", "Brooks", "Melbourne"), 1555897235, 1.0f, 1.0f, "http://localhost:8180");
 			vact.agregarReglasCupos("vact1", "1", 15,  LocalTime.of(0, 0, 0),  LocalTime.of(23, 59, 59));
+			vact.generarTokenVacunatorio("vact1");
 			//vact.agregarVacunatorio("vact2", "Nest2", new DtDireccion("Av. Italia 1112", "Brooks", "Melbourne"), 1555897235, 1.0f, 1.0f);
 			//vact.agregarReglasCupos("vact2", "2", 20,  LocalTime.of(10, 0, 0),  LocalTime.of(22, 0, 0));
 			//vact.agregarVacunatorio("vact3", "Nest3", new DtDireccion("Av. Italia 1113", "Brooks", "Melbourne"), 1555897235, 1.0f, 1.0f);
@@ -143,6 +145,7 @@ public class InitTest {
 			lab.agregarLaboratorio("lab1");
 			lab.agregarLaboratorio("lab2");
 			trs.agregarTransportista(1, "http://localhost:8280");
+			trs.generarTokenTransportista(1);
 			trs.agregarTransportista(2, "http://localhost:8280");
 			vch.agregarVacuna("vacuna1Virus1", 1, 60, 1999, "lab1", "virus1");
 			vch.agregarVacuna("vacuna2Virus2", 3, 60, 1999, "lab1", "virus2");
@@ -184,8 +187,8 @@ public class InitTest {
 			vc.asignarVacunadorAVacunatorio(11111112, "vact2", LocalDate.now().plusDays(1));
 			vc.asignarVacunadorAVacunatorio(11111114, "vact3", LocalDate.now().plusDays(1));*/
 			//cr.confirmarReserva(idCiudadano, idEnfermedad, idPlan, idVacunatorio, fecha, hora);
-			//cr.confirmarReserva(54657902, "virus1", 1, "vact1", LocalDate.now().plusDays(1), LocalTime.of(20, 00, 00), new DtUsuarioExterno("54657902", "", "industria", false));
-			//cr.confirmarReserva(54657902, "virus2", 3, "vact1", LocalDate.now().plusDays(1), LocalTime.of(22, 00, 00), new DtUsuarioExterno("54657902", "", "industria", false));
+			cr.confirmarReserva(54657902, "virus1", 8, "vact1", LocalDate.now().plusDays(1), LocalTime.of(20, 00, 00), new DtUsuarioExterno("54657902", "", "industria", false));
+			cr.confirmarReserva(54657902, "virus2", 10, "vact1", LocalDate.now().plusDays(1), LocalTime.of(22, 00, 00), new DtUsuarioExterno("54657902", "", "industria", false));
 			
 			cr.confirmarReserva(48585559, "virus1", 8, "vact1", LocalDate.now().plusDays(1), LocalTime.of(23, 30, 00), new DtUsuarioExterno("48585559", "", "salud", true));
 			System.out.println("reserva 1");
@@ -214,7 +217,7 @@ public class InitTest {
 			
 			//
 			return Response.ok().build();
-		} catch (EnfermedadRepetida | VacunatorioCargadoException | UsuarioExistente | LaboratorioRepetido | TransportistaRepetido | VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | EtapaRepetida | PlanVacunacionInexistente | VacunatorioNoCargadoException | ReglasCuposCargadoException |  PuestoCargadoException | AccionInvalida | VacunaInexistente | UsuarioInexistente | CupoInexistente | EtapaInexistente | CantidadNula | StockVacunaVacunatorioExistente | StockVacunaVacunatorioInexistente e) {
+		} catch (EnfermedadRepetida | VacunatorioCargadoException | UsuarioExistente | LaboratorioRepetido | TransportistaRepetido | VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | EtapaRepetida | PlanVacunacionInexistente | VacunatorioNoCargadoException | ReglasCuposCargadoException |  PuestoCargadoException | AccionInvalida | VacunaInexistente | UsuarioInexistente | CupoInexistente | EtapaInexistente | CantidadNula | StockVacunaVacunatorioExistente | StockVacunaVacunatorioInexistente | TransportistaInexistente e) {
 			// TODO Auto-generated catch block
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
 		}

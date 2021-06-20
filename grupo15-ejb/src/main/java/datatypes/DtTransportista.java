@@ -9,6 +9,7 @@ public class DtTransportista implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String url;
+	private String token;
 	
 	public DtTransportista() {
 		super();
@@ -16,6 +17,16 @@ public class DtTransportista implements Serializable{
 	}
 	
 	
+	
+	public DtTransportista(int id, String url, String token) {
+		super();
+		this.id = id;
+		this.url = url;
+		this.token = token;
+	}
+
+
+
 	public DtTransportista(int id, String url) {
 		super();
 		this.id = id;
@@ -38,6 +49,12 @@ public class DtTransportista implements Serializable{
 	}
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
 	}
 	
 	

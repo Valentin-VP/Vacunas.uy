@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -37,7 +38,24 @@ public class ControladorTransportista implements ITransportistaDaoLocal, ITransp
 		t.setUrl(url);
 		em.merge(t);
 	}
-
+	
+	public void generarTokenTransportista(Integer id) throws TransportistaInexistente {
+		Transportista t = em.find(Transportista.class, id);
+		if (t==null)
+			throw new TransportistaInexistente("No existe tal transportista.");
+		String encoded = Base64.getEncoder().encodeToString(id.toString().getBytes());
+		t.setToken(encoded);
+		em.merge(t);
+	}
+	
+	public boolean isTokenCorrecto(Integer id, String token) throws TransportistaInexistente {
+		Transportista t = em.find(Transportista.class, id);
+		if (t==null)
+			throw new TransportistaInexistente("No existe tal transportista.");
+		if (t.getToken().equals(token))
+			return true;
+		return false;
+	}
 
 	public DtTransportista obtenerTransportista(Integer id) throws TransportistaInexistente {
 		Transportista t = em.find(Transportista.class, id);
