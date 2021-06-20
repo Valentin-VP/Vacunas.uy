@@ -22,6 +22,7 @@ import org.w3c.dom.NodeList;
 
 import datatypes.DtLoteDosis;
 import datatypes.DtMensaje;
+import datatypes.DtStock;
 import datatypes.DtTransportista;
 import datatypes.EstadoLote;
 import datatypes.TransportistaInexistente;
@@ -29,6 +30,7 @@ import exceptions.CantidadNula;
 import exceptions.LoteInexistente;
 import exceptions.LoteRepetido;
 import exceptions.StockVacunaVacunatorioExistente;
+import exceptions.StockVacunaVacunatorioInexistente;
 import exceptions.VacunaInexistente;
 import exceptions.VacunatorioNoCargadoException;
 import interfaces.IControladorVacunatorioLocal;
@@ -107,7 +109,7 @@ public class GestionLoteDosisRWS {
 	@PermitAll
 	@POST
 	@Path("/modificar")
-	public Response modificarLoteDosisYCrearStock(String datos) {
+	public Response modificarLoteDosis(String datos) {
 		try {
 			JSONObject lote = new JSONObject(datos);
 			try {
@@ -119,8 +121,19 @@ public class GestionLoteDosisRWS {
 					try {
 						cs.agregarStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"), cantidadReal);
 						return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha modificado el lote de dosis. Se agregó el stock correspondiente.");
-					} catch (CantidadNula | StockVacunaVacunatorioExistente e) {
+					} catch (CantidadNula e) {
 						return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+					} catch (StockVacunaVacunatorioExistente e) {
+						
+						try {
+							DtStock dts = cs.obtenerStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"));
+							cs.modificarStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"), dts.getCantidad()+cantidadReal,
+									dts.getDescartadas(), dts.getAdministradas(), dts.getDisponibles()+cantidadReal);
+						} catch (StockVacunaVacunatorioInexistente e1) {
+							return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+						}
+						
+						return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha modificado el lote de dosis. Se agregó el stock correspondiente.");
 					}
 				}
 				return ResponseBuilder.createResponse(Response.Status.OK, "Se ha modificado el lote de dosis. No se agregó stock al vacunatorio.");
