@@ -86,7 +86,7 @@
 	<body>
 	
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	  <a class="navbar-brand" href="/grupo15-web/html/menuAdministrador.html">Menú Administrador</a>
+	  <a class="navbar-brand" href="/grupo15-web/html/menuAdministrador.html">Menú Autoridad</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -163,34 +163,34 @@
         </ul>
       
 		</nav>
- <div class="formulario" style="width: 50%">
+ <div class="formulario" style="width: 40%">
 <h:form>
 
 <div>
-<p:outputLabel style="width:40%" >Nombre:    </p:outputLabel>
+<p:outputLabel style="width:35%" >Nombre:    </p:outputLabel>
 <p:inputText id="nombre" required="true" value="#{CrearVacuna.nombre}" style="width:60%" > </p:inputText>
 
 </div>
 
 <div>
-<p:outputLabel style="width:40%" >Cantidad de Dosis:    </p:outputLabel>
-<p:inputNumber id="cantDosis" required="true" value="#{CrearVacuna.cantDosis}" style="width:50%" > </p:inputNumber>
+<p:outputLabel style="width:35%" >Cantidad de Dosis:    </p:outputLabel>
+<p:inputNumber id="cantDosis" required="true" value="#{CrearVacuna.cantDosis}" style="width:40%" > </p:inputNumber>
 </div>
 
 <div>
-<p:outputLabel style="width:40%">Expira:    </p:outputLabel>
-<p:inputNumber id="expira" required="true" value="#{CrearVacuna.expira}" style="width:50%" > </p:inputNumber>
-<p:outputLabel style="width:40%" >días </p:outputLabel>
+<p:outputLabel style="width:35%">Expira:    </p:outputLabel>
+<p:inputNumber id="expira" required="true" value="#{CrearVacuna.expira}" style="width:30%" > </p:inputNumber>
+<p:outputLabel style="width:10%" >días </p:outputLabel>
 </div>
 
 <div>
-<p:outputLabel style="width:40%">Tiempo entre Dosis:    </p:outputLabel>
-<p:inputNumber id="tiempoEntreDosis" required="true" value="#{CrearVacuna.tiempoEntreDosis}"  style="width:50%"> </p:inputNumber>
-<p:outputLabel style="width:40%" >días </p:outputLabel>
+<p:outputLabel style="width:35%">Tiempo entre Dosis:    </p:outputLabel>
+<p:inputNumber id="tiempoEntreDosis" required="true" value="#{CrearVacuna.tiempoEntreDosis}"  style="width:30%"> </p:inputNumber>
+<p:outputLabel style="width:10%" >días </p:outputLabel>
 </div>
 
 <div>
-<p:outputLabel style="width:40%" >Enfermedad:    </p:outputLabel>
+<p:outputLabel style="width:35%" >Enfermedad:    </p:outputLabel>
  <p:selectOneMenu value="#{CrearVacuna.enfermedad}"  style="border-width: thin" >
 	<f:selectItems value="#{CrearVacuna.enfermedades}" />
 </p:selectOneMenu>
@@ -198,7 +198,7 @@
 
 <div>
 
-<p:outputLabel style="width:40%" >Laboratorio:    </p:outputLabel>
+<p:outputLabel style="width:35%" >Laboratorio:    </p:outputLabel>
  <p:selectOneMenu value="#{CrearVacuna.laboratorio}"  style="border-width: thin">
 	<f:selectItems value="#{CrearVacuna.laboratorios}" />
 </p:selectOneMenu>
