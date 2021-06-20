@@ -164,7 +164,6 @@ public class GestionVacunasRWS {
 	@POST
 	@Path("/modificar")
 	public Response modificarVacuna(String vacuna) {
-		System.out.println(vacuna);
 		String nombre = "";
 		int cantDosis = -1;
 		int expira = -1;
@@ -173,13 +172,9 @@ public class GestionVacunasRWS {
 		String enf = "";
 		try {
 			JSONObject jsonObject = new JSONObject(vacuna);
-			System.out.println("entro al json");
 			nombre = jsonObject.getString("nombre");
-			System.out.println("paso el nombre");
 			cantDosis = Integer.valueOf(jsonObject.getString("cantDosis"));
-			System.out.println("paso cantDosis");
 			expira = Integer.valueOf(jsonObject.getString("expira"));
-			System.out.println("paso expira");
 			tiempoEntreDosis = Integer.valueOf(jsonObject.getString("tiempoEntreDosis"));
 			lab = jsonObject.getString("laboratorio");
 			enf = jsonObject.getString("enfermedad");
