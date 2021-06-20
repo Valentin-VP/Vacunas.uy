@@ -290,12 +290,14 @@ public class GestionUsuariosRWS {
 			String tipoUser = TokenSecurity.getTipoUsuarioClaim(TokenSecurity.validateJwtToken(token));
 			IUsuarioLocal.borrarToken(ci, TokenSecurity.getTipoUsuarioClaim(TokenSecurity.validateJwtToken(token)));
 			String host = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-			String referer = request.getHeader("Referer");
 			URI url;
-			if(referer.contains("/grupo15-web/html")) {// si es de vue
+			System.out.println(tipoUser);
+			if(tipoUser == "ciudadano" || tipoUser == "vacunador") {// si es de vue
 				url = new URI(host + "/grupo15-web/html/login.html");
-			}else {//si es de interno
+			}
+			else {//si es de interno
 				url = new URI(host + "/grupo15-web/html/loginInterno.html");
+				System.out.println("adentro de interno "+url);
 			}
 			System.out.println(url);
 			return Response.temporaryRedirect(url).build();
