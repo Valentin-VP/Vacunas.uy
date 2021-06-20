@@ -146,6 +146,12 @@
 <h:form>
 
 <div>
+<p:outputLabel style="width:40%" >Identificador:    </p:outputLabel>
+<p:inputText id="id" required="true" value="#{CrearSocio.id}" style="width:60%" > </p:inputText>
+
+</div>
+
+<div>
 <p:outputLabel style="width:40%" >URL:    </p:outputLabel>
 <p:inputText id="url" required="true" value="#{CrearSocio.url}" style="width:60%" > </p:inputText>
 
@@ -156,7 +162,7 @@
 <p:messages id="messages" showDetail="true" closable="true">
             <p:autoUpdate/>
 </p:messages>
-<p:commandButton id="confirmar" action="#{CrearSocio.confirmar}" value="Crear"> </p:commandButton>
+<p:commandButton id="crearSocio" action="#{CrearSocio.crearSocio}" value="Crear"> </p:commandButton>
 
 
 </h:form>

@@ -58,7 +58,7 @@ private final Logger LOGGER = Logger.getLogger(getClass().getName());
 	public Response agregarTransportista(String datos) {
 		try {
 			JSONObject datosInterno = new JSONObject(datos);
-			ct.agregarTransportista(Integer.valueOf(datosInterno.getString("idTransportista")), datosInterno.getString("url"));
+			ct.agregarTransportista(Integer.valueOf(datosInterno.getString("id")), datosInterno.getString("url"));
 			return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha agregado el nodo Transportista con exito.");
 		} catch ( NumberFormatException | JSONException | TransportistaRepetido  e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
