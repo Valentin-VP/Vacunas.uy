@@ -54,7 +54,7 @@
 
 <p:outputLabel style="width:40%" >Seleccione Plan:    </p:outputLabel>
  <p:selectOneMenu value="#{ConsultarPlan.plan}"  style="border-width: thin">
-	<f:selectItems value="#{ConsultarPlan.planes}" />
+	<f:selectItems value="#{ConsultarPlan.planes}" var="p" itemValue="#{p.id}" itemLabel="#{p.id}-#{p.nombre}"/>
 </p:selectOneMenu>
 </div>
 
