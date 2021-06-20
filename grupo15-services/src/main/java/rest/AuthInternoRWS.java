@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.naming.NamingException;
@@ -46,7 +45,7 @@ public class AuthInternoRWS{
 	
 	public AuthInternoRWS() {}
 
-	@RolesAllowed({ "administrador", "autoridad" })
+	@PermitAll
 	@POST
 	@Path("/login")
 	public Response autenticarUsuario(@Context HttpHeaders headers) {
