@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:rich="http://primefaces.org/ui"> 
+      
+
+<h:head> <link href="/grupo15-web/css/styles.css" type="text/css" rel="stylesheet" media="all" />
+</h:head> 
+<body> 
+
+
+ <div class="formulario" style="width:40%">
+<h:form>
+
+
+
+<div>
+<p:messages id="messages" showDetail="true" closable="true">
+            <p:autoUpdate/>
+</p:messages>
+
+
+<p:outputLabel style="width:55%" >Seleccione tipo de Usuario a eliminar:    </p:outputLabel>
+ <p:selectOneMenu value="#{BorrarInterno.tipo}" style="border-width: thin"  >
+<p:ajax event="itemSelect" update="@this"  />
+	<f:selectItem itemvalue="Autoridad" itemLabel="Autoridad"  />
+	<f:selectItem itemvalue="Administrador" itemLabel="Administrador"  />
+
+<p:ajax event="itemSelect" update="@this" />
+
+</p:selectOneMenu>
+
+<p:outputLabel style="width:55%" >Ingrese CI:    </p:outputLabel>
+<p:inputNumber id="ci" required="true" value="#{BorrarInterno.ci}" style="width:20%" > </p:inputNumber>
+
+</div>
+
+
+
+<p:commandButton id="button" action="#{BorrarInterno.borrarInterno}" value="Eliminar"  > </p:commandButton>
+<p:autoUpdate/>
+</h:form>
+ </div>
+	
+</body> 
+</html>

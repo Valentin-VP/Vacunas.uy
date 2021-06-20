@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:rich="http://primefaces.org/ui"> 
+      
+
+<h:head> <link href="/grupo15-web/css/styles.css" type="text/css" rel="stylesheet" media="all" />
+</h:head> 
+<body> 
+
+
+ <div class="formulario" style="width:30%">
+<h:form>
+
+<div>
+
+<p:outputLabel style="width:40%" >Ingrese CI a eliminar:    </p:outputLabel>
+<p:inputText id="ci" required="true" value="#{EliminarVacunador.ci}" style="width:60%" > </p:inputText>
+
+</div>
+
+
+
+<p:commandButton id="button" action="#{EliminarVacunador.eliminarVacunador}" value="Eliminar"  > </p:commandButton>
+<p:autoUpdate/>
+</h:form>
+ </div>
+	
+</body> 
+</html>
