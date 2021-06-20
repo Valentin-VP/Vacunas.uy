@@ -8,7 +8,7 @@ import javax.jws.WebService;
 
 import interfaces.IMensajeLocal;
 
-@WebService(name = "transService", targetNamespace = "http://localhost:8080/grupo15-services/webservice/transService")
+@WebService(name = "transService", targetNamespace = "webservice/transService")
 public class NodoTrans {
 	
 	@EJB
