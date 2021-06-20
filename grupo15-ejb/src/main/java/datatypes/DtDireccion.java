@@ -2,9 +2,12 @@ package datatypes;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+@XmlRootElement
 public class DtDireccion implements Serializable {
 
 	private static final long serialVersionUID = 1L;

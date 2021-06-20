@@ -41,33 +41,33 @@ public class ControladorCertificadoVacunacion implements ICertificadoVacunacionD
         // TODO Auto-generated constructor stub
     }
 
-    public void agregarCertificadoVacunacion(int usuario, ArrayList<DtConstancia> constancias) throws CertificadoRepetido, ConstanciaInexistente, UsuarioExistente {
-    	Ciudadano u = em.find(Ciudadano.class, usuario);
-    	if (u==null) {
-    		throw new UsuarioExistente("No existe ese usuario.");
-    	}else {
-    		if (u.getCertificado() == null) {
-        		//DateFormat df = new SimpleDateFormat("EEE dd MMM yyyy HH:mm:ss Z", new Locale("us"));
-        		CertificadoVacunacion cv = new CertificadoVacunacion();
-        		
-        		List<ConstanciaVacuna> listConstancias= new ArrayList<ConstanciaVacuna>();
-        		for (DtConstancia dtc: constancias) {
-        			ConstanciaVacuna c = em.find(ConstanciaVacuna.class, dtc.getIdConstVac());
-        			if (c!=null) 
-        				listConstancias.add(c);
-        			else
-        				throw new ConstanciaInexistente("La constancia que se intentó agregar no existe.");
-    			}
-        		cv.setConstancias(listConstancias);
-        		u.setCertificado(cv);
-        		em.merge(u);
-        		em.merge(cv);
-        	}else {
-        		throw new CertificadoRepetido("Ya existe un certificado para ese usuario.");
-        	}
-    	}
-    }
-    
+//    public void agregarCertificadoVacunacion(int usuario, ArrayList<DtConstancia> constancias) throws CertificadoRepetido, ConstanciaInexistente, UsuarioExistente {
+//   	Ciudadano u = em.find(Ciudadano.class, usuario);
+//    	if (u==null) {
+//    		throw new UsuarioExistente("No existe ese usuario.");
+//    	}else {
+//    		if (u.getCertificado() == null) {
+//        		//DateFormat df = new SimpleDateFormat("EEE dd MMM yyyy HH:mm:ss Z", new Locale("us"));
+//        		CertificadoVacunacion cv = new CertificadoVacunacion();
+//        		
+//        		List<ConstanciaVacuna> listConstancias= new ArrayList<ConstanciaVacuna>();
+//        		for (DtConstancia dtc: constancias) {
+//        			ConstanciaVacuna c = em.find(ConstanciaVacuna.class, dtc.getIdConstVac());
+//        			if (c!=null) 
+//        				listConstancias.add(c);
+//        			else
+//        				throw new ConstanciaInexistente("La constancia que se intentó agregar no existe.");
+//    			}
+//        		cv.setConstancias(listConstancias);
+//        		u.setCertificado(cv);
+//        		em.merge(u);
+//        		em.merge(cv);
+//        	}else {
+//        		throw new CertificadoRepetido("Ya existe un certificado para ese usuario.");
+//        	}
+//    	}
+//   }
+   
 //    public void modificarCertificadoVacunacion(int usuario, ArrayList<DtConstancia> constancias) throws CertificadoRepetido, CertificadoInexistente, UsuarioExistente, ConstanciaInexistente {
 //    	Ciudadano u = em.find(Ciudadano.class, usuario);
 //    	if (u==null) {

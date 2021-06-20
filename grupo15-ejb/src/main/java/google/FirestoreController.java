@@ -71,7 +71,7 @@ public class FirestoreController implements IFirestoreLocal, IFirestoreRemote {
 		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 		String body = "Le recordamos que tiene una reserva de vacunacion el dia " + fecha.format(dateFormatter)
 				+ " a las " + hora.format(timeFormatter) + ". Lugar: " + vacunatorio + ". Puesto: " + puesto
-				+ ". Recuerde asistir en hora.";
+				+ ". En caso de cancelacion, ignore este mensaje.";
 		notification.put("body", body);
 		expirationTask.put("notification", notification);
 		expirationTask.put("token", mobileToken);

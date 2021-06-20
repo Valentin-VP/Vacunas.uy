@@ -107,6 +107,58 @@ public class DtConstancia  implements Serializable{
 	public void setEnfermedad(String enfermedad) {
 		this.enfermedad = enfermedad;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + dosisRecibidas;
+		result = prime * result + ((enfermedad == null) ? 0 : enfermedad.hashCode());
+		result = prime * result + ((fechaUltimaDosis == null) ? 0 : fechaUltimaDosis.hashCode());
+		result = prime * result + idConstVac;
+		result = prime * result + periodoInmunidad;
+		result = prime * result + ((reserva == null) ? 0 : reserva.hashCode());
+		result = prime * result + ((vacuna == null) ? 0 : vacuna.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DtConstancia other = (DtConstancia) obj;
+		if (dosisRecibidas != other.dosisRecibidas)
+			return false;
+		if (enfermedad == null) {
+			if (other.enfermedad != null)
+				return false;
+		} else if (!enfermedad.equals(other.enfermedad))
+			return false;
+		if (fechaUltimaDosis == null) {
+			if (other.fechaUltimaDosis != null)
+				return false;
+		} else if (!fechaUltimaDosis.equals(other.fechaUltimaDosis))
+			return false;
+		if (idConstVac != other.idConstVac)
+			return false;
+		if (periodoInmunidad != other.periodoInmunidad)
+			return false;
+		if (reserva == null) {
+			if (other.reserva != null)
+				return false;
+		} else if (!reserva.equals(other.reserva))
+			return false;
+		if (vacuna == null) {
+			if (other.vacuna != null)
+				return false;
+		} else if (!vacuna.equals(other.vacuna))
+			return false;
+		return true;
+	}
 	
 	
 	

@@ -125,16 +125,16 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 		
 	}
 	
-	public void modificarPlanVacunacion(int id, String nombre, String descripcion, List<Etapa> etapas) throws PlanVacunacionInexistente {
-		PlanVacunacion pV = em.find(PlanVacunacion.class, id);
-		if(pV != null) {
-			pV.setNombre(nombre);
-			pV.setDescripcion(descripcion);
-			em.merge(pV);
-			//pV.setEtapas(etapas);
-		}else
-			throw new PlanVacunacionInexistente("No existe un plan de vacunacion con esa id");
-	}
+//	public void modificarPlanVacunacion(int id, String nombre, String descripcion, List<Etapa> etapas) throws PlanVacunacionInexistente {
+//		PlanVacunacion pV = em.find(PlanVacunacion.class, id);
+//		if(pV != null) {
+//			pV.setNombre(nombre);
+//			pV.setDescripcion(descripcion);
+//			em.merge(pV);
+//			//pV.setEtapas(etapas);
+//		}else
+//			throw new PlanVacunacionInexistente("No existe un plan de vacunacion con esa id");
+//	}
 	
 	public ArrayList<DtPlanFecha> listarAgendasAbiertas() throws PlanVacunacionInexistente{
 		Query query = em.createQuery("SELECT p FROM PlanVacunacion p ORDER BY nombre ASC");

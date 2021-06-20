@@ -100,6 +100,86 @@ public class DtReservaCompleto implements Serializable{
 	public String getPuesto() {
 		return puesto;
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((descEtapa == null) ? 0 : descEtapa.hashCode());
+		result = prime * result + ((descPlan == null) ? 0 : descPlan.hashCode());
+		result = prime * result + ((enfermedad == null) ? 0 : enfermedad.hashCode());
+		result = prime * result + ((estado == null) ? 0 : estado.hashCode());
+		result = prime * result + ((fecha == null) ? 0 : fecha.hashCode());
+		result = prime * result + ((idCiudadano == null) ? 0 : idCiudadano.hashCode());
+		result = prime * result + ((idEtapa == null) ? 0 : idEtapa.hashCode());
+		result = prime * result + ((idPlan == null) ? 0 : idPlan.hashCode());
+		result = prime * result + ((puesto == null) ? 0 : puesto.hashCode());
+		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
+		result = prime * result + ((vacuna == null) ? 0 : vacuna.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DtReservaCompleto other = (DtReservaCompleto) obj;
+		if (descEtapa == null) {
+			if (other.descEtapa != null)
+				return false;
+		} else if (!descEtapa.equals(other.descEtapa))
+			return false;
+		if (descPlan == null) {
+			if (other.descPlan != null)
+				return false;
+		} else if (!descPlan.equals(other.descPlan))
+			return false;
+		if (enfermedad == null) {
+			if (other.enfermedad != null)
+				return false;
+		} else if (!enfermedad.equals(other.enfermedad))
+			return false;
+		if (estado != other.estado)
+			return false;
+		if (fecha == null) {
+			if (other.fecha != null)
+				return false;
+		} else if (!fecha.equals(other.fecha))
+			return false;
+		if (idCiudadano == null) {
+			if (other.idCiudadano != null)
+				return false;
+		} else if (!idCiudadano.equals(other.idCiudadano))
+			return false;
+		if (idEtapa == null) {
+			if (other.idEtapa != null)
+				return false;
+		} else if (!idEtapa.equals(other.idEtapa))
+			return false;
+		if (idPlan == null) {
+			if (other.idPlan != null)
+				return false;
+		} else if (!idPlan.equals(other.idPlan))
+			return false;
+		if (puesto == null) {
+			if (other.puesto != null)
+				return false;
+		} else if (!puesto.equals(other.puesto))
+			return false;
+		if (usuario == null) {
+			if (other.usuario != null)
+				return false;
+		} else if (!usuario.equals(other.usuario))
+			return false;
+		if (vacuna == null) {
+			if (other.vacuna != null)
+				return false;
+		} else if (!vacuna.equals(other.vacuna))
+			return false;
+		return true;
+	}
 	public void setPuesto(String puesto) {
 		this.puesto = puesto;
 	}

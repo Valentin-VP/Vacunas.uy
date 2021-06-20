@@ -78,6 +78,52 @@ public class DtVacuna implements Serializable {
 	public void setTiempoEntreDosis(int tiempoEntreDosis) {
 		this.tiempoEntreDosis = tiempoEntreDosis;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + cantDosis;
+		result = prime * result + ((dtEnf == null) ? 0 : dtEnf.hashCode());
+		result = prime * result + ((dtLab == null) ? 0 : dtLab.hashCode());
+		result = prime * result + expira;
+		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
+		result = prime * result + tiempoEntreDosis;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DtVacuna other = (DtVacuna) obj;
+		if (cantDosis != other.cantDosis)
+			return false;
+		if (dtEnf == null) {
+			if (other.dtEnf != null)
+				return false;
+		} else if (!dtEnf.equals(other.dtEnf))
+			return false;
+		if (dtLab == null) {
+			if (other.dtLab != null)
+				return false;
+		} else if (!dtLab.equals(other.dtLab))
+			return false;
+		if (expira != other.expira)
+			return false;
+		if (nombre == null) {
+			if (other.nombre != null)
+				return false;
+		} else if (!nombre.equals(other.nombre))
+			return false;
+		if (tiempoEntreDosis != other.tiempoEntreDosis)
+			return false;
+		return true;
+	}
 	
 	
 	
