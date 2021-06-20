@@ -172,7 +172,7 @@ public class JSFModificarVacunaBean {
 	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
 	        LOGGER.info("El server name es: " + hostname);
 			Client conexion = ClientBuilder.newClient();
-			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/enfermedad/agregar");
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/vacuna/modificar");
 			JSONObject datos = new JSONObject();
 			datos.put("nombre", vacuna);
 			datos.put("cantDosis", String.valueOf(cantDosis));
