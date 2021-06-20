@@ -1,5 +1,7 @@
 package rest;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,10 +27,17 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 
+import datatypes.DtDireccion;
 import datatypes.ErrorInfo;
+import exceptions.EnfermedadInexistente;
+import exceptions.PuestoCargadoException;
+import exceptions.PuestoNoCargadosException;
+import exceptions.ReglasCuposCargadoException;
 import exceptions.VacunaInexistente;
+import exceptions.VacunatorioCargadoException;
 import exceptions.VacunatorioNoCargadoException;
 import exceptions.VacunatoriosNoCargadosException;
+import interfaces.IControladorPuestoLocal;
 import interfaces.IControladorVacunatorioLocal;
 import rest.filter.JsonSerializable;
 import rest.filter.ResponseBuilder;
@@ -44,6 +53,8 @@ public class GestionVacunatoriosRWS {
 	
 	@EJB
 	private IControladorVacunatorioLocal iControladorVacunatorio;
+	@EJB
+	private IControladorPuestoLocal cp;
 
 	public GestionVacunatoriosRWS() {}
 	
@@ -86,6 +97,73 @@ public class GestionVacunatoriosRWS {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					e.getMessage());
 		} catch (VacunatorioNoCargadoException e) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					e.getMessage());
+		}
+	}
+	
+	//@RolesAllowed({"autoridad"}) 
+	@PermitAll
+	@POST
+	@Path("/agregar")
+	public Response agregarVacunatorio(String datos) {
+		try {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+			JSONObject datosInterno = new JSONObject(datos);
+			DtDireccion dtDir = new DtDireccion(datosInterno.getString("direccion"), datosInterno.getString("barrio"), datosInterno.getString("departamento"));
+			iControladorVacunatorio.agregarVacunatorio(datosInterno.getString("idVacunatorio"), datosInterno.getString("nombre"), dtDir,
+					Integer.valueOf(datosInterno.getString("telefono")), Float.parseFloat(datosInterno.getString("latitud")), Float.parseFloat(datosInterno.getString("longitud")), datosInterno.getString("url"));
+			iControladorVacunatorio.agregarReglasCupos(datosInterno.getString("idVacunatorio"), datosInterno.getString("idReglas"),
+					Integer.parseInt(datosInterno.getString("duracionTurno")),
+					LocalTime.parse(datosInterno.getString("horaApertura"), formatter), LocalTime.parse(datosInterno.getString("horaCierre"), formatter));
+			return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha agregado el nodo Vacunatorio con exito.");
+		} catch ( NumberFormatException | JSONException | VacunatorioNoCargadoException | ReglasCuposCargadoException | VacunatorioCargadoException  e) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					e.getMessage());
+		}
+	}
+	
+	//@RolesAllowed({"autoridad"}) 
+	@PermitAll
+	@POST
+	@Path("/modificar")
+	public Response modificarVacunatorio(String datos) {
+		try {
+			JSONObject datosInterno = new JSONObject(datos);
+			DtDireccion dtDir = new DtDireccion(datosInterno.getString("direccion"), datosInterno.getString("barrio"), datosInterno.getString("departamento"));
+			iControladorVacunatorio.modificarVacunatorio(datosInterno.getString("idVacunatorio"), datosInterno.getString("nombre"), dtDir,
+					Integer.valueOf(datosInterno.getString("telefono")), Float.parseFloat(datosInterno.getString("latitud")), Float.parseFloat(datosInterno.getString("longitud")), datosInterno.getString("url"));
+			return ResponseBuilder.createResponse(Response.Status.OK, "Se ha agregado el nodo Vacunatorio con exito.");
+		} catch ( NumberFormatException | JSONException | VacunatorioNoCargadoException  e) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					e.getMessage());
+		}
+	}
+	
+	//@RolesAllowed({"autoridad"}) 
+	@PermitAll
+	@POST
+	@Path("/agregarPuesto")
+	public Response agregarPuesto(String datos) {
+		try {
+			JSONObject datosInterno = new JSONObject(datos);
+			cp.agregarPuesto(datosInterno.getString("idPuesto"), datosInterno.getString("idVacunatorio"));
+			return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha agregado el puesto al vacunatorio.");
+		} catch ( NumberFormatException | JSONException | PuestoCargadoException | VacunatorioNoCargadoException  e) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					e.getMessage());
+		}
+	}
+
+	@PermitAll
+	@POST
+	@Path("/listarPuestos")
+	public Response listarPuestos(String datos) {
+		try {
+			JSONObject datosInterno = new JSONObject(datos);
+			ArrayList<String> retorno = cp.listarPuestos(datosInterno.getString("idVacunatorio"));
+			return Response.ok().entity(retorno).build();
+		} catch ( NumberFormatException | JSONException | PuestoNoCargadosException  e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					e.getMessage());
 		}

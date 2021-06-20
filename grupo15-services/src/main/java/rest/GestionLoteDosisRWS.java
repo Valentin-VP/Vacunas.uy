@@ -2,6 +2,7 @@ package rest;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.security.DeclareRoles;
@@ -19,11 +20,21 @@ import org.codehaus.jettison.json.JSONObject;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import datatypes.DtLoteDosis;
 import datatypes.DtMensaje;
 import datatypes.DtTransportista;
+import datatypes.EstadoLote;
 import datatypes.TransportistaInexistente;
+import exceptions.CantidadNula;
+import exceptions.LoteInexistente;
+import exceptions.LoteRepetido;
+import exceptions.StockVacunaVacunatorioExistente;
+import exceptions.VacunaInexistente;
+import exceptions.VacunatorioNoCargadoException;
+import interfaces.IControladorVacunatorioLocal;
 import interfaces.ILoteDosisDaoLocal;
 import interfaces.IMensajeLocal;
+import interfaces.IStockDaoLocal;
 import interfaces.ITransportistaDaoLocal;
 import jakarta.xml.soap.MessageFactory;
 import jakarta.xml.soap.MimeHeaders;
@@ -53,23 +64,87 @@ public class GestionLoteDosisRWS {
 	
 	@EJB
 	ITransportistaDaoLocal ct;
+	
+	@EJB
+	IStockDaoLocal cs;
 
 	public GestionLoteDosisRWS() {
 
 	}
 
+	
+	@PermitAll
+	@POST
+	@Path("/listar")
+	public Response listarLoteDosis() {
+		List<DtLoteDosis> retorno = cld.listarLotesDosis();
+		if (retorno.isEmpty())
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "Sin lotes de dosis.");
+		return Response.ok().entity(retorno).build();
+	}
+	
+	@PermitAll
+	@POST
+	@Path("/obtener")
+	public Response obtenerLoteDosis(String datos) {
+		JSONObject lote;
+		try {
+			lote = new JSONObject(datos);
+			DtLoteDosis retorno = cld.obtenerLoteDosis(Integer.valueOf(lote.getString("idLote")), lote.getString("idVacunatorio"), lote.getString("idVacuna"));
+			return Response.ok().entity(retorno).build();
+		} catch (JSONException | NumberFormatException | LoteInexistente e) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+		}
+	}
+	
+	@PermitAll
+	@POST
+	@Path("/listarMensajes")
+	public Response listarMensajesLocales() {
+		return Response.ok().entity(cm.listarMensajes()).build();
+	}
+	
+	@PermitAll
+	@POST
+	@Path("/modificar")
+	public Response modificarLoteDosisYCrearStock(String datos) {
+		try {
+			JSONObject lote = new JSONObject(datos);
+			try {
+				cld.modificarLoteDosis(Integer.valueOf(lote.getString("idLote")), lote.getString("idVacunatorio"), lote.getString("idVacuna"), Integer.valueOf(lote.getString("cantidadTotal")),
+						Integer.valueOf(lote.getString("cantidadEntregada")), Integer.valueOf(lote.getString("cantidadDescartada")), lote.getString("estadoLote"),
+						Float.parseFloat(lote.getString("temperatura")), Integer.valueOf(lote.getString("transportista")));
+				if (lote.getString("estadoLote").equals("Recibido")) {
+					int cantidadReal = Integer.valueOf(lote.getString("cantidadEntregada"));
+					try {
+						cs.agregarStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"), cantidadReal);
+						return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha modificado el lote de dosis. Se agregó el stock correspondiente.");
+					} catch (CantidadNula | StockVacunaVacunatorioExistente e) {
+						return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+					}
+				}
+				return ResponseBuilder.createResponse(Response.Status.OK, "Se ha modificado el lote de dosis. No se agregó stock al vacunatorio.");
+			}catch (LoteInexistente | TransportistaInexistente | VacunatorioNoCargadoException | VacunaInexistente e) {
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+			}
+		} catch (JSONException | NumberFormatException /* | LoteRepetido | VacunatorioNoCargadoException | VacunaInexistente */ e) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+		}
+	}
+	
 	@PermitAll
 	@POST
 	@Path("/agregar")
 	public Response crearLoteDosis(String datos) {
 		try {
 			JSONObject lote = new JSONObject(datos);
-			/*try {
+			String urlTransportista;
+			try {
 				DtTransportista t = ct.obtenerTransportista(Integer.valueOf(lote.getString("idTransportista")));
 				urlTransportista = t.getUrl();
 			} catch (TransportistaInexistente et) {
 				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, et.getMessage());
-			}*/
+			}
 			
 			//String idTransportista = lote.getString("idTransportista");
 			// Integer Integer idLote, String idVacunatorio, String idVacuna, Integer
@@ -79,20 +154,23 @@ public class GestionLoteDosisRWS {
 			// Integer.getInteger(lote.getString("cantidadTotal")));
 			String soap;
 			try {
-				String urlTransportista;
-				try {
+				
+				/*try {
 					DtTransportista t = ct.obtenerTransportista(1);
 					urlTransportista = t.getUrl();
 				} catch (TransportistaInexistente et) {
 					return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, et.getMessage());
-				}
+				}*/
 				//retorno = agregarLoteDosisASocio(lote.getString("idLote"), lote.getString("idVacunatorio"), lote.getString("idVacuna"),
 				//		  lote.getString("idVacunatorio"), lote.getString("cantidadTotal"), urlTransportista);
-				soap = agregarLoteDosisASocioSOAP("2","a", "a", "50", urlTransportista);
-				
-				LOGGER.info(soap);
-				return Response.ok(soap).build();
-			}catch (SOAPException e) {
+				soap = agregarLoteDosisASocioSOAP(lote.getString("idLote"), lote.getString("idVacunatorio"), lote.getString("idVacuna"), lote.getString("cantidadTotal"), urlTransportista);
+				//soap = agregarLoteDosisASocioSOAP("2","a", "a", "50", urlTransportista);
+				//soap = agregarLoteDosisASocioSOAP("1","a", "a", "50", urlTransportista);
+				//LOGGER.info(soap);
+				cld.agregarLoteDosis(Integer.valueOf(lote.getString("idLote")), lote.getString("idVacunatorio"), lote.getString("idVacuna"), Integer.valueOf(lote.getString("cantidadTotal")));
+				cld.setTransportistaToLoteDosis(Integer.valueOf(lote.getString("idTransportista")), Integer.valueOf(lote.getString("idLote")), lote.getString("idVacunatorio"), lote.getString("idVacuna"));
+				return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha agregado el lote de dosis. Se debe modificarlo posteriormente para confirmarlo o cancelarlo.");
+			}catch (SOAPException | LoteRepetido | VacunatorioNoCargadoException | VacunaInexistente | TransportistaInexistente e) {
 				//e.printStackTrace();
 				//LOGGER.severe(e.getMessage());
 				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
@@ -109,35 +187,30 @@ public class GestionLoteDosisRWS {
 
 	@PermitAll
 	@POST
-	@Path("/obtenerLoteSocio")
+	@Path("/obtenerInfoLoteSocio")
 	public Response obtenerEstadoLoteDeSocio(String datos) {
 		try {
 			JSONObject lote = new JSONObject(datos);
-			/*try {
-				ct.obtenerTransportista(Integer.valueOf(lote.getString("idTransportista")));
-			} catch (TransportistaInexistente et) {
-				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, et.getMessage());
-			}*/
-			//String idTransportista = lote.getString("idTransportista");
+			DtLoteDosis dt;
+			try {
+				dt = cld.obtenerLoteDosis(Integer.valueOf(lote.getString("idLote")), lote.getString("idVacunatorio"), lote.getString("idVacuna"));
+			} catch (LoteInexistente e) {
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+			}
 			String soap;
 			try {
 				String urlTransportista;
 				try {
-					DtTransportista t = ct.obtenerTransportista(1);
+					DtTransportista t = ct.obtenerTransportista(dt.getTransportista());
 					urlTransportista = t.getUrl();
 				} catch (TransportistaInexistente et) {
 					return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, et.getMessage());
 				}
-				//retorno = obtenerEstadoLoteDosis(lote.getString("idLote"),
-				//		 lote.getString("idVacunatorio"), lote.getString("idVacuna"), lote.getString("idVacunatorio"), urlTransportista);
-				soap = obtenerEstadoLoteDosisSOAP("1","a", "a", urlTransportista);
-				cm.agregarMensaje(soap);
-				LOGGER.info(soap);
+				soap = obtenerEstadoLoteDosisSOAP(lote.getString("idLote"), lote.getString("idVacunatorio"), lote.getString("idVacuna"), urlTransportista);
+				//cm.agregarMensaje(soap); //no veo que tenga sentido guardar el mensaje a demanda porque ya lo trae cuando se  genera un evento.
 				
 				return Response.ok(new DtMensaje(soap)).build();
 			}catch (SOAPException e) {
-				//e.printStackTrace();
-				//LOGGER.severe(e.getMessage());
 				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 			}
 		} catch (JSONException | NumberFormatException /* | LoteRepetido | VacunatorioNoCargadoException | VacunaInexistente */ e) {
@@ -147,7 +220,7 @@ public class GestionLoteDosisRWS {
 	
 	@PermitAll
 	@POST
-	@Path("/obtenerTodosLotesSocio")
+	@Path("/obtenerInfoTodosLotesSocio")
 	public Response obtenerEstadoTodosLotesDeSocio(String datos) {
 		try {
 			JSONObject lote = new JSONObject(datos);
@@ -162,14 +235,14 @@ public class GestionLoteDosisRWS {
 			try {
 				String urlTransportista;
 				try {
-					DtTransportista t = ct.obtenerTransportista(1);
+					DtTransportista t = ct.obtenerTransportista(Integer.valueOf(lote.getString("idTransportista")));
 					urlTransportista = t.getUrl();
 				} catch (TransportistaInexistente et) {
 					return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, et.getMessage());
 				}
 				soap = obtenerTodosEstadoLoteDosisSOAP(urlTransportista);
 				for (String s: soap) {
-					cm.agregarMensaje(s);
+					//cm.agregarMensaje(s); //no me parece interesante volver a agregar estos mensajes
 					dt.add(new DtMensaje(s));
 				}
 				return Response.ok(dt).build();

@@ -107,17 +107,20 @@ public class ControladorVacunatorio implements IControladorVacunatorioLocal, ICo
 
 	}
 
-	public void modificarVacunatorio(DtVacunatorio dtVac) throws VacunatorioNoCargadoException {
+	public void modificarVacunatorio(String id, String nombre, DtDireccion dtDir, Integer telefono, Float latitud,
+			Float longitud, String url) throws VacunatorioNoCargadoException {
 
-		Vacunatorio vac = em.find(Vacunatorio.class, dtVac.getId());
-
-		vac.setNombre(dtVac.getNombre());
-		vac.setDtDir(dtVac.getDtDir());
-		vac.setLatitud(dtVac.getLatitud());
-		vac.setLongitud(dtVac.getLatitud());
-		vac.setTelefono(dtVac.getTelefono());
-		em.persist(vac);
-
+		Vacunatorio vac = em.find(Vacunatorio.class, id);
+		if (vac==null) {
+			throw new VacunatorioNoCargadoException("El vacunatorio " + id + " no existe en el sistema\n");
+		}
+		vac.setNombre(nombre);
+		vac.setDtDir(dtDir);
+		vac.setLatitud(latitud);
+		vac.setLongitud(longitud);
+		vac.setTelefono(telefono);
+		vac.setUrl(url);
+		em.merge(vac);
 	}
 
 	public void eliminarVacunatorio(String id) throws VacunatorioNoCargadoException {
