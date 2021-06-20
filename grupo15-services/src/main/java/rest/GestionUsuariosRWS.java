@@ -287,13 +287,14 @@ public class GestionUsuariosRWS {
 		String token = cookie.getValue();
 		try {
 			String ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-			IUsuarioLocal.borrarToken(ci);
+			String tipoUser = TokenSecurity.getTipoUsuarioClaim(TokenSecurity.validateJwtToken(token));
+			IUsuarioLocal.borrarToken(ci, TokenSecurity.getTipoUsuarioClaim(TokenSecurity.validateJwtToken(token)));
 			String host = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 			String referer = request.getHeader("Referer");
-			URI url = new URI("");
-			if(referer.contains("/grupo15-web/html")) {
+			URI url;
+			if(referer.contains("/grupo15-web/html")) {// si es de vue
 				url = new URI(host + "/grupo15-web/html/login.html");
-			}else {
+			}else {//si es de interno
 				url = new URI(host + "/grupo15-web/html/loginInterno.html");
 			}
 			System.out.println(url);

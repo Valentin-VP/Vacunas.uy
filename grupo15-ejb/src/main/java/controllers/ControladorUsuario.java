@@ -315,14 +315,40 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 
 	}
 
-	public void borrarToken(String ci) throws UsuarioInexistente {
-		Ciudadano ciudadano = em.find(Ciudadano.class, Integer.valueOf(ci));
-		if (ciudadano != null) {
-			ciudadano.setToken(null);
-			em.persist(ciudadano);
-		}else{
-			throw new UsuarioInexistente("No se encuentra el ciudadano con ID " + ci);
+	public void borrarToken(String ci, String tipoUser) throws UsuarioInexistente {
+		switch(tipoUser) {
+			case "ciudadano":
+				Ciudadano ciudadano = em.find(Ciudadano.class, Integer.valueOf(ci));
+				if (ciudadano != null) {
+					ciudadano.setToken(null);
+					em.persist(ciudadano);
+				}else{
+					throw new UsuarioInexistente("No se encuentra el "+tipoUser+" con ID " + ci);
+				}
+				break;
+			
+			case "vacunador":
+				Vacunador vacunador = em.find(Vacunador.class, Integer.valueOf(ci));
+				if (vacunador != null) {
+					vacunador.setToken(null);
+					em.persist(vacunador);
+				}else{
+					throw new UsuarioInexistente("No se encuentra el "+tipoUser+" con ID " + ci);
+				}
+				break;
+				
+			case "autoridad":
+			case "administrador":
+				UsuarioInterno ui= em.find(UsuarioInterno.class, Integer.valueOf(ci));
+				if (ui != null) {
+					ui.setToken(null);
+					em.persist(ui);
+				}else{
+					throw new UsuarioInexistente("No se encuentra el "+tipoUser+" con ID " + ci);
+				}
+				break;
 		}
+		
 	}
 	
 }
