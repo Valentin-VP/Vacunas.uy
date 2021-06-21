@@ -25,6 +25,8 @@ import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.jose4j.lang.JoseException;
 
 import interfaces.ILdapLocal;
@@ -80,9 +82,7 @@ public class AuthInternoRWS{
 				tipo = l.searchType(ci);
 				LOGGER.info("Tipo de Usuario obternido de LDAP en AuthInternoRWS: " + tipo);
 				token = TokenSecurity.generateJwtToken(ci, tipo);
-			} catch (NamingException error) {
-				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, error.getMessage());
-			} catch (JoseException error) {
+			} catch (NamingException | JoseException error) {
 				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, error.getMessage());
 			}
 		}
@@ -105,6 +105,16 @@ public class AuthInternoRWS{
 		.header("Origin", headers.getHeaderString("Origin"))
 		.get(String.class);
 		LOGGER.severe("LoginResponse: " + loginResponse);
+		try {
+			JSONObject respuesta = new JSONObject(loginResponse);
+			String urlStatus = respuesta.getString("url");
+			if (urlStatus.equals("error")) {
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST);
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return Response.ok().cookie(rwsCookie).entity(loginResponse).build();
 	}
 }
