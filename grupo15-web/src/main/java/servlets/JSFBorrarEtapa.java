@@ -60,8 +60,9 @@ public class JSFBorrarEtapa {
 		Response response = invocation.invoke();
 		LOGGER.info("Respuesta: " + response.getStatus());
 		if (response.getStatus() == 200) {
-			System.out.println("Entro al if");
-			this.planes = response.readEntity(new GenericType<List<DtPlanVacunacion>>() {});
+			System.out.println("Entro al if de planes");
+			planes = response.readEntity(new GenericType<List<DtPlanVacunacion>>() {});
+			
 		}else {
 			String jsonString = response.readEntity(String.class);
 			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
@@ -77,7 +78,7 @@ public class JSFBorrarEtapa {
 	}
 	
 	public void cargarEtapas(){
-		System.out.println(plan);
+		System.out.println("plan" + this.plan);
 		Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
         if (cookie != null) {
         	token = cookie.getValue();
@@ -95,7 +96,7 @@ public class JSFBorrarEtapa {
 		if (response.getStatus() == 200) {
 			System.out.println("Entro al if del cargar");
 			this.etapas = response.readEntity(new GenericType<List<DtEtapa>>() {});
-			System.out.println(etapas);
+			System.out.println("Etapas" +this.etapas);
 		}else {
 			
 			String jsonString = response.readEntity(String.class);
@@ -147,13 +148,6 @@ public class JSFBorrarEtapa {
 		this.planes = planes;
 	}
 
-	public interfaces.IPlanVacunacionLocal getPv() {
-		return pv;
-	}
-
-	public void setPv(interfaces.IPlanVacunacionLocal pv) {
-		this.pv = pv;
-	}
 	
 	
 }
