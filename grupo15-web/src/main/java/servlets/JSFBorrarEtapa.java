@@ -74,6 +74,32 @@ public class JSFBorrarEtapa {
 	}
 	
 	public void borrarEtapa() {
+		try {
+			System.out.println("borrarETAPA");
+			Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
+	        if (cookie != null) {
+	        	token = cookie.getValue();
+	        	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
+	        }
+	        // http://omnifaces-fans.blogspot.com/2015/10/jax-rs-consume-restful-web-service-from.html
+	        HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+	        LOGGER.info("El server name es: " + hostname);
+			Client conexion = ClientBuilder.newClient();
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/etapa/eliminar").queryParam("e", this.etapa).queryParam("p", this.plan);
+			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildDelete();
+			Response response = invocation.invoke();
+			LOGGER.info("Respuesta: " + response.getStatus());System.out.println("BORRAR ETAPA");
+			if (response.getStatus() == 200) {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Borrar:", "Enfermedad eliminada"));
+			}else {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "" + response.getStatus()));
+			}
+			cargaInicial();
+		} catch (Exception e) {
+			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
+		}
+
 		
 	}
 	
