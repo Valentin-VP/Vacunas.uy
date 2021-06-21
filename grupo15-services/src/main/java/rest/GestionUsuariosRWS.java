@@ -290,6 +290,18 @@ public class GestionUsuariosRWS {
 		}
 	}
 	
+	@RolesAllowed({ "administrador" })
+	@POST
+	@Path("/interno/eliminar") 
+	public Response eliminarInterno(@QueryParam("ci") String ci) {
+		try {
+			IUsuarioLocal.eliminarInterno(ci);
+			return Response.ok().build();
+		} catch (NumberFormatException | UsuarioInexistente e) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,e.getMessage());
+		}
+	}
+	
 	@RolesAllowed({"administrador", "autoridad" })
 	@POST
 	@Path("/interno/modificar")

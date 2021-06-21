@@ -359,4 +359,12 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 			throw new UsuarioInexistente("No existe el vacunador con cedula "+ci);
 	}
 	
+	public void eliminarInterno(String ci) throws UsuarioInexistente{
+		UsuarioInterno ui= em.find(UsuarioInterno.class, Integer.valueOf(ci));
+		if(ui!=null)
+			em.remove(ui);
+		else
+			throw new UsuarioInexistente("No existe el interno con cedula "+ci);
+	}
+	
 }
