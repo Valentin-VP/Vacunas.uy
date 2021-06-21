@@ -63,7 +63,7 @@ public class PlanVacunacion {
 	}
 	
 	public DtPlanVacunacion toDtPlanVacunacion() { //las etapas de los dtPLanVacunacion no tienen un a su PlanVacunacion
-		ArrayList<DtEtapa> dtEtapas = new ArrayList<>();
+		List<DtEtapa> dtEtapas = new ArrayList<>();
 		for(Etapa e: this.etapas) {
 			dtEtapas.add(e.toDtEtapa());
 		}

@@ -2,13 +2,10 @@ package servlets;
 
 import java.io.Serializable;
 import java.io.StringReader;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -34,8 +31,6 @@ import javax.ws.rs.core.Response;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import datatypes.DtEnfermedad;
-import datatypes.DtEtapa;
 import datatypes.DtPlanVacunacion;
 import datatypes.DtVacuna;
 
@@ -50,13 +45,18 @@ public class JSFCrearEtapaBean implements Serializable {
 	private String nombre;
 	private Date fechaInicio;
 	private Date fechaFin;
-	private String condicion;
 	//private List<String> planes = new ArrayList<String>();
-	private List<DtPlanVacunacion> planes = new ArrayList<DtPlanVacunacion>();
+	private List<HashMap<String, String>> planes = new ArrayList<HashMap<String, String>>();
 	private String plan;
 	private List<String> vacunas = new ArrayList<String>();
 	private List<DtVacuna> dtVacunas = new ArrayList<DtVacuna>();
 	private String vacuna;
+	private int edadMin;
+	private int edadMax;
+	private List<String> sectores = new ArrayList<String>();
+	private String sector;
+	private String enf; // convertir a booleano
+	private String condicion;
 
 	
 	public JSFCrearEtapaBean() {}
@@ -102,16 +102,6 @@ public class JSFCrearEtapaBean implements Serializable {
 	}
 
 
-	public String getCondicion() {
-		return condicion;
-	}
-
-
-	public void setCondicion(String condicion) {
-		this.condicion = condicion;
-	}
-
-
 //	public List<String> getPlanes() {
 //		return planes;
 //	}
@@ -122,12 +112,12 @@ public class JSFCrearEtapaBean implements Serializable {
 //	}
 
 
-	public List<DtPlanVacunacion> getPlanes() {
+	public List<HashMap<String, String>> getPlanes() {
 		return planes;
 	}
 
 
-	public void setPlanes(List<DtPlanVacunacion> planes) {
+	public void setPlanes(List<HashMap<String, String>> planes) {
 		this.planes = planes;
 	}
 
@@ -171,6 +161,66 @@ public class JSFCrearEtapaBean implements Serializable {
 		this.vacuna = vacuna;
 	}
 	
+	public int getEdadMin() {
+		return edadMin;
+	}
+
+
+	public void setEdadMin(int edadMin) {
+		this.edadMin = edadMin;
+	}
+
+
+	public int getEdadMax() {
+		return edadMax;
+	}
+
+
+	public void setEdadMax(int edadMax) {
+		this.edadMax = edadMax;
+	}
+
+
+	public List<String> getSectores() {
+		return sectores;
+	}
+
+
+	public void setSectores(List<String> sectores) {
+		this.sectores = sectores;
+	}
+
+
+	public String getSector() {
+		return sector;
+	}
+
+
+	public void setSector(String sector) {
+		this.sector = sector;
+	}
+
+
+	public String getEnf() {
+		return enf;
+	}
+
+
+	public void setEnf(String enf) {
+		this.enf = enf;
+	}
+
+
+	public String getCondicion() {
+		return condicion;
+	}
+
+
+	public void setCondicion(String condicion) {
+		this.condicion = condicion;
+	}
+
+
 	@PostConstruct
 	public void cargaInicial() {
 		try {
@@ -189,7 +239,21 @@ public class JSFCrearEtapaBean implements Serializable {
 			Response response = invocation.invoke();
 			LOGGER.info("Respuesta: " + response.getStatus());
 			if (response.getStatus() == 200) {
-				this.planes = response.readEntity(new GenericType<List<DtPlanVacunacion>>() {});
+				List<DtPlanVacunacion> dtplanes = new ArrayList<>();
+				try {
+					dtplanes = response.readEntity(new GenericType<List<DtPlanVacunacion>>() {});
+				} catch(Exception e) {
+					LOGGER.info("Error!!!!!! : " + e.getStackTrace());
+					LOGGER.info("Size del array: " + dtplanes.size());
+				}
+				LOGGER.info("Agregando al hashmap de planes");
+				for (DtPlanVacunacion dtplan: dtplanes) {
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("id", "" + dtplan.getId());
+					map.put("nombre", dtplan.getNombre());
+					planes.add(map);
+					LOGGER.info("Se ha agregado un plan a planes");
+				}
 //				for (DtPlanVacunacion dt : dtPlanes) {
 //					this.planes.add(Integer.toString(dt.getId()));
 //				}
@@ -218,8 +282,29 @@ public class JSFCrearEtapaBean implements Serializable {
 				String message = reply.getString("message");
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Crear:", message));
 			}
+			LOGGER.info("Por solicitar los planes en Bean...");
+			origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+			conexion = ClientBuilder.newClient();
+			webTarget = conexion.target(hostname + "/grupo15-services/rest/usuario/sectores");
+			invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
+			LOGGER.info("Realizando Invoke...");
+			response = invocation.invoke();
+			LOGGER.info("Respuesta: " + response.getStatus());
+			if (response.getStatus() == 200) {
+				this.sectores = response.readEntity(new GenericType<List<String>>() {});
+//				for (DtPlanVacunacion dt : dtPlanes) {
+//					this.planes.add(Integer.toString(dt.getId()));
+//				}
+			}else {
+				String jsonString = response.readEntity(String.class);
+				JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+				JsonObject reply = jsonReader.readObject();
+				String message = reply.getString("message");
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", message));
+			}
 		} catch (Exception e) {
-			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
+			LOGGER.severe("Ha ocurrido un error: " + e.getStackTrace() + e.getMessage());
 		}
 	}
 	 
@@ -253,14 +338,20 @@ public class JSFCrearEtapaBean implements Serializable {
 			System.out.println("Fecha del combo:" + this.getFechaInicio());		
 			etapa.put("fechaInicio", fechaInicio); 
 			etapa.put("fechaFin", fechaFin); 
-			System.out.println("Fecha parseada en jsf:" + fechaInicio);		
+			System.out.println("Fecha parseada en jsf:" + fechaInicio);
 			//System.out.println("Fecha cambiada:" + fechaInicio);
 			//String fechaFin = dateFormat.format(this.getFechaFin()); 
 
-			etapa.put("condicion", this.getCondicion());
+//			etapa.agregarEtapa(LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|50|todos|si", 8, "vacuna1Virus1");
+//			etapa.agregarEtapa(LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "51|80|industria|si", 8, "vacuna1Virus1");
+//			etapa.agregarEtapa(LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|50|salud|si", 9, "vacuna1Virus1");
+//			etapa.agregarEtapa(LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "18|500|industria|no", 10, "vacuna2Virus2");
+			
+			this.condicion = this.getEdadMin() + "|" + this.getEdadMax() + "|" + this.getSector() + "|" + this.getEnf().toLowerCase();
 			etapa.put("plan", this.getPlan());
 			etapa.put("vacuna", vacunaSeleccionada.getNombre());
 			System.out.println("etapa" + etapa.toString());
+			etapa.put("condicion", this.condicion);
 			
 			HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();

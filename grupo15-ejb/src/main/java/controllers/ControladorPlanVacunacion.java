@@ -82,8 +82,10 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 		if(!pVacs.isEmpty()) {
 			ArrayList<DtPlanVacunacion> dtPlanVacs = new ArrayList<>();
 	    	for(PlanVacunacion pV: pVacs) {
+	    		System.out.println("Iterando en PlanesVacunacion de los obtenidos en la DB");
 	    		dtPlanVacs.add(pV.toDtPlanVacunacion());	
 	    	}
+	    	System.out.println("Retornando Planes del Controlador");
 			return dtPlanVacs;
 		}else {
 			throw new PlanVacunacionInexistente("No existen planes de vacunacion registrados");

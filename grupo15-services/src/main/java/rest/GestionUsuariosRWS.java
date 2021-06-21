@@ -2,6 +2,7 @@ package rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.logging.Logger;
@@ -116,6 +117,26 @@ public class GestionUsuariosRWS {
 				.get(DtUsuarioExterno.class);
 		LOGGER.info("Obtenido usuario: " + resultados.getCi());
 		return Response.ok(resultados).build();
+	}
+	
+	@PermitAll
+	@GET
+	@Path("/sectores")
+	public Response listarSectoresExterno() {
+		String url = "https://rcastro.pythonanywhere.com/api/usuarios/";
+		Client conexion = ClientBuilder.newClient();
+		List<DtUsuarioExterno> resultados = conexion.target(url)
+				.request(MediaType.APPLICATION_JSON)
+				.get(new GenericType<List<DtUsuarioExterno>> () {});
+		List <String> sectores = new ArrayList<>();
+		sectores.add("todos");
+		for(DtUsuarioExterno dt: resultados) {
+			String sector = dt.getTipoSector();
+			if (!sectores.contains(sector)) {
+				sectores.add(sector);
+			}
+		}
+		return Response.ok(sectores).build();
 	}
 
 	@RolesAllowed({ "ciudadano" })

@@ -2,6 +2,7 @@ package datatypes;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -13,13 +14,13 @@ public class DtPlanVacunacion implements Serializable {
 	private int id;
 	private String nombre;
 	private String descripcion;
-	private ArrayList<DtEtapa> etapa = new ArrayList<>();
+	private List<DtEtapa> etapa = new ArrayList<>();
 	private String enfermedad;
 	
 	public DtPlanVacunacion() {
 	}
 
-	public DtPlanVacunacion(int id, String nombre, String descripcion, ArrayList<DtEtapa> etapa) {
+	public DtPlanVacunacion(int id, String nombre, String descripcion, List<DtEtapa> etapa) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -29,7 +30,7 @@ public class DtPlanVacunacion implements Serializable {
 
 	
 	
-	public DtPlanVacunacion(int id, String nombre, String descripcion, ArrayList<DtEtapa> etapa, String enfermedad) {
+	public DtPlanVacunacion(int id, String nombre, String descripcion, List<DtEtapa> etapa, String enfermedad) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -70,11 +71,11 @@ public class DtPlanVacunacion implements Serializable {
 		this.descripcion = descripcion;
 	}
 
-	public ArrayList<DtEtapa> getEtapa() {
+	public List<DtEtapa> getEtapa() {
 		return etapa;
 	}
 
-	public void setEtapa(ArrayList<DtEtapa> etapa) {
+	public void setEtapa(List<DtEtapa> etapa) {
 		this.etapa = etapa;
 	}
 
@@ -123,6 +124,8 @@ public class DtPlanVacunacion implements Serializable {
 			return false;
 		return true;
 	}
+
+
 
 	
 	
