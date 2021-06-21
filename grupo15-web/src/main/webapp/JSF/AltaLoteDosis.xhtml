@@ -164,73 +164,45 @@
         </ul>
       
 		</nav> 
- <div class="formulario" style="width: 50%">
+<div class="formulario" style="width: 50%">
 <h:form>
+	<div>
+		<p:outputLabel style="width:40%" >Identificador:    </p:outputLabel>
+		<p:inputNumber id="identificador" required="true" decimalPlaces="0" thousandSeparator="" minValue="1" value="#{AltaLoteDosis.identificador}" style="width:50%" > </p:inputNumber>
+	</div>
 
-<div>
-<p:outputLabel style="width:40%" >Identificador:    </p:outputLabel>
-<p:inputText id="identificador" required="true" value="#{AltaLoteDosis.identificador}" style="width:50%" > </p:inputText>
-</div>
+	<div>
+		<p:outputLabel style="width:40%" >Vacuna:    </p:outputLabel>
+		<p:selectOneMenu  required="true" value="#{AltaLoteDosis.vacuna}"  style="border-width: thin" >
+			<f:selectItems value="#{AltaLoteDosis.vacunas}" />
+		</p:selectOneMenu>
+	</div>
 
-<div>
-<p:outputLabel style="width:40%" >Vacuna:    </p:outputLabel>
- <p:selectOneMenu value="#{AltaLoteDosis.vacuna}"  style="border-width: thin" >
-	<f:selectItems value="#{AltaLoteDosis.vacunas}" />
-</p:selectOneMenu>
-</div>
+	<div>
+		<p:outputLabel style="width:40%" >Vacunatorio:    </p:outputLabel>
+ 		<p:selectOneMenu  required="true" value="#{AltaLoteDosis.vacunatorio}"  style="border-width: thin">
+			<f:selectItems value="#{AltaLoteDosis.vacunatorios}" />
+		</p:selectOneMenu>
+	</div>
+	<div>
+		<p:outputLabel style="width:40%" >Transportista:    </p:outputLabel>
+ 		<p:selectOneMenu  required="true" value="#{AltaLoteDosis.transportista}"  style="border-width: thin">
+			<f:selectItems value="#{AltaLoteDosis.transportistas}" />
+		</p:selectOneMenu>
+	</div>
 
-<div>
+	<div>
+		<p:outputLabel style="width:40%">Cantidad Total:    </p:outputLabel>
+		<p:inputNumber id="cantTotal" required="true" decimalPlaces="0" thousandSeparator="" minValue="1" value="#{AltaLoteDosis.cantTotal}" style="width:50%" > </p:inputNumber>
+	</div>
 
-<p:outputLabel style="width:40%" >Vacunatorio:    </p:outputLabel>
- <p:selectOneMenu value="#{AltaLoteDosis.vacunatorio}"  style="border-width: thin">
-	<f:selectItems value="#{AltaLoteDosis.vacunatorios}" />
-</p:selectOneMenu>
-</div>
+	<p:messages id="messages" showDetail="true" closable="true">
+		<p:autoUpdate/>
+	</p:messages>
 
-
-<div>
-<p:outputLabel style="width:40%">Cantidad Total:    </p:outputLabel>
-<p:inputNumber id="cantTotal" required="true" value="#{AltaLoteDosis.cantTotal}" style="width:50%" > </p:inputNumber>
-</div>
-
-<div>
-<p:outputLabel style="width:40%">Cantidad entregada:    </p:outputLabel>
-<p:inputNumber id="cantEntregada" required="true" value="#{AltaLoteDosis.cantEntregada}"  style="width:50%"> </p:inputNumber>
-</div>
-
-<div>
-<p:outputLabel style="width:40%">Cantidad descartada:    </p:outputLabel>
-<p:inputNumber id="cantDescartada" required="true" value="#{AltaLoteDosis.cantDescartada}"  style="width:50%"> </p:inputNumber>
-</div>
-
-
-<div>
-<p:outputLabel style="width:40%">Temperatura:    </p:outputLabel>
-<p:inputText id="temperatura" required="true" value="#{AltaLoteDosis.temperatura}"  style="width:50%"> </p:inputText>
-</div>
-
-<div>
-<p:outputLabel style="width:40%">Transportista:    </p:outputLabel>
-<p:inputNumber id="transportista" required="true" value="#{AltaLoteDosis.transportista}"  style="width:50%"> </p:inputNumber>
-</div>
-
-<div>
-
-<p:outputLabel style="width:40%"> Estado:    </p:outputLabel>
- <p:selectOneMenu value="#{AltaLoteDosis.estado}"  style="border-width: thin">
-	<f:selectItems value="#{AltaLoteDosis.estados}" />
-</p:selectOneMenu>
-</div>
-
-<p:messages id="messages" showDetail="true" closable="true">
-            <p:autoUpdate/>
-</p:messages>
-
-<p:commandButton id="confirmar" action="#{AltaLoteDosis.altaLoteDosis}" value="Alta"> </p:commandButton>
-
-
+	<p:commandButton id="confirmar" action="#{AltaLoteDosis.altaLoteDosis()}" value="Alta"> </p:commandButton>
 </h:form>
- </div>
+</div>
 	
 </body> 
 </html>

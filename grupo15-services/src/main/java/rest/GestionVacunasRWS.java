@@ -53,18 +53,6 @@ public class GestionVacunasRWS {
 	@Path("/listar")
 	public Response listarVacunas(@CookieParam("x-access-token") Cookie cookie) {
 		try {
-			String token = cookie.getValue();
-			String ci = null;
-			try {
-				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-			} catch (InvalidJwtException e) {
-				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-						e.getMessage());
-			}
-	        if( ci == null)
-	        	return ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED,
-	        			"No se encuentra CI en token de Cookie - Unauthorized!");
-			LOGGER.info("Cedula obtenida en REST: " + ci);
 			return Response.ok(cv.listarVacunas()).build();
 		} catch (VacunaInexistente e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,

@@ -79,6 +79,22 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 		}
 		return dtLotesDosis;
 	}
+	
+	public List<DtLoteDosis> listarLotesDosisVacunaVacunatorio(String idVacunatorio, String idVacuna) {
+		List<DtLoteDosis> dtLotesDosis = new ArrayList<DtLoteDosis>();
+		Query query = em.createQuery("select lote from LoteDosis lote");
+		@SuppressWarnings("unchecked")
+		List<LoteDosis> lotesDosis = (List<LoteDosis>) query.getResultList();
+		for (LoteDosis lote : lotesDosis) {
+			if (lote.getVacuna().getNombre().equals(idVacuna) && lote.getVacunatorio().getId().equals(idVacunatorio)) {
+				DtLoteDosis dtLoteDosis = new DtLoteDosis(lote.getIdLote(), lote.getVacunatorio().getId(), lote.getVacuna().getNombre(), lote.getCantidadTotal(),
+						lote.getCantidadEntregada(), lote.getCantidadDescartada(), lote.getEstadoLote().toString(),
+						lote.getTemperatura());
+				dtLotesDosis.add(dtLoteDosis);
+			}
+		}
+		return dtLotesDosis;
+	}
 
 	public void setTransportistaToLoteDosis(Integer idTransportista, Integer idLote, String idVacunatorio, String idVacuna) throws TransportistaInexistente {
 		// Asocia un Transportista a un LoteDosis.

@@ -61,7 +61,7 @@ public class ControladorTransportista implements ITransportistaDaoLocal, ITransp
 		Transportista t = em.find(Transportista.class, id);
 		if (t==null)
 			throw new TransportistaInexistente("No existe tal transportista.");
-		return new DtTransportista(t.getId(), t.getUrl());
+		return new DtTransportista(t.getId(), t.getUrl(), t.getToken());
 	}
 
 	public List<DtTransportista> listarTransportistas() throws TransportistaInexistente {
@@ -72,7 +72,7 @@ public class ControladorTransportista implements ITransportistaDaoLocal, ITransp
 		if (aux.isEmpty())
 			throw new TransportistaInexistente("No existe ningun transportista.");
 		for (Transportista t: aux) {
-			retorno.add(new DtTransportista(t.getId(), t.getUrl()));
+			retorno.add(new DtTransportista(t.getId(), t.getUrl(), t.getToken()));
 		}
 		return retorno;
 	}

@@ -9,9 +9,11 @@ import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -74,7 +76,7 @@ public class GestionLoteDosisRWS {
 
 	}
 
-	
+	/*
 	@PermitAll
 	@POST
 	@Path("/listar")
@@ -84,23 +86,38 @@ public class GestionLoteDosisRWS {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "Sin lotes de dosis.");
 		return Response.ok().entity(retorno).build();
 	}
+	*/
+	@PermitAll
+	@GET
+	@Path("/listar")
+	public Response listarLoteDosis(@QueryParam("idVacuna") String idVacuna,@QueryParam("idVacunatorio") String idVacunatorio) {
+		if (idVacuna == null || idVacunatorio == null) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "No se ingresaron todos los parametros necesarios.");
+		}
+		List<DtLoteDosis> retorno = cld.listarLotesDosisVacunaVacunatorio(idVacunatorio, idVacuna);
+		if (retorno.isEmpty())
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "Sin lotes de dosis.");
+		return Response.ok().entity(retorno).build();
+			
+	}
 	
 	@PermitAll
-	@POST
+	@GET
 	@Path("/obtener")
-	public Response obtenerLoteDosis(String datos) {
-		JSONObject lote;
+	public Response obtenerLoteDosis(@QueryParam("idLote")String idLote, @QueryParam("idVacuna") String idVacuna,@QueryParam("idVacunatorio") String idVacunatorio) {
+		if (idLote == null || idVacuna == null || idVacunatorio == null) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "No se ingresaron todos los parametros necesarios.");
+		}
 		try {
-			lote = new JSONObject(datos);
-			DtLoteDosis retorno = cld.obtenerLoteDosis(Integer.valueOf(lote.getString("idLote")), lote.getString("idVacunatorio"), lote.getString("idVacuna"));
+			DtLoteDosis retorno = cld.obtenerLoteDosis(Integer.valueOf(idLote), idVacunatorio, idVacuna);
 			return Response.ok().entity(retorno).build();
-		} catch (JSONException | NumberFormatException | LoteInexistente e) {
+		} catch (NumberFormatException | LoteInexistente e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 		}
 	}
 	
 	@PermitAll
-	@POST
+	@GET
 	@Path("/listarMensajes")
 	public Response listarMensajesLocales() {
 		return Response.ok().entity(cm.listarMensajes()).build();
@@ -199,14 +216,16 @@ public class GestionLoteDosisRWS {
 	}
 
 	@PermitAll
-	@POST
+	@GET
 	@Path("/obtenerInfoLoteSocio")
-	public Response obtenerEstadoLoteDeSocio(String datos) {
+	public Response obtenerEstadoLoteDeSocio(@QueryParam("idLote")String idLote, @QueryParam("idVacuna") String idVacuna,@QueryParam("idVacunatorio") String idVacunatorio) {
+		if (idLote == null || idVacuna == null || idVacunatorio == null) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "No se ingresaron todos los parametros necesarios.");
+		}
 		try {
-			JSONObject lote = new JSONObject(datos);
 			DtLoteDosis dt;
 			try {
-				dt = cld.obtenerLoteDosis(Integer.valueOf(lote.getString("idLote")), lote.getString("idVacunatorio"), lote.getString("idVacuna"));
+				dt = cld.obtenerLoteDosis(Integer.valueOf(idLote), idVacunatorio, idVacuna);
 			} catch (LoteInexistente e) {
 				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 			}
@@ -219,24 +238,23 @@ public class GestionLoteDosisRWS {
 				} catch (TransportistaInexistente et) {
 					return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, et.getMessage());
 				}
-				soap = obtenerEstadoLoteDosisSOAP(lote.getString("idLote"), lote.getString("idVacunatorio"), lote.getString("idVacuna"), urlTransportista);
+				soap = obtenerEstadoLoteDosisSOAP(idLote, idVacunatorio, idVacuna, urlTransportista);
 				//cm.agregarMensaje(soap); //no veo que tenga sentido guardar el mensaje a demanda porque ya lo trae cuando se  genera un evento.
 				
 				return Response.ok(new DtMensaje(soap)).build();
 			}catch (SOAPException e) {
 				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 			}
-		} catch (JSONException | NumberFormatException /* | LoteRepetido | VacunatorioNoCargadoException | VacunaInexistente */ e) {
+		} catch (NumberFormatException /* | LoteRepetido | VacunatorioNoCargadoException | VacunaInexistente */ e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 		}
 	}
 	
 	@PermitAll
-	@POST
+	@GET
 	@Path("/obtenerInfoTodosLotesSocio")
-	public Response obtenerEstadoTodosLotesDeSocio(String datos) {
+	public Response obtenerEstadoTodosLotesDeSocio(@QueryParam("idTransportista")String idTransportista) {
 		try {
-			JSONObject lote = new JSONObject(datos);
 			/*try {
 				ct.obtenerTransportista(Integer.valueOf(lote.getString("idTransportista")));
 			} catch (TransportistaInexistente et) {
@@ -248,7 +266,7 @@ public class GestionLoteDosisRWS {
 			try {
 				String urlTransportista;
 				try {
-					DtTransportista t = ct.obtenerTransportista(Integer.valueOf(lote.getString("idTransportista")));
+					DtTransportista t = ct.obtenerTransportista(Integer.valueOf(idTransportista));
 					urlTransportista = t.getUrl();
 				} catch (TransportistaInexistente et) {
 					return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, et.getMessage());
@@ -264,7 +282,7 @@ public class GestionLoteDosisRWS {
 				//LOGGER.severe(e.getMessage());
 				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 			}
-		} catch (JSONException | NumberFormatException /* | LoteRepetido | VacunatorioNoCargadoException | VacunaInexistente */ e) {
+		} catch ( NumberFormatException /* | LoteRepetido | VacunatorioNoCargadoException | VacunaInexistente */ e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 		}
 	}

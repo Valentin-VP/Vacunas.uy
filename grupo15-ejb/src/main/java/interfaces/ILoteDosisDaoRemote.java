@@ -30,4 +30,6 @@ public interface ILoteDosisDaoRemote {
 			String estadoLote, float temperatura, Integer transportista) throws LoteInexistente, TransportistaInexistente, VacunatorioNoCargadoException, VacunaInexistente;
 	
 	public void eliminarLoteDosis(Integer idLote, String idVacunatorio, String idVacuna) throws LoteInexistente, VacunatorioNoCargadoException, VacunaInexistente;
+
+	public List<DtLoteDosis> listarLotesDosisVacunaVacunatorio(String idVacunatorio, String idVacuna);
 }
