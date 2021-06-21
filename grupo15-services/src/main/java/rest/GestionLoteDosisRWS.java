@@ -377,8 +377,13 @@ public class GestionLoteDosisRWS {
 			soapConnection.close();
 
 		} catch (Exception e) {
-			System.err.println(
-					"\nError occurred while sending SOAP Request to Server!\nMake sure you have the correct endpoint URL and SOAPAction!\n");
+			/*
+			 * System.err.println(
+			 * "\nError occurred while sending SOAP Request to Server!\nMake sure you have the correct endpoint URL and SOAPAction!\n"
+			 * );
+			 */
+			LOGGER.severe("################################################################################################# Alta Conectando a " + soapEndpointUrl);
+			LOGGER.severe("" + e.getStackTrace());
 			throw new SOAPException(e.getMessage());
 			// e.printStackTrace();
 		}
