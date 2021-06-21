@@ -45,20 +45,8 @@ public class EnfermedadRWS {
 	@PermitAll
 	@GET
 	@Path("/listar")
-	public Response listarEnfermedades(/*@CookieParam("x-access-token") Cookie cookie*/) {
+	public Response listarEnfermedades() {
 		try {
-//			String token = cookie.getValue();
-//			String ci = null;
-//			try {
-//				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-//			} catch (InvalidJwtException e) {
-//				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-//						e.getMessage());
-//			}
-//	        if( ci == null)
-//	        	return ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED,
-//	        			"No se encuentra CI en token de Cookie - Unauthorized!");
-//			LOGGER.info("Cedula obtenida en REST: " + ci);
 			return Response.ok(ce.listarEnfermedades()).build();
 		} catch (EnfermedadInexistente e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
@@ -70,24 +58,12 @@ public class EnfermedadRWS {
 	@PermitAll
 	@GET
 	@Path("/obtener")
-	public Response obtenerEnfermedad(@CookieParam("x-access-token") Cookie cookie, @QueryParam("enf") String enfermedad) {
+	public Response obtenerEnfermedad(@QueryParam("enf") String enfermedad) {
 		if (enfermedad==null) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					"No se ha recibido enfermedad");
 		}
 		try {
-			String token = cookie.getValue();
-			String ci = null;
-			try {
-				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-			} catch (InvalidJwtException e) {
-				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-						e.getMessage());
-			}
-	        if( ci == null)
-	        	return ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED,
-	        			"No se encuentra CI en token de Cookie - Unauthorized!");
-			LOGGER.info("Cedula obtenida en REST: " + ci);
 			return Response.ok(ce.obtenerEnfermedad(enfermedad)).build();
 		} catch (EnfermedadInexistente e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
@@ -99,25 +75,13 @@ public class EnfermedadRWS {
 	@PermitAll
 	@POST
 	@Path("/agregar")
-	public Response agregarEnfermedad(@CookieParam("x-access-token") Cookie cookie, String enfermedad) {
+	public Response agregarEnfermedad(String enfermedad) {
 		LOGGER.info("Accediento a REST agregarEnfermedad");
 		if (enfermedad==null) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					"No se ha recibido enfermedad");
 		}
 		try {
-			String token = cookie.getValue();
-			String ci = null;
-			try {
-				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-			} catch (InvalidJwtException e) {
-				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-						e.getMessage());
-			}
-	        if( ci == null)
-	        	return ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED,
-	        			"No se encuentra CI en token de Cookie - Unauthorized!");
-			LOGGER.info("Cedula obtenida en REST: " + ci);
 			ce.agregarEnfermedad(enfermedad);
 			return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha creado la enfermedad");
 		} catch (EnfermedadRepetida e) {
@@ -130,24 +94,12 @@ public class EnfermedadRWS {
 	@PermitAll
 	@DELETE
 	@Path("/eliminar")
-	public Response eliminarEnfermedad(@CookieParam("x-access-token") Cookie cookie, @QueryParam("enf") String enfermedad) {
+	public Response eliminarEnfermedad(@QueryParam("enf") String enfermedad) {
 		if (enfermedad==null) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					"No se ha recibido enfermedad");
 		}
 		try {
-			String token = cookie.getValue();
-			String ci = null;
-			try {
-				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-			} catch (InvalidJwtException e) {
-				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-						e.getMessage());
-			}
-	        if( ci == null)
-	        	return ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED,
-	        			"No se encuentra CI en token de Cookie - Unauthorized!");
-			LOGGER.info("Cedula obtenida en REST: " + ci);
 			ce.eliminarEnfermedad(enfermedad);
 			return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha eliminado la enfermedad");
 		} catch (EnfermedadInexistente | AccionInvalida e) {

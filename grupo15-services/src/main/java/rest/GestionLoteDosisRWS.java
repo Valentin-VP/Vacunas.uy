@@ -173,6 +173,8 @@ public class GestionLoteDosisRWS {
 				DtTransportista t = ct.obtenerTransportista(Integer.valueOf(lote.getString("idTransportista")));
 				urlTransportista = t.getUrl();
 			} catch (TransportistaInexistente et) {
+				LOGGER.severe("################################################################################################# 1");
+				LOGGER.severe("" + et.getStackTrace());
 				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, et.getMessage());
 			}
 			
@@ -203,9 +205,13 @@ public class GestionLoteDosisRWS {
 			}catch (SOAPException | LoteRepetido | VacunatorioNoCargadoException | VacunaInexistente | TransportistaInexistente e) {
 				//e.printStackTrace();
 				//LOGGER.severe(e.getMessage());
+				LOGGER.severe("################################################################################################# 2");
+				LOGGER.severe("" + e.getStackTrace());
 				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 			}
 		} catch (JSONException | NumberFormatException /* | LoteRepetido | VacunatorioNoCargadoException | VacunaInexistente */ e) {
+			LOGGER.severe("################################################################################################# 3");
+			LOGGER.severe("" + e.getStackTrace());
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 		}
 
