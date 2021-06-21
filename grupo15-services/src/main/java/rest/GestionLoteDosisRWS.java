@@ -383,7 +383,8 @@ public class GestionLoteDosisRWS {
 			 * );
 			 */
 			LOGGER.severe("################################################################################################# Alta Conectando a " + soapEndpointUrl);
-			LOGGER.severe("" + e.getStackTrace());
+			LOGGER.severe("" + e.getMessage());
+			e.printStackTrace();
 			throw new SOAPException(e.getMessage());
 			// e.printStackTrace();
 		}
