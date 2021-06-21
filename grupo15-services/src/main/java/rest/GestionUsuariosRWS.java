@@ -19,6 +19,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
@@ -275,6 +276,18 @@ public class GestionUsuariosRWS {
 			}
 		}
 		return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "No se obtuvo interno");
+	}
+	
+	@RolesAllowed({ "administrador", "autoridad" })
+	@POST
+	@Path("/vacunador/eliminar") 
+	public Response eliminarVacunador(@QueryParam("ci") String ci) {
+		try {
+			IUsuarioLocal.eliminarVacunador(ci);
+			return Response.ok().build();
+		} catch (NumberFormatException | UsuarioInexistente e) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,e.getMessage());
+		}
 	}
 	
 	@RolesAllowed({"administrador", "autoridad" })

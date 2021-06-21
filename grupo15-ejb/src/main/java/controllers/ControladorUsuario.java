@@ -241,15 +241,15 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 	}
 	
 	
-	public void EliminarUsuario(int IdUsuario) throws UsuarioInexistente {
-
-		if (em.find(Usuario.class, IdUsuario) == null) {
-			throw new UsuarioInexistente("No existe el usuario ingresado");
-		}
-
-		Usuario usu = em.find(Usuario.class, IdUsuario);
-		em.remove(usu);
-	}
+//	public void eliminarUsuario(int IdUsuario) throws UsuarioInexistente {
+//
+//		if (em.find(Usuario.class, IdUsuario) == null) {
+//			throw new UsuarioInexistente("No existe el usuario ingresado");
+//		}
+//
+//		Usuario usu = em.find(Usuario.class, IdUsuario);
+//		em.remove(usu);
+//	}
 
 	
 	public void ModificarVacunador(DtVacunador vacunador) throws UsuarioInexistente {
@@ -349,6 +349,14 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 				break;
 		}
 		
+	}
+	
+	public void eliminarVacunador(String ci) throws UsuarioInexistente{
+		Vacunador vac = em.find(Vacunador.class, Integer.valueOf(ci));
+		if(vac!=null)
+			em.remove(vac);
+		else
+			throw new UsuarioInexistente("No existe el vacunador con cedula "+ci);
 	}
 	
 }

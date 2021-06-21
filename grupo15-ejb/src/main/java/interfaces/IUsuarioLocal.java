@@ -30,11 +30,12 @@ public interface IUsuarioLocal {
 	public ArrayList<DtCiudadano> listarCiudadanos();
 	public ArrayList<DtUsuarioInterno> listarUsuariosInternos();
 	public ArrayList<DtVacunador> listarVacunadores();
-	public void EliminarUsuario(int IdUsuario) throws UsuarioInexistente;
+//	public void eliminarUsuario(int IdUsuario) throws UsuarioInexistente;
 	public void ModificarCiudadano(DtCiudadano ciudadano) throws UsuarioInexistente;
 	public void ModificarUsuarioInterno(DtUsuarioInterno usu) throws UsuarioInexistente;
 	public void ModificarVacunador(DtVacunador vacunador) throws UsuarioInexistente;
 	public ArrayList<DtUsuarioSoap> listarVacunadoresSoap();
 	public DtUsuarioSoap buscarVacunadorSoap(int id) throws UsuarioInexistente;
 	public void borrarToken(String ci, String tipoUser) throws UsuarioInexistente;
+	public void eliminarVacunador(String ci) throws UsuarioInexistente;
 }
