@@ -87,7 +87,7 @@
 	<body>
 	
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	  <a class="navbar-brand" href="/grupo15-web/html/menuAdministrador.html">Menú Autoridad</a>
+	  <a class="navbar-brand" href="/grupo15-web/html/menuAutoridad.html">Menú Autoridad</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -175,7 +175,7 @@
 <p:outputLabel style="width:60%" >Seleccione Plan de Vacunación:    </p:outputLabel>
  <p:selectOneMenu value="#{BorrarPlan.nombre}" style="border-width: thin" >
  <p:ajax event="itemSelect" update="@this"   />
-	 <f:selectItems value="#{BorrarPlan.nombres}" var="p" itemValue="#{p.id}" itemLabel="#{p.id} - #{p.nombre}"   />
+	 <f:selectItems value="#{BorrarPlan.dtPlanes}" var="p" itemValue="#{p.id}" itemLabel="#{p.id} - #{p.nombre}"   />
 	<p:ajax event="itemSelect" update="@this"   />
 
 </p:selectOneMenu>
