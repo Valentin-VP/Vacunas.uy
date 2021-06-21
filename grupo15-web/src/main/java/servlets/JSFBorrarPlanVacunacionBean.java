@@ -27,6 +27,7 @@ import javax.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONObject;
 
+import datatypes.DtEnfermedad;
 import datatypes.DtPlanVacunacion;
 
 @Named("BorrarPlan")
@@ -41,7 +42,18 @@ public class JSFBorrarPlanVacunacionBean implements Serializable {
 	private List<String> nombres = new ArrayList<String>();
 	private List<DtPlanVacunacion> dtPlanes = new ArrayList<DtPlanVacunacion>();
 	private DtPlanVacunacion plan;
+	private String nombre;
 	
+	
+	
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
 	public JSFBorrarPlanVacunacionBean() {}
 
 	public String getToken() {
@@ -95,12 +107,10 @@ public class JSFBorrarPlanVacunacionBean implements Serializable {
 			LOGGER.info("Respuesta: " + response.getStatus());
 			if (response.getStatus() == 200) {
 				this.dtPlanes = response.readEntity(new GenericType<List<DtPlanVacunacion>>() {});
-			}else {
-				String jsonString = response.readEntity(String.class);
-				JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
-				JsonObject reply = jsonReader.readObject();
-				String message = reply.getString("message");
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Crear:", message));
+				
+				for(DtPlanVacunacion dt: dtPlanes) {
+					this.nombres.add(dt.getNombre());
+				}
 			}
 		} catch (Exception e) {
 			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
@@ -118,24 +128,15 @@ public class JSFBorrarPlanVacunacionBean implements Serializable {
         String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
         LOGGER.info("El server name es: " + hostname);
 		Client conexion = ClientBuilder.newClient();
-		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/plan/eliminar?p=" + this.getPlan().getId() );
+		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/plan/eliminar").queryParam("p", this.nombre);
 		LOGGER.severe("Conectando a : " + webTarget.getUri());
 		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildDelete();
 		Response response = invocation.invoke();
 		LOGGER.info("Respuesta: " + response.getStatus());
 		if (response.getStatus() == 200) {
-			String jsonString = response.readEntity(String.class);
-			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
-			JsonObject reply = jsonReader.readObject();
-			String message = reply.getString("message");
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Eliminar:", message));
-		}
-		else {
-			String jsonString = response.readEntity(String.class);
-			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
-			JsonObject reply = jsonReader.readObject();
-			String message = reply.getString("message");
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Eliminar:", message));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Borrar:", "Plan de Vacunacion eliminado"));
+		}else {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "" + response.getStatus()));
 		}
 		cargaInicial();
 	}
