@@ -1,6 +1,7 @@
 package entities;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -84,7 +85,10 @@ public class Etapa {
 	}
 	
 	public DtEtapa toDtEtapa() {
-		DtEtapa dtEtapa = new DtEtapa(this.id, this.fechaInicio, this.fechaFin, this.condicion, this.planVacunacion.getId(), this.vacuna.getNombre());
+		String fi,ff;
+		fi = this.fechaInicio.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+		ff = this.fechaFin.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+		DtEtapa dtEtapa = new DtEtapa(this.id, fi, ff, this.condicion, this.planVacunacion.getId(), this.vacuna.getNombre());
 		return dtEtapa;
 	}
 

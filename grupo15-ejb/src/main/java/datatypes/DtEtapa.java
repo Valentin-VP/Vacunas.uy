@@ -10,8 +10,8 @@ public class DtEtapa implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private int id;
-	private LocalDate fechaInicio;
-	private LocalDate fechaFin;
+	private String fechaInicio;
+	private String fechaFin;
 	private String condicion;
 	private int planVac;
 	private String vacuna;
@@ -20,7 +20,7 @@ public class DtEtapa implements Serializable {
 	public DtEtapa() {
 	}
 
-	public DtEtapa(int id, LocalDate fechaInicio, LocalDate fechaFin, String condicion, int planVac, String vacuna) {
+	public DtEtapa(int id, String fechaInicio, String fechaFin, String condicion, int planVac, String vacuna) {
 		super();
 		this.id = id;
 		this.fechaInicio = fechaInicio;
@@ -38,19 +38,19 @@ public class DtEtapa implements Serializable {
 		this.id = id;
 	}
 
-	public LocalDate getFechaInicio() {
+	public String getFechaInicio() {
 		return fechaInicio;
 	}
 
-	public void setFechaInicio(LocalDate fechaInicio) {
+	public void setFechaInicio(String fechaInicio) {
 		this.fechaInicio = fechaInicio;
 	}
 
-	public LocalDate getFechaFin() {
+	public String getFechaFin() {
 		return fechaFin;
 	}
 
-	public void setFechaFin(LocalDate fechaFin) {
+	public void setFechaFin(String fechaFin) {
 		this.fechaFin = fechaFin;
 	}
 
