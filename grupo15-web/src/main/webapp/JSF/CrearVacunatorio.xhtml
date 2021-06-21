@@ -145,47 +145,81 @@
 <h:form>
 
 <div>
-<p:outputLabel style="width:40%" >Nombre:    </p:outputLabel>
-<p:inputText id="nombre" required="true" value="#{CrearVacunatorio.nombre}" style="width:60%" > </p:inputText>
+<p:outputLabel style="width:30%" >Identificador:    </p:outputLabel>
+<p:inputText id="id" required="true" value="#{CrearVacunatorio.id}" style="width:70%" > </p:inputText>
 
 </div>
 
 
 <div>
+<p:outputLabel style="width:30%" >Nombre:    </p:outputLabel>
+<p:inputText id="nombre" required="true" value="#{CrearVacunatorio.nombre}" style="width:70%" > </p:inputText>
+
+</div>
+
+
+<div>
+<p:outputLabel style="width:30%" >URL:    </p:outputLabel>
+<p:inputText id="url"  required="true" value="#{CrearVacunatorio.url}" style="width:70%" > </p:inputText>
+</div>
+
+<div>
 <p:outputLabel style="width:30%" >Departamento:    </p:outputLabel>
-<p:inputText id="departamento" value="#{CrearVacunatorio.departamento}" style="width:70%" > </p:inputText>
+<p:inputText id="departamento"  required="true"  value="#{CrearVacunatorio.departamento}" style="width:70%" > </p:inputText>
 </div>
 
 <div>
 <p:outputLabel style="width:30%">Barrio:    </p:outputLabel>
-<p:inputText id="barrio"  value="#{CrearVacunatorio.barrio}" style="width:70%" > </p:inputText>
+<p:inputText id="barrio"   required="true" value="#{CrearVacunatorio.barrio}" style="width:70%" > </p:inputText>
 </div>
 
 <div>
 <p:outputLabel style="width:30%">Direccion:    </p:outputLabel>
-<p:inputText id="direccion"  value="#{CrearVacunatorio.direccion}"  style="width:70%"> </p:inputText>
+<p:inputText id="direccion"  required="true"  value="#{CrearVacunatorio.direccion}"  style="width:70%"> </p:inputText>
 </div>
 
 <div>
 <p:outputLabel style="width:30%">Telefono:    </p:outputLabel>
-<p:inputNumber id="telefono"  value="#{CrearVacunatorio.telefono}"  style="width:70%"> </p:inputNumber>
+<p:inputNumber id="telefono"  required="true" value="#{CrearVacunatorio.telefono}"  style="width:70%"> </p:inputNumber>
 </div>
 
 <div>
 <p:outputLabel style="width:30%">Latitud:    </p:outputLabel>
-<p:inputText id="latitud"  value="#{CrearVacunatorio.latitud}"  style="width:70%"> </p:inputText>
+<p:inputText id="latitud"  required="true"  value="#{CrearVacunatorio.latitud}"  style="width:70%"> </p:inputText>
 </div>
 
 <div>
 <p:outputLabel style="width:30%">Longitud:    </p:outputLabel>
-<p:inputText id="longitud"  value="#{CrearVacunatorio.longitud}"  style="width:70%"> </p:inputText>
+<p:inputText id="longitud"  required="true" value="#{CrearVacunatorio.longitud}"  style="width:70%"> </p:inputText>
+</div>
+
+<p:outputLabel style="width:30%">Reglas cupo:    </p:outputLabel>
+<div>
+<p:outputLabel style="width:30%">Identificador:    </p:outputLabel>
+<p:inputText id="idReglas"  required="true" value="#{CrearVacunatorio.idReglas}"  style="width:70%"> </p:inputText>
+</div>
+
+<div>
+<p:outputLabel style="width:30%">Duracion Turno:    </p:outputLabel>
+<p:inputNumber id="duracionTurno"  required="true"  value="#{CrearVacunatorio.duracionTurno}"  style="width:70%"> </p:inputNumber>
+</div>
+
+
+ <div>
+<p:outputLabel style="width:30%">Hora Apertura:    </p:outputLabel>
+<p:datePicker id="horaApertura"   required="true" value="#{CrearVacunatorio.horaApertura}" timeOnly="true" pattern="HH:mm"/>
+</div>
+
+ <div>
+<p:outputLabel style="width:30%">Hora Cierre:    </p:outputLabel>
+<p:datePicker id="horaCierre"  required="true" value="#{CrearVacunatorio.horaCierre}" timeOnly="true" pattern="HH:mm"/>
 </div>
 
 
 <p:messages id="messages" showDetail="true" closable="true">
             <p:autoUpdate/>
 </p:messages>
-<p:commandButton id="confirmar" action="#{CrearVacunatorio.confirmar}" value="Crear"> </p:commandButton>
+<p:commandButton id="crearVacunatorio" action="#{CrearVacunatorio.crearVacunatorio}" value="Crear"> </p:commandButton>
 
 
 </h:form>

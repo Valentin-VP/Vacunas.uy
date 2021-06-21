@@ -111,9 +111,9 @@ public class GestionVacunatoriosRWS {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 			JSONObject datosInterno = new JSONObject(datos);
 			DtDireccion dtDir = new DtDireccion(datosInterno.getString("direccion"), datosInterno.getString("barrio"), datosInterno.getString("departamento"));
-			iControladorVacunatorio.agregarVacunatorio(datosInterno.getString("idVacunatorio"), datosInterno.getString("nombre"), dtDir,
+			iControladorVacunatorio.agregarVacunatorio(datosInterno.getString("id"), datosInterno.getString("nombre"), dtDir,
 					Integer.valueOf(datosInterno.getString("telefono")), Float.parseFloat(datosInterno.getString("latitud")), Float.parseFloat(datosInterno.getString("longitud")), datosInterno.getString("url"));
-			iControladorVacunatorio.agregarReglasCupos(datosInterno.getString("idVacunatorio"), datosInterno.getString("idReglas"),
+			iControladorVacunatorio.agregarReglasCupos(datosInterno.getString("id"), datosInterno.getString("idReglas"),
 					Integer.parseInt(datosInterno.getString("duracionTurno")),
 					LocalTime.parse(datosInterno.getString("horaApertura"), formatter), LocalTime.parse(datosInterno.getString("horaCierre"), formatter));
 			return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha agregado el nodo Vacunatorio con exito.");
