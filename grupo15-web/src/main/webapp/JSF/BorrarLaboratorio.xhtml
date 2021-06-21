@@ -87,7 +87,7 @@
 	<body>
 	
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	  <a class="navbar-brand" href="/grupo15-web/html/menuAdministrador.html">Menú Autoridad</a>
+	  <a class="navbar-brand" href="/grupo15-web/html/menuAutoridad.html">Menú Autoridad</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -173,11 +173,11 @@
 <p:messages id="messages" showDetail="true" closable="true">
             <p:autoUpdate/>
 </p:messages>
-<p:outputLabel style="width:50%" >Seleccione enfermedad:    </p:outputLabel>
+<p:outputLabel style="width:50%" >Seleccione Laboratorio:    </p:outputLabel>
  <p:selectOneMenu value="#{BorrarLaboratorio.nombre}" style="border-width: thin"  >
 <p:ajax event="itemSelect" update="@this"  />
 
-	<f:selectItems value="#{BorrarLaboratorio.nombres}"  />
+	<f:selectItems value="#{BorrarLaboratorio.laboratorios}"  />
 <p:ajax event="itemSelect" update="@this" />
 
 </p:selectOneMenu>
