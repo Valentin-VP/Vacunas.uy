@@ -49,7 +49,7 @@ public class EliminarVacunador {
 		Response response = invocation.invoke();
 		LOGGER.info("Respuesta: " + response.getStatus());
 		if (response.getStatus() == 200) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Eliminar:", "VacunadorEliminado con exito"));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Eliminar:", "Vacunador Eliminado con exito"));
 			
 		}
 		else {
