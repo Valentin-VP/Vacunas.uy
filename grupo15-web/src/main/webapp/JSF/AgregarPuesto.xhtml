@@ -7,6 +7,7 @@
       
 
 <h:head> <link href="/grupo15-web/css/styles.css" type="text/css" rel="stylesheet" media="all" /> 
+
 <style type="text/css">
 			
 			* {
@@ -162,84 +163,42 @@
           </li>
         </ul>
       
-		</nav>
-
+		</nav> 
 <div class="formulario" style="width: 50%">
 <h:form>
+
+
 	<div>
-		<p:outputLabel style="width:40%" >Vacuna:    </p:outputLabel>
- 		<p:selectOneMenu id="vacuna" required="true" requiredMessage="No puede estar vacio la vacuna" value="#{ModificarLoteDosis.vacuna}"  style="border-width: thin" >
-			<f:selectItems value="#{ModificarLoteDosis.vacunas}" />
-			<p:ajax event="valueChange" listener="#{ModificarLoteDosis.cargaLotes}" update="@form" process="vacuna, vacunatorio"/>
-		</p:selectOneMenu>
+		<p:outputLabel style="width:40%" >Identificador Puesto:    </p:outputLabel>
+		<p:inputText id="identificador" required="true" value="#{AgregarPuesto.puesto}" style="width:50%" > </p:inputText>
 	</div>
 
 	<div>
 		<p:outputLabel style="width:40%" >Vacunatorio:    </p:outputLabel>
- 		<p:selectOneMenu id="vacunatorio" required="true" requiredMessage="No puede estar vacio el vacunatorio" value="#{ModificarLoteDosis.vacunatorio}"  style="border-width: thin">
-			<f:selectItems value="#{ModificarLoteDosis.vacunatorios}" />
-			<p:ajax event="valueChange" listener="#{ModificarLoteDosis.cargaLotes}" update="@form" process="vacuna, vacunatorio"/>
-		</p:selectOneMenu>
-	</div>
-
-	<div>
-		<p:outputLabel style="width:40%" >Lote:    </p:outputLabel>
- 		<p:selectOneMenu id="lotes" required="true" requiredMessage="No puede estar vacio el lote" value="#{ModificarLoteDosis.lote}"  style="border-width: thin">
-			<f:selectItems value="#{ModificarLoteDosis.lotes}"/>
-			<p:ajax event="valueChange" listener="#{ModificarLoteDosis.test}"/>
+ 		<p:selectOneMenu  required="true" value="#{AgregarPuesto.vacunatorio}" valueChangeListener="#{AgregarPuesto.cargaPuestos}" style="border-width: thin">
+			<f:selectItems value="#{AgregarPuesto.vacunatorios}" />
+			<p:ajax listener="#{AgregarPuesto.cargaPuestos}" update="table" process="@this"/>
 		</p:selectOneMenu>
 	</div>
 	
-	<div>
-		<p:outputLabel style="width:40%">Cantidad entregada:    </p:outputLabel>
-		<p:inputNumber id="cantEntregada" required="true" decimalPlaces="0" thousandSeparator="" minValue="0" value="#{ModificarLoteDosis.cantEntregada}"  style="width:50%"> </p:inputNumber>
-	</div>
-
-	<div>
-		<p:outputLabel style="width:40%">Cantidad descartada:    </p:outputLabel>
-		<p:inputNumber id="cantDescartada" required="true" decimalPlaces="0" thousandSeparator="" minValue="0" value="#{ModificarLoteDosis.cantDescartada}"  style="width:50%"> </p:inputNumber>
-	</div>
-
-
-	<div>
-		<p:outputLabel style="width:40%">Temperatura:    </p:outputLabel>
-		<p:inputText id="temperatura" required="true" decimalPlaces="1" thousandSeparator="" minValue="-273.0" maxValue="1000.0" value="#{ModificarLoteDosis.temperatura}"  style="width:50%"> </p:inputText>
-	</div>
-
-	<div>
-		<p:outputLabel style="width:40%"> Estado:    </p:outputLabel>
-		<p:selectOneMenu  required="true" value="#{ModificarLoteDosis.estado}"  style="border-width: thin">
-			<f:selectItem itemLabel="Arribado" itemValue="Recibido" />
-			<f:selectItem itemLabel="Cancelado" itemValue="Cancelado" />
-			<f:selectItem itemLabel="Recibido" itemValue="EnTransito" />
-		</p:selectOneMenu>
-	</div>
-
-	<p:messages id="messages" showDetail="true" closable="true">
-    	<p:autoUpdate/>
-	</p:messages>
-
-	<p:commandButton id="modificar" action="#{ModificarLoteDosis.modificarLoteDosis}" value="Modificar"> </p:commandButton>
-
-
-</h:form>
-
 	<div class="card">
-        <h5 style="margin-top:0">Log: </h5>
-        <p:dataTable var="mensaje" value="#{ModificarLoteDosis.dtMensajes}" scrollable="true" scrollHeight="250">
-            <p:column headerText="Mensaje" footerText="Mensaje">
-                <h:outputText value="#{mensaje.idMensaje}"/>
-            </p:column>
-            <p:column headerText="Mensaje" footerText="Mensaje">
-                <h:outputText value="#{mensaje.contenido}"/>
+        <h5 style="margin-top:0">Puestos: </h5>
+        <p:dataTable id="table" var="puesto" value="#{AgregarPuesto.dtPuestos}" scrollable="true" scrollHeight="250">
+            <p:column headerText="Puesto" footerText="Puesto">
+                <h:outputText value="#{puesto}"/>
             </p:column>
         </p:dataTable>
-        <p:commandButton id="cargarLogLocal" action="#{ModificarLoteDosis.cargaMensajes}" value="Cargar Log"> </p:commandButton>
-        <p:commandButton id="obtenerLogSocio" action="#{ModificarLoteDosis.obtenerLogLoteEnSocio}" value="Lote según transportista"> </p:commandButton>
-        <p:commandButton id="obtenerLogMultipleSocio" action="#{ModificarLoteDosis.obtenerLogsLotesEnSocio}" value="Lotes según transportista"> </p:commandButton>
-        
     </div>
- </div>
+
+	<p:messages id="messages" showDetail="true" closable="true">
+		<p:autoUpdate/>
+	</p:messages>
+
+	<p:commandButton id="confirmar" action="#{AgregarPuesto.agregarPuesto()}" value="Agregar"> 
+		<p:ajax listener="#{AgregarPuesto.cargaPuestos}" update="table" process="@this"/>
+	</p:commandButton>
+</h:form>
+</div>
 	
 </body> 
 </html>
