@@ -216,9 +216,9 @@
 
 <div>
 <p:outputLabel style="width:40%" >Edad Minima:    </p:outputLabel>
-<p:inputNumber id="edadMin" required="true" value="#{CrearEtapa.edadMin}" style="width:40%" />
+<p:inputNumber id="edadMin" required="true" minValue="0" value="#{CrearEtapa.edadMin}" style="width:40%" />
 <p:outputLabel style="width:40%" >Edad Máxima:    </p:outputLabel>
-<p:inputNumber id="edadMax" required="true" value="#{CrearEtapa.edadMax}" style="width:40%" > </p:inputNumber>
+<p:inputNumber id="edadMax" required="true" minValue="0" value="#{CrearEtapa.edadMax}" style="width:40%" > </p:inputNumber>
 </div>
 <div>
 <p:outputLabel style="width:50%" >Seleccione Sector:    </p:outputLabel>
