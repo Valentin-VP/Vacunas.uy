@@ -71,7 +71,7 @@ window.onload = function() {
     create_join_form(){
     
       var parent = this;
-
+ 
       var join_container = document.createElement('div')
       join_container.setAttribute('id', 'join_container')
       var join_inner_container = document.createElement('div')
