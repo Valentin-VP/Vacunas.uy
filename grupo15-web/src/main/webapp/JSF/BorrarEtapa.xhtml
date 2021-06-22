@@ -180,19 +180,22 @@
 	<div class="formulario">
 		<h:form>
 			<p:outputLabel style="width:50%">Seleccione Plan: </p:outputLabel>
-			<p:selectOneMenu id="planes" value="#{BorrarEtapa.plan}" style="border-width: thin">
-				<p:ajax listener="#{BorrarEtapa.cargarEtapas}" update="etapa" />
-				<f:selectItem itemLabel="Plan..." itemValue="" noSelectionOption="false" />
-				<f:selectItems value="#{ConsultarPlan.planes}" var="p" itemValue="#{p.id}"
+			<p:selectOneMenu id="planes" value="#{BorrarEtapa.plan}" style="border-width: thin" required="true"
+				requiredMessage="No puede esta vacio e plan">
+				<f:selectItems value="#{BorrarEtapa.planes}" var="p" itemValue="#{p.id}"
 					itemLabel="#{p.id}-#{p.nombre}" />
+				<p:ajax update="etapas" listener="#{BorrarEtapa.cargarEtapas()}" event="itemSelect" />
 			</p:selectOneMenu>
-			
+
 			<p:outputLabel style="width:50%">Seleccione Etapa: </p:outputLabel>
-			<p:selectOneMenu id="etapa" value="#{BorrarEtapa.etapa}" style="border-width: thin"
-				noSelectionOption="false">
-				<f:selectItems Value="#{BorrarEtapa.etapas}" var="e" itemValue="#{e.id}" itemLabel="#{e.id}" />
+			<p:selectOneMenu id="etapas" value="#{BorrarEtapa.etapa}" style="border-width: thin" required="true"
+				requiredMessage="No puede estar vacia la etapa">
+				<f:selectItems value="#{BorrarEtapa.etapas}" var="e" itemValue="#{e.id}" itemLabel="#{e.id}" />
 			</p:selectOneMenu>
 			<p:divider />
+
+
+
 			<p:messages id="messages" showDetail="true" closable="true">
 				<p:autoUpdate />
 			</p:messages>

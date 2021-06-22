@@ -170,11 +170,17 @@ public class GestionLoteDosisRWS {
 			JSONObject lote = new JSONObject(datos);
 			String urlTransportista;
 			try {
+				cld.obtenerLoteDosis(Integer.valueOf(lote.getString("idLote")), lote.getString("idVacunatorio"), lote.getString("idVacuna"));
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "Ya existe ese lote de dosis.");
+			} catch (JSONException | NumberFormatException ex) {
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, ex.getMessage());
+			} catch (LoteInexistente e) {
+				//nada
+			}
+			try {
 				DtTransportista t = ct.obtenerTransportista(Integer.valueOf(lote.getString("idTransportista")));
 				urlTransportista = t.getUrl();
 			} catch (TransportistaInexistente et) {
-				LOGGER.severe("################################################################################################# 1");
-				LOGGER.severe("" + et.getStackTrace());
 				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, et.getMessage());
 			}
 			
@@ -205,13 +211,9 @@ public class GestionLoteDosisRWS {
 			}catch (SOAPException | LoteRepetido | VacunatorioNoCargadoException | VacunaInexistente | TransportistaInexistente e) {
 				//e.printStackTrace();
 				//LOGGER.severe(e.getMessage());
-				LOGGER.severe("################################################################################################# 2");
-				LOGGER.severe("" + e.getStackTrace());
 				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 			}
 		} catch (JSONException | NumberFormatException /* | LoteRepetido | VacunatorioNoCargadoException | VacunaInexistente */ e) {
-			LOGGER.severe("################################################################################################# 3");
-			LOGGER.severe("" + e.getStackTrace());
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 		}
 
@@ -377,14 +379,8 @@ public class GestionLoteDosisRWS {
 			soapConnection.close();
 
 		} catch (Exception e) {
-			/*
-			 * System.err.println(
-			 * "\nError occurred while sending SOAP Request to Server!\nMake sure you have the correct endpoint URL and SOAPAction!\n"
-			 * );
-			 */
-			LOGGER.severe("################################################################################################# Alta Conectando a " + soapEndpointUrl);
-			LOGGER.severe("" + e.getMessage());
-			e.printStackTrace();
+			System.err.println(
+					"\nError occurred while sending SOAP Request to Server!\nMake sure you have the correct endpoint URL and SOAPAction!\n");
 			throw new SOAPException(e.getMessage());
 			// e.printStackTrace();
 		}

@@ -209,4 +209,17 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 			throw new PlanVacunacionInexistente("No existen agendas proximas.");
 		}
 	}
+	
+	
+	public void modificarPlan(int id, String nombre, String descripcion) throws PlanVacunacionInexistente {
+			PlanVacunacion plan = em.find(PlanVacunacion.class, id);
+			if (plan != null) {
+				plan.setNombre(nombre);
+				plan.setDescripcion(descripcion);
+				em.merge(plan);
+			}
+			else
+				throw new PlanVacunacionInexistente("No se ha encontrado el plan");
+	}
+	
 }

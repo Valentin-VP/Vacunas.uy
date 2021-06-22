@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
@@ -47,8 +48,7 @@ public class GestionEtapaRWS {
 
 	}
 	
-	//@RolesAllowed({"autoridad"}) 
-		@PermitAll
+		@RolesAllowed({"autoridad"}) 
 		@GET
 		@Path("/listar")
 		public Response listarEtapas() {

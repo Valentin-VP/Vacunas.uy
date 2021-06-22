@@ -38,6 +38,7 @@ public interface IUsuarioRemote {
 	public DtUsuarioSoap buscarVacunadorSoap(int id) throws UsuarioInexistente;
 	public void borrarToken(String ci, String tipoUser) throws UsuarioInexistente;
 	public void eliminarVacunador(String ci) throws UsuarioInexistente;
+	public void eliminarInterno(String ci) throws UsuarioInexistente;
 	}
 
 

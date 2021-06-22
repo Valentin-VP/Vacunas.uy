@@ -1,39 +1,36 @@
 package servlets;
 
-import java.io.IOException;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.logging.Logger;
+
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 
 import datatypes.DtPlanVacunacion;
-import exceptions.PlanVacunacionInexistente;
 
 @Named("ConsultarPlan")
 @RequestScoped
-public class JSFConsultarPlan {
+public class JSFConsultarPlan implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
@@ -43,10 +40,8 @@ public class JSFConsultarPlan {
 	private String nombre;
 	private String descripcion;
 	private String enfermedad;
-	private String etapas;
+	private List<String> etapas = new ArrayList<String>();
 			
-	@EJB
-	interfaces.IPlanVacunacionLocal ipv;
 	
 	public String getPlan() {
 		return plan;
@@ -107,12 +102,12 @@ public class JSFConsultarPlan {
 	}
 
 
-	public String getEtapas() {
+	public List<String> getEtapas() {
 		return etapas;
 	}
 
 
-	public void setEtapas(String etapas) {
+	public void setEtapas(List<String> etapas) {
 		this.etapas = etapas;
 	}
 
@@ -121,14 +116,26 @@ public class JSFConsultarPlan {
 
 	@PostConstruct
 	public void cargaInicial() {
-		try {
-			this.planes = ipv.listarPlanesVacunacion();
-		} catch (PlanVacunacionInexistente e) {
-			e.printStackTrace();
+		Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
+        if (cookie != null) {
+        	token = cookie.getValue();
+        	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
+        }
+        // http://omnifaces-fans.blogspot.com/2015/10/jax-rs-consume-restful-web-service-from.html
+        HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        LOGGER.info("El server name es: " + hostname);
+		Client conexion = ClientBuilder.newClient();
+		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/plan/listar");
+		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
+		Response response = invocation.invoke();
+		LOGGER.info("Respuesta: " + response.getStatus());
+		if (response.getStatus() == 200) {
+			this.planes = response.readEntity(new GenericType<List<DtPlanVacunacion>>() {});
 		}
 	}
 	
-	public void consultarPlan() {
+	public void consultarPlan() throws JSONException {
 		
 		Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
         if (cookie != null) {
@@ -144,26 +151,32 @@ public class JSFConsultarPlan {
 		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
 		Response response = invocation.invoke();
 		LOGGER.info("Respuesta: " + response.getStatus());
-		if (response.getStatus() != 201) {
+		if (response.getStatus() == 200) {
 			String jsonString = response.readEntity(String.class);
 			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
 			JsonObject reply = jsonReader.readObject();
 			this.nombre = reply.getString("nombre");
 			this.descripcion = reply.getString("descripcion");
 			this.enfermedad = reply.getString("enfermedad");
-			this.etapas = reply.getJsonObject("etapa").getString("nombre");
-			ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-			try {
-				context.redirect(context.getRequestContextPath() + "/JSF/ConsultarPlanVacunacion2");
-			} catch (IOException e) {
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Modificar:", e.getMessage()));
+			 JsonArray dtEtapas = reply.getJsonArray("etapa");
+			for(int i=0; i<dtEtapas.size(); i++) {
+				JsonObject e;
+				e = dtEtapas.getJsonObject(i);
+				this.etapas.add(String.valueOf(e.getInt("id")));
 			}
+			System.out.println(nombre);
+			System.out.println(plan);
+			System.out.println(descripcion);
+			System.out.println(enfermedad);
+			System.out.println(etapas);
+			
+			
 		}else {
 			String jsonString = response.readEntity(String.class);
 			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
 			JsonObject reply = jsonReader.readObject();
 			String message = reply.getString("message");
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Modificar:", message));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Consultar:", message));
 		}
 		
 		

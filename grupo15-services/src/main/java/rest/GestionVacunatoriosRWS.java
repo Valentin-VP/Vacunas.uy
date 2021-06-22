@@ -156,14 +156,13 @@ public class GestionVacunatoriosRWS {
 	}
 
 	@PermitAll
-	@POST
+	@GET
 	@Path("/listarPuestos")
-	public Response listarPuestos(String datos) {
+	public Response listarPuestos(@QueryParam("idVacunatorio") String idVacunatorio) {
 		try {
-			JSONObject datosInterno = new JSONObject(datos);
-			ArrayList<String> retorno = cp.listarPuestos(datosInterno.getString("idVacunatorio"));
+			ArrayList<String> retorno = cp.listarPuestos(idVacunatorio);
 			return Response.ok().entity(retorno).build();
-		} catch ( NumberFormatException | JSONException | PuestoNoCargadosException  e) {
+		} catch ( NumberFormatException | PuestoNoCargadosException  e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					e.getMessage());
 		}

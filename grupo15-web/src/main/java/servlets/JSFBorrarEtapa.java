@@ -1,13 +1,13 @@
 package servlets;
 
+import java.io.Serializable;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
@@ -27,8 +27,9 @@ import datatypes.DtEtapa;
 import datatypes.DtPlanVacunacion;
 
 @Named("BorrarEtapa")
-@RequestScoped
-public class JSFBorrarEtapa {
+@SessionScoped
+public class JSFBorrarEtapa implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 	private String token;
@@ -38,8 +39,6 @@ public class JSFBorrarEtapa {
 	private String plan;
 	private List<DtPlanVacunacion> planes = new ArrayList<DtPlanVacunacion>();
 
-	@EJB
-	interfaces.IPlanVacunacionLocal pv;
 	
 	public JSFBorrarEtapa() {}
 	
@@ -60,8 +59,9 @@ public class JSFBorrarEtapa {
 		Response response = invocation.invoke();
 		LOGGER.info("Respuesta: " + response.getStatus());
 		if (response.getStatus() == 200) {
-			System.out.println("Entro al if");
-			this.planes = response.readEntity(new GenericType<List<DtPlanVacunacion>>() {});
+			System.out.println("Entro al if de planes");
+			planes = response.readEntity(new GenericType<List<DtPlanVacunacion>>() {});
+			
 		}else {
 			String jsonString = response.readEntity(String.class);
 			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
@@ -73,17 +73,36 @@ public class JSFBorrarEtapa {
 	}
 	
 	public void borrarEtapa() {
+			Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
+	        if (cookie != null) {
+	        	token = cookie.getValue();
+	        	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
+	        }
+	        // http://omnifaces-fans.blogspot.com/2015/10/jax-rs-consume-restful-web-service-from.html
+	        HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+	        LOGGER.info("El server name es: " + hostname);
+			Client conexion = ClientBuilder.newClient();
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/etapa/eliminar?p="+this.plan+"&e="+this.etapa);
+			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildDelete();
+			Response response = invocation.invoke();
+			LOGGER.info("Respuesta: " + response.getStatus());System.out.println("BORRAR ETAPA");
+			if (response.getStatus() == 200) {
+				System.out.println("borrado Correctamente");
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Borrar:", "Etapa eliminada"));
+			}else {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "" + response.getStatus()));
+			}
 		
 	}
 	
 	public void cargarEtapas(){
-		System.out.println(plan);
+		System.out.println("plan" + this.plan);
 		Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
         if (cookie != null) {
         	token = cookie.getValue();
         	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
         }
-        // http://omnifaces-fans.blogspot.com/2015/10/jax-rs-consume-restful-web-service-from.html
         HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
         LOGGER.info("El server name es: " + hostname);
@@ -95,7 +114,7 @@ public class JSFBorrarEtapa {
 		if (response.getStatus() == 200) {
 			System.out.println("Entro al if del cargar");
 			this.etapas = response.readEntity(new GenericType<List<DtEtapa>>() {});
-			System.out.println(etapas);
+			System.out.println("Etapas" +this.etapas);
 		}else {
 			
 			String jsonString = response.readEntity(String.class);
@@ -147,13 +166,6 @@ public class JSFBorrarEtapa {
 		this.planes = planes;
 	}
 
-	public interfaces.IPlanVacunacionLocal getPv() {
-		return pv;
-	}
-
-	public void setPv(interfaces.IPlanVacunacionLocal pv) {
-		this.pv = pv;
-	}
 	
 	
 }

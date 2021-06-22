@@ -111,7 +111,7 @@ public class LoginInterno extends HttpServlet {
 				cookie.setMaxAge(0);
 				response.addCookie(cookie);
 				response.setContentType("application/json");
-				String url = request.getHeader("Origin") + "/grupo15-web/html/error.html";
+				String url = "error";
 				LOGGER.severe("Origin en LoginInterno: " + url);
 				JSONObject content = new JSONObject();
 				content.put("url", url);
@@ -127,7 +127,7 @@ public class LoginInterno extends HttpServlet {
 			cookie.setMaxAge(0);
 			response.addCookie(cookie);
 			response.setContentType("application/json");
-			String host = request.getHeader("Origin") + "/grupo15-web/html/error.html";
+			String host = "error";
 			LOGGER.severe("Origin en LoginInterno: " + host);
 			JSONObject content = new JSONObject();
 			content.put("url", host);

@@ -22,14 +22,14 @@ import javax.ws.rs.core.Response;
 
 @Named("EliminarVacunador")
 @RequestScoped
-public class EliminarVacunador {
+public class JSFEliminarVacunador {
 
 	private static final long serialVersionUID = 1L;
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 	private String token;
 	private String ci;
 	
-	public EliminarVacunador() {
+	public JSFEliminarVacunador() {
 		// TODO Auto-generated constructor stub
 	}
 

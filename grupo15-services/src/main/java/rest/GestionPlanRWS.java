@@ -26,7 +26,9 @@ import datatypes.DtEtapa;
 import datatypes.DtPlanVacunacion;
 import exceptions.AccionInvalida;
 import exceptions.EnfermedadInexistente;
+import exceptions.LaboratorioInexistente;
 import exceptions.PlanVacunacionInexistente;
+import exceptions.VacunaInexistente;
 import interfaces.IEnfermedadLocal;
 import interfaces.IEtapaLocal;
 import interfaces.IPlanVacunacionLocal;
@@ -131,5 +133,22 @@ public class GestionPlanRWS {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 		}
 		
+	}
+	
+	
+	@RolesAllowed({ "autoridad", "administrador" }) 
+	@POST
+	@Path("/modificar")
+	public Response modificarPlan(String plan) {
+		try {
+			JSONObject jsonObject = new JSONObject(plan);
+			int id = Integer.parseInt(jsonObject.getString("id"));
+			String nombre = jsonObject.getString("nombre");
+			String descripcion = jsonObject.getString("descripcion");
+			cp.modificarPlan(id, nombre, descripcion);
+			return ResponseBuilder.createResponse(Response.Status.OK, "Modificado Correctamente");
+		} catch (JSONException | PlanVacunacionInexistente e) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+		}
 	}
 }

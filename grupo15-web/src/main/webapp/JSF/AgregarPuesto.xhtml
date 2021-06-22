@@ -2,10 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:h="http://java.sun.com/jsf/html" 
       xmlns:p="http://primefaces.org/ui"> 
+      
 
-<h:head> <link href="/grupo15-web/css/styles.css" type="text/css" rel="stylesheet" media="all" />
+<h:head> <link href="/grupo15-web/css/styles.css" type="text/css" rel="stylesheet" media="all" /> 
+
 <style type="text/css">
 			
 			* {
@@ -161,31 +163,42 @@
           </li>
         </ul>
       
-		</nav>
- <div class="formulario">
-  
-<p:dataTable id="planes" value="#{ConsultarPlan.getListaPlanes()}" var="plan">
-<p:column>
-	<f:facet name="header">Id</f:facet>
-		#{plan.id}
-		</p:column>
-<p:column>
-<f:facet name="header">Nombre</f:facet>
-#{plan.nombre}
-</p:column>
-<p:column>
-<f:facet name="header">Descripcion</f:facet>
-#{plan.descripcion}
-</p:column>
-<p:column>
-<f:facet name="header">Enfermedad</f:facet>
-#{plan.enfermedad}
-</p:column>
-<p:column>
-<f:facet name="header">Etapas</f:facet>
-#{plan.etapas}
-</p:column>
-</p:dataTable>
+		</nav> 
+<div class="formulario" style="width: 50%">
+<h:form>
+
+
+	<div>
+		<p:outputLabel style="width:40%" >Identificador Puesto:    </p:outputLabel>
+		<p:inputText id="identificador" required="true" value="#{AgregarPuesto.puesto}" style="width:50%" > </p:inputText>
+	</div>
+
+	<div>
+		<p:outputLabel style="width:40%" >Vacunatorio:    </p:outputLabel>
+ 		<p:selectOneMenu  required="true" value="#{AgregarPuesto.vacunatorio}" valueChangeListener="#{AgregarPuesto.cargaPuestos}" style="border-width: thin">
+			<f:selectItems value="#{AgregarPuesto.vacunatorios}" />
+			<p:ajax listener="#{AgregarPuesto.cargaPuestos}" update="table" process="@this"/>
+		</p:selectOneMenu>
+	</div>
+	
+	<div class="card">
+        <h5 style="margin-top:0">Puestos: </h5>
+        <p:dataTable id="table" var="puesto" value="#{AgregarPuesto.dtPuestos}" scrollable="true" scrollHeight="250">
+            <p:column headerText="Puesto" footerText="Puesto">
+                <h:outputText value="#{puesto}"/>
+            </p:column>
+        </p:dataTable>
+    </div>
+
+	<p:messages id="messages" showDetail="true" closable="true">
+		<p:autoUpdate/>
+	</p:messages>
+
+	<p:commandButton id="confirmar" action="#{AgregarPuesto.agregarPuesto()}" value="Agregar"> 
+		<p:ajax listener="#{AgregarPuesto.cargaPuestos}" update="table" process="@this"/>
+	</p:commandButton>
+</h:form>
 </div>
+	
 </body> 
 </html>

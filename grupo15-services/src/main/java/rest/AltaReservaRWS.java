@@ -261,7 +261,7 @@ public class AltaReservaRWS implements Serializable {
 	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
 			LOGGER.info("Cedula obtenida en REST: " + ci);
 			
-			String url = "https://rcastro.pythonanywhere.com/api/usuarios/" + 12547968 + "/";
+			String url = "https://rcastro.pythonanywhere.com/api/usuarios/" + ci + "/";
 			LOGGER.info("Ejecutando call REST: " + url);
 			Client conexion = ClientBuilder.newClient();
 			DtUsuarioExterno externo = conexion.target(url)
@@ -297,7 +297,7 @@ public class AltaReservaRWS implements Serializable {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 			LocalDate f = LocalDate.parse(fecha, formatter);
 			
-			String url = "https://rcastro.pythonanywhere.com/api/usuarios/" + 12547968 + "/";
+			String url = "https://rcastro.pythonanywhere.com/api/usuarios/" + ci + "/";
 			LOGGER.info("Ejecutando call REST: " + url);
 			Client conexion = ClientBuilder.newClient();
 			DtUsuarioExterno externo = conexion.target(url)
@@ -337,7 +337,7 @@ public class AltaReservaRWS implements Serializable {
 			LocalDate f = LocalDate.parse(dtr.getFecha(), formatter);
 			LocalTime h = LocalTime.parse(dtr.getHora(), formatter2);
 			
-			String url = "https://rcastro.pythonanywhere.com/api/usuarios/" + 12547968 + "/";
+			String url = "https://rcastro.pythonanywhere.com/api/usuarios/" + ci + "/";
 			LOGGER.info("Ejecutando call REST: " + url);
 			Client conexion = ClientBuilder.newClient();
 			DtUsuarioExterno externo = conexion.target(url)

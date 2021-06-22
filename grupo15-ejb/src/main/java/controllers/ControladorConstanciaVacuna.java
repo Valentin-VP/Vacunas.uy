@@ -1,7 +1,12 @@
 package controllers;
 
+
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,12 +19,10 @@ import javax.persistence.Query;
 
 import datatypes.DtCiudadano;
 import datatypes.DtConstancia;
-import datatypes.DtReserva;
 import entities.CertificadoVacunacion;
 import entities.Ciudadano;
 import entities.ConstanciaVacuna;
 import entities.Reserva;
-import entities.Usuario;
 import entities.Vacuna;
 import exceptions.CertificadoInexistente;
 import exceptions.ConstanciaInexistente;
@@ -198,6 +201,82 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 			}
 			constancias.put(enf, String.valueOf(vacunados));
 		}
+		return constancias;
+	}
+	
+	public Map<String, String> constanciasPorMes(){
+		Map<String, String> constancias = new HashMap<String,String>();
+		for(int i=1; i<=12; i++) {
+			Query query = em.createQuery("SELECT p FROM ConstanciaVacuna p WHERE EXTRACT(MONTH FROM fechaultimadosis) = :mes");
+			query.setParameter("mes", i);
+			constancias.put(String.valueOf(i), String.valueOf(query.getResultList().size()));
+		}
+		return constancias;
+	}
+	
+	public Map<String, String> constanciasPorSexo(){
+		Map<String, String> constancias = new HashMap<String,String>();
+		int masculino=0;
+		int femenino=0;
+		int otro=0;
+		Query query = em.createNativeQuery("SELECT reserva_ciudadano_idusuario FROM ConstanciaVacuna");
+		ArrayList<Integer> result = (ArrayList<Integer>) query.getResultList();
+		System.out.println(result);
+		for(Integer x: result) {
+			Query query2 = em.createNativeQuery("SELECT sexo FROM Ciudadano WHERE idusuario = :ci");
+			query2.setParameter("ci", x);
+			ArrayList<Integer> sexo = (ArrayList<Integer>) query2.getResultList();
+			switch(sexo.get(0)){
+				case 0:
+					femenino = femenino+1;
+					break;
+				case 1:
+					masculino = masculino+1;
+					break;
+				case 2:
+					otro = otro+1;
+					break;
+			}
+		}
+		constancias.put("femenino", String.valueOf(femenino));
+		constancias.put("masculino", String.valueOf(masculino));
+		constancias.put("otro", String.valueOf(otro));
+		return constancias;
+	}
+	
+	public Map<String,String> constanciasPorEdad(){
+		Map<String, String> constancias = new HashMap<String,String>();
+		int adolescentes = 0;
+		int jovenes = 0;
+		int adultos = 0;
+		int mayores = 0;
+		Query query = em.createNativeQuery("SELECT reserva_ciudadano_idusuario FROM ConstanciaVacuna");
+		ArrayList<Integer> result = (ArrayList<Integer>) query.getResultList();
+		for(Integer x: result) {
+			Query query2 = em.createNativeQuery("SELECT fechanac FROM Ciudadano WHERE idusuario = :ci");
+			query2.setParameter("ci", x);
+			ArrayList<Date> fechanac = (ArrayList<Date>) query2.getResultList();
+			for(Date f: fechanac) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				String fechaInicio = dateFormat.format(f); 
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				LocalDate nac = LocalDate.parse(fechaInicio, formatter);
+				int edad = Period.between(nac, LocalDate.now()).getYears();
+				if(edad<18)
+					adolescentes = adolescentes+1;
+				if(edad>=18 && edad<45)
+					jovenes = jovenes+1;
+				if(edad>=45 && edad<61)
+					adultos = adultos+1;
+				if(edad>=60)
+					mayores = mayores+1;
+			}	
+		}
+		constancias.put("adolescentes", String.valueOf(adolescentes));
+		constancias.put("jovenes", String.valueOf(jovenes));
+		constancias.put("adultos", String.valueOf(adultos));
+		constancias.put("mayores", String.valueOf(mayores));
+		System.out.println(constancias);
 		return constancias;
 	}
 	

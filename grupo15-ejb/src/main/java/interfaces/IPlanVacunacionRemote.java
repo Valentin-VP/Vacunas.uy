@@ -27,4 +27,6 @@ public interface IPlanVacunacionRemote {
 	
 	public ArrayList<DtPlanFecha> listarAgendasProximas() throws PlanVacunacionInexistente;
 	
+	public void modificarPlan(int id, String nombre, String descripcion) throws PlanVacunacionInexistente;
+	
 }
