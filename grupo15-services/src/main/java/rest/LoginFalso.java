@@ -64,6 +64,9 @@ public class LoginFalso {
 	@Path("/fakeusuario")
 	@PermitAll
 	public Response getTokenUsuario(@QueryParam("ci") String ci, @QueryParam("tipo") String tipo) {
+		if (ci == null || tipo == null) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "");
+		}
 		try {
 			String token = TokenSecurity.generateJwtToken(ci, tipo);
 			switch(tipo){
