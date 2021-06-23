@@ -43,15 +43,11 @@ public class JSFModificarLoteDosisBean implements Serializable {
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 	private String token;
 	
-	private List<String> lotes = new ArrayList<String>();
-	private List<DtLoteDosis> dtLotes = new ArrayList<DtLoteDosis>();
+	private List<DtLoteDosis> lotes;
 	private String lote;
-	
-	private List<String> vacunas = new ArrayList<String>();
-	private List<DtVacuna> dtVacunas = new ArrayList<DtVacuna>();
+	private List<DtVacuna> vacunas;
 	private String vacuna;
-	private List<String> vacunatorios = new ArrayList<String>();
-	private List<DtVacunatorio> dtVacunatorios = new ArrayList<DtVacunatorio>();
+	private List<DtVacunatorio> vacunatorios;
 	private String vacunatorio;
 	
 	private Integer cantEntregada;
@@ -66,143 +62,6 @@ public class JSFModificarLoteDosisBean implements Serializable {
 
 	public JSFModificarLoteDosisBean() {}
 
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
-
-	public List<String> getLotes() {
-		return lotes;
-	}
-
-	public void setLotes(List<String> lotes) {
-		this.lotes = lotes;
-	}
-
-	public List<DtLoteDosis> getDtLotes() {
-		return dtLotes;
-	}
-
-	public void setDtLotes(List<DtLoteDosis> dtLotes) {
-		this.dtLotes = dtLotes;
-	}
-
-	public String getLote() {
-		return lote;
-	}
-
-	public void setLote(String lote) {
-		this.lote = lote;
-	}
-
-	public List<String> getVacunas() {
-		return vacunas;
-	}
-
-	public void setVacunas(List<String> vacunas) {
-		this.vacunas = vacunas;
-	}
-
-	public List<DtVacuna> getDtVacunas() {
-		return dtVacunas;
-	}
-
-	public void setDtVacunas(List<DtVacuna> dtVacunas) {
-		this.dtVacunas = dtVacunas;
-	}
-
-	public String getVacuna() {
-		return vacuna;
-	}
-
-	public void setVacuna(String vacuna) {
-		this.vacuna = vacuna;
-	}
-
-	public List<String> getVacunatorios() {
-		return vacunatorios;
-	}
-
-	public void setVacunatorios(List<String> vacunatorios) {
-		this.vacunatorios = vacunatorios;
-	}
-
-	public List<DtVacunatorio> getDtVacunatorios() {
-		return dtVacunatorios;
-	}
-
-	public void setDtVacunatorios(List<DtVacunatorio> dtVacunatorios) {
-		this.dtVacunatorios = dtVacunatorios;
-	}
-
-	public String getVacunatorio() {
-		return vacunatorio;
-	}
-
-	public void setVacunatorio(String vacunatorio) {
-		this.vacunatorio = vacunatorio;
-	}
-
-	public Integer getCantEntregada() {
-		return cantEntregada;
-	}
-
-	public void setCantEntregada(Integer cantEntregada) {
-		this.cantEntregada = cantEntregada;
-	}
-
-	public Integer getCantDescartada() {
-		return cantDescartada;
-	}
-
-	public void setCantDescartada(Integer cantDescartada) {
-		this.cantDescartada = cantDescartada;
-	}
-
-	public float getTemperatura() {
-		return temperatura;
-	}
-
-	public void setTemperatura(float temperatura) {
-		this.temperatura = temperatura;
-	}
-	
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-
-	public ArrayList<String> getEstados() {
-		return estados;
-	}
-
-	public void setEstados(ArrayList<String> estados) {
-		this.estados = estados;
-	}
-
-	public ArrayList<String> getMensajes() {
-		return mensajes;
-	}
-
-	public void setMensajes(ArrayList<String> mensajes) {
-		this.mensajes = mensajes;
-	}
-
-	
-	
-	public ArrayList<DtMensaje> getDtMensajes() {
-		return dtMensajes;
-	}
-
-	public void setDtMensajes(ArrayList<DtMensaje> dtMensajes) {
-		this.dtMensajes = dtMensajes;
-	}
 
 	@PostConstruct
 	public void cargaInicial() {
@@ -227,11 +86,7 @@ public class JSFModificarLoteDosisBean implements Serializable {
 		Response response = invocation.invoke();
 		LOGGER.info("Respuesta: " + response.getStatus());
 		if (response.getStatus() == 200) {
-			this.dtVacunas = response.readEntity(new GenericType<List<DtVacuna>>() {});
-			this.vacunas.clear();
-			for (DtVacuna dt : dtVacunas) {
-				this.vacunas.add(dt.getNombre());
-			}
+			this.vacunas = response.readEntity(new GenericType<List<DtVacuna>>() {});
 		}else{
 			String jsonString = response.readEntity(String.class);
 			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
@@ -257,11 +112,7 @@ public class JSFModificarLoteDosisBean implements Serializable {
 		Response response = invocation.invoke();
 		LOGGER.info("Respuesta: " + response.getStatus());
 		if (response.getStatus() == 200) {
-			this.dtVacunatorios = response.readEntity(new GenericType<List<DtVacunatorio>>() {});
-			this.vacunatorios.clear();
-			for (DtVacunatorio dt : dtVacunatorios) {
-				this.vacunatorios.add(dt.getId());
-			}
+			this.vacunatorios = response.readEntity(new GenericType<List<DtVacunatorio>>() {});
 		}else{
 			String jsonString = response.readEntity(String.class);
 			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
@@ -299,16 +150,14 @@ public class JSFModificarLoteDosisBean implements Serializable {
 	}
 	
 	public void cargaLotes() {
-		Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap()
-				.get("x-access-token");
-		if (cookie != null) {
-			token = cookie.getValue();
-			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
-		}
+		System.out.println("Entro al cargaLotes");
+		System.out.println(vacuna);
+		System.out.println(vacunatorio);
 		if (this.vacuna == null || this.vacunatorio == null) {
-			LOGGER.severe("AAAAAAAAAAAAAAAAAAAA");
+			LOGGER.severe("Esperando que se guarde vacuna o vacunatorio");
 			return;
 		}
+		Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
 		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
         LOGGER.info("El server name es: " + hostname);
@@ -318,12 +167,10 @@ public class JSFModificarLoteDosisBean implements Serializable {
 		Response response = invocation.invoke();
 		LOGGER.info("Respuesta: " + response.getStatus());
 		if (response.getStatus() == 200) {
-			this.dtLotes = response.readEntity(new GenericType<List<DtLoteDosis>>() {});
-			this.lotes.clear();
-			for (DtLoteDosis dt : dtLotes) {
-				this.lotes.add(String.valueOf(dt.getIdLote()));
-			}
+			System.out.println("entro al if de 200 status");
+			this.lotes = response.readEntity(new GenericType<List<DtLoteDosis>>() {});
 		}else{
+			System.out.println("entro al error");
 			String jsonString = response.readEntity(String.class);
 			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
 			JsonObject reply = jsonReader.readObject();
@@ -332,9 +179,6 @@ public class JSFModificarLoteDosisBean implements Serializable {
 		}
 	}
 	
-	public void test() {
-		LOGGER.info("Lote:" + this.lote + " Vacuna:" + this.vacuna + " Vacunatorio:" + this.vacunatorio + " estado:" + this.estado + " entr:" + this.cantEntregada + " desc:" + this.cantDescartada + " temp:" + this.temperatura);
-	}
 	
 	public void modificarLoteDosis() {
 		Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap()
@@ -357,47 +201,7 @@ public class JSFModificarLoteDosisBean implements Serializable {
 		
 		
 		JSONObject lote = new JSONObject();
-		
-		for (DtVacuna each : this.getDtVacunas()) {
-			if (each.getNombre().equals(this.getVacuna())) {
-				try {
-					lote.put("idVacuna", this.getVacuna());
-				} catch (JSONException e) {
-					LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
-					return;
-				}
-				break;
-			}
-		}
-
-		for (DtVacunatorio each : this.getDtVacunatorios()) {
-			if (each.getId().equals(this.getVacunatorio())) {
-				try {
-					lote.put("idVacunatorio", this.getVacunatorio());
-				} catch (JSONException e) {
-					LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
-					return;
-				}
-				break;
-			}
-		}
-		
-		for (DtLoteDosis each : this.getDtLotes()) {
-			if (each.getIdLote() == each.getIdLote()) {
-				try {
-					lote.put("transportista", String.valueOf(each.getTransportista()));
-					lote.put("cantidadTotal", String.valueOf(each.getCantidadTotal()));
-				} catch (JSONException e) {
-					LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
-					return;
-				}
-				break;
-			}
-		}
-		
+			
 		try {
 			lote.put("idLote", this.lote);
 			lote.put("cantidadEntregada", String.valueOf(this.cantEntregada));
@@ -468,30 +272,12 @@ public class JSFModificarLoteDosisBean implements Serializable {
 		}
 	}
 	public void obtenerLogsLotesEnSocio() {
-		Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap()
-				.get("x-access-token");
-		if (cookie != null) {
-			token = cookie.getValue();
-			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
-		}
-		if (this.lote == null || this.dtLotes.isEmpty()) {
-			return;
-		}
-		Integer idTransportista = null;
-		for (DtLoteDosis dtl: this.dtLotes) {
-			if (dtl.getIdLote().equals(Integer.parseInt(this.lote))) {
-				idTransportista = dtl.getTransportista();
-				break;
-			}	
-		}
-		if (idTransportista==null) {
-			return;
-		}
+		Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
 		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
         LOGGER.info("El server name es: " + hostname);
 		Client conexion = ClientBuilder.newClient();
-		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/obtenerInfoTodosLotesSocio?idTransportista=" + idTransportista);
+		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/obtenerInfoTodosLotesSocio?idTransportista=" /*+ idTransportista*/);
 		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
 		Response response = invocation.invoke();
 		LOGGER.info("Respuesta: " + response.getStatus());
@@ -505,6 +291,146 @@ public class JSFModificarLoteDosisBean implements Serializable {
 			String message = reply.getString("message");
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Listar:", message));
 		}
+	}
+
+
+	public String getToken() {
+		return token;
+	}
+
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+
+	public List<DtLoteDosis> getLotes() {
+		return lotes;
+	}
+
+
+	public void setLotes(List<DtLoteDosis> lotes) {
+		this.lotes = lotes;
+	}
+
+
+	public String getLote() {
+		return lote;
+	}
+
+
+	public void setLote(String lote) {
+		this.lote = lote;
+	}
+
+
+	public List<DtVacuna> getVacunas() {
+		return vacunas;
+	}
+
+
+	public void setVacunas(List<DtVacuna> vacunas) {
+		this.vacunas = vacunas;
+	}
+
+
+	public String getVacuna() {
+		return vacuna;
+	}
+
+
+	public void setVacuna(String vacuna) {
+		this.vacuna = vacuna;
+	}
+
+
+	public List<DtVacunatorio> getVacunatorios() {
+		return vacunatorios;
+	}
+
+
+	public void setVacunatorios(List<DtVacunatorio> vacunatorios) {
+		this.vacunatorios = vacunatorios;
+	}
+
+
+	public String getVacunatorio() {
+		return vacunatorio;
+	}
+
+
+	public void setVacunatorio(String vacunatorio) {
+		this.vacunatorio = vacunatorio;
+	}
+
+
+	public Integer getCantEntregada() {
+		return cantEntregada;
+	}
+
+
+	public void setCantEntregada(Integer cantEntregada) {
+		this.cantEntregada = cantEntregada;
+	}
+
+
+	public Integer getCantDescartada() {
+		return cantDescartada;
+	}
+
+
+	public void setCantDescartada(Integer cantDescartada) {
+		this.cantDescartada = cantDescartada;
+	}
+
+
+	public float getTemperatura() {
+		return temperatura;
+	}
+
+
+	public void setTemperatura(float temperatura) {
+		this.temperatura = temperatura;
+	}
+
+
+	public String getEstado() {
+		return estado;
+	}
+
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+
+	public ArrayList<String> getEstados() {
+		return estados;
+	}
+
+
+	public void setEstados(ArrayList<String> estados) {
+		this.estados = estados;
+	}
+
+
+	public ArrayList<String> getMensajes() {
+		return mensajes;
+	}
+
+
+	public void setMensajes(ArrayList<String> mensajes) {
+		this.mensajes = mensajes;
+	}
+
+
+	public ArrayList<DtMensaje> getDtMensajes() {
+		return dtMensajes;
+	}
+
+
+	public void setDtMensajes(ArrayList<DtMensaje> dtMensajes) {
+		this.dtMensajes = dtMensajes;
 	}
 	
 	

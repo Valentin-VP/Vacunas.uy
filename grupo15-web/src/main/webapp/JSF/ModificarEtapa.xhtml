@@ -180,7 +180,7 @@
 			<div>
 				<p:outputLabel style="width:50%">Seleccione Plan: </p:outputLabel>
 				<p:selectOneMenu id="planes" value="#{ModificarEtapa.plan}" style="border-width: thin" required="true"
-					requiredMessage="Debe seleccioanr un plan">
+					requiredMessage="Debe seleccionar un plan">
 					<f:selectItem itemLabel="Seleccione Plan..." itemValue="" noSelectionOption="true"/>
 					<f:selectItems value="#{ModificarEtapa.planes}" var="p" itemValue="#{p.id}" itemLabel="#{p.id}-#{p.nombre}" />
 					<p:ajax event="itemSelect" listener="#{ModificarEtapa.cargarEtapas}" update="etapas"/>
