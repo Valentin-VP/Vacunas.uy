@@ -20,4 +20,5 @@ public interface IEtapaLocal {
 	public DtEtapa obtenerEtapa(int id, int idPlan) throws EtapaInexistente;
 	
 	public void eliminarEtapa(int id, int idPlan) throws EtapaInexistente, AccionInvalida;
+	public void modificarEtapa(int id, int plan, LocalDate fechaInicio, LocalDate fechaFin, String condicion) throws EtapaInexistente;
 }

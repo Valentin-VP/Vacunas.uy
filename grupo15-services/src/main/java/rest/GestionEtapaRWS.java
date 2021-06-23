@@ -60,8 +60,7 @@ public class GestionEtapaRWS {
 			}
 		}
 		
-		//@RolesAllowed({"autoridad"}) 
-		@PermitAll
+		@RolesAllowed({"autoridad"}) 
 		@GET
 		@Path("/obtener")
 		public Response obtenerEtapa(@CookieParam("x-access-token") Cookie cookie, @QueryParam("p") String plan, @QueryParam("e") String etapa) {
@@ -87,8 +86,7 @@ public class GestionEtapaRWS {
 			}
 		}
 		
-		//@RolesAllowed({"autoridad"}) 
-		@PermitAll
+		@RolesAllowed({"autoridad"}) 
 		@POST
 		@Path("/agregar")
 		public Response agregarEtapa(String datos) {
@@ -104,8 +102,7 @@ public class GestionEtapaRWS {
 			}
 		}
 		
-		//@RolesAllowed({"autoridad"}) 
-		@PermitAll
+		@RolesAllowed({"autoridad"}) 
 		@DELETE
 		@Path("/eliminar")
 		public Response eliminarEtapa(@CookieParam("x-access-token") Cookie cookie, @QueryParam("e") String etapa, @QueryParam("p") String plan) {
@@ -131,4 +128,28 @@ public class GestionEtapaRWS {
 						e.getMessage());
 			}
 		}
-}
+		
+		@RolesAllowed({"autoridad"}) 
+		@POST
+		@Path("/modificar")
+		public Response modificarEtapa(String datos) {
+			JSONObject jsonObject;
+			System.out.println("Entro a etapa");
+			try {
+				jsonObject = new JSONObject(datos);
+				String id = jsonObject.getString("id");
+				String plan = jsonObject.getString("plan");
+				String[] fi = jsonObject.getString("fechaInicio").split("-");
+				String[] ff = jsonObject.getString("fechaFin").split("-");
+				LocalDate fechaInicio = LocalDate.of(Integer.valueOf(fi[0]), Integer.valueOf(fi[1]), Integer.valueOf(fi[2]));
+				LocalDate fechaFin = LocalDate.of(Integer.valueOf(ff[0]), Integer.valueOf(ff[1]), Integer.valueOf(ff[2]));
+				String condicion = jsonObject.getString("condicion");
+				System.out.println("Creo los datos");
+				ce.modificarEtapa(Integer.valueOf(id), Integer.valueOf(plan), fechaInicio, fechaFin, condicion);
+				System.out.println("Borro la etapa");
+				return Response.ok().build();
+			} catch (JSONException | NumberFormatException | EtapaInexistente e) {
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+			}
+		}
+}		

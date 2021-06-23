@@ -101,4 +101,14 @@ public class ControladorEtapa implements IEtapaLocal, IEtapaRemote{
 			throw new EtapaInexistente("No existe una etapa con ese id");
 	}
 	
+	public void modificarEtapa(int id, int plan, LocalDate fechaInicio, LocalDate fechaFin, String condicion)throws EtapaInexistente {
+		Etapa etapa = em.find(Etapa.class, new EtapaID(id, plan));
+		if(etapa != null) {
+			etapa.setFechaInicio(fechaInicio);
+			etapa.setFechaFin(fechaFin);
+			etapa.setCondicion(condicion);
+			em.merge(etapa);
+		}else
+			throw new EtapaInexistente("No existe un plan con esa id: " + id);
+	}
 }
