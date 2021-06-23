@@ -1,5 +1,6 @@
 package entities;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -16,8 +17,7 @@ import persistence.HistoricoID;
 @IdClass(HistoricoID.class)
 public class Historico {
 	@Id
-	@Temporal(TemporalType.DATE)
-	private Date fecha;
+	private LocalDate fecha;
 	private Integer cantidad;
 	private Integer descartadas;
 	private Integer disponibles;
@@ -32,7 +32,7 @@ public class Historico {
 	public Historico() {
 	}
 
-	public Historico(Date fecha, Integer cantidad, Integer descartadas, Integer disponibles,
+	public Historico(LocalDate fecha, Integer cantidad, Integer descartadas, Integer disponibles,
 			Integer administradas, Stock stock) {
 		super();
 		this.fecha = fecha;
@@ -43,11 +43,11 @@ public class Historico {
 		this.stock = stock;
 	}
 
-	public Date getFecha() {
+	public LocalDate getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(Date fecha) {
+	public void setFecha(LocalDate fecha) {
 		this.fecha = fecha;
 	}
 

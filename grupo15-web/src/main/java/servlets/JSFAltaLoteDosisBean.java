@@ -181,6 +181,7 @@ public class JSFAltaLoteDosisBean implements Serializable {
 			}
 		}else{
 			String jsonString = response.readEntity(String.class);
+			System.out.println(jsonString);
 			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
 			JsonObject reply = jsonReader.readObject();
 			String message = reply.getString("message");
@@ -297,8 +298,9 @@ public class JSFAltaLoteDosisBean implements Serializable {
 		
 		for (DtTransportista each : this.getDtTransportistas()) {
 			if (each.getId() == Integer.parseInt(this.getTransportista())) {
+				System.out.println(this.getTransportista());
 				try {
-					lote.put("idTransportista", String.valueOf(this.getTransportista()));
+					lote.put("idTransportista", this.getTransportista());
 				} catch (JSONException e) {
 					LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));

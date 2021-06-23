@@ -2,6 +2,7 @@ package controllers;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,8 +123,8 @@ public class ControladorStock implements IStockDaoLocal, IStockDaoRemote {
 					stock.getCantidad(), stock.getDescartadas(), stock.getDisponibles(), stock.getAdministradas());
 			if (stock.getHistoricos().size() > 0) {
 				for (Historico historico: stock.getHistoricos()) {
-					DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
-					String strDate = dateFormat.format(historico.getFecha());  
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");  
+					String strDate = historico.getFecha().format(formatter);
 					DtHistoricoStock dtHistorico = new DtHistoricoStock(strDate, historico.getCantidad(),
 							historico.getDescartadas(), historico.getDisponibles(), historico.getAdministradas(), 
 							historico.getStock().getVacuna().getNombre(), historico.getStock().getVacunatorio().getId());
@@ -148,8 +149,8 @@ public class ControladorStock implements IStockDaoLocal, IStockDaoRemote {
 					stock.getCantidad(), stock.getDescartadas(), stock.getDisponibles(), stock.getAdministradas());
 			if (stock.getHistoricos().size() > 0) {
 				for (Historico historico: stock.getHistoricos()) {
-					DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
-					String strDate = dateFormat.format(historico.getFecha());  
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");  
+					String strDate = historico.getFecha().format(formatter);
 					DtHistoricoStock dtHistorico = new DtHistoricoStock(strDate, historico.getCantidad(),
 							historico.getDescartadas(), historico.getDisponibles(), historico.getAdministradas(), 
 							historico.getStock().getVacuna().getNombre(), historico.getStock().getVacunatorio().getId());

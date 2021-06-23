@@ -28,6 +28,7 @@ import interfaces.IAgendaDAOLocal;
 import interfaces.IControladorPuestoLocal;
 import interfaces.IControladorVacunadorLocal;
 import interfaces.IControladorVacunatorioLocal;
+import interfaces.IHistoricoDaoLocal;
 import interfaces.IReservaDAOLocal;
 import interfaces.IStockDaoLocal;
 import interfaces.IUsuarioLocal;
@@ -49,6 +50,9 @@ public class NodoVac {
 	
 	@EJB
 	IStockDaoLocal cs;
+	
+	@EJB
+	IHistoricoDaoLocal ch;
 	
 	@EJB
 	IReservaDAOLocal cr;
@@ -81,7 +85,12 @@ public class NodoVac {
 	public void actualizarStockVacuna(String idVacunatorio, String idVacuna, Integer cantidad, Integer descartadas,Integer administradas, Integer disponibles, String token) throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente, AccionInvalida {
 		if (!vact.isTokenCorrecto(idVacunatorio, token))
 			throw new AccionInvalida("Fallo al identificar nodo.");
-		cs.modificarStock(idVacunatorio, idVacuna, cantidad, descartadas, administradas, disponibles);
+		try {
+			cs.modificarStock(idVacunatorio, idVacuna, cantidad, descartadas, administradas, disponibles);
+		}catch(VacunatorioNoCargadoException | VacunaInexistente | StockVacunaVacunatorioInexistente e) {
+			throw e;
+		}
+		ch.persistirHistorico(LocalDate.now(), cantidad, descartadas, disponibles, administradas, idVacunatorio, idVacuna);
 	}
 	
 	@WebMethod(action = "actualizar", operationName = "actualizarReserva")

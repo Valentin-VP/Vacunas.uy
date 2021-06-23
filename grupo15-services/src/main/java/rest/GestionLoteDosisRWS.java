@@ -76,17 +76,20 @@ public class GestionLoteDosisRWS {
 
 	}
 
-	/*
+	
 	@PermitAll
-	@POST
+	@GET
 	@Path("/listar")
 	public Response listarLoteDosis() {
 		List<DtLoteDosis> retorno = cld.listarLotesDosis();
-		if (retorno.isEmpty())
+		if (retorno==null || retorno.isEmpty()) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "Sin lotes de dosis.");
-		return Response.ok().entity(retorno).build();
+		}else {
+			return Response.ok().entity(retorno).build();
+		}
+		
 	}
-	*/
+	/*
 	@PermitAll
 	@GET
 	@Path("/listar")
@@ -100,7 +103,7 @@ public class GestionLoteDosisRWS {
 		return Response.ok().entity(retorno).build();
 			
 	}
-	
+	*/
 	@PermitAll
 	@GET
 	@Path("/obtener")
@@ -134,9 +137,10 @@ public class GestionLoteDosisRWS {
 						Integer.valueOf(lote.getString("cantidadEntregada")), Integer.valueOf(lote.getString("cantidadDescartada")), lote.getString("estadoLote"),
 						Float.parseFloat(lote.getString("temperatura")), Integer.valueOf(lote.getString("transportista")));
 				if (lote.getString("estadoLote").equals("Recibido")) {
-					int cantidadReal = Integer.valueOf(lote.getString("cantidadEntregada"));
+					int entregados = Integer.valueOf(lote.getString("cantidadEntregada"));
+					int descartados = Integer.valueOf(lote.getString("cantidadDescartada"));
 					try {
-						cs.agregarStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"), cantidadReal);
+						cs.agregarStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"), entregados);
 						return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha modificado el lote de dosis. Se agregó el stock correspondiente.");
 					} catch (CantidadNula e) {
 						return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
@@ -144,8 +148,8 @@ public class GestionLoteDosisRWS {
 						
 						try {
 							DtStock dts = cs.obtenerStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"));
-							cs.modificarStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"), dts.getCantidad()+cantidadReal,
-									dts.getDescartadas(), dts.getAdministradas(), dts.getDisponibles()+cantidadReal);
+							cs.modificarStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"), dts.getCantidad()+entregados,
+									dts.getDescartadas()+descartados, dts.getAdministradas(), dts.getDisponibles()+entregados);
 						} catch (StockVacunaVacunatorioInexistente e1) {
 							return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 						}

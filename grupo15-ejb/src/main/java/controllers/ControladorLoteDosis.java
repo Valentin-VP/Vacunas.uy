@@ -49,6 +49,7 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 			obtenerLoteDosis(idLote, idVacunatorio, idVacuna);
 		} catch (LoteInexistente e) {
 			LoteDosis loteDosis = new LoteDosis(idLote, vacunatorio, vacuna, cantidadTotal, 0, 0, 0);
+			
 			em.persist(loteDosis);
 		}
 
@@ -59,7 +60,7 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 		LoteDosis lote = em.find(LoteDosis.class, new LoteDosisID(idLote, idVacunatorio, idVacuna));
 		if (lote != null) {
 			dtLoteDosis = new DtLoteDosis(lote.getIdLote(), lote.getVacunatorio().getId(), lote.getVacuna().getNombre(), lote.getCantidadTotal(), lote.getCantidadEntregada(),
-					lote.getCantidadDescartada(), lote.getEstadoLote().toString(), lote.getTemperatura());
+					lote.getCantidadDescartada(), lote.getEstadoLote().toString(), lote.getTemperatura(), lote.getTransportista().getId());
 		} else {
 			throw new LoteInexistente("No se encontró un Lote con ese ID");
 		}
@@ -74,7 +75,7 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 		for (LoteDosis lote : lotesDosis) {
 			DtLoteDosis dtLoteDosis = new DtLoteDosis(lote.getIdLote(), lote.getVacunatorio().getId(), lote.getVacuna().getNombre(), lote.getCantidadTotal(),
 					lote.getCantidadEntregada(), lote.getCantidadDescartada(), lote.getEstadoLote().toString(),
-					lote.getTemperatura());
+					lote.getTemperatura(), lote.getTransportista().getId());
 			dtLotesDosis.add(dtLoteDosis);
 		}
 		return dtLotesDosis;
@@ -86,10 +87,10 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 		@SuppressWarnings("unchecked")
 		List<LoteDosis> lotesDosis = (List<LoteDosis>) query.getResultList();
 		for (LoteDosis lote : lotesDosis) {
-			if (lote.getVacuna().getNombre().equals(idVacuna) && lote.getVacunatorio().getId().equals(idVacunatorio)) {
+			if (!lote.getEstadoLote().equals(EstadoLote.Recibido) && lote.getVacuna().getNombre().equals(idVacuna) && lote.getVacunatorio().getId().equals(idVacunatorio)) {
 				DtLoteDosis dtLoteDosis = new DtLoteDosis(lote.getIdLote(), lote.getVacunatorio().getId(), lote.getVacuna().getNombre(), lote.getCantidadTotal(),
 						lote.getCantidadEntregada(), lote.getCantidadDescartada(), lote.getEstadoLote().toString(),
-						lote.getTemperatura());
+						lote.getTemperatura(), lote.getTransportista().getId());
 				dtLotesDosis.add(dtLoteDosis);
 			}
 		}
@@ -100,8 +101,9 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 		// Asocia un Transportista a un LoteDosis.
 		// PRE: Ya debe existir el LoteDosis y el transportista
 		// El 
-		if (existeLoteDosis(idLote, idVacunatorio, idVacuna)) {
-			LoteDosis lote = em.find(LoteDosis.class, new LoteDosisID(idLote, idVacunatorio, idVacuna));
+		LoteDosis lote = em.find(LoteDosis.class, new LoteDosisID(idLote, idVacunatorio, idVacuna));
+		if (lote!=null) {
+			
 			Transportista transportista = null;
 			transportista = em.find(Transportista.class, idTransportista);
 			if (transportista != null) {
@@ -132,7 +134,7 @@ public class ControladorLoteDosis implements ILoteDosisDaoRemote, ILoteDosisDaoL
 			try {
 				
 				lote.setCantidadTotal(cantidadTotal);
-				lote.setCantidadEntregada(cantidadEntregada);
+				lote.setCantidadDescartada(cantidadDescartada);
 				lote.setCantidadEntregada(cantidadEntregada);
 				lote.setEstadoLote(EstadoLote.valueOf(estadoLote)); // valueOf() method does a case-sensitive match of
 																	// the argument supplied to it, so passing a value

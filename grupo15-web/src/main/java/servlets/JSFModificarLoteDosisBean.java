@@ -36,7 +36,7 @@ import datatypes.DtVacuna;
 import datatypes.DtVacunatorio;
 
 @Named("ModificarLoteDosis")
-@SessionScoped
+@RequestScoped
 public class JSFModificarLoteDosisBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -65,8 +65,9 @@ public class JSFModificarLoteDosisBean implements Serializable {
 
 	@PostConstruct
 	public void cargaInicial() {
-		cargaVacunas();
-		cargaVacunatorios();
+		//cargaVacunas();
+		//cargaVacunatorios();
+		cargaLotes();
 		cargaMensajes();
 	}
 	
@@ -138,8 +139,12 @@ public class JSFModificarLoteDosisBean implements Serializable {
 		Response response = invocation.invoke();
 		LOGGER.info("Respuesta: " + response.getStatus());
 		if (response.getStatus() == 200) {
-			this.dtMensajes.clear();
+			this.mensajes.clear();
 			this.dtMensajes = response.readEntity(new GenericType<ArrayList<DtMensaje>>() {});
+			for (DtMensaje dt: this.dtMensajes) {
+				System.out.println(dt.getContenido());
+				this.mensajes.add(dt.getContenido());
+			}
 		}else{
 			String jsonString = response.readEntity(String.class);
 			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
@@ -151,18 +156,24 @@ public class JSFModificarLoteDosisBean implements Serializable {
 	
 	public void cargaLotes() {
 		System.out.println("Entro al cargaLotes");
-		System.out.println(vacuna);
-		System.out.println(vacunatorio);
-		if (this.vacuna == null || this.vacunatorio == null) {
-			LOGGER.severe("Esperando que se guarde vacuna o vacunatorio");
-			return;
+		//System.out.println(vacuna);
+		//System.out.println(vacunatorio);
+		//if (this.vacuna == null || this.vacunatorio == null) {
+		//	LOGGER.severe("Esperando que se guarde vacuna o vacunatorio");
+		//	return;
+		//}
+		
+		Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap()
+				.get("x-access-token");
+		if (cookie != null) {
+			token = cookie.getValue();
+			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 		}
-		Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
 		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
         LOGGER.info("El server name es: " + hostname);
 		Client conexion = ClientBuilder.newClient();
-		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/listar?idVacuna=" + this.vacuna + "&idVacunatorio=" + this.vacunatorio);
+		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/listar");//?idVacuna=" + this.vacuna + "&idVacunatorio=" + this.vacunatorio);
 		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
 		Response response = invocation.invoke();
 		LOGGER.info("Respuesta: " + response.getStatus());
@@ -172,6 +183,7 @@ public class JSFModificarLoteDosisBean implements Serializable {
 		}else{
 			System.out.println("entro al error");
 			String jsonString = response.readEntity(String.class);
+			System.out.println(jsonString);
 			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
 			JsonObject reply = jsonReader.readObject();
 			String message = reply.getString("message");
@@ -188,27 +200,42 @@ public class JSFModificarLoteDosisBean implements Serializable {
 			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 		}
 		LOGGER.info("Lote:" + this.lote + " Vacuna:" + this.vacuna + " Vacunatorio:" + this.vacunatorio + " estado:" + this.estado + " entr:" + this.cantEntregada + " desc:" + this.cantDescartada + " temp:" + this.temperatura);
-		if (this.vacuna == null || this.vacuna.equals("") || this.vacunatorio == null || this.vacunatorio.equals("") || this.lote == null) {
+		if (this.lote == null) {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", "Faltan datos."));
 			return;
 		}
-		try {
-			Integer.parseInt(this.lote);
-		}catch(NumberFormatException e) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", "Faltan datos."));
-			return;
-		}
+		//try {
+		//	Integer.parseInt(this.lote);
+		//}catch(NumberFormatException e) {
+		//	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", "Faltan datos."));
+		//	return;
+		//}
+		
 		
 		
 		JSONObject lote = new JSONObject();
-			
 		try {
-			lote.put("idLote", this.lote);
+			String[] temp;
+			DtLoteDosis dt = new DtLoteDosis();
+			temp = this.lote.split("\\Q|\\E");
+			for (DtLoteDosis d: lotes) {
+				if (d.getIdLote().equals(Integer.valueOf(temp[0])) && d.getIdVacunatorio().equals(temp[1]) && d.getIdVacuna().equals(temp[2])) {
+					System.out.println("ASKJDnASKJDjASFDASDASDASDa " + String.valueOf(d.getTransportista()) + String.valueOf(d.getCantidadTotal()));
+					lote.put("idLote", String.valueOf(d.getIdLote()));
+					lote.put("idVacunatorio", d.getIdVacunatorio());
+					lote.put("idVacuna", d.getIdVacuna());
+					lote.put("transportista", String.valueOf(d.getTransportista()));
+					lote.put("cantidadTotal", String.valueOf(d.getCantidadTotal()));
+					break;
+				}
+			}
+			//lote.put("idVacunatorio", this.vacunatorio);
+			//lote.put("idVacuna", this.vacuna);
 			lote.put("cantidadEntregada", String.valueOf(this.cantEntregada));
 			lote.put("cantidadDescartada", String.valueOf(this.cantDescartada));
 			lote.put("estadoLote", this.estado);
 			lote.put("temperatura", this.temperatura);
-			LOGGER.info("Lote:" + this.lote + " Vacuna:" + this.vacuna + " Vacunatorio:" + this.vacunatorio + " estado:" + this.estado + " entr:" + this.cantEntregada + " desc:" + this.cantDescartada + " temp:" + this.temperatura);
+			//LOGGER.info("Lote:" + this.lote + " Vacuna:" + this.vacuna + " Vacunatorio:" + this.vacunatorio + " estado:" + this.estado + " entr:" + this.cantEntregada + " desc:" + this.cantDescartada + " temp:" + this.temperatura);
 			HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
 	        LOGGER.info("El server name es: " + hostname);
@@ -237,10 +264,8 @@ public class JSFModificarLoteDosisBean implements Serializable {
 			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
 		}
-		cargaVacunas();
-		cargaVacunatorios();
+		cargaLotes();
 		cargaMensajes();
-		this.lotes.clear();
 	}
 	public void obtenerLogLoteEnSocio() {
 		Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap()
@@ -249,20 +274,26 @@ public class JSFModificarLoteDosisBean implements Serializable {
 			token = cookie.getValue();
 			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 		}
-		if (this.vacuna == null || this.vacunatorio == null || this.lote == null) {
+		if (this.lote == null) {
 			return;
 		}
+		String[] temp;
+		temp = this.lote.split("\\Q|\\E");
 		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
         LOGGER.info("El server name es: " + hostname);
 		Client conexion = ClientBuilder.newClient();
-		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/obtenerInfoLoteSocio?idLote=" + this.lote + "&idVacuna=" + this.vacuna + "&idVacunatorio=" + this.vacunatorio);
+		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/obtenerInfoLoteSocio?idLote=" + temp[0] + "&idVacuna=" + temp[2] + "&idVacunatorio=" + temp[1]);
 		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
 		Response response = invocation.invoke();
 		LOGGER.info("Respuesta: " + response.getStatus());
 		if (response.getStatus() == 200) {
 			DtMensaje m = response.readEntity(new GenericType<DtMensaje>() {});
 			this.dtMensajes.add(m);
+			this.mensajes.clear();
+			for (DtMensaje dt: this.dtMensajes) {
+				this.mensajes.add(dt.getContenido());
+			}
 		}else{
 			String jsonString = response.readEntity(String.class);
 			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
@@ -273,17 +304,30 @@ public class JSFModificarLoteDosisBean implements Serializable {
 	}
 	public void obtenerLogsLotesEnSocio() {
 		Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
+		String[] temp;
+		DtLoteDosis dt = new DtLoteDosis();
+		temp = this.lote.split("\\Q|\\E");
+		for (DtLoteDosis d: lotes) {
+			if (d.getIdLote().equals(Integer.valueOf(temp[0])) && d.getIdVacunatorio().equals(temp[1]) && d.getIdVacuna().equals(temp[2])) {
+				System.out.println("ASKJDnASKJDjASFDASDASDASDa " + String.valueOf(d.getTransportista()) + String.valueOf(d.getCantidadTotal()));
+				dt = d;
+				break;
+			}
+		}
 		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
         LOGGER.info("El server name es: " + hostname);
 		Client conexion = ClientBuilder.newClient();
-		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/obtenerInfoTodosLotesSocio?idTransportista=" /*+ idTransportista*/);
+		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/obtenerInfoTodosLotesSocio?idTransportista=" + dt.getTransportista());
 		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
 		Response response = invocation.invoke();
 		LOGGER.info("Respuesta: " + response.getStatus());
 		if (response.getStatus() == 200) {
-			this.dtMensajes.clear();
+			this.mensajes.clear();
 			this.dtMensajes = response.readEntity(new GenericType<ArrayList<DtMensaje>>() {});
+			for (DtMensaje d: this.dtMensajes) {
+				this.mensajes.add(d.getContenido());
+			}
 		}else{
 			String jsonString = response.readEntity(String.class);
 			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));

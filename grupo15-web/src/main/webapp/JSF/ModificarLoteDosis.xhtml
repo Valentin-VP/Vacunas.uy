@@ -4,7 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui">
 
 
-<h:head>,.
+<h:head>
 	<link href="/grupo15-web/css/styles.css" type="text/css" rel="stylesheet" media="all" />
 	<style type="text/css">
 		* {
@@ -178,34 +178,13 @@
 
 	<div class="formulario" style="width: 50%">
 		<h:form>
+			
 			<div>
-				<p:outputLabel style="width:40%">Vacuna: </p:outputLabel>
-				<p:selectOneMenu id="vacuna" value="#{ModificarLoteDosis.vacuna}" style="border-width: thin"
-					required="true" requiredMessage="Debe seleccioanr una vacuna">
-					<f:selectItem itemLabel="Seleccione Vacuna..." itemValue="" noSelectionOption="true" />
-					<f:selectItems value="#{ModificarLoteDosis.vacunas}" var="p" itemValue="#{p.nombre}" itemLabel="#{p.nombre}"/>
-					<p:ajax event="itemSelect" listener="#{ModificarLoteDosis.cargaLotes}" update="lotes" />
-				</p:selectOneMenu>
+				<p:outputLabel style="width:40%" >Lote:</p:outputLabel>
+		 		<p:selectOneMenu value="#{ModificarLoteDosis.lote}"  style="border-width: thin">
+					<f:selectItems value="#{ModificarLoteDosis.lotes}" var="l" itemValue="#{l.idLote}|#{l.idVacunatorio}|#{l.idVacuna}" itemLabel="Nº: #{l.idLote} - Vacunatorio: #{l.idVacunatorio} - Vacuna: #{l.idVacuna}"/>
+				</p:selectOneMenu> 
 			</div>
-
-			<div>
-				<p:outputLabel style="width:40%">Vacunatorio: </p:outputLabel>
-				<p:selectOneMenu id="vacunatorio" value="#{ModificarLoteDosis.vacunatorio}" style="border-width: thin"
-					required="true" requiredMessage="Debe seleccionar un vacunatorio">
-					<f:selectItem itemLabel="Seleccione Vacunatorio..." itemValue="" noSelectionOption="true" />
-					<f:selectItems value="#{ModificarLoteDosis.vacunatorios}" var="p" itemValue="#{p.id}" itemLabel="#{p.id}-#{p.nombre}"/>
-					<p:ajax event="itemSelect" listener="#{ModificarLoteDosis.cargaLotes}" update="lotes" />
-				</p:selectOneMenu>
-			</div>
-
-			<div>
-				<p:outputLabel style="width:40%">Lote: </p:outputLabel>
-				<p:selectOneMenu id="lotes" value="#{ModificarLoteDosis.lote}" style="border-width: thin"
-					required="true" requiredMessage="Debe seleccionar un lote">
-					<f:selectItems value="#{ModificarLoteDosis.lotes}" var="p" itemValue="#{p.idLote}" itemLabel="#{p.idLote}"/>
-				</p:selectOneMenu>
-			</div>
-
 			<div>
 				<p:outputLabel style="width:40%">Cantidad entregada: </p:outputLabel>
 				<p:inputNumber id="cantEntregada" required="true"
@@ -251,7 +230,7 @@
 
 		<div class="card">
 			<h5 style="margin-top:0">Log: </h5>
-			<p:dataTable var="mensaje" value="#{ModificarLoteDosis.dtMensajes}" scrollable="true" scrollHeight="250">
+			<p:dataTable id="tabla" var="mensaje" value="#{ModificarLoteDosis.dtMensajes}" scrollable="true" scrollHeight="250">
 				<p:column headerText="Mensaje" footerText="Mensaje">
 					<h:outputText value="#{mensaje.idMensaje}" />
 				</p:column>
@@ -259,12 +238,9 @@
 					<h:outputText value="#{mensaje.contenido}" />
 				</p:column>
 			</p:dataTable>
-			<p:commandButton id="cargarLogLocal" action="#{ModificarLoteDosis.cargaMensajes}" value="Cargar Log">
-			</p:commandButton>
-			<p:commandButton id="obtenerLogSocio" action="#{ModificarLoteDosis.obtenerLogLoteEnSocio}"
-				value="Lote según transportista"> </p:commandButton>
-			<p:commandButton id="obtenerLogMultipleSocio" action="#{ModificarLoteDosis.obtenerLogsLotesEnSocio}"
-				value="Lotes según transportista"> </p:commandButton>
+			<p:commandButton id="cargarLogLocal" action="#{ModificarLoteDosis.cargaMensajes}" value="Cargar Log" update="tabla"></p:commandButton>
+			<p:commandButton id="obtenerLogSocio" action="#{ModificarLoteDosis.obtenerLogLoteEnSocio}" value="Lote según transportista" update="tabla"> </p:commandButton>
+			<p:commandButton id="obtenerLogMultipleSocio" action="#{ModificarLoteDosis.obtenerLogsLotesEnSocio}" value="Lotes según transportista" update="tabla"> </p:commandButton>
 
 		</div>
 	</div>
