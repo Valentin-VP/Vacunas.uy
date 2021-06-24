@@ -1,6 +1,8 @@
 package interfaces;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Local;
 
@@ -30,4 +32,8 @@ public interface IStockDaoLocal {
 			throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente;
 
 	public List<DtStock> listarStock(String idVacunatorio) throws VacunatorioNoCargadoException;
+	
+	public Map<String, String> getStockGlobal(String enfermedad, String vacuna, String vacunatorio) ;
+	
+	public Map<String, Map<String, String>> getHistoricoStock(String enfermedad, String vacuna, String vacunatorio, LocalDate fechaInicio, LocalDate fechaFin);
 }
