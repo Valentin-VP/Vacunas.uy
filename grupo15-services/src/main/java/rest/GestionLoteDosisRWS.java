@@ -1,5 +1,6 @@
 package rest;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +37,7 @@ import exceptions.StockVacunaVacunatorioInexistente;
 import exceptions.VacunaInexistente;
 import exceptions.VacunatorioNoCargadoException;
 import interfaces.IControladorVacunatorioLocal;
+import interfaces.IHistoricoDaoLocal;
 import interfaces.ILoteDosisDaoLocal;
 import interfaces.IMensajeLocal;
 import interfaces.IStockDaoLocal;
@@ -71,6 +73,9 @@ public class GestionLoteDosisRWS {
 	
 	@EJB
 	IStockDaoLocal cs;
+	
+	@EJB
+	IHistoricoDaoLocal ch;
 
 	public GestionLoteDosisRWS() {
 
@@ -141,15 +146,16 @@ public class GestionLoteDosisRWS {
 					int descartados = Integer.valueOf(lote.getString("cantidadDescartada"));
 					try {
 						cs.agregarStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"), entregados);
+						ch.persistirHistorico(LocalDate.now(), entregados, 0, entregados, 0, lote.getString("idVacunatorio"), lote.getString("idVacuna"));
 						return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha modificado el lote de dosis. Se agregó el stock correspondiente.");
 					} catch (CantidadNula e) {
 						return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
-					} catch (StockVacunaVacunatorioExistente e) {
-						
+					} catch (StockVacunaVacunatorioExistente | StockVacunaVacunatorioInexistente e) {
 						try {
 							DtStock dts = cs.obtenerStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"));
 							cs.modificarStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"), dts.getCantidad()+entregados,
-									dts.getDescartadas()+descartados, dts.getAdministradas(), dts.getDisponibles()+entregados);
+									dts.getDescartadas()+descartados, dts.getAdministradas(), dts.getDisponibles()+entregados-descartados);
+							ch.persistirHistorico(LocalDate.now(), dts.getCantidad()+entregados, dts.getDescartadas()+descartados, dts.getDisponibles()+entregados-descartados, dts.getAdministradas(), lote.getString("idVacunatorio"), lote.getString("idVacuna"));
 						} catch (StockVacunaVacunatorioInexistente e1) {
 							return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 						}
