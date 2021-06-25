@@ -50,9 +50,9 @@ public class GestionStock {
 			String vacunatorio = json.getString("vacunatorio");
 			String enfermedad = json.getString("enfermedad");
 			String vacuna = json.getString("vacuna");
-			if(vacuna.equals("Todos"))
+			if(vacuna.equals("todos"))
 				vacuna = "";
-			if(vacunatorio.equals("Todos"))
+			if(vacunatorio.equals("todos"))
 				vacunatorio = "";
 			System.out.println(vacunatorio);
 			System.out.println(enfermedad);
