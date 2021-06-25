@@ -30,7 +30,7 @@ import datatypes.DtPlanVacunacion;
 
 @Named("ModificarEtapa")
 @SessionScoped
-public class ModificarEtapa implements Serializable{
+public class JSFModificarEtapa implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
@@ -142,7 +142,7 @@ public class ModificarEtapa implements Serializable{
 		
 	}
 	
-	public ModificarEtapa() {
+	public JSFModificarEtapa() {
 		// TODO Auto-generated constructor stub
 	}
 

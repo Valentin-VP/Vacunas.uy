@@ -3,7 +3,9 @@ package servlets;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
@@ -11,7 +13,19 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
@@ -27,7 +41,12 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
 
+import datatypes.DtEnfermedad;
+import datatypes.DtLaboratorio;
 import datatypes.DtPlanVacunacion;
+import datatypes.DtStock;
+import datatypes.DtVacuna;
+import datatypes.DtVacunatorio;
 
 @Named("ReporteStock")
 @RequestScoped
@@ -35,13 +54,20 @@ public class JSFReporteStock implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
-
-	private List<DtPlanVacunacion> Lista = new ArrayList<DtPlanVacunacion>();
+	private String token; 
+	
+	private Map<String,Map<String,String>> historico = new HashMap<String,Map<String,String>>();
+	private List<DtStock> actual;
     private LineChartModel lineModel2;
     private String enfermedad;
+    private List<DtEnfermedad> enfermedades;
     private String vacuna;
-    private String nombre;
-   
+    private List<String> vacunas;
+    private String periodo;
+    private Map<String,String> periodos = new HashMap<String,String>();
+    private String vacunatorio;
+   	private List<DtVacunatorio> vacunatorios;
+    
     private BarChartModel barModel;
    
     private PieChartModel pieModel1;
@@ -49,68 +75,108 @@ public class JSFReporteStock implements Serializable {
     @PostConstruct
     public void init() {
         createLineModels();
-      
-    
-     
-    }
-    
-    
-    public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-	
-	public String getVacuna() {
-		return vacuna;
-	}
-
-	public void setVacuna(String vacuna) {
-		this.vacuna = vacuna;
-	}
-	
-	public String getEnfermedad() {
-		return enfermedad;
-	}
-
-	public void setEnfermedad(String enfermedad) {
-		this.enfermedad = enfermedad;
-	}
-	
-    public List<DtPlanVacunacion> getVacunas() {
-		return Lista;
-	}
-
-	public void setVacunas(List<DtPlanVacunacion> vacunas) {
-		this.Lista = vacunas;
-	}
-	
-	  public List<DtPlanVacunacion> getEnfermedades() {
-			return Lista;
-		}
-
-		public void setEnfermedades(List<DtPlanVacunacion> enfermedades) {
-			this.Lista = enfermedades;
+        this.periodos.put("Tres meses", "3");
+        this.periodos.put("Seis meses", "6");
+        this.periodos.put("Un año", "12");
+        
+        //cargo enfermedades
+        Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
+        if (cookie != null) {
+        	token = cookie.getValue();
+        	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
+        }
+        HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        LOGGER.info("El server name es: " + hostname);
+		Client conexion = ClientBuilder.newClient();
+		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/enfermedad/listar");
+		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
+		Response response = invocation.invoke();
+		LOGGER.info("Respuesta: " + response.getStatus());
+		if (response.getStatus() == 200) {
+			this.enfermedades = response.readEntity(new GenericType<List<DtEnfermedad>>() {});
 		}
 		
-		  public List<DtPlanVacunacion> getNombres() {
-				return Lista;
-			}
-
-			public void setNombres(List<DtPlanVacunacion> nombres) {
-				this.Lista = nombres;
-			}
-
-			   public List<DtPlanVacunacion> getLista() {
-					return Lista;
-				}
-
-				public void setLista(List<DtPlanVacunacion> dtPlanes) {
-					this.Lista = dtPlanes;
-				}
+		//cargo vacunatorios
+		origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        LOGGER.info("El server name es: " + hostname);
+		conexion = ClientBuilder.newClient();
+		webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunatorios/listar");
+		invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
+		response = invocation.invoke();
+		LOGGER.info("Respuesta: " + response.getStatus());
+		if (response.getStatus() == 200) {
+			vacunatorios = response.readEntity(new GenericType<List<DtVacunatorio>>() {});
+		}
+    }
     
+    public void cargarVacunas(){
+    	Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
+        if (cookie != null) {
+        	token = cookie.getValue();
+        	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
+        }
+        HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        LOGGER.info("El server name es: " + hostname);
+		Client conexion = ClientBuilder.newClient();
+		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/monitor/pv/"+enfermedad+"/Todos");
+		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
+		Response response = invocation.invoke();
+		LOGGER.info("Respuesta: " + response.getStatus());
+		if (response.getStatus() == 200) {
+			this.vacunas = response.readEntity(new GenericType<List<String>>() {});
+		}
+    }
+    
+    public void getStock() {
+    	System.out.println(vacunatorio);
+    	System.out.println(periodo);
+    	JSONObject datos = new JSONObject();
+    	
+    	try {
+    		datos.put("vacunatorio", vacunatorio);
+			datos.put("enfermedad", enfermedad);
+			datos.put("vacuna", vacuna);
+			datos.put("periodo", periodo);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+    	Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
+        if (cookie != null) {
+        	token = cookie.getValue();
+        	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
+        }
+        HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        LOGGER.info("El server name es: " + hostname);
+		Client conexion = ClientBuilder.newClient();
+		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/stock/actual");
+		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildPost(Entity.entity(datos.toString(), MediaType.APPLICATION_JSON));
+		Response response = invocation.invoke();
+		LOGGER.info("Respuesta: " + response.getStatus());
+		if (response.getStatus() == 200) {
+			this.actual = response.readEntity(new GenericType<List<DtStock>>() {});
+		}
+		
+		cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
+        if (cookie != null) {
+        	token = cookie.getValue();
+        	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
+        }
+        origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        LOGGER.info("El server name es: " + hostname);
+		conexion = ClientBuilder.newClient();
+		webTarget = conexion.target(hostname + "/grupo15-services/rest/stock/historico");
+		invocation = webTarget.request("application/json").cookie("x-access-token", token).buildPost(Entity.entity(datos.toString(), MediaType.APPLICATION_JSON));
+		response = invocation.invoke();
+		LOGGER.info("Respuesta: " + response.getStatus());
+		if (response.getStatus() == 200) {
+			this.historico = response.readEntity(new GenericType<Map<String,Map<String,String>>>() {});
+		}
+    }
 
     public void itemSelect(ItemSelectEvent event) {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Item selected",
@@ -131,18 +197,7 @@ public class JSFReporteStock implements Serializable {
 
         ChartSeries meses = new ChartSeries();
         meses.setLabel("meses");
-        meses.set("enero", 25000);
-        meses.set("febrero", 35000);
-        meses.set("marzo", 44000);
-        meses.set("abril", 50000);
-        meses.set("mayo", 70000);
-        meses.set("junio", 100000);
-        meses.set("julio", 200000);
-        meses.set("agosto", 250000);
-        meses.set("septiembre", 270000);
-        meses.set("octubre", 500000);
-        meses.set("noviembre", 1000000);
-        meses.set("diciembre", 1500000);
+
         
 
         model.addSeries(meses);
@@ -183,6 +238,121 @@ public class JSFReporteStock implements Serializable {
         return model;
     }
 
+
+	public String getEnfermedad() {
+		return enfermedad;
+	}
+
+
+	public void setEnfermedad(String enfermedad) {
+		this.enfermedad = enfermedad;
+	}
+
+
+	public String getVacuna() {
+		return vacuna;
+	}
+
+
+	public void setVacuna(String vacuna) {
+		this.vacuna = vacuna;
+	}
+
+
+	public String getPeriodo() {
+		return periodo;
+	}
+
+
+	public void setPeriodo(String periodo) {
+		this.periodo = periodo;
+	}
+
+
+	public BarChartModel getBarModel() {
+		return barModel;
+	}
+
+
+	public void setBarModel(BarChartModel barModel) {
+		this.barModel = barModel;
+	}
+
+
+	public PieChartModel getPieModel1() {
+		return pieModel1;
+	}
+
+
+	public void setPieModel1(PieChartModel pieModel1) {
+		this.pieModel1 = pieModel1;
+	}
+
+
+	public List<String> getVacunas() {
+		return vacunas;
+	}
+
+
+	public void setVacunas(List<String> vacunas) {
+		this.vacunas = vacunas;
+	}
+
+
+	public List<DtEnfermedad> getEnfermedades() {
+		return enfermedades;
+	}
+
+
+	public void setEnfermedades(List<DtEnfermedad> enfermedades) {
+		this.enfermedades = enfermedades;
+	}
+
+
+	public Map<String, String> getPeriodos() {
+		return periodos;
+	}
+
+
+	public void setPeriodos(Map<String, String> periodos) {
+		this.periodos = periodos;
+	}
+
+
+	public List<DtVacunatorio> getVacunatorios() {
+		return vacunatorios;
+	}
+
+
+	public void setVacunatorios(List<DtVacunatorio> vacunatorios) {
+		this.vacunatorios = vacunatorios;
+	}
+
+
+	public String getVacunatorio() {
+		return vacunatorio;
+	}
+
+
+	public void setVacunatorio(String vacunatorio) {
+		this.vacunatorio = vacunatorio;
+	}
+
+	public Map<String,Map<String,String>> getHistorico() {
+		return historico;
+	}
+
+	public void setHistorico(Map<String,Map<String,String>> historico) {
+		this.historico = historico;
+	}
+
+	public List<DtStock> getActual() {
+		return actual;
+	}
+
+	public void setActual(List<DtStock> actual) {
+		this.actual = actual;
+	}
    
 }
   
