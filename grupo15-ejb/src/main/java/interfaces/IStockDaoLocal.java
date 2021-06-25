@@ -34,7 +34,7 @@ public interface IStockDaoLocal {
 
 	public List<DtStock> listarStock(String idVacunatorio) throws VacunatorioNoCargadoException;
 	
-	public ArrayList<DtStock> getStockActual(String enfermedad, String vacuna, String vacunatorio) ;
+	public List<DtStock> getStockActual(String enfermedad, String vacuna, String vacunatorio) ;
 	
 	public Map<String, Map<String, String>> getHistoricoStock(String enfermedad, String vacuna, String vacunatorio, LocalDate fechaInicio, LocalDate fechaFin);
 }

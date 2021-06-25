@@ -191,8 +191,8 @@ public class ControladorStock implements IStockDaoLocal, IStockDaoRemote {
 		return base;
 	}
 	
-	public ArrayList<DtStock> getStockActual(String enfermedad, String vacuna, String vacunatorio) {
-		ArrayList<DtStock> retorno = new ArrayList<>();
+	public List<DtStock> getStockActual(String enfermedad, String vacuna, String vacunatorio) {
+		List<DtStock> retorno = new ArrayList<>();
 		Query query;
 		if (vacunatorio!=null && !vacunatorio.equals("")) {
 			query = em.createQuery(prepararQueryStockGlobalActual(enfermedad, vacuna).concat(" AND vacunatorio = '" + vacunatorio + "'"));
