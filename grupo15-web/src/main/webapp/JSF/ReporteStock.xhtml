@@ -193,7 +193,8 @@
 					requiredMessage="Debe seleccionar una vacuna">
 					<f:selectItem itemLabel="Vacuna:" itemValue="" noSelectionOption="true" />
 					<f:selectItem itemLabel="Todos" itemValue="todos" />
-					<f:selectItems value="#{ReporteStock.vacunas}"/>
+					<f:selectItems value="#{ReporteStock.vacunas}" var="p" itemLabel="#{p.nombre}"
+						itemValue="#{p.nombre}" />
 				</p:selectOneMenu>
 			</div>
 
@@ -202,7 +203,7 @@
 					requiredMessage="Debe seleccionar un Vacunatorio">
 					<f:selectItem itemLabel="Vacunatorio:" itemValue="" noSelectionOption="true" />
 					<f:selectItem itemLabel="Todos" itemValue="todos" />
-					<f:selectItems value="#{ReporteStock.vacunatorios}" var="p" itemValue="#{p.nombre}"
+					<f:selectItems value="#{ReporteStock.vacunatorios}" var="p" itemValue="#{p.id}"
 						itemLabel="#{p.id}-#{p.nombre}" />
 				</p:selectOneMenu>
 			</div>
@@ -226,7 +227,6 @@
 			<p:autoUpdate />
 		</p:messages>
 	</div>
-
 	<div class="formulario6">
 
 		<p:dataTable id="rep2" value="#{ReporteStock.actual}" var="rep2">
@@ -255,21 +255,21 @@
 		</p:dataTable>
 	</div>
 
-	<div class="formulario">
-		<p:panel header="Para exportar los datos de la tabla anterior, haga click en el siguiente botón:"
-			style="text-align: center">
-			<h:commandLink>
-				<p:commandButton value="Descargar" />
-				<p:dataExporter type="pdf" target="rep2" fileName="ReporteStock" />
-			</h:commandLink>
-		</p:panel>
-	</div>
-
 	<div class="formulario6">
 		<p:chart id="grafica" type="line" model="#{ReporteStock.lineModel2}" style="height:600px; width:1300px" />
 
 	</div>
-
+	<h:form>
+		<div class="formulario">
+			<p:panel header="Para exportar los datos de la tabla anterior, haga click en el siguiente botón:"
+				style="text-align: center">
+				<h:commandLink>
+					<p:commandButton value="Descargar" />
+					<p:dataExporter type="pdf" target="rep2" fileName="ReporteStock" />
+				</h:commandLink>
+			</p:panel>
+		</div>
+	</h:form>
 </body>
 
 </html>

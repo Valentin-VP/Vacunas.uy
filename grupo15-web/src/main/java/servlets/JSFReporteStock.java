@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
@@ -49,7 +50,7 @@ import datatypes.DtVacuna;
 import datatypes.DtVacunatorio;
 
 @Named("ReporteStock")
-@RequestScoped
+@SessionScoped
 public class JSFReporteStock implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -62,7 +63,7 @@ public class JSFReporteStock implements Serializable {
     private String enfermedad;
     private List<DtEnfermedad> enfermedades;
     private String vacuna;
-    private List<String> vacunas;
+    private List<DtVacuna> vacunas;
     private String periodo;
     private Map<String,String> periodos = new HashMap<String,String>();
     private String vacunatorio;
@@ -87,7 +88,6 @@ public class JSFReporteStock implements Serializable {
         }
         HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
-        LOGGER.info("El server name es: " + hostname);
 		Client conexion = ClientBuilder.newClient();
 		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/enfermedad/listar");
 		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
@@ -100,7 +100,6 @@ public class JSFReporteStock implements Serializable {
 		//cargo vacunatorios
 		origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
-        LOGGER.info("El server name es: " + hostname);
 		conexion = ClientBuilder.newClient();
 		webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunatorios/listar");
 		invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
@@ -119,16 +118,17 @@ public class JSFReporteStock implements Serializable {
         }
         HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
-        LOGGER.info("El server name es: " + hostname);
 		Client conexion = ClientBuilder.newClient();
-		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/monitor/pv/"+enfermedad+"/Todos");
+		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/stock/enf/"+enfermedad);
 		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
 		Response response = invocation.invoke();
+		LOGGER.info(webTarget.getUri().toString());
 		LOGGER.info("Respuesta: " + response.getStatus());
 		if (response.getStatus() == 200) {
-			this.vacunas = response.readEntity(new GenericType<List<String>>() {});
+			this.vacunas = response.readEntity(new GenericType<List<DtVacuna>>() {});
 		}
     }
+    
     
     public void getStock() {
     	System.out.println(vacunatorio);
@@ -150,7 +150,6 @@ public class JSFReporteStock implements Serializable {
         }
         HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
-        LOGGER.info("El server name es: " + hostname);
 		Client conexion = ClientBuilder.newClient();
 		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/stock/actual");
 		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildPost(Entity.entity(datos.toString(), MediaType.APPLICATION_JSON));
@@ -167,14 +166,13 @@ public class JSFReporteStock implements Serializable {
         }
         origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
-        LOGGER.info("El server name es: " + hostname);
 		conexion = ClientBuilder.newClient();
 		webTarget = conexion.target(hostname + "/grupo15-services/rest/stock/historico");
 		invocation = webTarget.request("application/json").cookie("x-access-token", token).buildPost(Entity.entity(datos.toString(), MediaType.APPLICATION_JSON));
 		response = invocation.invoke();
 		LOGGER.info("Respuesta: " + response.getStatus());
 		if (response.getStatus() == 200) {
-			this.historico = response.readEntity(new GenericType<Map<String,Map<String,String>>>() {});
+			this.historico = response.readEntity(new GenericType<Map<String,Map<String,String>>>() {});	
 		}
     }
 
@@ -289,12 +287,12 @@ public class JSFReporteStock implements Serializable {
 	}
 
 
-	public List<String> getVacunas() {
+	public List<DtVacuna> getVacunas() {
 		return vacunas;
 	}
 
 
-	public void setVacunas(List<String> vacunas) {
+	public void setVacunas(List<DtVacuna> vacunas) {
 		this.vacunas = vacunas;
 	}
 
