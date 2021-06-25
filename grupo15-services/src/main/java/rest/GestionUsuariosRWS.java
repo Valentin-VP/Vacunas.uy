@@ -38,6 +38,7 @@ import datatypes.DtUsuarioExterno;
 import datatypes.DtUsuarioInterno;
 import datatypes.DtVacunador;
 import exceptions.UsuarioInexistente;
+import interfaces.IControladorVacunadorLocal;
 import interfaces.ILdapLocal;
 import interfaces.IUsuarioLocal;
 import rest.filter.ResponseBuilder;
@@ -325,6 +326,36 @@ public class GestionUsuariosRWS {
 		}
 		return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "No se ha seteado la Cookie");
 	}
+	
+	
+	
+	@RolesAllowed({"vacunador" })
+	@POST
+	@Path("/vacunador/modificar")
+	public Response modificarVacunador(@CookieParam("x-access-token") Cookie cookie, String datos) {
+		if (cookie != null) {
+			try {
+				JSONObject datosInterno = new JSONObject(datos);
+				String token = cookie.getValue();
+				String ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+				DtVacunador vacunador = IUsuarioLocal.buscarVacunador(Integer.parseInt(ci));
+				//String nombre, String apellido, LocalDate fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo
+				vacunador.setEmail(datosInterno.getString("email"));
+				JSONObject jsonDir = datosInterno.getJSONObject("direccion");
+				DtDireccion dir = new DtDireccion(jsonDir.getString("direccion"), jsonDir.getString("barrio"), jsonDir.getString("departamento"));
+				vacunador.setDireccion(dir);
+				IUsuarioLocal.ModificarVacunador(vacunador);
+				return ResponseBuilder.createResponse(Response.Status.CREATED, "Se modifico el usuario correctamente");
+			} catch (JSONException | InvalidJwtException | NumberFormatException | UsuarioInexistente e) {
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+			}
+		}
+		return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "No se ha seteado la Cookie");
+	}
+	
+	
+	
+	
 	
 	@RolesAllowed({ "vacunador", "ciudadano", "administrador", "autoridad" })
 	@GET

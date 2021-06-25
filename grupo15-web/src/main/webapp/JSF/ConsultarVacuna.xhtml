@@ -86,7 +86,7 @@
 	<body>
 	
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	  <a class="navbar-brand" href="/grupo15-web/html/menuAdministrador.html">Menú Autoridad</a>
+	  <a class="navbar-brand" href="/grupo15-web/html/menuAutoridad.html">Menú Autoridad</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -171,18 +171,55 @@
 <div>
 
 <p:outputLabel style="width:40%" >Seleccione Vacuna:    </p:outputLabel>
- <p:selectOneMenu value="#{ConsultarVacuna.vacuna}"  style="border-width: thin">
-	<f:selectItems value="#{ConsultarVacuna.vacunas}" />
+ <p:selectOneMenu value="#{vacuna.vacuna}"  style="border-width: thin">
+	<f:selectItems value="#{vacuna.vacunas}" var="p" itemValue="#{p.nombre}" itemLabel="#{p.nombre}" />
+	<p:ajax event="itemSelect" listener="#{vacuna.mostrarVacuna}" />
 </p:selectOneMenu>
 </div>
 
+<p:divider />
 
+			<div>
+				<p:outputLabel style="width:35%">ID: </p:outputLabel>
+				<p:outputLabel style="width:60%">#{vacuna.vacuna}
+					<p:autoUpdate />
+				</p:outputLabel>
+			</div>
 
-<p:messages id="messages" showDetail="true" closable="true">
-            <p:autoUpdate/>
-</p:messages>
-<p:commandButton id="confirmar" action="#{ConsultarVacuna.consultarVacuna}" value="Consultar"> </p:commandButton>
+			<div>
+				<p:outputLabel style="width:35%">Cantidad de Dosis: </p:outputLabel>
+				<p:outputLabel style="width:60%">#{vacuna.cantDosis}
+					<p:autoUpdate />
+				</p:outputLabel>
+			</div>
 
+			<div>
+				<p:outputLabel style="width:35%">Expira: </p:outputLabel>
+				<p:outputLabel style="width:60%">#{vacuna.expira}
+					<p:autoUpdate />
+				</p:outputLabel>
+			</div>
+
+			<div>
+				<p:outputLabel style="width:35%">Tiempo entre dosis: </p:outputLabel>
+				<p:outputLabel style="width:60%">#{vacuna.tiempoEntreDosis}
+					<p:autoUpdate />
+				</p:outputLabel>
+			</div>
+
+			<div>
+				<p:outputLabel style="width:35%">Enfermedad: </p:outputLabel>
+				<p:outputLabel style="width:60%">#{vacuna.enfermedad}
+					<p:autoUpdate />
+				</p:outputLabel>
+			</div>
+
+			<div>
+				<p:outputLabel style="width:35%">Laboratorio: </p:outputLabel>
+				<p:outputLabel style="width:60%">#{vacuna.laboratorio}
+					<p:autoUpdate />
+				</p:outputLabel>
+			</div>
 
 </h:form>
  </div>
