@@ -1,5 +1,9 @@
 package controllers;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -12,6 +16,7 @@ import javax.persistence.Query;
 import datatypes.DtTransportista;
 import datatypes.TransportistaInexistente;
 import entities.Transportista;
+import exceptions.AccionInvalida;
 import exceptions.TransportistaRepetido;
 import interfaces.ITransportistaDaoLocal;
 import interfaces.ITransportistaDaoRemote;
@@ -39,13 +44,20 @@ public class ControladorTransportista implements ITransportistaDaoLocal, ITransp
 		em.merge(t);
 	}
 	
-	public void generarTokenTransportista(Integer id) throws TransportistaInexistente {
+	public void generarTokenTransportista(Integer id) throws TransportistaInexistente, AccionInvalida {
 		Transportista t = em.find(Transportista.class, id);
 		if (t==null)
 			throw new TransportistaInexistente("No existe tal transportista.");
-		String encoded = Base64.getEncoder().encodeToString(id.toString().getBytes());
-		t.setToken(encoded);
-		em.merge(t);
+		byte[] salt;
+		try {
+			salt = getSalt();
+			String encoded = getSecurePassword(String.valueOf(id), salt);
+			//String encoded = Base64.getEncoder().encodeToString(id.toString().getBytes());
+			t.setToken(encoded);
+			em.merge(t);
+		} catch (NoSuchAlgorithmException | NoSuchProviderException e) {
+			throw new AccionInvalida(e.getMessage());
+		}
 	}
 	
 	public boolean isTokenCorrecto(Integer id, String token) throws TransportistaInexistente {
@@ -77,4 +89,29 @@ public class ControladorTransportista implements ITransportistaDaoLocal, ITransp
 		return retorno;
 	}
 
+	private String getSecurePassword(String passwordToHash, byte[] salt){
+        String generatedPassword = null;
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(salt);
+            byte[] bytes = md.digest(passwordToHash.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for(int i=0; i< bytes.length ;i++)
+            {
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            generatedPassword = sb.toString();
+        } 
+        catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return generatedPassword;
+    }
+
+	private byte[] getSalt() throws NoSuchAlgorithmException, NoSuchProviderException{
+        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG", "SUN");
+        byte[] salt = new byte[16];
+        sr.nextBytes(salt);
+        return salt;
+    }
 }

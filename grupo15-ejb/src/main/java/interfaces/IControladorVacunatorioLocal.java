@@ -8,6 +8,7 @@ import javax.ejb.Local;
 
 import datatypes.DtDireccion;
 import datatypes.DtVacunatorio;
+import exceptions.AccionInvalida;
 import exceptions.ReglasCuposCargadoException;
 import exceptions.VacunatorioCargadoException;
 import exceptions.VacunatorioNoCargadoException;
@@ -18,7 +19,7 @@ public interface IControladorVacunatorioLocal {
 
 	public void agregarVacunatorio(String id, String nombre, DtDireccion dtDir, Integer telefono, Float latitud, Float longitud, String url) throws VacunatorioCargadoException ;
 	public void setURLtoVacunatorio(String id, String url) throws VacunatorioNoCargadoException;
-	public void generarTokenVacunatorio(String id) throws VacunatorioNoCargadoException;
+	public void generarTokenVacunatorio(String id) throws VacunatorioNoCargadoException, AccionInvalida;
 	public DtVacunatorio obtenerVacunatorio(String id) throws VacunatorioNoCargadoException;
 	public ArrayList<DtVacunatorio> listarVacunatorio()throws VacunatoriosNoCargadosException;
 	public void modificarVacunatorio(String id, String nombre, DtDireccion dtDir, Integer telefono, Float latitud,

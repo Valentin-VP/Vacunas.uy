@@ -1,5 +1,9 @@
 package controllers;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -16,6 +20,7 @@ import datatypes.DtDireccion;
 import entities.ReglasCupos;
 import entities.Vacunatorio;
 import datatypes.DtVacunatorio;
+import exceptions.AccionInvalida;
 import exceptions.ReglasCuposCargadoException;
 import exceptions.VacunatorioCargadoException;
 import exceptions.VacunatorioNoCargadoException;
@@ -53,15 +58,22 @@ public class ControladorVacunatorio implements IControladorVacunatorioLocal, ICo
 		}
 	}
 	
-	public void generarTokenVacunatorio(String id) throws VacunatorioNoCargadoException {
+	public void generarTokenVacunatorio(String id) throws VacunatorioNoCargadoException, AccionInvalida {
 		Vacunatorio vac = em.find(Vacunatorio.class, id);
 
 		if (vac == null) {
 			throw new VacunatorioNoCargadoException("El vacunatorio " + id + " no existe en el sistema");
 		}else {
-			String encoded = Base64.getEncoder().encodeToString(id.getBytes());
-			vac.setToken(encoded);
-			em.merge(vac);
+			byte[] salt;
+			try {
+				salt = getSalt();
+				String encoded = getSecurePassword(id, salt);
+				//String encoded = Base64.getEncoder().encodeToString(id.getBytes());
+				vac.setToken(encoded);
+				em.merge(vac);
+			} catch (NoSuchAlgorithmException | NoSuchProviderException e) {
+				throw new AccionInvalida(e.getMessage());
+			}
 		}
 	}
 	
@@ -161,5 +173,30 @@ public class ControladorVacunatorio implements IControladorVacunatorioLocal, ICo
 		}
 
 	}
+	
+	private String getSecurePassword(String passwordToHash, byte[] salt){
+        String generatedPassword = null;
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(salt);
+            byte[] bytes = md.digest(passwordToHash.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for(int i=0; i< bytes.length ;i++)
+            {
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            generatedPassword = sb.toString();
+        } 
+        catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return generatedPassword;
+    }
 
+	private byte[] getSalt() throws NoSuchAlgorithmException, NoSuchProviderException{
+        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG", "SUN");
+        byte[] salt = new byte[16];
+        sr.nextBytes(salt);
+        return salt;
+    }
 }
