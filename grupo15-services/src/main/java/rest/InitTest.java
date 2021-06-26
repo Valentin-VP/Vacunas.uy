@@ -147,8 +147,13 @@ public class InitTest {
 			trs.agregarTransportista(1, "http://localhost:8280");
 			trs.generarTokenTransportista(1);
 			trs.agregarTransportista(2, "http://localhost:8280");
-			vch.agregarVacuna("vacuna1Virus1", 1, 60, 1999, "lab1", "virus1");
-			vch.agregarVacuna("vacuna2Virus2", 3, 60, 1999, "lab1", "virus2");
+			vch.agregarVacuna("vacuna1Virus1", 1, 60, 12, "lab1", "virus1");
+			vch.agregarVacuna("vacuna2Virus1", 1, 60, 12, "lab2", "virus1");
+			vch.agregarVacuna("vacuna3Virus1", 1, 60, 12, "lab1", "virus1");
+			vch.agregarVacuna("vacuna4Virus1", 1, 60, 12, "lab2", "virus1");
+			vch.agregarVacuna("vacuna1Virus2", 3, 60, 12, "lab1", "virus2");
+			vch.agregarVacuna("vacuna2Virus2", 2, 60, 12, "lab2", "virus2");
+			vch.agregarVacuna("vacuna3Virus2", 4, 60, 12, "lab1", "virus2");
 			
 			csl.agregarStock("vact1", "vacuna1Virus1", 200);
 			csl.modificarStock("vact1", "vacuna1Virus1", 200, 0, 0, 200);

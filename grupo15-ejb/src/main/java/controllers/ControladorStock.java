@@ -164,41 +164,59 @@ public class ControladorStock implements IStockDaoLocal, IStockDaoRemote {
 		return stockVacunatorio;
 	}
 
-	private String prepararQueryStockGlobalActual(String enfermedad, String vacuna){
-		String base = "SELECT s FROM STOCK s";
-		if (vacuna!=null && !vacuna.equals("")) {
-			base.concat(" WHERE vacuna = '" + vacuna + "'");
+	private String prepararQueryStockGlobalActual(String enfermedad, String vacuna, String vacunatorio){
+		String base = "SELECT s FROM Stock s";
+		if (vacuna!=null && vacuna.equals("") == false) {
+			base = base + (" WHERE vacuna = '" + vacuna + "'");
+			System.out.println(base);
+			if (vacunatorio!=null && vacunatorio.equals("") == false) {
+				base = base + (" AND vacunatorio = '" + vacunatorio + "'");
+				System.out.println(base);
+			}
 		}else {
-			if (enfermedad!=null && !enfermedad.equals("")) {
-				Query query = em.createQuery("SELECT v FROM Vacuna v WHERE enfermedad_nombre = '"+vacuna + "'");
+			if (enfermedad!=null && enfermedad.equals("") == false) {
+				System.out.println("SELECT v FROM Vacuna v WHERE enfermedad_nombre = '"+enfermedad + "'");
+				Query query = em.createQuery("SELECT v FROM Vacuna v WHERE enfermedad_nombre = '"+enfermedad + "'");
 				@SuppressWarnings("unchecked")
 				List<Vacuna> vacunas = (List<Vacuna>) query.getResultList();
 				int size = 0;
 				if (!vacunas.isEmpty()) {
-					base.concat(" WHERE ");
+					base = base + (" WHERE (");
+					System.out.println(base);
 					size = vacunas.size();
 				}
 				int i = 0;
 				for (Vacuna v: vacunas) {
 					i++;
-					base.concat("vacuna = '" + v.getNombre() + "'");
-					if (i<=size) {
-						base.concat(" OR ");
+					base = base + ("vacuna = '" + v.getNombre() + "'");
+					System.out.println(base);
+					if (i<size) {
+						base = base + (" OR ");
+						System.out.println(base);
+					}else {
+						base = base + (")");
 					}
 				}
-			}//else{}
+				if (vacunatorio!=null && vacunatorio.equals("") == false) {
+					base = base + (" AND vacunatorio = '" + vacunatorio + "'");
+					System.out.println(base);
+				}
+			}else {
+				if (vacunatorio!=null && vacunatorio.equals("") == false) {
+					base = base + (" WHERE vacunatorio = '" + vacunatorio + "'");
+					System.out.println(base);
+				}
+			}
 		}
+		System.out.println("RESULTADO: " + base);
 		return base;
 	}
 	
 	public List<DtStock> getStockActual(String enfermedad, String vacuna, String vacunatorio) {
 		List<DtStock> retorno = new ArrayList<>();
 		Query query;
-		if (vacunatorio!=null && !vacunatorio.equals("")) {
-			query = em.createQuery(prepararQueryStockGlobalActual(enfermedad, vacuna).concat(" AND vacunatorio = '" + vacunatorio + "'"));
-		}else {
-			query = em.createQuery(prepararQueryStockGlobalActual(enfermedad, vacuna));
-		}
+		query = em.createQuery(prepararQueryStockGlobalActual(enfermedad, vacuna, vacunatorio));
+
 		@SuppressWarnings("unchecked")
 		List<Stock> stocks = query.getResultList();
 		if (!stocks.isEmpty()) {
@@ -207,8 +225,6 @@ public class ControladorStock implements IStockDaoLocal, IStockDaoRemote {
 				dt.setHistoricos(new ArrayList<DtHistoricoStock>());
 				retorno.add(dt);
 			}
-		}else {
-			return null;
 		}
 		return retorno;
 	}
@@ -217,11 +233,8 @@ public class ControladorStock implements IStockDaoLocal, IStockDaoRemote {
 		Map<String, Map<String, String>> retorno = new HashMap<String, Map<String, String>>();
 		Map<String, String> valores;
 		Query query;
-		if (vacunatorio!=null && !vacunatorio.equals("")) {
-			query = em.createQuery(prepararQueryStockGlobalActual(enfermedad, vacuna).concat(" AND vacunatorio = '" + vacunatorio + "'"));
-		}else {
-			query = em.createQuery(prepararQueryStockGlobalActual(enfermedad, vacuna));
-		}
+		query = em.createQuery(prepararQueryStockGlobalActual(enfermedad, vacuna, vacunatorio));
+
 		@SuppressWarnings("unchecked")
 		List<Stock> stocks = query.getResultList();
 		if (!stocks.isEmpty()) {
@@ -254,7 +267,7 @@ public class ControladorStock implements IStockDaoLocal, IStockDaoRemote {
 			//valores.put("cantDesc", String.valueOf(0));
 			//valores.put("cantDisp", String.valueOf(0));
 			//retorno.put("0", valores);
-			return null;
+
 		}
 		return retorno;
 		

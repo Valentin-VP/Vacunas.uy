@@ -146,6 +146,7 @@ public class GestionLoteDosisRWS {
 					int descartados = Integer.valueOf(lote.getString("cantidadDescartada"));
 					try {
 						cs.agregarStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"), entregados);
+						cs.modificarStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"), entregados, descartados, 0, entregados-descartados);
 						ch.persistirHistorico(LocalDate.now(), entregados, 0, entregados, 0, lote.getString("idVacunatorio"), lote.getString("idVacuna"));
 						return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha modificado el lote de dosis. Se agregó el stock correspondiente.");
 					} catch (CantidadNula e) {

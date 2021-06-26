@@ -63,6 +63,10 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 							return;
 						}
 					}
+					Historico historico = new Historico(fecha, cantidad, descartadas, disponibles, administradas, stock);
+					stock.getHistoricos().add(historico);
+					em.merge(stock);
+					return;
 				}
 			}
 		}
