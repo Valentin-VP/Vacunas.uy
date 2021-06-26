@@ -54,9 +54,6 @@ public class GestionStock {
 				vacuna = "";
 			if(vacunatorio.equals("todos"))
 				vacunatorio = "";
-			System.out.println(vacunatorio);
-			System.out.println(enfermedad);
-			System.out.println(vacuna);
 			return Response.ok(cs.getStockActual(enfermedad, vacuna, vacunatorio)).build();
 		} catch (JSONException e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
@@ -75,14 +72,10 @@ public class GestionStock {
 			String enfermedad = json.getString("enfermedad");
 			String vacuna = json.getString("vacuna");
 			String tiempo = json.getString("periodo");
-			if(vacuna.equals("Todos"))
+			if(vacuna.equals("todos"))
 				vacuna = "";
-			if(vacunatorio.equals("Todos"))
+			if(vacunatorio.equals("todos"))
 				vacunatorio = "";
-			System.out.println(vacunatorio);
-			System.out.println(enfermedad);
-			System.out.println(vacuna);
-			System.out.println(tiempo);
 			return Response.ok(cs.getHistoricoStock(enfermedad, vacuna, vacunatorio, LocalDate.now().minusMonths(Integer.valueOf(tiempo)), LocalDate.now())).build();
 		} catch (JSONException e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());

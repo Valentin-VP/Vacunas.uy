@@ -58,6 +58,7 @@ public class JSFReporteStock implements Serializable {
 	private String token; 
 	
 	private Map<String,Map<String,String>> historico = new HashMap<String,Map<String,String>>();
+	private Map<String,String> historicoMes = new HashMap<String,String>();
 	private List<DtStock> actual;
     private LineChartModel lineModel2;
     private String enfermedad;
@@ -127,6 +128,7 @@ public class JSFReporteStock implements Serializable {
 		if (response.getStatus() == 200) {
 			this.vacunas = response.readEntity(new GenericType<List<DtVacuna>>() {});
 		}
+		createLineModels();
     }
     
     
@@ -173,7 +175,10 @@ public class JSFReporteStock implements Serializable {
 		LOGGER.info("Respuesta: " + response.getStatus());
 		if (response.getStatus() == 200) {
 			this.historico = response.readEntity(new GenericType<Map<String,Map<String,String>>>() {});	
+			System.out.println(historico);
 		}
+		
+		
     }
 
     public void itemSelect(ItemSelectEvent event) {
@@ -191,15 +196,88 @@ public class JSFReporteStock implements Serializable {
 
 
     private LineChartModel initCategoryModel() {
-        LineChartModel model = new LineChartModel();
+    	LineChartModel model = new LineChartModel();
 
-        ChartSeries meses = new ChartSeries();
-        meses.setLabel("meses");
+        if(this.historico != null) {
+        	ChartSeries meses = new ChartSeries();
+            meses.setLabel("meses");  
+            if(this.historico.get("1") != null) {
+            	meses.set("Enero", Integer.valueOf(this.historico.get("1").get("disponibles")));
+            }else {
+            	meses.set("Enero", 0);
+            }
 
-        
+            if(this.historico.get("2") != null) {
+            	meses.set("Febrero", Integer.valueOf(this.historico.get("2").get("disponibles")));
+            }else {
+            	meses.set("Febrero", 0);
+            }
 
-        model.addSeries(meses);
+            if(this.historico.get("3") != null) {
+            	meses.set("Marzo", Integer.valueOf(this.historico.get("3").get("disponibles")));
+            }else {
+            	meses.set("Marzo", 0);
+            }
 
+            if(this.historico.get("4") != null) {
+            	meses.set("Abril", Integer.valueOf(this.historico.get("4").get("disponibles")));
+            }else {
+            	meses.set("Abril", 0);
+            }
+
+            if(this.historico.get("5") != null) {
+            	meses.set("Mayo", Integer.valueOf(this.historico.get("5").get("disponibles")));
+            }else {
+            	meses.set("Mayo", 0);
+            }
+
+            if(this.historico.get("6") != null) {
+            	meses.set("Junio", Integer.valueOf(this.historico.get("6").get("disponibles")));
+            }else {
+            	meses.set("Junio", 0);
+            }
+
+            if(this.historico.get("7") != null) {
+            	meses.set("Julio", Integer.valueOf(this.historico.get("7").get("disponibles")));
+            }else {
+            	meses.set("Julio", 0);
+            }
+
+            if(this.historico.get("8") != null) {
+            	meses.set("Agosto", Integer.valueOf(this.historico.get("8").get("disponibles")));
+            }else {
+            	meses.set("Agosto", 0);
+            }
+
+            if(this.historico.get("9") != null) {
+            	meses.set("Septiembre", Integer.valueOf(this.historico.get("9").get("disponibles")));
+            }else {
+            	meses.set("Septiembre", 0);
+            }
+
+            if(this.historico.get("10") != null) {
+            	meses.set("Octumbre", Integer.valueOf(this.historico.get("10").get("disponibles")));
+            }else {
+            	meses.set("Octubre", 0);
+            }
+
+            if(this.historico.get("11") != null) {
+            	meses.set("Noviembre", Integer.valueOf(this.historico.get("12").get("disponibles")));
+            }else {
+            	meses.set("Noviembre", 0);
+            }
+
+            if(this.historico.get("12") != null) {
+            	meses.set("Diciembre", Integer.valueOf(this.historico.get("12").get("disponibles")));
+            }else {
+            	meses.set("Diciembre", 0);
+            }
+
+
+            model.addSeries(meses);
+
+            
+        }
         return model;
     }
 
@@ -350,6 +428,14 @@ public class JSFReporteStock implements Serializable {
 
 	public void setActual(List<DtStock> actual) {
 		this.actual = actual;
+	}
+
+	public Map<String,String> getHistoricoMes() {
+		return historicoMes;
+	}
+
+	public void setHistoricoMes(Map<String,String> historicoMes) {
+		this.historicoMes = historicoMes;
 	}
    
 }
