@@ -55,10 +55,10 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 				}else {
 					for (Historico historico : stock.getHistoricos()) {
 						if (historico.getFecha().equals(fecha)) {
-							historico.setCantidad(cantidad);
-							historico.setDescartadas(descartadas);
-							historico.setDisponibles(disponibles);
-							historico.setAdministradas(administradas);
+							historico.setCantidad(historico.getCantidad()+cantidad);
+							historico.setDescartadas(historico.getDescartadas()+descartadas);
+							historico.setDisponibles(historico.getDisponibles()+disponibles);
+							historico.setAdministradas(historico.getAdministradas()+administradas);
 							em.merge(historico);
 							return;
 						}

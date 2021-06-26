@@ -51,6 +51,7 @@ import interfaces.IControladorVacunadorLocal;
 import interfaces.IControladorVacunatorioLocal;
 import interfaces.IEnfermedadLocal;
 import interfaces.IEtapaRemote;
+import interfaces.IHistoricoDaoLocal;
 import interfaces.ILaboratorioLocal;
 import interfaces.IPlanVacunacionLocal;
 import interfaces.IReservaDAOLocal;
@@ -80,6 +81,9 @@ public class InitTest {
 	IControladorVacunaLocal vch;
 	@EJB
 	IStockDaoLocal csl;
+	@EJB
+	IHistoricoDaoLocal ch;
+	
 	
 	@EJB
 	IPlanVacunacionLocal plan;
@@ -155,10 +159,78 @@ public class InitTest {
 			vch.agregarVacuna("vacuna2Virus2", 2, 60, 12, "lab2", "virus2");
 			vch.agregarVacuna("vacuna3Virus2", 4, 60, 12, "lab1", "virus2");
 			
-			csl.agregarStock("vact1", "vacuna1Virus1", 200);
-			csl.modificarStock("vact1", "vacuna1Virus1", 200, 0, 0, 200);
-			csl.agregarStock("vact1", "vacuna2Virus2", 100);
-			csl.modificarStock("vact1", "vacuna2Virus2", 100, 0, 0, 100);
+			csl.agregarStock("vact1", "vacuna1Virus1", 400);
+			csl.modificarStock("vact1", "vacuna1Virus1", 400, 0, 0, 400);
+			ch.persistirHistorico(LocalDate.now(), 200, 0, 200, 0, "vact1", "vacuna1Virus1");
+			ch.persistirHistorico(LocalDate.now().minusMonths(1), 100, 0, 100, 0, "vact1", "vacuna1Virus1");
+			ch.persistirHistorico(LocalDate.now().minusMonths(3), 200, 0, 200, 0, "vact1", "vacuna1Virus1");
+			
+			csl.agregarStock("terminal", "vacuna1Virus1", 100);
+			csl.modificarStock("terminal", "vacuna1Virus1", 100, 20, 0, 80);
+			ch.persistirHistorico(LocalDate.now(), 50, 0, 50, 0, "terminal", "vacuna1Virus1");
+			ch.persistirHistorico(LocalDate.now().minusMonths(2), 25, 0, 25, 0, "terminal", "vacuna1Virus1");
+			ch.persistirHistorico(LocalDate.now().minusMonths(4), 25, 20, 5, 0, "terminal", "vacuna1Virus1");
+			
+			csl.agregarStock("vact1", "vacuna2Virus1", 100);
+			csl.modificarStock("vact1", "vacuna2Virus1", 100, 10, 0, 90);
+			ch.persistirHistorico(LocalDate.now(), 40, 0, 40, 0, "vact1", "vacuna2Virus1");
+			ch.persistirHistorico(LocalDate.now(), 10, 0, 10, 0, "vact1", "vacuna2Virus1");
+			ch.persistirHistorico(LocalDate.now().minusMonths(1), 25, 10, 15, 0, "vact1", "vacuna2Virus1");
+			ch.persistirHistorico(LocalDate.now().minusMonths(2), 25, 0, 25, 0, "vact1", "vacuna2Virus1");
+			
+			csl.agregarStock("carrasco", "vacuna2Virus1", 500);
+			csl.modificarStock("carrasco", "vacuna2Virus1", 500, 0, 0, 500);
+			ch.persistirHistorico(LocalDate.now(), 50, 0, 50, 0, "carrasco", "vacuna2Virus1");
+			ch.persistirHistorico(LocalDate.now().minusMonths(2), 150, 0, 150, 0, "carrasco", "vacuna2Virus1");
+			ch.persistirHistorico(LocalDate.now().minusMonths(5), 200, 0, 200, 0, "carrasco", "vacuna2Virus1");
+			ch.persistirHistorico(LocalDate.now().minusMonths(8), 100, 0, 100, 0, "carrasco", "vacuna2Virus1");
+			
+			csl.agregarStock("vact1", "vacuna3Virus1", 300);
+			csl.modificarStock("vact1", "vacuna3Virus1", 300, 50, 50, 200);
+			ch.persistirHistorico(LocalDate.now(), 100, 50, 25, 25, "vact1", "vacuna3Virus1");
+			ch.persistirHistorico(LocalDate.now().minusMonths(1), 50, 0, 25, 25, "vact1", "vacuna3Virus1");
+			ch.persistirHistorico(LocalDate.now().minusMonths(2), 100, 0, 100, 0, "vact1", "vacuna3Virus1");
+			ch.persistirHistorico(LocalDate.now().minusMonths(10), 50, 0, 50, 0, "vact1", "vacuna3Virus1");
+			
+			csl.agregarStock("vact1", "vacuna4Virus1", 400);
+			csl.modificarStock("vact1", "vacuna4Virus1", 400, 0, 0, 400);
+			ch.persistirHistorico(LocalDate.now(), 300, 0, 300, 0, "vact1", "vacuna4Virus1");
+			ch.persistirHistorico(LocalDate.now().minusMonths(3), 100, 0, 100, 0, "vact1", "vacuna4Virus1");
+			
+			csl.agregarStock("terminal", "vacuna4Virus1", 50);
+			csl.modificarStock("terminal", "vacuna4Virus1", 50, 0, 50, 0);
+			ch.persistirHistorico(LocalDate.now().minusMonths(3), 50, 0, 0, 50, "terminal", "vacuna4Virus1");
+			
+			csl.agregarStock("carrasco", "vacuna4Virus1", 100);
+			csl.modificarStock("carrasco", "vacuna4Virus1", 100, 0, 0, 100);
+			ch.persistirHistorico(LocalDate.now(), 90, 0, 90, 0, "carrasco", "vacuna4Virus1");
+			ch.persistirHistorico(LocalDate.now().minusMonths(2), 10, 0, 10, 0, "carrasco", "vacuna4Virus1");
+			
+			csl.agregarStock("vact1", "vacuna1Virus2", 600);
+			csl.modificarStock("vact1", "vacuna1Virus2", 600, 0, 0, 600);
+			ch.persistirHistorico(LocalDate.now(), 100, 0, 100, 0, "vact1", "vacuna1Virus2");
+			ch.persistirHistorico(LocalDate.now().minusMonths(1), 50, 0, 50, 0, "vact1", "vacuna1Virus2");
+			ch.persistirHistorico(LocalDate.now().minusMonths(2), 100, 0, 100, 0, "vact1", "vacuna1Virus2");
+			ch.persistirHistorico(LocalDate.now().minusMonths(3), 150, 0, 150, 0, "vact1", "vacuna1Virus2");
+			ch.persistirHistorico(LocalDate.now().minusMonths(4), 20, 0, 20, 0, "vact1", "vacuna1Virus2");
+			ch.persistirHistorico(LocalDate.now().minusMonths(5), 180, 0, 180, 0, "vact1", "vacuna1Virus2");
+			
+			csl.agregarStock("carrasco", "vacuna1Virus2", 400);
+			csl.modificarStock("carrasco", "vacuna1Virus2", 400, 100, 100, 200);
+			ch.persistirHistorico(LocalDate.now(), 50, 0, 50, 0, "carrasco", "vacuna1Virus2");
+			ch.persistirHistorico(LocalDate.now().minusMonths(2), 50, 50, 0, 0, "carrasco", "vacuna1Virus2");
+			ch.persistirHistorico(LocalDate.now().minusMonths(4), 100, 0, 50, 50, "carrasco", "vacuna1Virus2");
+			ch.persistirHistorico(LocalDate.now().minusMonths(6), 100, 25, 50, 25, "carrasco", "vacuna1Virus2");
+			ch.persistirHistorico(LocalDate.now().minusMonths(8), 50, 25, 0, 25, "carrasco", "vacuna1Virus2");
+			ch.persistirHistorico(LocalDate.now().minusMonths(10), 50, 0, 50, 0, "carrasco", "vacuna1Virus2");
+			
+			csl.agregarStock("vact1", "vacuna2Virus2", 200);
+			csl.modificarStock("vact1", "vacuna2Virus2", 200, 0, 0, 200);
+			ch.persistirHistorico(LocalDate.now().minusMonths(5), 10, 0, 10, 0, "vact1", "vacuna2Virus2");
+			ch.persistirHistorico(LocalDate.now().minusMonths(8), 190, 0, 190, 0, "vact1", "vacuna2Virus2");
+			
+			
+			
 			
 			plan.agregarPlanVacunacion("plan1virus1", "descripcion plan1virus1", "virus1");
 			plan.agregarPlanVacunacion("plan2virus1", "descripcion plan2virus1", "virus1");
