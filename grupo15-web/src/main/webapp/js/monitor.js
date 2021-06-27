@@ -158,7 +158,7 @@ var res = new Vue({
 
         },
         cargarDiaMesAnio() {
-            axios.post("http://localhost:8080/grupo15-services/rest/monitor/vacunados", {
+            axios.post("/grupo15-services/rest/monitor/vacunados", {
                 enfermedad: this.IdEnf.toString(),
                 plan: this.IdPlan.toString(),
                 vacuna: this.IdVac.toString(),
