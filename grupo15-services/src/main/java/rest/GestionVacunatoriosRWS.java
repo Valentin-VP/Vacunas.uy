@@ -3,8 +3,6 @@ package rest;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.security.DeclareRoles;
@@ -13,7 +11,6 @@ import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -21,25 +18,22 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 
 import datatypes.DtDireccion;
-import datatypes.ErrorInfo;
-import exceptions.EnfermedadInexistente;
+import datatypes.DtVacunatorio;
+import exceptions.AccionInvalida;
 import exceptions.PuestoCargadoException;
 import exceptions.PuestoNoCargadosException;
 import exceptions.ReglasCuposCargadoException;
-import exceptions.VacunaInexistente;
 import exceptions.VacunatorioCargadoException;
 import exceptions.VacunatorioNoCargadoException;
 import exceptions.VacunatoriosNoCargadosException;
 import interfaces.IControladorPuestoLocal;
 import interfaces.IControladorVacunatorioLocal;
-import rest.filter.JsonSerializable;
 import rest.filter.ResponseBuilder;
 import rest.filter.TokenSecurity;
 
@@ -92,7 +86,7 @@ public class GestionVacunatoriosRWS {
 	        	return ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED,
 						"No se ha obtenido ci de Cookie/Token");
 			LOGGER.info("Cedula obtenida en REST: " + ci);
-			return ResponseBuilder.createResponse(Response.Status.OK, iControladorVacunatorio.obtenerVacunatorio(vacunatorio).toJson());
+			return ResponseBuilder.createResponse(Response.Status.OK, toJson(iControladorVacunatorio.obtenerVacunatorio(vacunatorio)));
 		} catch (JSONException e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					e.getMessage());
@@ -116,8 +110,9 @@ public class GestionVacunatoriosRWS {
 			iControladorVacunatorio.agregarReglasCupos(datosInterno.getString("id"), datosInterno.getString("idReglas"),
 					Integer.parseInt(datosInterno.getString("duracionTurno")),
 					LocalTime.parse(datosInterno.getString("horaApertura"), formatter), LocalTime.parse(datosInterno.getString("horaCierre"), formatter));
+			iControladorVacunatorio.generarTokenVacunatorio(datosInterno.getString("id"));
 			return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha agregado el nodo Vacunatorio con exito.");
-		} catch ( NumberFormatException | JSONException | VacunatorioNoCargadoException | ReglasCuposCargadoException | VacunatorioCargadoException  e) {
+		} catch ( NumberFormatException | JSONException | VacunatorioNoCargadoException | ReglasCuposCargadoException | VacunatorioCargadoException | AccionInvalida  e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					e.getMessage());
 		}
@@ -181,5 +176,24 @@ public class GestionVacunatoriosRWS {
 //			e.printStackTrace();
 //		}
 //	}
-
+	private JSONObject toJson(DtVacunatorio dt) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put( "id", dt.getId() );
+		jsonObject.put( "nombre", dt.getNombre() );
+		jsonObject.put( "dtDir", toJsonDtDir(dt.getDtDir()));
+		jsonObject.put( "telefono", dt.getTelefono() );
+		jsonObject.put( "latitud", dt.getLatitud() );
+		jsonObject.put( "longitud", dt.getLongitud() );
+		jsonObject.put( "url", dt.getUrl() );
+		jsonObject.put( "token", dt.getToken() );
+		return jsonObject;
+	}
+	
+	public JSONObject toJsonDtDir(DtDireccion dt) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("direccion", dt.getDireccion());
+		jsonObject.put("barrio", dt.getBarrio());
+		jsonObject.put("departamento", dt.getDepartamento());
+		return jsonObject;
+	}
 }
