@@ -4,9 +4,6 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
 @XmlRootElement
 public class DtDireccion implements Serializable {
 
@@ -50,7 +47,7 @@ public class DtDireccion implements Serializable {
 	public void setDepartamento(String departamento) {
 		this.departamento = departamento;
 	}
-
+/*
 	public JSONObject toJson() throws JSONException {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("direccion", this.direccion);
@@ -58,7 +55,7 @@ public class DtDireccion implements Serializable {
 		jsonObject.put("departamento", this.departamento);
 		return jsonObject;
 	}
-
+*/
 	@Override
 	public int hashCode() {
 		final int prime = 31;

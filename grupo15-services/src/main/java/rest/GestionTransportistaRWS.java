@@ -20,6 +20,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import datatypes.DtDireccion;
 import datatypes.TransportistaInexistente;
+import exceptions.AccionInvalida;
 import exceptions.ReglasCuposCargadoException;
 import exceptions.TransportistaRepetido;
 import exceptions.VacunatorioCargadoException;
@@ -59,8 +60,9 @@ private final Logger LOGGER = Logger.getLogger(getClass().getName());
 		try {
 			JSONObject datosInterno = new JSONObject(datos);
 			ct.agregarTransportista(Integer.valueOf(datosInterno.getString("id")), datosInterno.getString("url"));
+			ct.generarTokenTransportista(Integer.valueOf(datosInterno.getString("id")));
 			return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha agregado el nodo Transportista con exito.");
-		} catch ( NumberFormatException | JSONException | TransportistaRepetido  e) {
+		} catch ( NumberFormatException | JSONException | TransportistaRepetido | TransportistaInexistente | AccionInvalida  e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					e.getMessage());
 		}
