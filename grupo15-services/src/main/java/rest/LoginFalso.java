@@ -78,21 +78,21 @@ public class LoginFalso {
 					IUsuarioLocal.ModificarCiudadano(ciu);
 					break;
 				case "autoridad":
-					IUsuarioLocal.agregarUsuarioInterno(Integer.parseInt(ci), ci, tipo, null, null, null, null, Rol.Autoridad);
+					IUsuarioLocal.agregarUsuarioInterno(Integer.parseInt(ci), null, null, null, null, null, null, Rol.Autoridad);
 					DtUsuarioInterno aut;
 					aut = IUsuarioLocal.buscarUsuarioInterno(Integer.parseInt(ci));
 					aut.setToken(token);
 					IUsuarioLocal.ModificarUsuarioInterno(aut);
 					break;
 				case "administrador":
-					IUsuarioLocal.agregarUsuarioInterno(Integer.parseInt(ci), ci, tipo, null, null, null, null, Rol.Administrador);
+					IUsuarioLocal.agregarUsuarioInterno(Integer.parseInt(ci), null, null, null, null, null, null, Rol.Administrador);
 					DtUsuarioInterno adm;
 					adm = IUsuarioLocal.buscarUsuarioInterno(Integer.parseInt(ci));
 					adm.setToken(token);
 					IUsuarioLocal.ModificarUsuarioInterno(adm);
 					break;
 				case "vacunador":
-					IUsuarioLocal.agregarUsuarioVacunador(Integer.parseInt(ci), ci, tipo, null, token, null, null);
+					IUsuarioLocal.agregarUsuarioVacunador(Integer.parseInt(ci), null, null, null, null, null, null);
 					DtVacunador vac;
 					vac = IUsuarioLocal.buscarVacunador(Integer.parseInt(ci));
 					vac.setToken(token);
