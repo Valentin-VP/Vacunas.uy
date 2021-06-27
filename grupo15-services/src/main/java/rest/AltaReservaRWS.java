@@ -347,11 +347,28 @@ public class AltaReservaRWS implements Serializable {
 			ArrayList<DtTareaNotificacion> tasks = rs.confirmarReserva(Integer.parseInt(ci), dtr.getIdEnfermedad(), dtr.getIdPlan(), dtr.getIdVacunatorio(),
 					f,
 					h, externo);
-			
 			// Se agrega pedido de push notification en caso que el Ciudadano tenga la app instalada
-//			if (IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci)).getMobileToken() != null) {
-//				DtTareaNotificacion task = new DtTareaNotificacion(reserva.getPuesto(), mobileToken, reserva.getVacunatorio(), fecha, hora);
-//			}
+			if (IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci)).getMobileToken() != null) {
+				for (DtTareaNotificacion task: tasks) {
+					String origin = headers.getHeaderString("Origin");
+					if (origin == null || origin == "") 
+						origin = "http://localhost:8080";
+					String firebaseUrl = origin + "/grupo15-services/rest/firestore/notificacion";
+					URI uri = UriBuilder.fromPath(firebaseUrl).build();
+					LOGGER.severe("Uri para REST Firestore: " + uri.toString());
+					conexion = ClientBuilder.newClient();
+					Response loginResponse = conexion.target(uri)
+					.request(MediaType.APPLICATION_JSON)
+					.cookie(cookie)
+					.buildPost(Entity.entity(task, MediaType.APPLICATION_JSON))
+					.invoke();
+					if(loginResponse.getStatus() == 200) {
+						LOGGER.info("Pedido de push realizado a REST de Firestore retorna 200 OK");
+					}else {
+						LOGGER.severe("Ha ocurrido un error realizando el pedido REST a Firestore (interno) - " + loginResponse.getEntity());
+					}
+				}
+			}
 			return Response.ok().build();
 		} catch (DateTimeException | UsuarioInexistente | PlanVacunacionInexistente | VacunatorioNoCargadoException | EnfermedadInexistente
 				| CupoInexistente | EtapaInexistente e) {
