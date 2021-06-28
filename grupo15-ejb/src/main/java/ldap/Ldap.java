@@ -123,8 +123,12 @@ public class Ldap implements ILdap, ILdapLocal {
 
 //	}
 
-	public void deleteUser(Integer ci) {
+
+
+public void deleteUser(Integer cedula) {
 		try {
+			String ci=cedula.toString();
+			this.newConnection();
 			connection.destroySubcontext("userid=" + ci + ",ou=users,ou=system");
 		} catch (NamingException e) {
 			System.out.println("Usuario eliminado correctamente");
@@ -132,7 +136,6 @@ public class Ldap implements ILdap, ILdapLocal {
 			e.printStackTrace();
 		}
 	}
-
 //
 ////DELETE USER HARDCOREADO
 //public void deleteUser() {
