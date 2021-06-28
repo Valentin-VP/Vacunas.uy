@@ -1,6 +1,7 @@
 
 package google;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -20,6 +21,7 @@ import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.FirestoreOptions;
 import com.google.cloud.firestore.WriteResult;
+import com.google.common.collect.Lists;
 
 import interfaces.IFirestoreLocal;
 import interfaces.IFirestoreRemote;
@@ -45,8 +47,10 @@ public class FirestoreController implements IFirestoreLocal, IFirestoreRemote {
 	public void iniciarConexion() {
 		FirestoreOptions firestoreOptions;
 		try {
+			GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream("/home/wildfly/.config/gcloud/tse_grupo15_gmail.com_application_default_credentials.json"))
+			        .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
 			firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder().setProjectId(PROJECT_ID)
-					.setCredentials(GoogleCredentials.getApplicationDefault()).build();
+					.setCredentials(credentials).build();
 			Firestore db = firestoreOptions.getService();
 			this.setDb(db);
 		} catch (IOException e) {
