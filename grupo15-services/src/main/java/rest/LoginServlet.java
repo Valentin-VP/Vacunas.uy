@@ -28,9 +28,15 @@ public class LoginServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // URL donde la app recibira el authorization code (e.g., http://localhost:3000/callback)
+    	String agent = request.getHeader("User-Agent");
     	String authorizationUri = config.getAuthorizeEndpoint();
     	String clientId = config.getClientId();
-    	String redirectUri = config.getRedirect_uri();
+    	String redirectUri;
+    	if(agent.contains("Android")) {
+    		redirectUri = "http://localhost";
+    	}else {
+    		redirectUri = config.getRedirect_uri();
+    	}
     	String scope = config.getOpenid();
     	//String tipoUsuario = "vacunador";
     	String tipoUsuario = request.getParameter("tipoUsuario");
