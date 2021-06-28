@@ -181,18 +181,8 @@ public class AltaReservaRWS implements Serializable {
 	//@PermitAll
 	@GET
 	@Path("/enf")
-	public Response listarEnfermedades(@CookieParam("x-access-token") Cookie cookie){
+	public Response listarEnfermedades(){
 		try {
-			String token = cookie.getValue();
-			String ci = null;
-			try {
-				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-			} catch (InvalidJwtException e) {
-				e.printStackTrace();
-			}
-	        if( ci == null)
-	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
-			LOGGER.info("Cedula obtenida en REST: " + ci);
 			return Response.ok(es.listarEnfermedades()).build();
 		} catch (EnfermedadInexistente e) {
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
@@ -203,18 +193,8 @@ public class AltaReservaRWS implements Serializable {
 	//@PermitAll
 	@GET
 	@Path("/vac")
-	public Response listarVacunatorios(@CookieParam("x-access-token") Cookie cookie){
+	public Response listarVacunatorios(){
 		try {
-			String token = cookie.getValue();
-			String ci = null;
-			try {
-				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-			} catch (InvalidJwtException e) {
-				e.printStackTrace();
-			}
-	        if( ci == null)
-	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
-			LOGGER.info("Cedula obtenida en REST: " + ci);
 			return Response.ok(vs.listarVacunatorio()).build();
 		} catch (VacunatoriosNoCargadosException e) {
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
@@ -226,18 +206,8 @@ public class AltaReservaRWS implements Serializable {
 	//@PermitAll
 	@GET
 	@Path("/enf/{e}")
-	public Response seleccionarEnfermedad(@CookieParam("x-access-token") Cookie cookie, @PathParam("e") String enfermedad){
+	public Response seleccionarEnfermedad(@PathParam("e") String enfermedad){
 		try {
-			String token = cookie.getValue();
-			String ci = null;
-			try {
-				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-			} catch (InvalidJwtException e) {
-				e.printStackTrace();
-			}
-	        if( ci == null)
-	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
-			LOGGER.info("Cedula obtenida en REST: " + ci);
 			return Response.ok(rs.seleccionarEnfermedad(enfermedad)).build();
 		} catch (EnfermedadInexistente | PlanVacunacionInexistente  e) {
 			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
@@ -260,7 +230,6 @@ public class AltaReservaRWS implements Serializable {
 	        if( ci == null)
 	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
 			LOGGER.info("Cedula obtenida en REST: " + ci);
-			
 			String url = "https://rcastro.pythonanywhere.com/api/usuarios/" + ci + "/";
 			LOGGER.info("Ejecutando call REST: " + url);
 			Client conexion = ClientBuilder.newClient();
@@ -350,9 +319,8 @@ public class AltaReservaRWS implements Serializable {
 			// Se agrega pedido de push notification en caso que el Ciudadano tenga la app instalada
 			if (IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci)).getMobileToken() != null) {
 				for (DtTareaNotificacion task: tasks) {
-					String origin = headers.getHeaderString("Origin");
-					if (origin == null || origin == "") 
-						origin = "http://localhost:8080";
+					String origin = "http://" + headers.getHeaderString("Host");
+					//String origin = headers.getHeaderString("Origin");
 					String firebaseUrl = origin + "/grupo15-services/rest/firestore/notificacion";
 					URI uri = UriBuilder.fromPath(firebaseUrl).build();
 					LOGGER.severe("Uri para REST Firestore: " + uri.toString());
