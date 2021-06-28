@@ -57,7 +57,11 @@ var res = new Vue({
         this.ok200="Se realizó la reserva correctamente"
         console.log("VariableRespuesta: " + this.ok200)
       }
-
+      if (response.status === 400) {
+        console.log("Respuesta: " + response.status)
+        this.ok200="No es posible realizar esta reserva"
+        console.log("VariableRespuesta: " + this.ok200)
+      }
 
     });
 
