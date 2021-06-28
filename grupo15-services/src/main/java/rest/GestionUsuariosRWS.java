@@ -285,6 +285,7 @@ public class GestionUsuariosRWS {
 	public Response eliminarVacunador(@QueryParam("ci") String ci) {
 		try {
 			IUsuarioLocal.eliminarVacunador(ci);
+			l.deleteUser(Integer.valueOf(ci));
 			return Response.ok().build();
 		} catch (NumberFormatException | UsuarioInexistente e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,e.getMessage());
