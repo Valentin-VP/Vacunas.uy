@@ -37,7 +37,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import org.jose4j.jwt.consumer.InvalidJwtException;
@@ -63,6 +62,7 @@ import interfaces.IEnfermedadLocal;
 import interfaces.IReservaDAOLocal;
 import interfaces.IUsuarioLocal;
 import rest.filter.AuthenticationFilter;
+import rest.filter.ResponseBuilder;
 import rest.filter.TokenSecurity;
 
 @DeclareRoles({"vacunador", "ciudadano", "administrador", "autoridad"})
@@ -185,7 +185,8 @@ public class AltaReservaRWS implements Serializable {
 		try {
 			return Response.ok(es.listarEnfermedades()).build();
 		} catch (EnfermedadInexistente e) {
-			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					e.getMessage());
 		}
 	}
 	
@@ -197,7 +198,8 @@ public class AltaReservaRWS implements Serializable {
 		try {
 			return Response.ok(vs.listarVacunatorio()).build();
 		} catch (VacunatoriosNoCargadosException e) {
-			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					e.getMessage());
 		}
 
 	}
@@ -210,7 +212,8 @@ public class AltaReservaRWS implements Serializable {
 		try {
 			return Response.ok(rs.seleccionarEnfermedad(enfermedad)).build();
 		} catch (EnfermedadInexistente | PlanVacunacionInexistente  e) {
-			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					e.getMessage());
 		}
 	}
 	
@@ -239,7 +242,8 @@ public class AltaReservaRWS implements Serializable {
 			
 			return Response.ok(rs.seleccionarPlanVacunacion(plan, Integer.parseInt(ci), externo)).build();
 		} catch (PlanVacunacionInexistente | EtapaInexistente | UsuarioInexistente e) {
-			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					e.getMessage());
 		}
 	}
 	
@@ -249,8 +253,8 @@ public class AltaReservaRWS implements Serializable {
 	@Path("/fecha")///{vac}/{date}")
 	public Response seleccionarFecha(@CookieParam("x-access-token") Cookie cookie, @QueryParam("vac") String idVacunatorio, @QueryParam("date") String fecha, @QueryParam("p") int plan){
 		if (idVacunatorio==null || fecha==null) {
-			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
-			return rb.build();
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					"Faltan argumentos");
 		}
 		try {
 			String token = cookie.getValue();
@@ -277,7 +281,8 @@ public class AltaReservaRWS implements Serializable {
 			//Date nuevaFecha = Date.from(f.atStartOfDay(ZoneId.systemDefault()).toInstant());
 			return Response.ok(rs.seleccionarFecha(f, idVacunatorio, plan, Integer.parseInt(ci), externo)).build();
 		} catch (DateTimeException | VacunatorioNoCargadoException | PlanVacunacionInexistente | UsuarioInexistente | EtapaInexistente | NumberFormatException | CupoInexistente e) {
-			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					e.getMessage());
 		}
 	}
 	
@@ -287,8 +292,8 @@ public class AltaReservaRWS implements Serializable {
 	@Path("/confirmar")
 	public Response confirmarReserva(@CookieParam("x-access-token") Cookie cookie, @Context HttpHeaders headers, DtDatosReserva dtr){
 		if (dtr.getIdEnfermedad()==null || dtr.getIdVacunatorio()==null || dtr.getFecha()==null || dtr.getHora()==null) {
-			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
-			return rb.build();
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					"Faltan argumentos");
 		}
 		try {
 			String token = cookie.getValue();
@@ -340,7 +345,8 @@ public class AltaReservaRWS implements Serializable {
 			return Response.ok().build();
 		} catch (DateTimeException | UsuarioInexistente | PlanVacunacionInexistente | VacunatorioNoCargadoException | EnfermedadInexistente
 				| CupoInexistente | EtapaInexistente e) {
-			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					e.getMessage());
 		}
 	}
 	
