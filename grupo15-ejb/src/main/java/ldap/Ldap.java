@@ -24,7 +24,7 @@ import interfaces.ILdapLocal;
 public class Ldap implements ILdap, ILdapLocal {
 
 	DirContext connection;
-
+	private String hostname = "10.1.4.48";
 	public Ldap() {
 		// TODO Auto-generated constructor stub
 	}
@@ -33,11 +33,11 @@ public class Ldap implements ILdap, ILdapLocal {
 
 		Properties env = new Properties();
 		env.put(DirContext.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-		env.put(DirContext.PROVIDER_URL, "ldap://localhost:10389");
+		env.put(DirContext.PROVIDER_URL, "ldap://"+hostname+":10389");
 		env.put(DirContext.SECURITY_AUTHENTICATION, "simple");
 		env.put(DirContext.SECURITY_PRINCIPAL, "uid=admin,ou=system");
 		env.put(DirContext.SECURITY_CREDENTIALS, "secret");
-
+		System.out.println("############################## CREANDO CONEXION LDAP ###################################");
 		try {
 			connection = new InitialDirContext(env);
 			System.out.println("Hello World" + connection);
@@ -225,8 +225,9 @@ public class Ldap implements ILdap, ILdapLocal {
 	public boolean authUser(String userId, String password) {
 		try {
 			Properties env = new Properties();
+			System.out.println("############################## CREANDO CONEXION LDAP ###################################");
 			env.put(DirContext.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-			env.put(DirContext.PROVIDER_URL, "ldap://localhost:10389");
+			env.put(DirContext.PROVIDER_URL, "ldap://"+hostname+":10389");
 			env.put(DirContext.SECURITY_AUTHENTICATION, "simple");
 			env.put(DirContext.SECURITY_PRINCIPAL, "userid=" + userId + ",ou=users,ou=system");
 			env.put(DirContext.SECURITY_CREDENTIALS, password);

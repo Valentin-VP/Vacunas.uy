@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import datatypes.ErrorInfo;
 import exceptions.PlanVacunacionInexistente;
 import interfaces.IPlanVacunacionLocal;
+import rest.filter.ResponseBuilder;
 
 @DeclareRoles({"vacunador", "ciudadano", "administrador", "autoridad"})
 @Path("/planagenda")
@@ -43,7 +44,7 @@ public class ConsultarAgendaPlanRWS implements Serializable {
 		try {
 			return Response.ok(cp.listarAgendasAbiertas()).build();
 		}catch(PlanVacunacionInexistente e) {
-			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).build();
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST);
 		}
 	}
 	
@@ -54,7 +55,7 @@ public class ConsultarAgendaPlanRWS implements Serializable {
 		try {
 			return Response.ok(cp.listarAgendasProximas()).build();
 		}catch(PlanVacunacionInexistente e) {
-			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).build();
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST);
 		}
 	}
 }
