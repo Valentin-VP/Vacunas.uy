@@ -9,6 +9,7 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -16,6 +17,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -149,6 +151,23 @@ public class GestionPlanRWS {
 			return ResponseBuilder.createResponse(Response.Status.OK, "Modificado Correctamente");
 		} catch (JSONException | PlanVacunacionInexistente e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+		}
+	}
+	
+	//@RolesAllowed({"autoridad"}) 
+	@PermitAll
+	@GET
+	@Path("/obtenerVacunasParaPlan")
+	public Response obtenerVacunasDeEnfermedadDePlan(@CookieParam("x-access-token") Cookie cookie, @QueryParam("idPlan") String idPlan) {
+		if (idPlan==null) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					"No se han ingresado todos los parametros necesarios.");
+		}
+		try {
+			return Response.ok(cp.obtenerVacunasDeEnfermedadDePlan(Integer.parseInt(idPlan))).build();
+		} catch (NumberFormatException | AccionInvalida | PlanVacunacionInexistente e) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					e.getMessage());
 		}
 	}
 }

@@ -167,8 +167,8 @@ public class GestionVacunasRWS {
 			lab = jsonObject.getString("laboratorio");
 			enf = jsonObject.getString("enfermedad");
 			cv.modificarVacuna(nombre, cantDosis, expira, tiempoEntreDosis, lab, enf);
-			return Response.ok().build();
-		} catch (JSONException | VacunaInexistente | LaboratorioInexistente | EnfermedadInexistente e) {
+			return ResponseBuilder.createResponse(Response.Status.OK, "Se ha modificado la vacuna.");
+		} catch (JSONException | VacunaInexistente | LaboratorioInexistente | EnfermedadInexistente | AccionInvalida e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 		}
 	}

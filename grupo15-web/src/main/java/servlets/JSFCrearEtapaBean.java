@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
@@ -35,7 +36,7 @@ import datatypes.DtPlanVacunacion;
 import datatypes.DtVacuna;
 
 @Named("CrearEtapa")
-@RequestScoped
+@SessionScoped
 public class JSFCrearEtapaBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -264,24 +265,6 @@ public class JSFCrearEtapaBean implements Serializable {
 				String message = reply.getString("message");
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Crear:", message));
 			}
-			conexion = ClientBuilder.newClient();
-			webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunas/listar");
-			invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
-			response = invocation.invoke();
-			LOGGER.info("Respuesta: " + response.getStatus());
-			if (response.getStatus() == 200) {
-				dtVacunas = response.readEntity(new GenericType<List<DtVacuna>>() {
-				});
-				for (DtVacuna dt : dtVacunas) {
-					this.vacunas.add(dt.getNombre());
-				}
-			}else {
-				String jsonString = response.readEntity(String.class);
-				JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
-				JsonObject reply = jsonReader.readObject();
-				String message = reply.getString("message");
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Crear:", message));
-			}
 			LOGGER.info("Por solicitar los planes en Bean...");
 			origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 	        hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
@@ -306,8 +289,43 @@ public class JSFCrearEtapaBean implements Serializable {
 		} catch (Exception e) {
 			LOGGER.severe("Ha ocurrido un error: " + e.getStackTrace() + e.getMessage());
 		}
+		cargarVacunasPlan();
 	}
 	 
+	public void cargarVacunasPlan() {
+		Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap()
+				.get("x-access-token");
+		if (cookie != null) {
+			token = cookie.getValue();
+			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
+		}
+		if (this.plan==null || this.plan.equals("")) {
+			return;
+		}
+		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        LOGGER.info("El server name es: " + hostname);
+		Client conexion = ClientBuilder.newClient();
+		conexion = ClientBuilder.newClient();
+		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/plan/obtenerVacunasParaPlan?idPlan=" + this.plan);
+		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
+		Response response = invocation.invoke();
+		LOGGER.info("Respuesta: " + response.getStatus());
+		if (response.getStatus() == 200) {
+			dtVacunas = response.readEntity(new GenericType<List<DtVacuna>>() {
+			});
+			this.vacunas.clear();
+			for (DtVacuna dt : dtVacunas) {
+				this.vacunas.add(dt.getNombre());
+			}
+		}else {
+			String jsonString = response.readEntity(String.class);
+			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+			JsonObject reply = jsonReader.readObject();
+			String message = reply.getString("message");
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Crear:", message));
+		}
+	}
 	
 	public void crearEtapa() {
 		Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap()

@@ -12,10 +12,12 @@ import javax.persistence.Query;
 
 import datatypes.DtPlanFecha;
 import datatypes.DtPlanVacunacion;
+import datatypes.DtVacuna;
 import entities.Enfermedad;
 import entities.Etapa;
 import entities.PlanVacunacion;
 import entities.Reserva;
+import entities.Vacuna;
 import exceptions.AccionInvalida;
 import exceptions.EnfermedadInexistente;
 import exceptions.PlanVacunacionInexistente;
@@ -89,6 +91,26 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 			return dtPlanVacs;
 		}else {
 			throw new PlanVacunacionInexistente("No existen planes de vacunacion registrados");
+		}
+	}
+	
+	public ArrayList<DtVacuna> obtenerVacunasDeEnfermedadDePlan(int id) throws AccionInvalida, PlanVacunacionInexistente{
+		PlanVacunacion pV = em.find(PlanVacunacion.class, id);
+		if(pV != null) {
+			ArrayList<DtVacuna> retorno = new ArrayList<DtVacuna>();
+			Query query = em.createQuery("SELECT v FROM Vacuna v WHERE enfermedad_nombre = '" + pV.getEnfermedad().getNombre() + "'");
+			@SuppressWarnings("unchecked")
+			List<Vacuna> vacs = query.getResultList();
+			if(!vacs.isEmpty()) {
+				for (Vacuna v: vacs) {
+					retorno.add(v.toDtVacuna());
+				}
+				return retorno;
+			}else {
+				throw new AccionInvalida("No hay ninguna vacuna para la enfermedad del plan seleccionado.");
+			}
+		}else {
+			throw new PlanVacunacionInexistente("No existe un plan de vacunacion con esa id");
 		}
 	}
 	

@@ -6,6 +6,7 @@ import javax.ejb.Remote;
 
 import datatypes.DtPlanFecha;
 import datatypes.DtPlanVacunacion;
+import datatypes.DtVacuna;
 import exceptions.AccionInvalida;
 import exceptions.EnfermedadInexistente;
 import exceptions.PlanVacunacionInexistente;
@@ -29,4 +30,5 @@ public interface IPlanVacunacionRemote {
 	
 	public void modificarPlan(int id, String nombre, String descripcion) throws PlanVacunacionInexistente;
 	
+	public ArrayList<DtVacuna> obtenerVacunasDeEnfermedadDePlan(int id) throws AccionInvalida, PlanVacunacionInexistente;
 }

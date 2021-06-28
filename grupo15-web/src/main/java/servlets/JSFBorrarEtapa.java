@@ -91,7 +91,11 @@ public class JSFBorrarEtapa implements Serializable {
 				System.out.println("borrado Correctamente");
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Borrar:", "Etapa eliminada"));
 			}else {
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "" + response.getStatus()));
+				String jsonString = response.readEntity(String.class);
+				JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+				JsonObject reply = jsonReader.readObject();
+				String message = reply.getString("message");
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Eliminar:", message));
 			}
 		
 	}

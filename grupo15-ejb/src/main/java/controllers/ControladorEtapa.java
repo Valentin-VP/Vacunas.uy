@@ -42,7 +42,7 @@ public class ControladorEtapa implements IEtapaLocal, IEtapaRemote{
 				if (v==null)
 					throw new VacunaInexistente("No existe esa vacuna");
 				if (!v.getEnfermedad().equals(pV.getEnfermedad()))
-					throw new AccionInvalida("Esa vacuna no inmuniza '" + pV.getEnfermedad() + "'.");
+					throw new AccionInvalida("Esa vacuna no inmuniza '" + pV.getEnfermedad().getNombre() + "'.");
 				etapa.setVacuna(v);
 				em.persist(etapa);
 				pV.addEtapa(etapa);

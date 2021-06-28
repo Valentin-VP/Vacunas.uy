@@ -19,6 +19,7 @@ import entities.Etapa;
 import entities.Laboratorio;
 import entities.LoteDosis;
 import entities.PlanVacunacion;
+import entities.Reserva;
 import entities.Stock;
 import entities.Vacuna;
 import entities.Vacunatorio;
@@ -116,7 +117,7 @@ public class ControladorVacuna implements IControladorVacunaLocal, IControladorV
 			throw new VacunaInexistente("No existe una vacuna con ese nombre");
 	}
 	
-	public void modificarVacuna(String nombre, int cantDosis, int expira, int tiempoEntreDosis, String laboratorio, String enfermedad) throws VacunaInexistente, LaboratorioInexistente, EnfermedadInexistente{
+	public void modificarVacuna(String nombre, int cantDosis, int expira, int tiempoEntreDosis, String laboratorio, String enfermedad) throws VacunaInexistente, LaboratorioInexistente, EnfermedadInexistente, AccionInvalida{
 		Vacuna vac = em.find(Vacuna.class, nombre);
 		if(vac != null) {
 			vac.setCantDosis(cantDosis);
@@ -128,12 +129,33 @@ public class ControladorVacuna implements IControladorVacunaLocal, IControladorV
 			else
 				throw new LaboratorioInexistente("No existe un laboratorio con ese nombre");
 			Enfermedad enf = em.find(Enfermedad.class, enfermedad);
-			if(enf != null)
+			if(enf != null) {
+				Query queryE = em.createQuery("SELECT e FROM Etapa e");
+				@SuppressWarnings("unchecked")
+				List<Etapa> etapas = queryE.getResultList();
+				for (Etapa e: etapas) {
+					if (e.getPlanVacunacion()!=null && e.getVacuna()!=null && e.getVacuna().getNombre().equals(nombre)) {
+						throw new AccionInvalida("El plan '" + e.getPlanVacunacion().getNombre()+"' tiene asociado una enfermedad que se inmuniza con esa vacuna.");
+					}
+				}
+				/*Query queryR = em.createQuery("SELECT r FROM Reserva r");
+				@SuppressWarnings("unchecked")
+				List<Reserva> reservas = queryR.getResultList();
+				for (Reserva r: reservas) {
+					if (r.getEtapa().getVacuna().getNombre().equals(nombre)) {
+						throw new AccionInvalida("El usuario de cedula '" +r.getCiudadano().getIdUsuario() + "' tiene una reserva asociada al plan '" + r.getEtapa().getPlanVacunacion().getNombre()+"' con la vacuna actual.");
+					}
+				}*/
+				
 				vac.setEnfermedad(enf);
-			else
+			}else {
 				throw new EnfermedadInexistente("No existe una enfermedad con ese nombre");
+			}
+				
 			em.persist(vac);
-		}else
+		}else {
 			throw new VacunaInexistente("No existe una vacuna con ese nombre");
+		}
+			
 	}
 }

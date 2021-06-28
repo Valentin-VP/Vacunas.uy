@@ -164,7 +164,7 @@ public class JSFModificarVacunaBean {
 	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
 	        LOGGER.info("El server name es: " + hostname);
 			Client conexion = ClientBuilder.newClient();
-			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/vacuna/modificar");
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunas/modificar");
 			JSONObject datos = new JSONObject();
 			datos.put("nombre", vacuna);
 			datos.put("cantDosis", String.valueOf(cantDosis));
@@ -175,7 +175,7 @@ public class JSFModificarVacunaBean {
 			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildPost(Entity.entity(datos.toString(),MediaType.APPLICATION_JSON));
 			Response response = invocation.invoke();
 			LOGGER.info("Respuesta: " + response.getStatus());
-			if (response.getStatus() == 201) {
+			if (response.getStatus() == 200) {
 				String jsonString = response.readEntity(String.class);
 				JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
 				JsonObject reply = jsonReader.readObject();

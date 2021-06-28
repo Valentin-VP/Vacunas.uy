@@ -23,7 +23,7 @@ public interface IControladorVacunaLocal {
 	
 	public DtVacuna obtenerVacuna(String nombre)throws VacunaInexistente;
 	
-	public void modificarVacuna(String nombre, int cantDosis, int expira, int tiempoEntreDosis, String laboratorio, String enfermedad) throws VacunaInexistente, LaboratorioInexistente, EnfermedadInexistente;
+	public void modificarVacuna(String nombre, int cantDosis, int expira, int tiempoEntreDosis, String laboratorio, String enfermedad) throws VacunaInexistente, LaboratorioInexistente, EnfermedadInexistente, AccionInvalida;
 	
 	public void eliminarVacuna(String nombre) throws VacunaInexistente, AccionInvalida;
 }
