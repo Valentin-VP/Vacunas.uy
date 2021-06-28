@@ -112,8 +112,10 @@ var res = new Vue({
             fecha=this.fecha;
             axios.get("/grupo15-services/rest/reservas/fecha" + "?vac="+ this.IdVac.toString() +"&date="+ this.fecha.toString()  +"&p="+ this.IdPlan.toString())
               .then((response => {
+                if (response.status === 200) {
                 console.log("GET horas: ", response.data)
                 this.listaHoras = response.data
+              }
                 }))
           },
 
