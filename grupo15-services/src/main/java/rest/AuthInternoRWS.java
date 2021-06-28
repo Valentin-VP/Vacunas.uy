@@ -94,7 +94,7 @@ public class AuthInternoRWS{
 		Cookie userCookie = new Cookie("x-access-token", token, "/", "");
 		NewCookie rwsCookie = new NewCookie(userCookie);
 
-		String url = headers.getHeaderString("Origin") + "/grupo15-services/logininterno";
+		String url = "http://" + headers.getHeaderString("Host") + "/grupo15-services/logininterno";
 		URI uri = UriBuilder.fromPath(url).build();
 		LOGGER.severe("Uri: " + uri.toString());
 		
