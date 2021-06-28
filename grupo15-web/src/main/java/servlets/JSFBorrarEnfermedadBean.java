@@ -120,7 +120,7 @@ public class JSFBorrarEnfermedadBean implements Serializable{
 			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildDelete();
 			Response response = invocation.invoke();
 			LOGGER.info("Respuesta: " + response.getStatus());
-			if (response.getStatus() == 200) {
+			if (response.getStatus() == 201) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Borrar:", "Enfermedad eliminada"));
 			}else {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "" + response.getStatus()));
