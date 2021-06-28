@@ -47,7 +47,9 @@ public class FirestoreController implements IFirestoreLocal, IFirestoreRemote {
 	public void iniciarConexion() {
 		FirestoreOptions firestoreOptions;
 		try {
-			GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream("/home/jelastic/.config/gcloud/tse_grupo15_gmail.com_application_default_credentials.json"))
+			String homeDir = System.getenv("HOME");
+			LOGGER.info("HOME DIRECTORY = " + homeDir);
+			GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream(homeDir+"/.config/gcloud/tse_grupo15_gmail.com_application_default_credentials.json"))
 			        .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
 			firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder().setProjectId(PROJECT_ID)
 					.setCredentials(credentials).build();
