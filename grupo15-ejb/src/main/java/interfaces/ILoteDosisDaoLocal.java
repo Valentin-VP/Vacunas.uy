@@ -5,9 +5,9 @@ import java.util.List;
 import javax.ejb.Local;
 
 import datatypes.DtLoteDosis;
-import datatypes.TransportistaInexistente;
 import exceptions.LoteInexistente;
 import exceptions.LoteRepetido;
+import exceptions.TransportistaInexistente;
 import exceptions.VacunaInexistente;
 import exceptions.VacunatorioNoCargadoException;
 

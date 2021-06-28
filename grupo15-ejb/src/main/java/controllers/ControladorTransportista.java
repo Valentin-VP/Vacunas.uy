@@ -14,9 +14,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import datatypes.DtTransportista;
-import datatypes.TransportistaInexistente;
 import entities.Transportista;
 import exceptions.AccionInvalida;
+import exceptions.TransportistaInexistente;
 import exceptions.TransportistaRepetido;
 import interfaces.ITransportistaDaoLocal;
 import interfaces.ITransportistaDaoRemote;

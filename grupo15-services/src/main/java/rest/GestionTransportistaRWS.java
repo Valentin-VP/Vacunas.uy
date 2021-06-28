@@ -19,9 +19,9 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import datatypes.DtDireccion;
-import datatypes.TransportistaInexistente;
 import exceptions.AccionInvalida;
 import exceptions.ReglasCuposCargadoException;
+import exceptions.TransportistaInexistente;
 import exceptions.TransportistaRepetido;
 import exceptions.VacunatorioCargadoException;
 import exceptions.VacunatorioNoCargadoException;

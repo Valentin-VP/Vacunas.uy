@@ -6,10 +6,10 @@ import javax.ejb.Remote;
 
 import datatypes.DtLoteDosis;
 import datatypes.EstadoLote;
-import datatypes.TransportistaInexistente;
 import entities.Transportista;
 import exceptions.LoteInexistente;
 import exceptions.LoteRepetido;
+import exceptions.TransportistaInexistente;
 import exceptions.VacunaInexistente;
 import exceptions.VacunatorioNoCargadoException;
 

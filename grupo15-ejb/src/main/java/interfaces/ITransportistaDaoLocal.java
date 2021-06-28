@@ -5,8 +5,8 @@ import java.util.List;
 import javax.ejb.Local;
 
 import datatypes.DtTransportista;
-import datatypes.TransportistaInexistente;
 import exceptions.AccionInvalida;
+import exceptions.TransportistaInexistente;
 import exceptions.TransportistaRepetido;
 
 @Local

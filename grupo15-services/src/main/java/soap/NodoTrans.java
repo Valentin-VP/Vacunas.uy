@@ -6,8 +6,8 @@ import javax.ejb.EJB;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
-import datatypes.TransportistaInexistente;
 import exceptions.AccionInvalida;
+import exceptions.TransportistaInexistente;
 import interfaces.IMensajeLocal;
 import interfaces.ITransportistaDaoLocal;
 
