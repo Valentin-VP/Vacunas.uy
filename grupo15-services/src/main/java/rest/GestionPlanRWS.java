@@ -69,8 +69,7 @@ public class GestionPlanRWS {
 		}
 	}
 	
-	//@RolesAllowed({"autoridad"}) 
-	@PermitAll
+	@RolesAllowed({"autoridad"}) 
 	@GET
 	@Path("/obtener")
 	public Response obtenerPlan(@QueryParam("p") String plan) {
@@ -86,8 +85,7 @@ public class GestionPlanRWS {
 		}
 	}
 	
-	//@RolesAllowed({"autoridad"}) 
-	@PermitAll
+	@RolesAllowed({"autoridad"})
 	@POST
 	@Path("/agregar")
 	public Response agregarPlan(String datos) {
@@ -102,8 +100,7 @@ public class GestionPlanRWS {
 	}
 	
 	
-	//@RolesAllowed({"autoridad"}) 
-	@PermitAll
+	@RolesAllowed({"autoridad"}) 
 	@DELETE
 	@Path("/eliminar")
 	public Response eliminarPlan(@QueryParam("p") String plan) {
@@ -154,8 +151,7 @@ public class GestionPlanRWS {
 		}
 	}
 	
-	//@RolesAllowed({"autoridad"}) 
-	@PermitAll
+	@RolesAllowed({"autoridad"}) 
 	@GET
 	@Path("/obtenerVacunasParaPlan")
 	public Response obtenerVacunasDeEnfermedadDePlan(@CookieParam("x-access-token") Cookie cookie, @QueryParam("idPlan") String idPlan) {

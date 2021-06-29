@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
@@ -41,7 +42,7 @@ public class EnfermedadRWS {
 		// TODO Auto-generated constructor stub
 	}
 	
-	//@RolesAllowed({"autoridad"}) 
+	//@RolesAllowed({"autoridad"}) LA USA EL MONITOR TAMBIEN
 	@PermitAll
 	@GET
 	@Path("/listar")
@@ -55,24 +56,23 @@ public class EnfermedadRWS {
 	}
 	
 	//@RolesAllowed({"autoridad"}) 
-	@PermitAll
-	@GET
-	@Path("/obtener")
-	public Response obtenerEnfermedad(@QueryParam("enf") String enfermedad) {
-		if (enfermedad==null) {
-			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-					"No se ha recibido enfermedad");
-		}
-		try {
-			return Response.ok(ce.obtenerEnfermedad(enfermedad)).build();
-		} catch (EnfermedadInexistente e) {
-			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-					e.getMessage());
-		}
-	}
+//	@PermitAll
+//	@GET
+//	@Path("/obtener")
+//	public Response obtenerEnfermedad(@QueryParam("enf") String enfermedad) {
+//		if (enfermedad==null) {
+//			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+//					"No se ha recibido enfermedad");
+//		}
+//		try {
+//			return Response.ok(ce.obtenerEnfermedad(enfermedad)).build();
+//		} catch (EnfermedadInexistente e) {
+//			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+//					e.getMessage());
+//		}
+//	}
 	
-	//@RolesAllowed({"autoridad"}) 
-	@PermitAll
+	@RolesAllowed({"autoridad"}) 
 	@POST
 	@Path("/agregar")
 	public Response agregarEnfermedad(String enfermedad) {
@@ -90,8 +90,7 @@ public class EnfermedadRWS {
 		}
 	}
 	
-	//@RolesAllowed({"autoridad"}) 
-	@PermitAll
+	@RolesAllowed({"autoridad"}) 
 	@DELETE
 	@Path("/eliminar")
 	public Response eliminarEnfermedad(@QueryParam("enf") String enfermedad) {

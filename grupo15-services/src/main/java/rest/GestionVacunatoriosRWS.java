@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
@@ -52,7 +53,7 @@ public class GestionVacunatoriosRWS {
 
 	public GestionVacunatoriosRWS() {}
 	
-	@PermitAll
+	@RolesAllowed({ "administrador", "autoridad" })
     @GET
     @Path("/listar")
     public Response listarVacunatorios() {
@@ -65,7 +66,7 @@ public class GestionVacunatoriosRWS {
         }
     }
 	
-	@PermitAll
+	@RolesAllowed({ "administrador", "autoridad" })
 	@GET
 	@Path("/obtener")
 	public Response obtenerVacunatorio(@CookieParam("x-access-token") Cookie cookie, @QueryParam("vacunatorio") String vacunatorio) {
@@ -96,8 +97,7 @@ public class GestionVacunatoriosRWS {
 		}
 	}
 	
-	//@RolesAllowed({"autoridad"}) 
-	@PermitAll
+	@RolesAllowed({ "administrador", "autoridad" })
 	@POST
 	@Path("/agregar")
 	public Response agregarVacunatorio(String datos) {
@@ -118,8 +118,7 @@ public class GestionVacunatoriosRWS {
 		}
 	}
 	
-	//@RolesAllowed({"autoridad"}) 
-	@PermitAll
+	@RolesAllowed({ "administrador", "autoridad" })
 	@POST
 	@Path("/modificar")
 	public Response modificarVacunatorio(String datos) {
@@ -135,8 +134,7 @@ public class GestionVacunatoriosRWS {
 		}
 	}
 	
-	//@RolesAllowed({"autoridad"}) 
-	@PermitAll
+	@RolesAllowed({ "administrador", "autoridad" })
 	@POST
 	@Path("/agregarPuesto")
 	public Response agregarPuesto(String datos) {
@@ -150,7 +148,7 @@ public class GestionVacunatoriosRWS {
 		}
 	}
 
-	@PermitAll
+	@RolesAllowed({ "administrador", "autoridad" })
 	@GET
 	@Path("/listarPuestos")
 	public Response listarPuestos(@QueryParam("idVacunatorio") String idVacunatorio) {

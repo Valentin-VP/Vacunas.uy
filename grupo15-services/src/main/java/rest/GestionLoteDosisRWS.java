@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.security.DeclareRoles;
-import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -27,7 +27,6 @@ import datatypes.DtLoteDosis;
 import datatypes.DtMensaje;
 import datatypes.DtStock;
 import datatypes.DtTransportista;
-import datatypes.EstadoLote;
 import exceptions.CantidadNula;
 import exceptions.LoteInexistente;
 import exceptions.LoteRepetido;
@@ -36,7 +35,6 @@ import exceptions.StockVacunaVacunatorioInexistente;
 import exceptions.TransportistaInexistente;
 import exceptions.VacunaInexistente;
 import exceptions.VacunatorioNoCargadoException;
-import interfaces.IControladorVacunatorioLocal;
 import interfaces.IHistoricoDaoLocal;
 import interfaces.ILoteDosisDaoLocal;
 import interfaces.IMensajeLocal;
@@ -82,7 +80,7 @@ public class GestionLoteDosisRWS {
 	}
 
 	
-	@PermitAll
+	@RolesAllowed({"autoridad"})
 	@GET
 	@Path("/listar")
 	public Response listarLoteDosis() {
@@ -109,7 +107,7 @@ public class GestionLoteDosisRWS {
 			
 	}
 	*/
-	@PermitAll
+	@RolesAllowed({"autoridad"})
 	@GET
 	@Path("/obtener")
 	public Response obtenerLoteDosis(@QueryParam("idLote")String idLote, @QueryParam("idVacuna") String idVacuna,@QueryParam("idVacunatorio") String idVacunatorio) {
@@ -124,14 +122,14 @@ public class GestionLoteDosisRWS {
 		}
 	}
 	
-	@PermitAll
+	@RolesAllowed({"autoridad"})
 	@GET
 	@Path("/listarMensajes")
 	public Response listarMensajesLocales() {
 		return Response.ok().entity(cm.listarMensajes()).build();
 	}
 	
-	@PermitAll
+	@RolesAllowed({"autoridad"})
 	@POST
 	@Path("/modificar")
 	public Response modificarLoteDosis(String datos) {
@@ -173,7 +171,7 @@ public class GestionLoteDosisRWS {
 		}
 	}
 	
-	@PermitAll
+	@RolesAllowed({"autoridad"})
 	@POST
 	@Path("/agregar")
 	public Response crearLoteDosis(String datos) {
@@ -234,7 +232,7 @@ public class GestionLoteDosisRWS {
 
 	}
 
-	@PermitAll
+	@RolesAllowed({"autoridad"})
 	@GET
 	@Path("/obtenerInfoLoteSocio")
 	public Response obtenerEstadoLoteDeSocio(@QueryParam("idLote")String idLote, @QueryParam("idVacuna") String idVacuna,@QueryParam("idVacunatorio") String idVacunatorio) {
@@ -269,7 +267,7 @@ public class GestionLoteDosisRWS {
 		}
 	}
 	
-	@PermitAll
+	@RolesAllowed({"autoridad"})
 	@GET
 	@Path("/obtenerInfoTodosLotesSocio")
 	public Response obtenerEstadoTodosLotesDeSocio(@QueryParam("idTransportista")String idTransportista) {
