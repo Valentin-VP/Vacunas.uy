@@ -11,7 +11,8 @@ var res = new Vue({
     password: '',
     tipoUser: '',
     barrio: '',
-    departamento: ''
+    departamento: '',
+    ok200:''
 
   }),
 
@@ -69,6 +70,21 @@ var res = new Vue({
         }, {
           headers: { config }
       })
+      .then(response => {
+        if (response.status === 201) {
+          console.log("Respuesta: " + response.status)
+          this.ok200="Se agregó al usuario correctamente"
+          console.log("VariableRespuesta: " + this.ok200)
+        } })
+      .catch(error => {
+          if (error.response.status === 400) {
+  
+           this.ok200="El usuario ya existe";
+       }
+         
+  
+      });
+  
 
     }
 
