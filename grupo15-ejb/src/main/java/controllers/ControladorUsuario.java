@@ -3,7 +3,6 @@ package controllers;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -11,10 +10,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import interfaces.IUsuarioLocal;
-import interfaces.IUsuarioRemote;
-import exceptions.UsuarioExistente;
-import exceptions.UsuarioInexistente;
 import datatypes.DtCertificadoVac;
 import datatypes.DtCiudadano;
 import datatypes.DtConstancia;
@@ -24,10 +19,8 @@ import datatypes.DtUsuario;
 import datatypes.DtUsuarioInterno;
 import datatypes.DtUsuarioSoap;
 import datatypes.DtVacunador;
-import datatypes.EstadoReserva;
 import datatypes.Rol;
 import datatypes.Sexo;
-import datatypes.TipoUsuario;
 import entities.CertificadoVacunacion;
 import entities.Ciudadano;
 import entities.ConstanciaVacuna;
@@ -35,6 +28,10 @@ import entities.Reserva;
 import entities.Usuario;
 import entities.UsuarioInterno;
 import entities.Vacunador;
+import exceptions.UsuarioExistente;
+import exceptions.UsuarioInexistente;
+import interfaces.IUsuarioLocal;
+import interfaces.IUsuarioRemote;
 
 @Stateless
 public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
