@@ -60,7 +60,7 @@ var res = new Vue({
     .catch(error => {
         if (error.response.status === 400) {
 
-         this.ok200="Acceso no permitido. Verifique credenciales";
+         this.ok200="El usuario ya posee una reserva para esa enfermedad";
      }
        
 
