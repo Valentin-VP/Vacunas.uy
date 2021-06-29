@@ -119,26 +119,12 @@ public class GestionVacunasRWS {
 	@RolesAllowed({"autoridad"}) 
 	@DELETE
 	@Path("/eliminar")
-	public Response eliminarVacuna(@CookieParam("x-access-token") Cookie cookie, @QueryParam("vac") String vacuna) {
-		if (vacuna==null) {
-			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-					"No se ha recibido vacuna");
-		}
+	public Response eliminarVacuna(@QueryParam("vac") String vacuna) {
 		try {
-			String token = cookie.getValue();
-			String ci = null;
-			try {
-				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-			} catch (InvalidJwtException e) {
-				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-						e.getMessage());
-			}
-	        if( ci == null)
-	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
-			LOGGER.info("Cedula obtenida en REST: " + ci);
 			cv.eliminarVacuna(vacuna);
 			return ResponseBuilder.createResponse(Response.Status.OK, "Se ha eliminado la vacuna");
 		} catch (AccionInvalida | VacunaInexistente e) {
+			System.out.println(e.getMessage());
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					e.getMessage());
 		}

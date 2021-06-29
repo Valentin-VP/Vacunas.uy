@@ -20,10 +20,9 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
-import datatypes.DtEnfermedad;
 import datatypes.DtVacuna;
 
-@Named("BorrarVacuna")
+@Named("borrarVacuna")
 @RequestScoped
 public class JSFBorrarVacunaBean implements Serializable {
 
@@ -31,46 +30,13 @@ public class JSFBorrarVacunaBean implements Serializable {
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 	private String token; 
 	
-	private String nombre;
-	private List<String> vacunas = new ArrayList<String>();
-	private List<DtVacuna> dtvacunas = new ArrayList<DtVacuna>();
+	private String vacuna;
+	private List<DtVacuna> vacunas = new ArrayList<DtVacuna>();
 	
 	@EJB
 	interfaces.IControladorVacunaLocal iControlador;
 	
 	public JSFBorrarVacunaBean() {}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-
-	public List<String> getVacunas() {
-		return vacunas;
-	}
-
-	public void setVacunas(List<String> vacunas) {
-		this.vacunas = vacunas;
-	}
-
-	public List<DtVacuna> getDtvacunas() {
-		return dtvacunas;
-	}
-
-	public void setDtvacunas(List<DtVacuna> dtvacunas) {
-		this.dtvacunas = dtvacunas;
-	}
 
 	@PostConstruct
 	public void cargaInicial() {
@@ -89,10 +55,8 @@ public class JSFBorrarVacunaBean implements Serializable {
 			Response response = invocation.invoke();
 			LOGGER.info("Respuesta: " + response.getStatus());
 			if (response.getStatus() == 200) {
-				dtvacunas = response.readEntity(new GenericType<List<DtVacuna>>() {});
-				for(DtVacuna dt: dtvacunas) {
-					this.vacunas.add(dt.getNombre());
-				}
+				this.vacunas = response.readEntity(new GenericType<List<DtVacuna>>() {});
+				
 			}
 		} catch (Exception e) {
 			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
@@ -112,7 +76,7 @@ public class JSFBorrarVacunaBean implements Serializable {
 	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
 	        LOGGER.info("El server name es: " + hostname);
 			Client conexion = ClientBuilder.newClient();
-			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunas/eliminar").queryParam("vac", this.nombre);
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunas/eliminar").queryParam("vac", this.vacuna);
 			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildDelete();
 			Response response = invocation.invoke();
 			LOGGER.info("Respuesta: " + response.getStatus());
@@ -127,4 +91,29 @@ public class JSFBorrarVacunaBean implements Serializable {
 		}
 
 	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public String getVacuna() {
+		return vacuna;
+	}
+
+	public void setVacuna(String vacuna) {
+		this.vacuna = vacuna;
+	}
+
+	public List<DtVacuna> getVacunas() {
+		return vacunas;
+	}
+
+	public void setVacunas(List<DtVacuna> vacunas) {
+		this.vacunas = vacunas;
+	}
+	
 }

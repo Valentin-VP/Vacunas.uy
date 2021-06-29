@@ -167,21 +167,17 @@
  <div class="formulario">
 <h:form>
 
-<div>
-<p:outputLabel style="width:50%" >Seleccione Vacuna:    </p:outputLabel>
- <p:selectOneMenu value="#{BorrarVacuna.nombre}"  style="border-width: thin">
- <p:ajax event="itemSelect" update="@this" />
-	<f:selectItems Value="#{BorrarVacuna.vacunas}" />
-	<p:ajax event="itemSelect" update="@this" />
+	<div>
 
- </p:selectOneMenu>
-
-
-</div>
+		<p:outputLabel style="width:40%">Seleccione Vacuna: </p:outputLabel>
+		<p:selectOneMenu value="#{borrarVacuna.vacuna}" style="border-width: thin">
+			<f:selectItems value="#{borrarVacuna.vacunas}" var="p" itemValue="#{p.nombre}" itemLabel="#{p.nombre}" />
+		</p:selectOneMenu>
+	</div>
 <p:messages id="messages" showDetail="true" closable="true">
             <p:autoUpdate/>
 </p:messages>
-<p:commandButton action="#{BorrarVacuna.borrarVacuna}" value="Eliminar"  > </p:commandButton>
+<p:commandButton action="#{borrarVacuna.borrarVacuna}" value="Eliminar"  > </p:commandButton>
 
 
 </h:form>
