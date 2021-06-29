@@ -56,16 +56,17 @@ var res = new Vue({
         console.log("Respuesta: " + response.status)
         this.ok200="Se realizó la reserva correctamente"
         console.log("VariableRespuesta: " + this.ok200)
-      }
-      if (response.status === 400) {
-        console.log("Respuesta: " + response.status)
-        this.ok200="No es posible realizar esta reserva"
-        console.log("VariableRespuesta: " + this.ok200)
-      }
+      } })
+    .catch(error => {
+        if (error.response.status === 400) {
+
+         this.ok200="Acceso no permitido. Verifique credenciales";
+     }
+       
 
     });
 
-    console.log(this.reserva);
+
 
       },
 
@@ -95,6 +96,12 @@ var res = new Vue({
         
             IdPlan = this.IdPlan;
             axios.get("/grupo15-services/rest/reservas/pv" + "?p="+ this.IdPlan.toString())
+            .catch(error => {
+              if (error.response.status === 400) {
+               this.ok200="Ya tiene reservas para este plan";
+           }
+          });
+      
           this.CargarVacunatorios();
         
             },
