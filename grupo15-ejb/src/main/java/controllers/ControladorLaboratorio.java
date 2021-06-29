@@ -10,6 +10,8 @@ import javax.persistence.Query;
 
 import datatypes.DtLaboratorio;
 import entities.Laboratorio;
+import entities.Vacuna;
+import exceptions.AccionInvalida;
 import exceptions.LaboratorioInexistente;
 import exceptions.LaboratorioRepetido;
 import interfaces.ILaboratorioLocal;
@@ -57,9 +59,17 @@ public class ControladorLaboratorio implements ILaboratorioLocal, ILaboratorioRe
 			throw new LaboratorioInexistente("No existe un Laboratorio con ese nombre");
 	}
 	
-	public void eliminarLaboratorio(String nombre) throws LaboratorioInexistente {
+	public void eliminarLaboratorio(String nombre) throws LaboratorioInexistente, AccionInvalida {
 		Laboratorio lab = em.find(Laboratorio.class, nombre);
 		if(lab != null) {
+			Query queryV = em.createQuery("SELECT v FROM Vacuna v ORDER BY nombre ASC");
+			@SuppressWarnings("unchecked")
+			List<Vacuna> vacunas = queryV.getResultList();
+			for (Vacuna v: vacunas) {
+				if (v.getLaboratorio().equals(lab)) {
+					throw new AccionInvalida("Hay una vacuna de ID y nombre '" + v.getNombre() + "' que esta asociada a ese laboratorio.");
+				}
+			}
 			em.remove(lab);
 		}else 
 			throw new LaboratorioInexistente("No existe un Laboratorio con ese nombre");

@@ -15,8 +15,15 @@ import javax.persistence.Query;
 
 import datatypes.DtVacuna;
 import entities.Enfermedad;
+import entities.Etapa;
 import entities.Laboratorio;
+import entities.LoteDosis;
+import entities.PlanVacunacion;
+import entities.Reserva;
+import entities.Stock;
 import entities.Vacuna;
+import entities.Vacunatorio;
+import exceptions.AccionInvalida;
 import exceptions.EnfermedadInexistente;
 import exceptions.LaboratorioInexistente;
 import exceptions.VacunaInexistente;
@@ -36,18 +43,18 @@ public class ControladorVacuna implements IControladorVacunaLocal, IControladorV
 	@PersistenceContext(name = "test")
 	private EntityManager em;
 	
-	public void agregarVacuna(String nombre, int cantDosis, int tiempoEntreDosis, int dia, int mes, int anio, String laboratorio, String enfermedad) throws VacunaRepetida , LaboratorioInexistente, EnfermedadInexistente{
+	public void agregarVacuna(String nombre, int cantDosis, int tiempoEntreDosis, int expira, String laboratorio, String enfermedad) throws VacunaRepetida , LaboratorioInexistente, EnfermedadInexistente{
 		if(em.find(Vacuna.class, nombre) == null) {
 			//Calendar result = new GregorianCalendar();
             //result.set(anio, mes, dia, 0, 0, 0);
-            LocalDate f = LocalDate.of(anio, mes, dia);
+            //LocalDate f = LocalDate.of(anio, mes, dia);
             Laboratorio lab = em.find(Laboratorio.class, laboratorio);
             if(lab == null) //controla que exista el laboratorio
             	throw new LaboratorioInexistente("No existe una laboratorio con ese nombre");
             Enfermedad enf = em.find(Enfermedad.class, enfermedad);
             if(enf == null) //controla que exista la enfermedad
             	throw new EnfermedadInexistente("No existe una enfermedad con ese nombre");
-            Vacuna vac = new Vacuna(nombre, cantDosis, f, tiempoEntreDosis, lab, enf);
+            Vacuna vac = new Vacuna(nombre, cantDosis, expira, tiempoEntreDosis, lab, enf);
 			em.persist(vac);
 		}else {
 			throw new VacunaRepetida("Ya existe una Vacuna con ese nombre");
@@ -79,24 +86,76 @@ public class ControladorVacuna implements IControladorVacunaLocal, IControladorV
 		}
 	}
 	
-	public void eliminarVacuna(String nombre) throws VacunaInexistente {
+	public void eliminarVacuna(String nombre) throws VacunaInexistente, AccionInvalida {
 		Vacuna vac = em.find(Vacuna.class, nombre);
 		if(vac != null) {
+			Query queryE = em.createQuery("SELECT e FROM Etapa e ORDER BY id ASC");
+			Query queryV = em.createQuery("SELECT v FROM Vacunatorio v ORDER BY id ASC");
+			@SuppressWarnings("unchecked")
+			List<Etapa> etapas = queryE.getResultList();
+			@SuppressWarnings("unchecked")
+			List<Vacunatorio> vacunatorios = queryV.getResultList();
+			for (Etapa e: etapas) {
+				if (e.getVacuna().equals(vac)) {
+					throw new AccionInvalida("Hay una etapa de ID '" + e.getId() + "' que esta asociada a esa vacuna.");
+				}
+			}
+			for (Vacunatorio v: vacunatorios) {
+				for (Stock s: v.getStock()) {
+					if (s.getVacuna().equals(vac)) {
+						throw new AccionInvalida("Hay un vacunatorio de ID '" + v.getId() + "' y nombre '" + v.getNombre() + "' que esta asociado a esa vacuna.");
+					}
+				}
+				for (LoteDosis ld: v.getLote()) {
+					if (ld.getVacuna().equals(vac)) {
+						throw new AccionInvalida("Hay un vacunatorio de ID '" + v.getId() + "' y nombre '" + v.getNombre() + "' que esta asociado a esa vacuna.");
+					}
+				}
+			}
 			em.remove(vac);
 		}else
 			throw new VacunaInexistente("No existe una vacuna con ese nombre");
 	}
 	
-	public void modificarVacuna(String nombre, int cantDosis, LocalDate expira, int tiempoEntreDosis, Laboratorio laboratorio, Enfermedad enfermedad) throws VacunaInexistente {
+	public void modificarVacuna(String nombre, int cantDosis, int expira, int tiempoEntreDosis, String laboratorio, String enfermedad) throws VacunaInexistente, LaboratorioInexistente, EnfermedadInexistente, AccionInvalida{
 		Vacuna vac = em.find(Vacuna.class, nombre);
 		if(vac != null) {
 			vac.setCantDosis(cantDosis);
 			vac.setExpira(expira);
-			vac.setLaboratorio(laboratorio);
-			vac.setEnfermedad(enfermedad);
 			vac.setTiempoEntreDosis(tiempoEntreDosis);
+			Laboratorio lab = em.find(Laboratorio.class, laboratorio);
+			if(lab != null)
+				vac.setLaboratorio(lab);
+			else
+				throw new LaboratorioInexistente("No existe un laboratorio con ese nombre");
+			Enfermedad enf = em.find(Enfermedad.class, enfermedad);
+			if(enf != null) {
+				Query queryE = em.createQuery("SELECT e FROM Etapa e");
+				@SuppressWarnings("unchecked")
+				List<Etapa> etapas = queryE.getResultList();
+				for (Etapa e: etapas) {
+					if (e.getPlanVacunacion()!=null && e.getVacuna()!=null && e.getVacuna().getNombre().equals(nombre)) {
+						throw new AccionInvalida("El plan '" + e.getPlanVacunacion().getNombre()+"' tiene asociado una enfermedad que se inmuniza con esa vacuna.");
+					}
+				}
+				/*Query queryR = em.createQuery("SELECT r FROM Reserva r");
+				@SuppressWarnings("unchecked")
+				List<Reserva> reservas = queryR.getResultList();
+				for (Reserva r: reservas) {
+					if (r.getEtapa().getVacuna().getNombre().equals(nombre)) {
+						throw new AccionInvalida("El usuario de cedula '" +r.getCiudadano().getIdUsuario() + "' tiene una reserva asociada al plan '" + r.getEtapa().getPlanVacunacion().getNombre()+"' con la vacuna actual.");
+					}
+				}*/
+				
+				vac.setEnfermedad(enf);
+			}else {
+				throw new EnfermedadInexistente("No existe una enfermedad con ese nombre");
+			}
+				
 			em.persist(vac);
-		}else
+		}else {
 			throw new VacunaInexistente("No existe una vacuna con ese nombre");
+		}
+			
 	}
 }

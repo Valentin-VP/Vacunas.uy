@@ -34,7 +34,14 @@ public class Vacunatorio {
 	private List<Stock> stock = new ArrayList<Stock>();
 	@OneToMany(mappedBy = "vacunatorio", cascade = CascadeType.ALL)
 	private List<Agenda> agenda = new ArrayList<Agenda>();
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<LoteDosis> lote = new ArrayList<LoteDosis>();
 
+	private String url;
+	@Column(length = 1024)
+	private String token;
+	
 	public Vacunatorio(String id, String nombre, DtDireccion dtDir, Integer telefono, Float latitud, Float longitud) {
 		super();
 		this.id = id;
@@ -45,6 +52,37 @@ public class Vacunatorio {
 		this.longitud = longitud;
 
 	}
+
+	
+	
+	public Vacunatorio(String id, String nombre, DtDireccion dtDir, Integer telefono, Float latitud, Float longitud,
+			String url) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.dtDir = dtDir;
+		this.telefono = telefono;
+		this.latitud = latitud;
+		this.longitud = longitud;
+		this.url = url;
+	}
+
+
+
+	public Vacunatorio(String id, String nombre, DtDireccion dtDir, Integer telefono, Float latitud, Float longitud,
+			String url, String token) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.dtDir = dtDir;
+		this.telefono = telefono;
+		this.latitud = latitud;
+		this.longitud = longitud;
+		this.url = url;
+		this.token = token;
+	}
+
+
 
 	public Vacunatorio() {
 		super();
@@ -130,5 +168,35 @@ public class Vacunatorio {
 	public void setAgenda(ArrayList<Agenda> agenda) {
 		this.agenda = agenda;
 	}
+
+	public List<LoteDosis> getLote() {
+		return lote;
+	}
+
+	public void setLote(List<LoteDosis> lote) {
+		this.lote = lote;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+
+
+	public String getToken() {
+		return token;
+	}
+
+
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+	
+	
 
 }

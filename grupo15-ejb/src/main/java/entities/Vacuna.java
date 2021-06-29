@@ -19,18 +19,18 @@ public class Vacuna{
 	@Id
 	private String nombre;
 	private int cantDosis; //cuantas veces se da la vacuna
-	private LocalDate expira;  //fecha de expiracion
+	private int expira;  //tiempo de inmunidad meses
 	private int tiempoEntreDosis;
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne//(cascade = CascadeType.ALL)
 	private Laboratorio laboratorio;
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne//(cascade = CascadeType.ALL)
 	private Enfermedad enfermedad;
 	
 	public Vacuna() {
 		super();
 	}
 
-	public Vacuna(String nombre, int cantDosis, LocalDate expira, int tiempoEntreDosis, Laboratorio laboratorio,
+	public Vacuna(String nombre, int cantDosis, int expira, int tiempoEntreDosis, Laboratorio laboratorio,
 			Enfermedad enfermedad) {
 		super();
 		this.nombre = nombre;
@@ -57,11 +57,11 @@ public class Vacuna{
 		return this.cantDosis;
 	}
 	
-	public void setExpira(LocalDate fecha) {
+	public void setExpira(int fecha) {
 		this.expira = fecha;
 	}
 	
-	public LocalDate getExpira() {
+	public int getExpira() {
 		return this.expira;
 	}
 

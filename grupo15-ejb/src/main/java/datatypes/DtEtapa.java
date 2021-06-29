@@ -1,24 +1,33 @@
 package datatypes;
 
+import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 
-public class DtEtapa {
+import javax.xml.bind.annotation.XmlRootElement;
+@XmlRootElement
+public class DtEtapa implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private int id;
-	private LocalDate fechaInicio;
-	private LocalDate fechaFin;
-	private DtPlanVacunacion DtPvac;
+	private String fechaInicio;
+	private String fechaFin;
+	private String condicion;
+	private int planVac;
+	private String vacuna;
+	
 	
 	public DtEtapa() {
 	}
 
-	public DtEtapa(int id, LocalDate fechaInicio, LocalDate fechaFin, DtPlanVacunacion dtPvac) {
+	public DtEtapa(int id, String fechaInicio, String fechaFin, String condicion, int planVac, String vacuna) {
 		super();
 		this.id = id;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
-		DtPvac = dtPvac;
+		this.condicion = condicion;
+		this.planVac = planVac;
+		this.vacuna = vacuna;
 	}
 
 	public int getId() {
@@ -29,29 +38,40 @@ public class DtEtapa {
 		this.id = id;
 	}
 
-	public LocalDate getFechaInicio() {
+	public String getFechaInicio() {
 		return fechaInicio;
 	}
 
-	public void setFechaInicio(LocalDate fechaInicio) {
+	public void setFechaInicio(String fechaInicio) {
 		this.fechaInicio = fechaInicio;
 	}
 
-	public LocalDate getFechaFin() {
+	public String getFechaFin() {
 		return fechaFin;
 	}
 
-	public void setFechaFin(LocalDate fechaFin) {
+	public void setFechaFin(String fechaFin) {
 		this.fechaFin = fechaFin;
 	}
 
-	public DtPlanVacunacion getDtPvac() {
-		return DtPvac;
+	public int getPlanVac() {
+		return planVac;
 	}
 
-	public void setDtPvac(DtPlanVacunacion dtPvac) {
-		DtPvac = dtPvac;
+	public void setDtPvac(int planVac) {
+		this.planVac = planVac;
 	}
-	
+
+	public String getCondicion() {
+		return condicion;
+	}
+
+	public void setCondicion(String condicion) {
+		this.condicion = condicion;
+	}
+
+	public String getVacuna() {
+		return vacuna;
+	}
 	
 }

@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:p="http://primefaces.org/ui"> 
+      
+
+<h:head> <link href="/grupo15-web/css/styles.css" type="text/css" rel="stylesheet" media="all" /> 
+<style type="text/css">
+			
+			* {
+				margin:0px;
+				padding:0px;
+			}
+			
+			#header {
+				margin:auto;
+				width: 200%;
+				font-family:Arial, Helvetica, sans-serif;
+			}
+			
+			ul, ol {
+				list-style:none;
+			}
+			
+			.nav > li {
+				float:left;
+				padding: 10px ;
+			}
+			
+			.nav-link {
+  display: block;
+  padding: 0.5rem 1rem;
+}
+.nav-link:hover, .nav-link:focus {
+  text-decoration: none;
+}
+.nav-link.disabled {
+  color: #6c757d;
+  pointer-events: none;
+  cursor: default;
+}
+			
+			.nav li a {
+				background-color: transparent;
+				color:#6c757d;
+				text-decoration:none;
+				padding:10px 12px;
+				display:block;
+			}
+			
+			.nav li a:hover {
+				color:#495057;
+			
+			}
+			.nav-tabs .nav-item {
+  margin-bottom: -0.125rem;
+}
+.nav-tabs .nav-link {
+  border: 0.125rem solid transparent;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+			.nav li ul {
+				display:none;
+				position:absolute;
+				min-width:140px;
+			}
+			
+			.nav li:hover > ul {
+				display:block;
+			}
+			
+			.nav li ul li {
+				position:relative;
+			}
+			
+			.nav li ul li ul {
+				right:-140px;
+				top:0px;
+			}
+			
+		</style>
+	</h:head>
+	<body>
+	
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	  <a class="navbar-brand" href="/grupo15-web/html/menuAdministrador.html">Menú Administrador</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+		<div id="header">
+			<ul class="nav">
+
+				
+				<li class="nav-item"><a href="">Usuarios Internos</a>
+					<ul>
+						<li><a class="nav-link"  href="/grupo15-web/html/registroInterno.html">Registrar Interno</a></li>
+						<li><a class="nav-link"  href="/grupo15-web/JSF/ModificarInterno.xhtml">Modificar Interno</a></li>
+						<li><a class="nav-link"  href="/grupo15-web/JSF/BorrarInterno.xhtml">Eliminar Interno</a></li>
+					</ul>
+				</li>
+				
+				
+				
+				<li class="nav-item"><a href="">Usuarios Vacunador</a>
+					<ul>
+						<li><a class="nav-link"  href="/grupo15-web/html/registroVacunador.html">Registrar Vacunador</a></li>
+						<li><a class="nav-link"  href="/grupo15-web/JSF/ModificarVacunador.xhtml">Modificar Vacunador</a></li>
+						<li><a class="nav-link"  href="/grupo15-web/JSF/EliminarVacunador.xhtml">Borrar Vacunador</a></li>
+					</ul>
+				</li>
+				
+				<li class="nav-item"><a href="">Vacunatorio</a>
+					<ul>
+						<li><a class="nav-link"  href="/grupo15-web/JSF/CrearVacunatorio.xhtml">Registrar Vacunatorio</a></li>
+					</ul>
+				</li>
+				
+				<li class="nav-item"><a href="">Socio Logistico</a>
+					<ul>
+						<li><a class="nav-link"  href="/grupo15-web/JSF/CrearSocio.xhtml">Registrar Socio </a></li>
+					</ul>
+				</li>
+				
+				</ul>
+				
+			 </div>
+          <div class="collapse navbar-collapse justify-content-between"></div>
+          <ul class="navbar-nav">
+          <li class="nav-right">
+            <a class="nav-link" href="/grupo15-services/rest/usuario/cerrarSesion">Cerrar Sesión</a>
+          </li>
+        </ul>
+      
+		</nav>
+
+
+ <div class="formulario" style="width: 50%">
+<h:form>
+
+<div>
+<p:outputLabel style="width:40%" >Identificador:    </p:outputLabel>
+<p:inputText id="id" required="true" value="#{CrearSocio.id}" style="width:60%" > </p:inputText>
+
+</div>
+
+<div>
+<p:outputLabel style="width:40%" >URL:    </p:outputLabel>
+<p:inputText id="url" required="true" value="#{CrearSocio.url}" style="width:60%" > </p:inputText>
+
+</div>
+
+
+
+<p:messages id="messages" showDetail="true" closable="true">
+            <p:autoUpdate/>
+</p:messages>
+<p:commandButton id="crearSocio" action="#{CrearSocio.crearSocio}" value="Crear"> </p:commandButton>
+
+
+</h:form>
+ </div>
+	
+</body> 
+</html>

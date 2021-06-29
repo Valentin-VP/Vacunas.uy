@@ -11,7 +11,7 @@
   
 </head>
 
-<body>
+<body style="overflow: hidden;">
 <div id="int">
 
  
@@ -27,8 +27,11 @@
 				<input type="text" placeholder="username" v-model=user id="user"><br>
 				<input type="password" placeholder="password" v-model=pass id="pass"><br>
 				<input type="button" @click="setDatos" value="Login">
+        <br>
+        <br>
+        <a>{{error401}}</a>
 		</div>
-     
+   
     </div>
 
   

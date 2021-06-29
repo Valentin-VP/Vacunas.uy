@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Monitor de vacunación</title>
+  <link href="/grupo15-web/css/styles.css" rel="stylesheet" type="text/css" media="all">
+  <link rel="shortcut icon" href="#">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/Chart.min.js"></script>
+
+
+</head>
+
+<body>
+  <div id="res">
+    <div class="formulario4">
+      <a style="color: #fff;
+        font-family: 'Exo', sans-serif;
+        font-size: 37px;">VACUNAS <a style="color: #153396 !important;
+        font-family: 'Exo', sans-serif;
+        font-size: 40px; font-weight: 800;">UY
+        </a>
+
+      </a>
+    </div>
+
+    <form class="formulario2" @submit.prevent="setDatos">
+
+      <div style="display: inline-block">
+        <select class="form-control" v-model=IdEnf id="IdEnf" @click="SeleccionarEnfermedades" required>
+          <option disabled value="">Seleccione una enfermedad:</option>
+          <option > Todos </option>
+          <option v-for="item in listaEnfermedades" >{{item.nombre}} </option>
+        </select>
+      </div>
+
+      <div style="display: inline-block">
+        <select class="form-control" v-model=IdPlan id="IdPlan" @click="SeleccionarPlanes" required>
+          <option disabled value="">Seleccione un plan de vacunación:</option>
+          <option > Todos </option>
+          <option v-for="item in listaPlanes" >{{item}} </option>
+
+        </select>
+      </div>
+
+      <div style="display: inline-block">
+        <select class="form-control" v-model=IdVac id="IdVac" required>
+          <option disabled value="">Seleccione la vacuna:</option>
+          <option > Todos </option>
+          <option v-for="item in listaVacunas" >{{item}} </option>
+
+        </select>
+      </div>
+
+      <div style="display: inline-block">
+        <button class="btn btn-primary" type="submit" style="width:33,33%">Filtrar</button>
+      </div>
+    </form>
+
+
+
+
+
+    <!-- Carousel wrapper -->
+    <div id="carouselMultiItemExample" class="carousel slide carousel-dark text-center" data-mdb-ride="carousel">
+      <!-- Inner -->
+      <div class="carousel-inner py-4">
+        <!-- Single item -->
+        <div class="carousel-item active">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="card">
+                  <img src="/grupo15-web/media/vacuna1.jpg" class="card-img-top" alt="..." />
+                  <div class="card-body">
+                    <h5 class="card-title">Vacunados en el día de hoy</h5>
+                    <p class="card-text">
+                      {{nroDia}}
+                    </p>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-4 d-none d-lg-block">
+                <div class="card">
+                  <img src="/grupo15-web/media/vacuna2.jpeg" class="card-img-top" alt="..." />
+                  <div class="card-body">
+                    <h5 class="card-title">Vacunados en el mes actual</h5>
+                    <p class="card-text">
+                      {{nroMes}}
+                    </p>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-4 d-none d-lg-block">
+                <div class="card">
+                  <img src="/grupo15-web/media/vacuna5.jpg" class="card-img-top" alt="..." />
+                  <div class="card-body">
+                    <h5 class="card-title">Vacunados en el último año</h5>
+                    <p class="card-text">
+                      {{nroAnio}}
+                    </p>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- Inner -->
+    </div>
+    <!-- Carousel wrapper -->
+    <div class="formulario6">
+      <div class="formulario3">
+
+        <h1>Total de Vacunados por Enfermedad </h1>
+        <canvas id="grafica"></canvas>
+
+      </div>
+
+      <div class="formulario5">
+
+        <div class="col-sm-3">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">Enfermedad</th>
+                <th scope="col">Vacunados</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in listVacPorEnf">
+                <td>{{item.idEnfermedad}}</td>
+                <td>{{item.vacunados}}</td>
+
+
+              </tr>
+
+
+
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="formulario6">
+      <div class="formulario3">
+
+
+        <h1>Total de Vacunados por Vacuna </h1>
+        <canvas id="grafica2"></canvas>
+
+      </div>
+
+      <div class="formulario5">
+
+        <div class="col-sm-3">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">Vacuna</th>
+                <th scope="col">Vacunados</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in listVacPorVac">
+                <td>{{item.idVacuna}}</td>
+                <td>{{item.vacunados}}</td>
+
+
+              </tr>
+
+
+
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  </div>
+  <!-- development version, includes helpful console warnings -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="/grupo15-web/js/monitor.js"></script>
+</body>
+
+
+</html>

@@ -8,15 +8,14 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.MappedSuperclass;
 
 import datatypes.DtDireccion;
 import datatypes.Sexo;
 
 
 
-@Entity
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="tipousuario")
+@MappedSuperclass
 public abstract class Usuario {
 	
 	@Id 

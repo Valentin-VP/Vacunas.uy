@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
- 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,111 +7,108 @@
   <title>Consultar Puestos</title>
   <link href="/grupo15-web/css/styles.css" rel="stylesheet" type="text/css" media="all">
   <link rel="shortcut icon" href="#">
-  
 </head>
 
 <body>
 
   <div id="vac">
 
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/grupo15-web/html/menuVacunador.html">Menú vacunador</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-       
-          <li class="nav-item">
-            <a class="nav-link" href="/grupo15-web/html/consultarPuestos.html">Consultar puestos</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href=""></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href=""></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href=""></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href=""></a>
-          </li>
-        </ul>
-        </div>
-          <div class="collapse navbar-collapse justify-content-between"></div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/grupo15-web/html/menuVacunador.html">Menú vacunador</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
+
+            <li class="nav-item">
+              <a class="nav-link" href="/grupo15-web/html/consultarPuestos.html">Consultar puestos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/grupo15-web/html/chat.html">Acceder al chat</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href=""></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href=""></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href=""></a>
+            </li>
+          </ul>
+        </div>
+        <div class="collapse navbar-collapse justify-content-between"></div>
+        <ul class="navbar-nav">
           <li class="nav-right">
-            <a class="nav-link" href="">Cerrar Sesión</a>
+            <a class="nav-link" href="/grupo15-services/rest/usuario/cerrarSesion">Cerrar Sesión</a>
           </li>
         </ul>
-        </div>
-
-     
+      </div>
 
 
-  </nav>
+
+
+    </nav>
+
+
 
     <div class="formulario">
-      <form>
+      <form @submit.prevent="setDatos">
 
 
-        
-        
-        
         <div>
           <label for="idVac" style="font-size: medium">Seleccione un vacunatorio:</label>
-          <select class="form-control" id="idVac" v-model=idVac >
+          <select class="form-control" id="idVac" v-model=idVac required>
             <option v-for="item in listaVac">{{item.id}}</option>
-            
+
           </select>
         </div>
         <div>
           <label for="fecha" style="font-size: medium">Seleccione la fecha:</label>
           <input type="date" v-model=fecha class="form-control" id="fecha">
-       </div>
-    
-      </form>
-    
-      <a class="btn btn-primary" @click="setDatos"> Confirmar</a>
-      
-
-  <div class="container">
-      <div class="row">
-          <div class="col-sm-3">
-            <table class="table table-bordered" ALIGN="center">
-              <thead>
-                <tr>
-                  <th scope="col">Fecha</th>
-                  <th scope="col">Puesto</th>
-  
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{{vacPuesto.fecha}}</td>
-                  <td>{{vacPuesto.idPuesto}}</td>
-  
-  
-                </tr>
-  
-  
-  
-              </tbody>
-            </table>
-          </div>
         </div>
-  
-      </div>
-  
-    </div> 
+        <button class="btn btn-primary" type="submit" style="width:33,33%">Confirmar</button>
+      </form>
+ </div>
+     <div class="formulario" style="padding-right: 10%">
+        <div class="col-sm-3">
+          <table class="table table-bordered" >
+            <thead>
+              <tr>
+                <th scope="col">Fecha</th>
+                <th scope="col">Puesto</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{vacPuesto.fecha}}</td>
+                <td>{{vacPuesto.idPuesto}}</td>
+
+
+              </tr>
+
+
+
+            </tbody>
+          </table>
+        </div>
+    
+ </div>
+
+   
+      
+     
+ 
+
   </div>
- <!-- development version, includes helpful console warnings -->
+  <!-- development version, includes helpful console warnings -->
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
- <script src="/grupo15-web/js/consultarPuestos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="/grupo15-web/js/consultarPuestos.js"></script>
 
 </body>
 

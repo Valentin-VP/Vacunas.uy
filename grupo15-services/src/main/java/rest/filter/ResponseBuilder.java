@@ -4,6 +4,8 @@ package rest.filter;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONArray;
@@ -44,6 +46,10 @@ public class ResponseBuilder {
 		return Response.status( status ).entity( json.toJson().toString() ).build();
 	}
 	
+	public static Response createResponse( Response.Status status, JSONObject json ) throws JSONException {
+		return Response.status( status ).entity( json.toString() ).build();
+	}
+	
 	public static Response createResponse( Response.Status status, List<JsonSerializable> json ) throws JSONException {
 		JSONArray jsonArray = new JSONArray();
 		
@@ -68,4 +74,18 @@ public class ResponseBuilder {
 		
 		return Response.status( status ).entity( jsonObject.toString() ).build();
 	}
+	
+	public static Response createResponseUrl( Response.Status status, String url ) {
+		JSONObject jsonObject = new JSONObject();
+		
+		try {
+			jsonObject.put( "url", url );
+		}
+		catch( JSONException e ) {
+			return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( Response.Status.INTERNAL_SERVER_ERROR ).build();
+		}
+		
+		return Response.status( status ).entity( jsonObject.toString() ).build();
+	}
+	
 }

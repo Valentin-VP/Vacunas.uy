@@ -40,7 +40,7 @@ public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequ
 
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 
-	@EJB(lookup = "java:global/grupo15/grupo15-ejb/ControladorUsuario!interfaces.IUsuarioLocal")
+	@EJB
 	private IUsuarioLocal IUsuarioLocal;
 
 	@Context
@@ -85,7 +85,7 @@ public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequ
 			// Se decodifica el jwt - Acceso es denegado si no es un token valido
 			try {
 				id = Integer.parseInt(TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(jwt)));
-				tipoUsuario = TokenSecurity.getTipoUsuarioClaim(TokenSecurity.validateJwtToken(jwt));
+				tipoUsuario = TokenSecurity.getTipoUsuarioClaim(TokenSecurity.validateJwtToken(jwt)).toLowerCase();
 				LOGGER.severe("Claims recuperados: " + id + " y " + tipoUsuario);
 			} catch (InvalidJwtException e) {
 				LOGGER.warning("Invalid token provided!");
@@ -117,7 +117,18 @@ public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequ
 						"Not allowed to access this resource!"));
 				return;
 			}
-
+			if (user == null) {
+				LOGGER.warning("Usuario no identificado en la Base de Datos");
+				requestContext.abortWith(ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED,
+						"Usuario no identificado en la Base de Datos"));
+				return;
+			}
+			if (user.getToken() == null) {
+				LOGGER.warning("Nohay token para este usuario (null)");
+				requestContext.abortWith(ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED,
+						"Token expired. Please authenticate again!"));
+				return;
+			}
 			// Si el token no coincide, se fuerza reautenticar
 			if (!user.getToken().equals(jwt)) {
 				LOGGER.warning("Token expired!");

@@ -1,10 +1,11 @@
 package entities;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
@@ -17,13 +18,13 @@ import persistence.EtapaID;
 @IdClass(EtapaID.class)
 public class Etapa {
 	
-	@Id
+	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	private LocalDate fechaInicio;
 	private LocalDate fechaFin;
 	private String condicion;
 	@Id
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne//(cascade = CascadeType.ALL)
 	@JoinColumn
 	private PlanVacunacion planVacunacion;
 	
@@ -35,9 +36,8 @@ public class Etapa {
 		super();
 	}
 
-	public Etapa(int id, LocalDate fechaInicio, LocalDate fechaFin, String condicion, PlanVacunacion planVacunacion) {
+	public Etapa(LocalDate fechaInicio, LocalDate fechaFin, String condicion, PlanVacunacion planVacunacion) {
 		super();
-		this.id = id;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
 		this.condicion = condicion;
@@ -85,7 +85,10 @@ public class Etapa {
 	}
 	
 	public DtEtapa toDtEtapa() {
-		DtEtapa dtEtapa = new DtEtapa(this.id, this.fechaInicio, this.fechaFin,this.planVacunacion.toDtPlanVacunacion());
+		String fi,ff;
+		fi = this.fechaInicio.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+		ff = this.fechaFin.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+		DtEtapa dtEtapa = new DtEtapa(this.id, fi, ff, this.condicion, this.planVacunacion.getId(), this.vacuna.getNombre());
 		return dtEtapa;
 	}
 

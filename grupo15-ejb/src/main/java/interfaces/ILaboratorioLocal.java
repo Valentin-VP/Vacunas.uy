@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.ejb.Local;
 
 import datatypes.DtLaboratorio;
+import exceptions.AccionInvalida;
 import exceptions.LaboratorioInexistente;
 import exceptions.LaboratorioRepetido;
 
@@ -17,5 +18,5 @@ public interface ILaboratorioLocal {
 	
 	public DtLaboratorio obtenerLaboratorio(String nombre) throws LaboratorioInexistente;
 
-	public void eliminarLaboratorio(String nombre) throws LaboratorioInexistente;
+	public void eliminarLaboratorio(String nombre) throws LaboratorioInexistente, AccionInvalida;
 }

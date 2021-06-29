@@ -28,7 +28,7 @@ public class LoginMobileDemo {
 
 	//private static final long serialVersionUID = 1L;
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
-	@EJB(lookup = "java:global/grupo15/grupo15-ejb/ControladorUsuario!interfaces.IUsuarioLocal")
+	@EJB
 	private IUsuarioLocal IUsuarioLocal;
 	public LoginMobileDemo() {}
 	
@@ -57,13 +57,6 @@ public class LoginMobileDemo {
 			e.printStackTrace();
 		}
 		return null;
-	}
-	
-	@GET
-	@Path("/forbidden")
-	@RolesAllowed({"vacunador"}) 
-	public void metodoVacunador() {
-		LOGGER.info("Metodo no permitido para ciudadano. Este print nunca deberiamos verlo dede la app mobile!");
 	}
 
 }

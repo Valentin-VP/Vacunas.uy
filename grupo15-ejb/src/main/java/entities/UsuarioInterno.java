@@ -14,7 +14,6 @@ import datatypes.Sexo;
 @DiscriminatorValue("interno")
 public class UsuarioInterno extends Usuario{
 
-	private String password;
 	private Rol rol;
 	
 	
@@ -22,20 +21,11 @@ public class UsuarioInterno extends Usuario{
 		super();
 	}
 	
-	public UsuarioInterno( int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo, String password, Rol rol) {
+	public UsuarioInterno( int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email, DtDireccion direccion, Sexo sexo, Rol rol) {
 		super(IdUsuario, nombre, apellido, fechaNac, email, direccion, sexo);
-		this.password = password;
 		this.rol = rol;
-		
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
 
 	public Rol getRol() {
 		return rol;

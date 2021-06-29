@@ -1,6 +1,5 @@
 package ldap;
 
-
 import java.util.Properties;
 
 import javax.ejb.LocalBean;
@@ -22,93 +21,88 @@ import interfaces.ILdapLocal;
 
 @Stateless
 @LocalBean
-public class Ldap implements ILdap, ILdapLocal{
-	
+public class Ldap implements ILdap, ILdapLocal {
+
 	DirContext connection;
-	
-	 public Ldap() {
-	        // TODO Auto-generated constructor stub
-	    }
-	
-	
+	private String hostname = "10.1.4.48";
+	public Ldap() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public void newConnection() {
-		
+
 		Properties env = new Properties();
 		env.put(DirContext.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-		env.put(DirContext.PROVIDER_URL, "ldap://localhost:10389");
+		env.put(DirContext.PROVIDER_URL, "ldap://"+hostname+":10389");
 		env.put(DirContext.SECURITY_AUTHENTICATION, "simple");
 		env.put(DirContext.SECURITY_PRINCIPAL, "uid=admin,ou=system");
 		env.put(DirContext.SECURITY_CREDENTIALS, "secret");
-		
+		System.out.println("############################## CREANDO CONEXION LDAP ###################################");
 		try {
-		connection = new InitialDirContext(env);
-			System.out.println("Hello World"+ connection);
+			connection = new InitialDirContext(env);
+			System.out.println("Hello World" + connection);
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
+
 	}
-	
+
 	public static void main(String[] args) throws NamingException {
 
 		Ldap ldap = new Ldap();
 		ldap.newConnection();
-		//ldap.deleteUser();
-	//	ldap.getAllUsers();
-		//ldap.searchUser();
-		//System.out.println(authUser("12345678","12"));
-		//ldap.updateUserPass("12345678", "12");
-		
-		//ldap.addUser("Rodriguez", 22222222, "Jose", "Autoridad", "123");
+		// ldap.deleteUser();
+		// ldap.getAllUsers();
+		// ldap.searchUser();
+		// System.out.println(authUser("12345678","12"));
+		// ldap.updateUserPass("12345678", "12");
+
+		// ldap.addUser("Rodriguez", 22222222, "Jose", "Autoridad", "123");
 		ldap.searchType("11111111");
 	}
-	
+
 	public void getAllUsers() throws NamingException {
 		String searchFilter = "(objectClass=inetOrgPerson)";
-		String [] reqAtt = {"userId","userPassword", "cn"};
-		SearchControls controls= new SearchControls();
+		String[] reqAtt = { "userId", "userPassword", "cn" };
+		SearchControls controls = new SearchControls();
 		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 		controls.setReturningAttributes(reqAtt);
 		NamingEnumeration users = connection.search("ou=users,ou=system", searchFilter, controls);
 		SearchResult result = null;
-		while (users.hasMore()){
-			result = (SearchResult)users.next();
+		while (users.hasMore()) {
+			result = (SearchResult) users.next();
 			Attributes attr = result.getAttributes();
 			System.out.println(attr.get("userId"));
 			System.out.println(attr.get("userPassword"));
 			System.out.println(attr.get("cn"));
 		}
 	}
-		
 
-public void addUser(String apellido, Integer ci, String nombre, String tipoUser, String password) {
-	//Ldap ldap = new Ldap();
-	this.newConnection();
-	String cedula = ci.toString();
-	Attributes attributes = new BasicAttributes();
-	Attribute attribute = new BasicAttribute("objectClass");
-	attribute.add("inetOrgPerson");
-	attributes.put(attribute);
-	attributes.put("userid",cedula);
-	attributes.put("cn",nombre);
-	attributes.put("sn",apellido);
-	attributes.put("employeeType", tipoUser);
-	attributes.put("userPassword", password);
-	System.out.print(cedula);
-	try {
-		connection.createSubcontext("userid="+cedula+ ",ou=users,ou=system", attributes);
-		System.out.println("Usuario ingresado correctamente");
-	} catch (NamingException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+	public void addUser(String apellido, Integer ci, String nombre, String tipoUser, String password) {
+		// Ldap ldap = new Ldap();
+		this.newConnection();
+		String cedula = ci.toString();
+		Attributes attributes = new BasicAttributes();
+		Attribute attribute = new BasicAttribute("objectClass");
+		attribute.add("inetOrgPerson");
+		attributes.put(attribute);
+		attributes.put("userid", cedula);
+		attributes.put("cn", nombre);
+		attributes.put("sn", apellido);
+		attributes.put("employeeType", tipoUser);
+		attributes.put("userPassword", password);
+		System.out.print(cedula);
+		try {
+			connection.createSubcontext("userid=" + cedula + ",ou=users,ou=system", attributes);
+			System.out.println("Usuario ingresado correctamente");
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
-	
-}
-	
-	
+
 //ADD USER HARDCOREADO
 //public void addUser() {
 //	Attributes attributes = new BasicAttributes();
@@ -126,19 +120,22 @@ public void addUser(String apellido, Integer ci, String nombre, String tipoUser,
 //		// TODO Auto-generated catch block
 //		e.printStackTrace();
 //	}
-	
+
 //	}
 
-public void deleteUser(Integer ci) {
-	try {
-		connection.destroySubcontext("userid="+ci+ ",ou=users,ou=system");
-	} catch (NamingException e) {
-		System.out.println("Usuario eliminado correctamente");
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-}
 
+
+public void deleteUser(Integer cedula) {
+		try {
+			String ci=cedula.toString();
+			this.newConnection();
+			connection.destroySubcontext("userid=" + ci + ",ou=users,ou=system");
+		} catch (NamingException e) {
+			System.out.println("Usuario eliminado correctamente");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 //
 ////DELETE USER HARDCOREADO
 //public void deleteUser() {
@@ -151,44 +148,64 @@ public void deleteUser(Integer ci) {
 //	}
 //}
 
-public void searchUser(Integer ci) throws NamingException {
-	String searchFilter = "(userId="+ci+")";
-	String [] reqAtt = {"userId","userPassword", "cn"};
-	SearchControls controls= new SearchControls();
-	controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-	controls.setReturningAttributes(reqAtt);
-	NamingEnumeration users = connection.search("ou=users,ou=system", searchFilter, controls);
-	SearchResult result = null;
-	while (users.hasMore()){
-		result = (SearchResult)users.next();
-		Attributes attr = result.getAttributes();
-		System.out.println(attr.get("userId"));
-		System.out.println(attr.get("userPassword"));
-		System.out.println(attr.get("cn"));
+	public void searchUser(Integer ci) throws NamingException {
+		String searchFilter = "(userId=" + ci + ")";
+		String[] reqAtt = { "userId", "userPassword", "cn" };
+		SearchControls controls = new SearchControls();
+		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+		controls.setReturningAttributes(reqAtt);
+		NamingEnumeration users = connection.search("ou=users,ou=system", searchFilter, controls);
+		SearchResult result = null;
+		while (users.hasMore()) {
+			result = (SearchResult) users.next();
+			Attributes attr = result.getAttributes();
+			System.out.println(attr.get("userId"));
+			System.out.println(attr.get("userPassword"));
+			System.out.println(attr.get("cn"));
+		}
 	}
-}
 
+	public boolean searchUserBool(Integer ci) throws NamingException {
+		this.newConnection();
+		String searchFilter = "(userId=" + ci + ")";
+		String[] reqAtt = { "userId", "userPassword", "cn" };
+		SearchControls controls = new SearchControls();
+		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+		controls.setReturningAttributes(reqAtt);
+		NamingEnumeration users = connection.search("ou=users,ou=system", searchFilter, controls);
+		SearchResult result = null;
+		while (users.hasMore()) {
+			result = (SearchResult) users.next();
+			Attributes attr = result.getAttributes();
+			System.out.println(attr.get("userId"));
+			System.out.println(attr.get("userPassword"));
+			System.out.println(attr.get("cn"));
+		}
+		if (users != null) {
+			return true;
+		} else
+			return false;
+	}
 
-public String searchType(String ci) throws NamingException {
-	this.newConnection();
-    String searchFilter = "(userId="+ci+")";
-    String [] reqAtt = {"employeeType"};
-    SearchControls controls= new SearchControls();
-    controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-    controls.setReturningAttributes(reqAtt);
-    NamingEnumeration users = connection.search("ou=users,ou=system", searchFilter, controls);
-    SearchResult result = null;
-  
-        result = (SearchResult)users.next();
-        Attributes attr = result.getAttributes();
-    //    System.out.println(attr.get("userId"));
-    //    System.out.println(attr.get("userPassword"));
-      //  System.out.println(attr.get("employeeType"));
-        
-    String tipoEmpleado = (attr.get("employeeType").toString());
-	return tipoEmpleado;
-}
+	public String searchType(String ci) throws NamingException {
+		this.newConnection();
+		String searchFilter = "(userId=" + ci + ")";
+		String[] reqAtt = { "employeeType" };
+		SearchControls controls = new SearchControls();
+		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+		controls.setReturningAttributes(reqAtt);
+		NamingEnumeration users = connection.search("ou=users,ou=system", searchFilter, controls);
+		SearchResult result = null;
 
+		result = (SearchResult) users.next();
+		Attributes attr = result.getAttributes();
+		// System.out.println(attr.get("userId"));
+		// System.out.println(attr.get("userPassword"));
+		// System.out.println(attr.get("employeeType"));
+
+		String tipoEmpleado = (attr.get("employeeType").toString()).replaceAll("employeeType: ", "");
+		return tipoEmpleado;
+	}
 
 //SEARCH USER HARDCOREADO
 //public void searchUser() throws NamingException {
@@ -208,26 +225,25 @@ public String searchType(String ci) throws NamingException {
 //	}
 //}
 
-public boolean authUser(String userId, String password) {
-	try {
-	Properties env = new Properties();
-	env.put(DirContext.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-	env.put(DirContext.PROVIDER_URL, "ldap://localhost:10389");
-	env.put(DirContext.SECURITY_AUTHENTICATION, "simple");
-	env.put(DirContext.SECURITY_PRINCIPAL, "userid="+userId+",ou=users,ou=system");
-	env.put(DirContext.SECURITY_CREDENTIALS, password);
-	
-		DirContext con = new InitialDirContext(env);
-		con.close();
-		return true;
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-	System.out.println(e.getMessage());
-		return false;
-	
-	}
-	
+	public boolean authUser(String userId, String password) {
+		try {
+			Properties env = new Properties();
+			System.out.println("############################## CREANDO CONEXION LDAP ###################################");
+			env.put(DirContext.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+			env.put(DirContext.PROVIDER_URL, "ldap://"+hostname+":10389");
+			env.put(DirContext.SECURITY_AUTHENTICATION, "simple");
+			env.put(DirContext.SECURITY_PRINCIPAL, "userid=" + userId + ",ou=users,ou=system");
+			env.put(DirContext.SECURITY_CREDENTIALS, password);
 
+			DirContext con = new InitialDirContext(env);
+			con.close();
+			return true;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+			return false;
+
+		}
 
 //
 //env.put(Context.SECURITY_PRINCIPAL, "cn="+username+",ou=users,ou=system");  //check the DN correctly
@@ -242,19 +258,18 @@ public boolean authUser(String userId, String password) {
 //System.out.println("failed: "+e.getMessage());
 //return false;
 //}
-}
-public void updateUserPass(String userId, String password) {
-	try {
-		String ruta=",ou=users,ou=system";
-		ModificationItem[] mods= new ModificationItem[1];
-		mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("userPassword", password));// if you want, then you can delete the old password and after that you can replace with new password 
-		connection.modifyAttributes("userId="+userId +ruta, mods);//try to form DN dynamically
-		System.out.println("Se modifico el password");
-	}catch (Exception e) {
-		System.out.println("failed: "+e.getMessage());
-	}
-}
-
 	}
 
+	public void updateUserPass(String userId, String password) {
+		try {
+			String ruta = ",ou=users,ou=system";
+			ModificationItem[] mods = new ModificationItem[1];
+			mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("userPassword", password));
+			connection.modifyAttributes("userId=" + userId + ruta, mods);// try to form DN dynamically
+			System.out.println("Se modifico el password");
+		} catch (Exception e) {
+			System.out.println("failed: " + e.getMessage());
+		}
+	}
 
+}

@@ -1,5 +1,9 @@
 package controllers;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,8 +32,47 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 	public ControladorHistorico() {
 	}
 
-	@Override
-	public void agregarHistorico(Date fecha, Integer cantidad, Integer descartadas, Integer disponibles,
+	public void persistirHistorico(LocalDate fecha, Integer cantidad, Integer descartadas, Integer disponibles,
+			Integer administradas, String idVacunatorioStock, String idVacunaStock)
+			throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente {
+		// Se reciben todas las cantidades porque resume el stock de una fecha en
+		// concreto, donde esos valores ya fueron registrados
+		Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorioStock);
+		if (vacunatorio == null) {
+			throw new VacunatorioNoCargadoException("No existe el vacunatorio con ID " + idVacunatorioStock);
+		}
+		if (em.find(Vacuna.class, idVacunaStock) == null) {
+			throw new VacunaInexistente("No existe la vacuna con ID " + idVacunaStock);
+		}
+		for (Stock stock : vacunatorio.getStock()) {
+			if (stock.getVacuna().getNombre().equals(idVacunaStock)) {
+				if (stock.getHistoricos().isEmpty()) {
+					Historico historico = new Historico(fecha, cantidad, descartadas, disponibles, administradas, stock);
+					stock.getHistoricos().add(historico);
+					em.merge(stock);
+					//em.persist(historico);
+					return;
+				}else {
+					for (Historico historico : stock.getHistoricos()) {
+						if (historico.getFecha().equals(fecha)) {
+							historico.setCantidad(historico.getCantidad()+cantidad);
+							historico.setDescartadas(historico.getDescartadas()+descartadas);
+							historico.setDisponibles(historico.getDisponibles()+disponibles);
+							historico.setAdministradas(historico.getAdministradas()+administradas);
+							em.merge(historico);
+							return;
+						}
+					}
+					Historico historico = new Historico(fecha, cantidad, descartadas, disponibles, administradas, stock);
+					stock.getHistoricos().add(historico);
+					em.merge(stock);
+					return;
+				}
+			}
+		}
+	}
+	
+	public void agregarHistorico(LocalDate fecha, Integer cantidad, Integer descartadas, Integer disponibles,
 			Integer administradas, String idVacunatorioStock, String idVacunaStock)
 			throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente {
 		// Se reciben todas las cantidades porque resume el stock de una fecha en
@@ -52,8 +95,7 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 		}
 	}
 
-	@Override
-	public void modificarHistorico(Date fecha, Integer cantidad, Integer descartadas, Integer disponibles,
+	public void modificarHistorico(LocalDate fecha, Integer cantidad, Integer descartadas, Integer disponibles,
 			Integer administradas, String idVacunatorioStock, String idVacunaStock)
 			throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente {
 		Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorioStock);
@@ -66,12 +108,12 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 		for (Stock stock : vacunatorio.getStock()) {
 			if (stock.getVacuna().getNombre().equals(idVacunaStock)) {
 				for (Historico historico : stock.getHistoricos()) {
-					if (historico.getFecha().compareTo(fecha) == 0) {
+					if (historico.getFecha().equals(fecha)) {
 						historico.setCantidad(cantidad);
 						historico.setDescartadas(descartadas);
 						historico.setDisponibles(disponibles);
 						historico.setAdministradas(administradas);
-						em.persist(historico);
+						em.merge(historico);
 						break;
 					}
 				}
@@ -83,8 +125,7 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 				"No se encontro Stock de la Vacuna %s en el Vacunatorio %s", idVacunaStock, idVacunatorioStock));
 	}
 
-	@Override
-	public void eliminarHistorico(Date fecha, String idVacunatorioStock, String idVacunaStock)
+	public void eliminarHistorico(LocalDate fecha, String idVacunatorioStock, String idVacunaStock)
 			throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente {
 		Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorioStock);
 		int index = 0;
@@ -97,7 +138,7 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 		for (Stock stock : vacunatorio.getStock()) {
 			if (stock.getVacuna().getNombre().equals(idVacunaStock)) {
 				for (Historico historico : stock.getHistoricos()) {
-					if (historico.getFecha().compareTo(fecha) == 0) {
+					if (historico.getFecha().equals(fecha)) {
 						em.remove(historico);
 						break;
 					}
@@ -112,8 +153,7 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 				"No se encontro Stock de la Vacuna %s en el Vacunatorio %s", idVacunaStock, idVacunatorioStock));
 	}
 
-	@Override
-	public DtHistoricoStock obtenerHistorico(Date fecha, String idVacunatorioStock, String idVacunaStock)
+	public DtHistoricoStock obtenerHistorico(LocalDate fecha, String idVacunatorioStock, String idVacunaStock)
 			throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente {
 		Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorioStock);
 		if (vacunatorio == null) {
@@ -125,8 +165,10 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 		for (Stock stock : vacunatorio.getStock()) {
 			if (stock.getVacuna().getNombre().equals(idVacunaStock)) {
 				for (Historico historico : stock.getHistoricos()) {
-					if (historico.getFecha().compareTo(fecha) == 0) {
-						return (new DtHistoricoStock(historico.getFecha(), historico.getCantidad(),
+					if (historico.getFecha().equals(fecha)) {
+						DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");  
+						String strDate = historico.getFecha().format(formatter);
+						return (new DtHistoricoStock(strDate, historico.getCantidad(),
 								historico.getDescartadas(), historico.getDisponibles(), historico.getAdministradas(),
 								historico.getStock().getVacuna().getNombre(),
 								historico.getStock().getVacunatorio().getNombre()));
@@ -152,7 +194,9 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 		for (Stock stock : vacunatorio.getStock()) {
 			if (stock.getVacuna().getNombre().equals(idVacunaStock)) {
 				for (Historico historico : stock.getHistoricos()) {
-					historicos.add(new DtHistoricoStock(historico.getFecha(), historico.getCantidad(),
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");  
+					String strDate = historico.getFecha().format(formatter);
+					historicos.add(new DtHistoricoStock(strDate, historico.getCantidad(),
 							historico.getDescartadas(), historico.getDisponibles(), historico.getAdministradas(),
 							historico.getStock().getVacuna().getNombre(),
 							historico.getStock().getVacunatorio().getNombre()));

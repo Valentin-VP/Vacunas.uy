@@ -3,7 +3,6 @@ package controllers;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -11,32 +10,36 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import interfaces.IUsuarioLocal;
-import interfaces.IUsuarioRemote;
-import exceptions.UsuarioExistente;
-import exceptions.UsuarioInexistente;
+import datatypes.DtCertificadoVac;
 import datatypes.DtCiudadano;
+import datatypes.DtConstancia;
 import datatypes.DtDireccion;
+import datatypes.DtReserva;
 import datatypes.DtUsuario;
 import datatypes.DtUsuarioInterno;
 import datatypes.DtUsuarioSoap;
 import datatypes.DtVacunador;
 import datatypes.Rol;
 import datatypes.Sexo;
-import datatypes.TipoUsuario;
+import entities.CertificadoVacunacion;
 import entities.Ciudadano;
+import entities.ConstanciaVacuna;
+import entities.Reserva;
 import entities.Usuario;
 import entities.UsuarioInterno;
 import entities.Vacunador;
+import exceptions.UsuarioExistente;
+import exceptions.UsuarioInexistente;
+import interfaces.IUsuarioLocal;
+import interfaces.IUsuarioRemote;
 
 @Stateless
 public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 
 	@PersistenceContext(name = "test")
 	private EntityManager em;
-	private DtUsuario usuario;
 
-	@Override
+	
 	public ArrayList<DtCiudadano> listarCiudadanos() {
 		// ManejadorUsuario mu = ManejadorUsuario.getInstancia();
 		// ArrayList<Usuario> u = mu.listarUsuarios();
@@ -54,7 +57,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		return Usu;
 	}
 
-	@Override
+	
 	public ArrayList<DtUsuarioInterno> listarUsuariosInternos() {
 		// ManejadorUsuario mu = ManejadorUsuario.getInstancia();
 		// ArrayList<Usuario> u = mu.listarUsuarios();
@@ -72,7 +75,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		return Usu;
 	}
 
-	@Override
+	
 	public ArrayList<DtVacunador> listarVacunadores() {
 		// ManejadorUsuario mu = ManejadorUsuario.getInstancia();
 		// ArrayList<Usuario> u = mu.listarUsuarios();
@@ -90,7 +93,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		return Usu;
 	}
 	
-	@Override
+	
 	public ArrayList<DtUsuarioSoap> listarVacunadoresSoap() {
 		ArrayList<DtUsuarioSoap> Usu = new ArrayList<>();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -106,7 +109,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		return Usu;
 	}
 
-	@Override
+	
 	public void agregarUsuarioVacunador(int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email,
 			DtDireccion direccion, Sexo sexo) throws UsuarioExistente {
 		// ManejadorUsuario mu = ManejadorUsuario.getInstancia();
@@ -122,24 +125,23 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 
 	}
 
-	@Override
+	
 	public void agregarUsuarioInterno(int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email,
-			DtDireccion direccion, Sexo sexo, String password, Rol rol) throws UsuarioExistente {
+			DtDireccion direccion, Sexo sexo, Rol rol) throws UsuarioExistente {
 		// ManejadorUsuario mu = ManejadorUsuario.getInstancia();
 
 		if (em.find(UsuarioInterno.class, IdUsuario) != null) {
 			throw new UsuarioExistente("Ya existe el usuario ingresado");
 		}
 
-		UsuarioInterno usu = new UsuarioInterno(IdUsuario, nombre, apellido, fechaNac, email, direccion, sexo, password,
-				rol);
+		UsuarioInterno usu = new UsuarioInterno(IdUsuario, nombre, apellido, fechaNac, email, direccion, sexo, rol);
 		// mu.agregarUsuario(usu);
 
 		em.persist(usu);
 
 	}
 
-	@Override
+	
 	public void agregarUsuarioCiudadano(int IdUsuario, String nombre, String apellido, LocalDate fechaNac, String email,
 			DtDireccion direccion, Sexo sexo, String TipoSector, Boolean autenticado) throws UsuarioExistente {
 		// ManejadorUsuario mu = ManejadorUsuario.getInstancia();
@@ -151,12 +153,13 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		Ciudadano usu = new Ciudadano(IdUsuario, nombre, apellido, fechaNac, email, direccion, sexo, TipoSector,
 				autenticado);
 		// mu.agregarUsuario(usu);
-
+		CertificadoVacunacion cv = new CertificadoVacunacion();
+		usu.setCertificado(cv);
 		em.persist(usu);
 
 	}
 
-	@Override
+	
 	public DtUsuario buscarUsuario(int IdUsuario) {
 		Usuario usu = em.find(Usuario.class, IdUsuario);
 		DtUsuario dt = new DtUsuario(usu.getNombre(), usu.getApellido(), usu.getFechaNac(), usu.getIdUsuario(),
@@ -164,19 +167,41 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		return dt;
 	}
 
-	@Override
+	
 	public DtCiudadano buscarCiudadano(int id) throws UsuarioInexistente {
 		Ciudadano ciudadano = em.find(Ciudadano.class, id);
 		if (ciudadano == null) {
 			throw new UsuarioInexistente("No se encuentra el ciudadano con ID " + id);
 		}
+		// Reservas
+		List<DtReserva> reservas = new ArrayList<DtReserva>();
+		for (Reserva res: ciudadano.getReservas()) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			reservas.add(new DtReserva(res.getFechaRegistro().format(formatter), res.getPuesto().getVacunatorio().getId() ,res.getEstado(), 
+					Integer.toString(res.getEtapa().getId()), Integer.toString(res.getCiudadano().getIdUsuario()),
+					res.getPuesto().getId()));
+		}
+		// Certificado --> si es != null
+		ArrayList<DtConstancia> constancias = new ArrayList<DtConstancia>();
+		DtCertificadoVac certificado = null;
+		if (ciudadano.getCertificado() != null) {
+			for(ConstanciaVacuna constancia: ciudadano.getCertificado().getConstancias()) {
+				constancias.add(new DtConstancia(constancia.getIdConstVac(), constancia.getPeriodoInmunidad(),
+						constancia.getDosisRecibidas(), constancia.getFechaUltimaDosis(), constancia.getVacuna(), 
+						constancia.getReserva().getDtReserva()));
+			}
+			certificado = new DtCertificadoVac(ciudadano.getCertificado().getIdCert(), constancias);
+		}
+		
+		// Ciudadano
 		DtCiudadano dt = new DtCiudadano(ciudadano.getIdUsuario(), ciudadano.getNombre(), ciudadano.getApellido(),
 				ciudadano.getFechaNac(), ciudadano.getEmail(), ciudadano.getDireccion(), ciudadano.getSexo(),
-				ciudadano.getToken(), ciudadano.getTipoSector(), ciudadano.isAutenticado());
+				ciudadano.getToken(), ciudadano.getTipoSector(), ciudadano.isAutenticado(), ciudadano.getMobiletoken(),
+				reservas, certificado);
 		return dt;
 	}
 
-	@Override
+	
 	public DtVacunador buscarVacunador(int id) throws UsuarioInexistente {
 		Vacunador vacunador = em.find(Vacunador.class, id);
 		if (vacunador == null) {
@@ -188,7 +213,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		return dt;
 	}
 	
-	@Override
+	
 	public DtUsuarioInterno buscarUsuarioInterno(int id) throws UsuarioInexistente {
 		UsuarioInterno interno = em.find(UsuarioInterno.class, id);
 		if (interno == null) {
@@ -200,7 +225,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		return dt;
 	}
 
-	@Override
+	
 	public DtUsuarioSoap buscarVacunadorSoap(int id) throws UsuarioInexistente {
 		Vacunador vacunador = em.find(Vacunador.class, id);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -212,18 +237,18 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		return dt;
 	}
 	
-	@Override
-	public void EliminarUsuario(int IdUsuario) throws UsuarioInexistente {
+	
+//	public void eliminarUsuario(int IdUsuario) throws UsuarioInexistente {
+//
+//		if (em.find(Usuario.class, IdUsuario) == null) {
+//			throw new UsuarioInexistente("No existe el usuario ingresado");
+//		}
+//
+//		Usuario usu = em.find(Usuario.class, IdUsuario);
+//		em.remove(usu);
+//	}
 
-		if (em.find(Usuario.class, IdUsuario) == null) {
-			throw new UsuarioInexistente("No existe el usuario ingresado");
-		}
-
-		Usuario usu = em.find(Usuario.class, IdUsuario);
-		em.remove(usu);
-	}
-
-	@Override
+	
 	public void ModificarVacunador(DtVacunador vacunador) throws UsuarioInexistente {
 
 		if (em.find(Vacunador.class, vacunador.getIdUsuario()) == null) {
@@ -244,7 +269,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 
 	}
 
-	@Override
+	
 	public void ModificarUsuarioInterno(DtUsuarioInterno usu) throws UsuarioInexistente {
 
 		if (em.find(UsuarioInterno.class, usu.getIdUsuario()) == null) {
@@ -265,7 +290,7 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 
 	}
 
-	@Override
+	
 	public void ModificarCiudadano(DtCiudadano ciudadano) throws UsuarioInexistente {
 
 		if (em.find(Ciudadano.class, ciudadano.getIdUsuario()) == null) {
@@ -282,8 +307,61 @@ public class ControladorUsuario implements IUsuarioRemote, IUsuarioLocal {
 		ciu.setFechaNac(ciudadano.getFechaNac());
 		ciu.setSexo(ciudadano.getSexo());
 		ciu.setToken(ciudadano.getToken());
+		ciu.setMobiletoken(ciudadano.getMobileToken());
 		em.persist(ciu);
 
 	}
 
+	public void borrarToken(String ci, String tipoUser) throws UsuarioInexistente {
+		switch(tipoUser) {
+			case "ciudadano":
+				Ciudadano ciudadano = em.find(Ciudadano.class, Integer.valueOf(ci));
+				if (ciudadano != null) {
+					ciudadano.setToken(null);
+					em.persist(ciudadano);
+				}else{
+					throw new UsuarioInexistente("No se encuentra el "+tipoUser+" con ID " + ci);
+				}
+				break;
+			
+			case "vacunador":
+				Vacunador vacunador = em.find(Vacunador.class, Integer.valueOf(ci));
+				if (vacunador != null) {
+					vacunador.setToken(null);
+					em.persist(vacunador);
+				}else{
+					throw new UsuarioInexistente("No se encuentra el "+tipoUser+" con ID " + ci);
+				}
+				break;
+				
+			case "autoridad":
+			case "administrador":
+				UsuarioInterno ui= em.find(UsuarioInterno.class, Integer.valueOf(ci));
+				if (ui != null) {
+					ui.setToken(null);
+					em.persist(ui);
+				}else{
+					throw new UsuarioInexistente("No se encuentra el "+tipoUser+" con ID " + ci);
+				}
+				break;
+		}
+		
+	}
+	
+	public void eliminarVacunador(String ci) throws UsuarioInexistente{
+		Vacunador vac = em.find(Vacunador.class, Integer.valueOf(ci));
+		if(vac!=null)
+			em.remove(vac);
+		else
+			throw new UsuarioInexistente("No existe el vacunador con cedula "+ci);
+	}
+	
+	public void eliminarInterno(String ci) throws UsuarioInexistente{
+		UsuarioInterno ui= em.find(UsuarioInterno.class, Integer.valueOf(ci));
+		if(ui!=null)
+			em.remove(ui);
+		else
+			throw new UsuarioInexistente("No existe el interno con cedula "+ci);
+	}
+	
 }

@@ -1,23 +1,24 @@
 package persistence;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class HistoricoID implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Date fecha;
+	private LocalDate fecha;
 	private StockID stock;
 	
 	public HistoricoID() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Date getFecha() {
+	public LocalDate getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(Date fecha) {
+	public void setFecha(LocalDate fecha) {
 		this.fecha = fecha;
 	}
 
@@ -59,5 +60,7 @@ public class HistoricoID implements Serializable {
 			return false;
 		return true;
 	}
+
+	
 
 }

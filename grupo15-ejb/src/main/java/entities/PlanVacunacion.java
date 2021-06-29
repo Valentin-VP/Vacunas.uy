@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -15,7 +17,7 @@ import datatypes.DtPlanVacunacion;
 @Entity
 public class PlanVacunacion {
 	
-	@Id
+	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	private String nombre;
 	private String descripcion;
@@ -28,18 +30,14 @@ public class PlanVacunacion {
 	public PlanVacunacion() {
 		super();
 	}
-	public PlanVacunacion(int id, String nombre, String descripcion) {
+	public PlanVacunacion(String nombre, String descripcion) {
 		super();
-		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 	}
 	
 	public int getId() {
 		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
 	}
 	public String getNombre() {
 		return nombre;
@@ -65,11 +63,11 @@ public class PlanVacunacion {
 	}
 	
 	public DtPlanVacunacion toDtPlanVacunacion() { //las etapas de los dtPLanVacunacion no tienen un a su PlanVacunacion
-		ArrayList<DtEtapa> dtEtapas = new ArrayList<>();
+		List<DtEtapa> dtEtapas = new ArrayList<>();
 		for(Etapa e: this.etapas) {
-			dtEtapas.add(new DtEtapa(e.getId(), e.getFechaInicio(), e.getFechaFin(), new DtPlanVacunacion()));
+			dtEtapas.add(e.toDtEtapa());
 		}
-		DtPlanVacunacion dtPlanVacunacion = new DtPlanVacunacion(this.id, this.nombre, this.descripcion, dtEtapas);
+		DtPlanVacunacion dtPlanVacunacion = new DtPlanVacunacion(this.id, this.nombre, this.descripcion, dtEtapas, this.enfermedad.getNombre());
 		return dtPlanVacunacion;
 	}
 	public Enfermedad getEnfermedad() {

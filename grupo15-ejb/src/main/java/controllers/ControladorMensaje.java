@@ -26,13 +26,13 @@ public class ControladorMensaje implements IMensajeLocal, IMensajeRemote{
         // TODO Auto-generated constructor stub
     }
 	
-public void agregarMensaje(int IdMensaje, String contenido) throws MensajeExistente {
+public void agregarMensaje(String contenido)  {
 		
-		if (em.find(Mensaje.class,IdMensaje) != null) {
-			throw new MensajeExistente("Ya existe el mensaje ingresado");
-		}
+		//if (em.find(Mensaje.class,IdMensaje) != null) {
+		//	throw new MensajeExistente("Ya existe el mensaje ingresado");
+		//}
 		
-		Mensaje cha = new Mensaje(IdMensaje,contenido);
+		Mensaje cha = new Mensaje(contenido);
 		em.persist(cha);
 		
 		
@@ -80,7 +80,7 @@ public void agregarMensaje(int IdMensaje, String contenido) throws MensajeExiste
 		
 		}
 	
-	public ArrayList<DtMensaje> listarChats() {
+	public ArrayList<DtMensaje> listarMensajes() {
 	
 		ArrayList<DtMensaje> chat = new ArrayList<>();
 		

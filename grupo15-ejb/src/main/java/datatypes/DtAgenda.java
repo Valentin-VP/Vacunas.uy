@@ -7,8 +7,6 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import entities.Cupo;
-
 @XmlRootElement
 public class DtAgenda implements Serializable{
 
@@ -42,6 +40,37 @@ public class DtAgenda implements Serializable{
 	}
 	public void setReservas(List<DtReserva> reservas) {
 		this.reservas = reservas;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((fecha == null) ? 0 : fecha.hashCode());
+		result = prime * result + ((reservas == null) ? 0 : reservas.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DtAgenda other = (DtAgenda) obj;
+		if (fecha == null) {
+			if (other.fecha != null)
+				return false;
+		} else if (!fecha.equals(other.fecha))
+			return false;
+		if (reservas == null) {
+			if (other.reservas != null)
+				return false;
+		} else if (!reservas.equals(other.reservas))
+			return false;
+		return true;
 	}
 	
 	

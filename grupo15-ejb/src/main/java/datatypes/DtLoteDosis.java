@@ -9,6 +9,8 @@ public class DtLoteDosis implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private Integer idLote;
+	private String idVacunatorio;
+	private String idVacuna;
 	private Integer cantidadTotal;
 	private Integer cantidadEntregada;
 	private Integer cantidadDescartada;
@@ -21,10 +23,12 @@ public class DtLoteDosis implements Serializable{
 	}
 
 	
-	public DtLoteDosis(Integer idLote, Integer cantidadTotal, Integer cantidadEntregada, Integer cantidadDescartada,
+	public DtLoteDosis(Integer idLote, String idVacunatorio, String idVacuna, Integer cantidadTotal, Integer cantidadEntregada, Integer cantidadDescartada,
 			String estadoLote, float temperatura) {
 		super();
 		this.idLote = idLote;
+		this.idVacunatorio = idVacunatorio;
+		this.idVacuna = idVacuna;
 		this.cantidadTotal = cantidadTotal;
 		this.cantidadEntregada = cantidadEntregada;
 		this.cantidadDescartada = cantidadDescartada;
@@ -34,10 +38,12 @@ public class DtLoteDosis implements Serializable{
 
 	
 	
-	public DtLoteDosis(Integer idLote, Integer cantidadTotal, Integer cantidadEntregada, Integer cantidadDescartada,
+	public DtLoteDosis(Integer idLote, String idVacunatorio, String idVacuna, Integer cantidadTotal, Integer cantidadEntregada, Integer cantidadDescartada,
 			String estadoLote, float temperatura, Integer transportista) {
 		super();
 		this.idLote = idLote;
+		this.idVacunatorio = idVacunatorio;
+		this.idVacuna = idVacuna;
 		this.cantidadTotal = cantidadTotal;
 		this.cantidadEntregada = cantidadEntregada;
 		this.cantidadDescartada = cantidadDescartada;
@@ -114,6 +120,26 @@ public class DtLoteDosis implements Serializable{
 
 	public void setTransportista(Integer transportista) {
 		this.transportista = transportista;
+	}
+
+
+	public String getIdVacunatorio() {
+		return idVacunatorio;
+	}
+
+
+	public void setIdVacunatorio(String idVacunatorio) {
+		this.idVacunatorio = idVacunatorio;
+	}
+
+
+	public String getIdVacuna() {
+		return idVacuna;
+	}
+
+
+	public void setIdVacuna(String idVacuna) {
+		this.idVacuna = idVacuna;
 	}
 	
 	

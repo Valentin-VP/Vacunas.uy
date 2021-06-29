@@ -13,8 +13,8 @@ public class DtVacunatorio implements Serializable {
 	private Integer telefono;
 	private Float latitud;
 	private Float longitud;
-	
-	
+	private String url;
+	private String token;
 	
 	public DtVacunatorio() {
 		super();
@@ -31,6 +31,47 @@ public class DtVacunatorio implements Serializable {
 		this.telefono = telefono;
 		this.latitud = latitud;
 		this.longitud = longitud;
+	}
+
+
+
+	public DtVacunatorio(String id, String nombre, DtDireccion dtDir, Integer telefono, Float latitud, Float longitud,
+			String url) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.dtDir = dtDir;
+		this.telefono = telefono;
+		this.latitud = latitud;
+		this.longitud = longitud;
+		this.url = url;
+	}
+
+
+
+	public DtVacunatorio(String id, String nombre, DtDireccion dtDir, Integer telefono, Float latitud, Float longitud,
+			String url, String token) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.dtDir = dtDir;
+		this.telefono = telefono;
+		this.latitud = latitud;
+		this.longitud = longitud;
+		this.url = url;
+		this.token = token;
+	}
+
+
+
+	public String getUrl() {
+		return url;
+	}
+
+
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 
@@ -95,6 +136,18 @@ public class DtVacunatorio implements Serializable {
 
 
 
+	public String getToken() {
+		return token;
+	}
+
+
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+
+
 	public Float getLongitud() {
 		return longitud;
 	}
@@ -104,5 +157,18 @@ public class DtVacunatorio implements Serializable {
 	public void setLongitud(Float longitud) {
 		this.longitud = longitud;
 	}
-
+	/*
+	public JSONObject toJson() throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put( "id", this.id );
+		jsonObject.put( "nombre", this.nombre );
+		jsonObject.put( "dtDir", this.dtDir.toJson() );
+		jsonObject.put( "telefono", this.telefono );
+		jsonObject.put( "latitud", this.latitud );
+		jsonObject.put( "longitud", this.longitud );
+		jsonObject.put( "url", this.url );
+		jsonObject.put( "token", this.token );
+		return jsonObject;
+	}
+*/
 }

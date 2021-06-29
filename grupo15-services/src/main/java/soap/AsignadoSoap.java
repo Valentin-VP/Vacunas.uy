@@ -13,20 +13,20 @@ import exceptions.UsuarioInexistente;
 import exceptions.VacunatorioNoCargadoException;
 import interfaces.IControladorVacunadorLocal;
 
-@WebService
+//@WebService
 public class AsignadoSoap {
 
 	@EJB
 	IControladorVacunadorLocal vc;
 	
-	@WebMethod
-	public void asignarVacunadorAVacunatorio(int idVacunador, String idVacunatorio, String fecha) throws UsuarioInexistente, VacunatorioNoCargadoException, SinPuestosLibres, FechaIncorrecta {
+	//@WebMethod
+	public void asignarVacunadorAVacunatorio(int idVacunador, String idVacunatorio, String fecha, String token) throws UsuarioInexistente, VacunatorioNoCargadoException, SinPuestosLibres, FechaIncorrecta {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate f = LocalDate.parse(fecha, formatter);
 		vc.asignarVacunadorAVacunatorio(idVacunador, idVacunatorio, f);
 	}
 	
-	public String isVacunadorAsignadoEnFecha(int idVacunador, String fecha) {
+	public String isVacunadorAsignadoEnFecha(int idVacunador, String fecha, String idVacunatorio, String token) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate f = LocalDate.parse(fecha, formatter);
 		return vc.isVacunadorAsignadoEnFecha(idVacunador, f);

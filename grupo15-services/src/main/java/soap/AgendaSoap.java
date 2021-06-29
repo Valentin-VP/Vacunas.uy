@@ -11,14 +11,14 @@ import datatypes.DtReservaCompleto;
 import exceptions.AgendaInexistente;
 import interfaces.IAgendaDAOLocal;
 
-@WebService
+//@WebService
 public class AgendaSoap {
 
 	@EJB
 	IAgendaDAOLocal ac;
 	
-	@WebMethod
-	public ArrayList<DtReservaCompleto> obtenerAgendaVacunatorio(String idVacunatorio) throws AgendaInexistente{
+	//@WebMethod
+	public ArrayList<DtReservaCompleto> obtenerAgendaVacunatorio(String idVacunatorio, String token) throws AgendaInexistente{
 		return ac.obtenerAgendaSoap(idVacunatorio, LocalDate.now());
 	}
 }

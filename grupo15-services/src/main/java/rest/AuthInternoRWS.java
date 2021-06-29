@@ -1,5 +1,6 @@
 package rest;
 
+import java.net.URI;
 import java.util.Base64;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -14,16 +15,22 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.jose4j.lang.JoseException;
 
 import interfaces.ILdapLocal;
+import rest.filter.ResponseBuilder;
 import rest.filter.TokenSecurity;
 
 @DeclareRoles({"vacunador", "ciudadano", "administrador", "autoridad"})
@@ -40,9 +47,9 @@ public class AuthInternoRWS{
 	
 	public AuthInternoRWS() {}
 
+	@PermitAll
 	@POST
 	@Path("/login")
-	@PermitAll
 	public Response autenticarUsuario(@Context HttpHeaders headers) {
 		LOGGER.info("Accediendo a AuthInternoRWS");
 		// http://wiki.eclipse.org/Tutorial:_Extending_the_JaxRS_Remote_Services_Provider
@@ -50,13 +57,15 @@ public class AuthInternoRWS{
 		// Este Header es diferente a los obtenidos en otros REST, no modificar. Es para leer el Basic user:pass
 		List<String> authHeaders = headers.getRequestHeader("Authorization");
 		if (authHeaders == null) {
-			throw new IllegalArgumentException("Request does not have Authorization header");
+			LOGGER.severe("Request does not have Authorization header");
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "Request does not have Authorization header");
 		}
 		//Obtener value del header Auth 
 		String authHeaderValue = authHeaders.get(0);
 		System.out.println(authHeaderValue);
 		if (authHeaderValue == null) {
-			throw new IllegalArgumentException("Request does not have authorization header value");
+			LOGGER.severe("Request does not have authorization header value");
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "Request does not have authorization header value");
 		}
 		// Decodificar considerando value: Basic <encoded_username>:<encoded_password>
 		StringTokenizer tokenizer = new StringTokenizer(new String(
@@ -73,17 +82,39 @@ public class AuthInternoRWS{
 				tipo = l.searchType(ci);
 				LOGGER.info("Tipo de Usuario obternido de LDAP en AuthInternoRWS: " + tipo);
 				token = TokenSecurity.generateJwtToken(ci, tipo);
-			} catch (NamingException e1) {
-				e1.printStackTrace();
-			} catch (JoseException e) {
-				e.printStackTrace();
+			} catch (NamingException | JoseException error) {
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, error.getMessage());
 			}
+		}
+		else {
+			// Usuario no existe en LDAP, se retorna 400 con mensaje
+			LOGGER.severe("Usuario no existe en LDAP");
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "Usuario no existe en LDAP");
 		}
 		Cookie userCookie = new Cookie("x-access-token", token, "/", "");
 		NewCookie rwsCookie = new NewCookie(userCookie);
-		// Alternativa:
-		//NewCookie userCookie = new NewCookie("x-access-token", token, "/", "", "x-access-token", 3600, false);
-		return Response.status(Response.Status.OK).header(HttpHeaders.LOCATION, "/grupo15-services/logininterno")
-				.cookie(rwsCookie).build();
+
+		String url = "http://" + headers.getHeaderString("Host") + "/grupo15-services/logininterno";
+		URI uri = UriBuilder.fromPath(url).build();
+		LOGGER.severe("Uri: " + uri.toString());
+		
+		Client conexion = ClientBuilder.newClient();
+		String loginResponse = conexion.target(uri)
+		.request(MediaType.APPLICATION_JSON)
+		.cookie(rwsCookie)
+		.header("Origin", headers.getHeaderString("Origin"))
+		.get(String.class);
+		LOGGER.severe("LoginResponse: " + loginResponse);
+		try {
+			JSONObject respuesta = new JSONObject(loginResponse);
+			String urlStatus = respuesta.getString("url");
+			if (urlStatus.equals("error")) {
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST);
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return Response.ok().cookie(rwsCookie).entity(loginResponse).build();
 	}
 }

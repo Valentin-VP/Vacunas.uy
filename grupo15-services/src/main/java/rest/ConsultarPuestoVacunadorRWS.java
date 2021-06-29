@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.Consumes;
@@ -17,7 +18,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import org.jose4j.jwt.consumer.InvalidJwtException;
@@ -25,7 +25,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import datatypes.DtAsignado;
+import datatypes.DtVacunatorio;
 import datatypes.ErrorInfo;
+import exceptions.VacunatorioNoCargadoException;
 import exceptions.VacunatoriosNoCargadosException;
 import interfaces.IControladorVacunadorLocal;
 import interfaces.IControladorVacunatorioLocal;
@@ -40,6 +42,7 @@ import jakarta.xml.soap.SOAPEnvelope;
 import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPMessage;
 import jakarta.xml.soap.SOAPPart;
+import rest.filter.ResponseBuilder;
 import rest.filter.TokenSecurity;
 
 @DeclareRoles({"vacunador", "ciudadano", "administrador", "autoridad"})
@@ -67,7 +70,8 @@ public class ConsultarPuestoVacunadorRWS{
 	
 	@GET
 	@Path("/vac")
-	@PermitAll
+	//@PermitAll
+	@RolesAllowed({"vacunador"}) 
 	public Response listarVacunatorios(@CookieParam("x-access-token") Cookie cookie){
 		try {
 			String token = cookie.getValue();
@@ -82,7 +86,7 @@ public class ConsultarPuestoVacunadorRWS{
 			LOGGER.info("Cedula obtenida en REST: " + ci);
 			return Response.ok(vacs.listarVacunatorio()).status(200).build();
 		} catch (VacunatoriosNoCargadosException e) {
-			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 		}
 
 	}
@@ -103,12 +107,12 @@ public class ConsultarPuestoVacunadorRWS{
 	//2021-05-12 
 	@GET
 	@Path("/asignado") //agregar fecha
-	@PermitAll
+	//@PermitAll
+	@RolesAllowed({"vacunador"}) 
 	public Response consultarPuestoVacunador(@CookieParam("x-access-token") Cookie cookie, @QueryParam("vact") String idVacunatorio, @QueryParam("date") String fecha){
 		if (idVacunatorio==null || fecha==null) {
 			LOGGER.info("G15Services/Soap/ConsultarPuestoVaucnadorRWS/consultarPuestoVacunador : idVacunatorio || fecha NULL");
-			ResponseBuilder rb = Response.status(Status.BAD_REQUEST);
-			return rb.build();
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "No se han ingresado todos los QueryParam necesarios.");
 		}
 
 		String token = cookie.getValue();
@@ -121,8 +125,13 @@ public class ConsultarPuestoVacunadorRWS{
         if( ci == null)
             throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
 		LOGGER.info("Cedula obtenida en REST: " + ci);
-		
-		String soapEndpointUrl = "http://localhost:8180/vacunatorio-services/AsignadoSoap?wsdl";
+		DtVacunatorio v;
+		try {
+			v = vacs.obtenerVacunatorio(idVacunatorio);
+		} catch (VacunatorioNoCargadoException e1) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e1.getMessage());
+		}
+		String soapEndpointUrl = v.getUrl() + "/vacunatorio-services/AsignadoSoap?wsdl";
         String soapAction = "consultar";
         DtAsignado dt;
 		try {
@@ -133,10 +142,10 @@ public class ConsultarPuestoVacunadorRWS{
 	        	return Response.ok(dt).build();
 	        }
 	        else
-	        	return Response.ok(new ErrorInfo(200, "Error")).build();
+	        	return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "Error");
 		} catch (SOAPException e) {
 			// TODO Auto-generated catch block
-			return Response.serverError().entity(new ErrorInfo(200, e.getMessage())).status(200).build();
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 		}
 		/*try {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -157,7 +166,7 @@ public class ConsultarPuestoVacunadorRWS{
         SOAPPart soapPart = soapMessage.getSOAPPart();
 
         String myNamespace = "ws";
-        String myNamespaceURI = "http://localhost:8180/vacunatorio-services/webservice/asignacionService";
+        String myNamespaceURI = "webservice/asignacionService";
 
         // SOAP Envelope
         SOAPEnvelope envelope = soapPart.getEnvelope();

@@ -11,6 +11,12 @@ public class StockID implements Serializable {
 	public StockID() {
 	}
 
+	public StockID(String vacunatorio, String vacuna) {
+		super();
+		this.vacunatorio = vacunatorio;
+		this.vacuna = vacuna;
+	}
+
 	public String getVacunatorio() {
 		return vacunatorio;
 	}

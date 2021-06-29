@@ -10289,6 +10289,27 @@ margin: 30px auto;
 text-align:left;
 }
 
+.formulario2 {
+    
+  display: block;
+  padding: 10px;
+  width: 77.5%;
+  text-align:center;
+  margin: 2% auto;
+  border-width: 10px;
+  border-radius: 10px 10px 10px 10px;
+  box-shadow: 0 15px 20px 0 rgba(0,0,0,0.2);
+ 
+}
+
+.formulario2 div {
+  border-width: 50px;  
+  padding: 20px;
+margin: 30px auto;
+text-align:center;
+}
+
+
 @import url(https://fonts.googleapis.com/css?family=Exo:100,200,400);
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300);
 
@@ -10453,7 +10474,7 @@ text-align:left;
 	background-image: url(/grupo15-web/media/vacuna2.jpg);
 	background-size: cover;
 	-webkit-filter: blur(5px);
-	z-index: 0;
+	z-index: 0; 
 }
 
 .grad5{
@@ -10570,4 +10591,99 @@ text-align:left;
 
 ::-moz-input-placeholder{
    color: rgba(255, 255, 255, 0.945);
+}
+
+.card {
+    
+  display: block;
+  width: 82%;
+  text-align:center;
+  margin: 2% auto;
+  border-width: 10px;
+  border-radius: 20px 20px 20px 20px;
+  box-shadow: 0 15px 20px 0 rgba(0,0,0,0.2);
+ 
+
+}
+
+
+.formulario4 {
+    
+  display: block;
+  padding: 30px;
+  width: 100%;
+  background-color:rgb(10, 12, 85) ;
+  text-align:center;
+ 
+}
+
+.formulario3 {
+
+  width: 80%;
+  text-align:left;
+
+  flex-basis: 80%;
+}
+
+.formulario2 div {
+  border-width: 50px;
+  padding: 20px;
+margin: 30px auto;
+text-align:center;
+}
+
+
+.formulario5 {
+flex-basis: 10%;
+  width: 40%;
+  text-align:right;
+  margin-top:1%;
+  margin-left:18%
+
+
+}
+
+.formulario6 {
+display: flex;
+margin: 2% auto;
+padding:2%;
+width: 77.5%;
+border-width: 10px;
+  border-radius: 10px 10px 10px 10px;
+  box-shadow: 0 15px 20px 0 rgba(0,0,0,0.2);
+}
+
+
+.formulario8 {
+flex-basis: 50%;
+  width:40%;
+  text-align:right;
+  margin-top:3%;
+  margin-left: 3%;
+ 
+
+
+}
+
+.formulario9 {
+
+  width:75%;
+  text-align:left;
+
+  flex-basis: 50%;
+}
+
+
+.body10{
+	position: absolute;
+	top: -20px;
+	left: -20px;
+	right: -40px;
+	bottom: -40px;
+	width: auto;
+	height: auto;
+	background-image: url(/grupo15-web/media/vacuna.jpg);
+	background-size: cover;
+
+	z-index: 0;
 }

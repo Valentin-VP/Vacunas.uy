@@ -152,15 +152,10 @@
 				<scope>import</scope>
 			</dependency>
 
-			<dependency>
-				<groupId>com.google.cloud</groupId>
-				<artifactId>libraries-bom</artifactId>
-				<version>2.2.0</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+
 	<build>
 		<plugins>
 			<!--Configuration of the maven-compiler-plugin -->
@@ -240,12 +235,37 @@
 			<!-- An optional Arquillian testing profile that executes tests in a remote 
 				WildFly / JBoss EAP instance. Run with: mvn clean verify -Parq-remote -->
 			<id>arq-remote</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<dependencies>
 				<dependency>
 					<groupId>org.wildfly.arquillian</groupId>
 					<artifactId>wildfly-arquillian-container-remote</artifactId>
 					<scope>test</scope>
 				</dependency>
+				<dependency>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>0.8.7</version>
+					<!-- -->
+					<type>maven-plugin</type>
+					<scope>test</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.jboss.arquillian.extension</groupId>
+					<artifactId>arquillian-jacoco</artifactId>
+					<version>1.1.0</version>
+					<scope>test</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.eu.ingwar.tools</groupId>
+					<artifactId>arquillian-suite-extension</artifactId>
+					<version>1.2.2</version>
+					<scope>test</scope>
+				</dependency>
+
+
 			</dependencies>
 			<build>
 				<plugins>
@@ -268,6 +288,78 @@
 								<arquillian.launch>remote</arquillian.launch>
 							</systemPropertyVariables>
 						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>0.8.7</version>
+						<executions>
+							<execution>
+								<id>jacoco-initialize</id>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+								<configuration>
+									<!-- Sets the path to the file which contains the execution data. -->
+									<destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
+									<!-- Sets the name of the property containing the settings for JaCoCo 
+										runtime agent. -->
+									<propertyName>surefireArgLine</propertyName>
+								</configuration>
+							</execution>
+							<execution>
+								<id>jacoco-site</id>
+								<phase>test</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+								<configuration>
+									<!-- Sets the path to the file which contains the execution data. -->
+									<dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
+									<!-- Sets the output directory for the code coverage report. -->
+									<outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>2.15</version>
+						<configuration>
+							<!-- Sets the VM argument line used when unit tests are run. -->
+							<argLine>${surefireArgLine}</argLine>
+							<!-- Skips unit tests if the value of skip.unit.tests property is 
+								true -->
+							<skipTests>${skip.unit.tests}</skipTests>
+							<!-- Excludes integration tests when unit tests are run. -->
+							<excludes>
+								<exclude>**/IT*.java</exclude>
+							</excludes>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<version>2.15</version>
+						<executions>
+							<!-- Ensures that both integration-test and verify goals of the Failsafe 
+								Maven plugin are executed. -->
+							<execution>
+								<id>integration-tests</id>
+								<goals>
+									<goal>integration-test</goal>
+									<goal>verify</goal>
+								</goals>
+								<configuration>
+									<!-- Sets the VM argument line used when integration tests are run. -->
+									<argLine>${failsafeArgLine}</argLine>
+									<!-- Skips integration tests if the value of skip.integration.tests 
+										property is true -->
+									<skipTests>${skip.integration.tests}</skipTests>
+								</configuration>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>
