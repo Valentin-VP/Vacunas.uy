@@ -58,12 +58,5 @@ public class LoginMobileDemo {
 		}
 		return null;
 	}
-	
-	@GET
-	@Path("/forbidden")
-	@RolesAllowed({"vacunador"}) 
-	public void metodoVacunador() {
-		LOGGER.info("Metodo no permitido para ciudadano. Este print nunca deberiamos verlo dede la app mobile!");
-	}
 
 }

@@ -59,34 +59,33 @@ public class GestionVacunasRWS {
 		}
 	}
 	
-//	@RolesAllowed({ "administrador", "autoridad" })
-//	@PermitAll
-//	@GET
-//	@Path("/obtener")
-//	public Response obtenerVacuna(@CookieParam("x-access-token") Cookie cookie, @QueryParam("vac") String vacuna) {
-//		if (vacuna==null) {
-//			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-//					"No se ha recibido vacuna");
-//		}
-//		try {
-//			String token = cookie.getValue();
-//			String ci = null;
-//			try {
-//				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-//			} catch (InvalidJwtException e) {
-//				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-//						e.getMessage());
-//			}
-//	        if( ci == null)
-//	        	return ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED,
-//	        			"No se encuentra CI en token de Cookie - Unauthorized!");
-//			LOGGER.info("Cedula obtenida en REST: " + ci);
-//			return Response.ok(cv.obtenerVacuna(vacuna)).build();
-//		} catch (VacunaInexistente e) {
-//			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-//					e.getMessage());
-//		}
-//	}
+	@PermitAll
+	@GET
+	@Path("/obtener")
+	public Response obtenerVacuna(@CookieParam("x-access-token") Cookie cookie, @QueryParam("vac") String vacuna) {
+		if (vacuna==null) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					"No se ha recibido vacuna");
+		}
+		try {
+			String token = cookie.getValue();
+			String ci = null;
+			try {
+				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+			} catch (InvalidJwtException e) {
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+						e.getMessage());
+			}
+	        if( ci == null)
+	        	return ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED,
+	        			"No se encuentra CI en token de Cookie - Unauthorized!");
+			LOGGER.info("Cedula obtenida en REST: " + ci);
+			return Response.ok(cv.obtenerVacuna(vacuna)).build();
+		} catch (VacunaInexistente e) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					e.getMessage());
+		}
+	}
 	
 	@RolesAllowed({"autoridad"}) 
 	@POST
