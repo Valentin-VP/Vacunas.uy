@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.ws.rs.Consumes;
@@ -37,7 +38,7 @@ public class ConsultarAgendaPlanRWS implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	
-	@PermitAll
+	@RolesAllowed({"ciudadano"})
 	@GET
 	@Path("/vigente")
 	public Response listarAgendasAbiertas() {
@@ -48,7 +49,7 @@ public class ConsultarAgendaPlanRWS implements Serializable {
 		}
 	}
 	
-	@PermitAll
+	@RolesAllowed({"ciudadano"})
 	@GET
 	@Path("/proxima")
 	public Response listarAgendasProximas() {

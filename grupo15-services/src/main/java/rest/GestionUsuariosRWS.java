@@ -94,19 +94,19 @@ public class GestionUsuariosRWS {
 	}
 	
 	//@RolesAllowed({ "administrador", "autoridad" })
-	@PermitAll
-	@GET
-	@Path("/external")
-	public Response obtenerDatosExternos() {
-		String url = "https://rcastro.pythonanywhere.com/api/usuarios/";
-		Client conexion = ClientBuilder.newClient();
-		List<DtUsuarioExterno> resultados = conexion.target(url)
-				.request(MediaType.APPLICATION_JSON)
-				.get(new GenericType<List<DtUsuarioExterno>> () {});
-		return Response.ok(resultados).build();
-	}
+//	@PermitAll
+//	@GET
+//	@Path("/external")
+//	public Response obtenerDatosExternos() {
+//		String url = "https://rcastro.pythonanywhere.com/api/usuarios/";
+//		Client conexion = ClientBuilder.newClient();
+//		List<DtUsuarioExterno> resultados = conexion.target(url)
+//				.request(MediaType.APPLICATION_JSON)
+//				.get(new GenericType<List<DtUsuarioExterno>> () {});
+//		return Response.ok(resultados).build();
+//	}
 	
-	@PermitAll
+	@RolesAllowed({ "administrador", "autoridad" })
 	@GET
 	@Path("/external/{ci}")
 	public Response obtenerDatosExternos(@PathParam("ci") String ci) {
@@ -121,7 +121,7 @@ public class GestionUsuariosRWS {
 		return Response.ok(resultados).build();
 	}
 	
-	@PermitAll
+	@RolesAllowed({ "administrador", "autoridad" })
 	@GET
 	@Path("/sectores")
 	public Response listarSectoresExterno() {

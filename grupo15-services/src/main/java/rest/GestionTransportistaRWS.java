@@ -1,11 +1,10 @@
 package rest;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.logging.Logger;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -18,13 +17,9 @@ import javax.ws.rs.core.Response;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import datatypes.DtDireccion;
 import exceptions.AccionInvalida;
-import exceptions.ReglasCuposCargadoException;
 import exceptions.TransportistaInexistente;
 import exceptions.TransportistaRepetido;
-import exceptions.VacunatorioCargadoException;
-import exceptions.VacunatorioNoCargadoException;
 import interfaces.ITransportistaDaoLocal;
 import rest.filter.ResponseBuilder;
 @DeclareRoles({ "vacunador", "ciudadano", "administrador", "autoridad" })
@@ -39,7 +34,7 @@ private final Logger LOGGER = Logger.getLogger(getClass().getName());
 	
 	public GestionTransportistaRWS() {}
 	
-	//@RolesAllowed({"autoridad"}) 
+	@RolesAllowed({"autoridad"}) 
 	@PermitAll
     @GET
     @Path("/listar")
@@ -52,7 +47,7 @@ private final Logger LOGGER = Logger.getLogger(getClass().getName());
 		}
 	}
 	
-	//@RolesAllowed({"autoridad"}) 
+	@RolesAllowed({"autoridad"}) 
 	@PermitAll
 	@POST
 	@Path("/agregar")
@@ -69,17 +64,17 @@ private final Logger LOGGER = Logger.getLogger(getClass().getName());
 	}
 	
 	//@RolesAllowed({"autoridad"}) 
-	@PermitAll
-	@POST
-	@Path("/modificar")
-	public Response modificarTransportista(String datos) {
-		try {
-			JSONObject datosInterno = new JSONObject(datos);
-			ct.setURLtoTransportista(Integer.valueOf(datosInterno.getString("idTransportista")), datosInterno.getString("url"));
-			return ResponseBuilder.createResponse(Response.Status.OK, "Se ha modificado el transportista con exito.");
-		} catch ( NumberFormatException | JSONException | TransportistaInexistente  e) {
-			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-					e.getMessage());
-		}
-	}
+//	@PermitAll
+//	@POST
+//	@Path("/modificar")
+//	public Response modificarTransportista(String datos) {
+//		try {
+//			JSONObject datosInterno = new JSONObject(datos);
+//			ct.setURLtoTransportista(Integer.valueOf(datosInterno.getString("idTransportista")), datosInterno.getString("url"));
+//			return ResponseBuilder.createResponse(Response.Status.OK, "Se ha modificado el transportista con exito.");
+//		} catch ( NumberFormatException | JSONException | TransportistaInexistente  e) {
+//			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+//					e.getMessage());
+//		}
+//	}
 }
