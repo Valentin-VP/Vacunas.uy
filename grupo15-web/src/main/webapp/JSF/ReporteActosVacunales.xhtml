@@ -171,14 +171,14 @@
           <p:chart type="bar" model="#{ReporteActosVacunales.barModel}" style="height:600px; width:700px" />
         </div>
         <div class="formulario8">
-          <p:dataTable id="rep" value="#{ReporteActosVacunales.getLista()}" var="rep">
+          <p:dataTable id="rep" value="#{ReporteActosVacunales.vacunadosMes}" var="rep">
             <p:column>
               <f:facet name="header">Vacunados</f:facet>
-              #{rep.vacunados}
+              #{rep.key}
             </p:column>
             <p:column>
               <f:facet name="header">Edades</f:facet>
-              #{rep.edad}
+              #{rep.value}
             </p:column>
 
           </p:dataTable>
@@ -200,14 +200,14 @@
           <p:chart type="pie" model="#{ReporteActosVacunales.pieModel1}" style="height:500px; width:700px" />
         </div>
         <div class="formulario8">
-          <p:dataTable id="rep2" value="#{ReporteActosVacunales.getLista()}" var="rep2">
+          <p:dataTable id="rep2" value="#{ReporteActosVacunales.vacunadosSexo}" var="rep2">
             <p:column>
               <f:facet name="header">Vacunados</f:facet>
-              #{rep2.vacunados}
+              #{rep2.key}
             </p:column>
             <p:column>
               <f:facet name="header">Sexo</f:facet>
-              #{rep2.sexo}
+              #{rep2.value}
             </p:column>
 
           </p:dataTable>
