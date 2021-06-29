@@ -1,7 +1,6 @@
 package servlets;
 
 import java.io.Serializable;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -10,27 +9,18 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import datatypes.DtEnfermedad;
-import exceptions.AccionInvalida;
-import exceptions.EnfermedadInexistente;
 
 @Named("BorrarEnfermedad")
 @RequestScoped
@@ -120,12 +110,11 @@ public class JSFBorrarEnfermedadBean implements Serializable{
 			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildDelete();
 			Response response = invocation.invoke();
 			LOGGER.info("Respuesta: " + response.getStatus());
-			if (response.getStatus() == 201) {
+			if (response.getStatus() == 200) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Borrar:", "Enfermedad eliminada"));
 			}else {
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "" + response.getStatus()));
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error:", "" + "La enfermedad tiene un plan asociado"));
 			}
-			cargaInicial();
 		} catch (Exception e) {
 			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
 		}

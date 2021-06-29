@@ -94,14 +94,11 @@ public class EnfermedadRWS {
 	@DELETE
 	@Path("/eliminar")
 	public Response eliminarEnfermedad(@QueryParam("enf") String enfermedad) {
-		if (enfermedad==null) {
-			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
-					"No se ha recibido enfermedad");
-		}
 		try {
 			ce.eliminarEnfermedad(enfermedad);
-			return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha eliminado la enfermedad");
+			return ResponseBuilder.createResponse(Response.Status.OK, "Se ha eliminado la enfermedad");
 		} catch (EnfermedadInexistente | AccionInvalida e) {
+			System.out.println(e.getMessage());
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					e.getMessage());
 		}
