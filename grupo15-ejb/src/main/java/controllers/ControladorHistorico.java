@@ -77,7 +77,7 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 			throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente {
 		// Se reciben todas las cantidades porque resume el stock de una fecha en
 		// concreto, donde esos valores ya fueron registrados
-		Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorioStock);
+		/*Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorioStock);
 		if (vacunatorio == null) {
 			throw new VacunatorioNoCargadoException("No existe el vacunatorio con ID " + idVacunatorioStock);
 		}
@@ -92,13 +92,13 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 				em.persist(historico);
 				return;
 			}
-		}
+		}*/
 	}
 
 	public void modificarHistorico(LocalDate fecha, Integer cantidad, Integer descartadas, Integer disponibles,
 			Integer administradas, String idVacunatorioStock, String idVacunaStock)
 			throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente {
-		Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorioStock);
+		/*Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorioStock);
 		if (vacunatorio == null) {
 			throw new VacunatorioNoCargadoException("No existe el vacunatorio con ID " + idVacunatorioStock);
 		}
@@ -122,12 +122,12 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 			}
 		}
 		throw new StockVacunaVacunatorioInexistente(String.format(
-				"No se encontro Stock de la Vacuna %s en el Vacunatorio %s", idVacunaStock, idVacunatorioStock));
+				"No se encontro Stock de la Vacuna %s en el Vacunatorio %s", idVacunaStock, idVacunatorioStock));*/
 	}
 
 	public void eliminarHistorico(LocalDate fecha, String idVacunatorioStock, String idVacunaStock)
 			throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente {
-		Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorioStock);
+		/*Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorioStock);
 		int index = 0;
 		if (vacunatorio == null) {
 			throw new VacunatorioNoCargadoException("No existe el vacunatorio con ID " + idVacunatorioStock);
@@ -150,12 +150,12 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 			}
 		}
 		throw new StockVacunaVacunatorioInexistente(String.format(
-				"No se encontro Stock de la Vacuna %s en el Vacunatorio %s", idVacunaStock, idVacunatorioStock));
+				"No se encontro Stock de la Vacuna %s en el Vacunatorio %s", idVacunaStock, idVacunatorioStock));*/
 	}
 
 	public DtHistoricoStock obtenerHistorico(LocalDate fecha, String idVacunatorioStock, String idVacunaStock)
 			throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente {
-		Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorioStock);
+		/*Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorioStock);
 		if (vacunatorio == null) {
 			throw new VacunatorioNoCargadoException("No existe el vacunatorio con ID " + idVacunatorioStock);
 		}
@@ -177,13 +177,13 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 			}
 		}
 		throw new StockVacunaVacunatorioInexistente(String.format(
-				"No se encontro Stock de la Vacuna %s en el Vacunatorio %s", idVacunaStock, idVacunatorioStock));
+				"No se encontro Stock de la Vacuna %s en el Vacunatorio %s", idVacunaStock, idVacunatorioStock));*/return null;
 	}
 
 	@Override
 	public List<DtHistoricoStock> listarHistoricos(String idVacunatorioStock, String idVacunaStock)
 			throws VacunatorioNoCargadoException, VacunaInexistente {
-		List<DtHistoricoStock> historicos = new ArrayList<DtHistoricoStock>();
+		/*List<DtHistoricoStock> historicos = new ArrayList<DtHistoricoStock>();
 		Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorioStock);
 		if (vacunatorio == null) {
 			throw new VacunatorioNoCargadoException("No existe el vacunatorio con ID " + idVacunatorioStock);
@@ -203,7 +203,7 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 				}
 			}
 		}
-		return historicos;
+		return historicos;*/return null;
 	}
 
 }

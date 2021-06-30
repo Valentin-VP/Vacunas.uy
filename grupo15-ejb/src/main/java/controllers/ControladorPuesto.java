@@ -48,7 +48,7 @@ public class ControladorPuesto implements IControladorPuestoLocal, IControladorP
 	}
 
 	public String obtenerPuesto(String id, String vac) throws PuestoNoCargadoException, VacunatorioNoCargadoException {
-
+/*
 		Puesto puesto = em.find(Puesto.class, id);
 
 		if (puesto == null) {
@@ -67,7 +67,7 @@ public class ControladorPuesto implements IControladorPuestoLocal, IControladorP
     		}
 			
 		}
-
+*/return null;
 	}
 
 	public ArrayList<String> listarPuestos(String idVac) throws PuestoNoCargadosException {
@@ -92,16 +92,16 @@ public class ControladorPuesto implements IControladorPuestoLocal, IControladorP
 	}
 
 	public void modificarPuesto(DtPuesto dtPuesto) throws PuestoNoCargadoException {
-
+/*
 		Puesto puesto = em.find(Puesto.class, dtPuesto.getId());
 
 		puesto.setId(dtPuesto.getId());
-		puesto.setVacunatorio(puesto.getVacunatorio());
+		puesto.setVacunatorio(puesto.getVacunatorio());*/
 
 	}
 
 	public void eliminarPuesto(String id) throws PuestoNoCargadoException {
-
+/*
 		Puesto puesto = em.find(Puesto.class, id);
 
 		if (puesto == null) {
@@ -111,7 +111,7 @@ public class ControladorPuesto implements IControladorPuestoLocal, IControladorP
 		} else {
 			em.remove(puesto);
 		}
-
+*/
 	}
 
 	private DtVacunatorio getDtVacunatorio(Vacunatorio v) {

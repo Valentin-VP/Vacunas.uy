@@ -69,7 +69,7 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
     			
     	}
     }
-
+/*
     public void modificarConstanciaVacuna(int idConst, String vacuna, int periodoInmunidad, int dosisRecibidas, LocalDate fechaUltimaDosis, int idUser, int idEtapa) throws UsuarioExistente, ReservaInexistente, CertificadoInexistente, ConstanciaInexistente {
     	ConstanciaVacuna cv = em.find(ConstanciaVacuna.class, idConst);
     	if (cv==null)
@@ -100,7 +100,7 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 		    }
     	}
     }
-    
+    */
     public DtConstancia obtenerConstancia(int idConst) throws ConstanciaInexistente {
     	DtConstancia retorno;
     	ConstanciaVacuna temp = em.find(ConstanciaVacuna.class, idConst);
@@ -116,10 +116,11 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
     
     public ArrayList<DtConstancia> listarConstancias() throws ConstanciaInexistente{
     	 ArrayList<DtConstancia> retorno = new ArrayList<>();
-    	 Query query = em.createQuery("SELECT cv FROM constanciavacuna cv");
+    	 Query query = em.createQuery("SELECT cv FROM ConstanciaVacuna cv");
  		@SuppressWarnings("unchecked")
  		ArrayList<ConstanciaVacuna> result = (ArrayList<ConstanciaVacuna>) query.getResultList();
- 		if (result!=null) {
+ 		System.out.println(result.size());
+ 		if (result!=null && !result.isEmpty()) {
  			
 			for (ConstanciaVacuna cv: result) {
 				
@@ -144,13 +145,6 @@ public class ControladorConstanciaVacuna implements IConstanciaVacunaDAORemote, 
 			}
 		}
 		return null;
-	}
-    
-	private DtCiudadano getDtUsuario(Ciudadano u) {
-		if (u!=null)
-			return new DtCiudadano(u.getIdUsuario(), u.getNombre(), u.getApellido(), u.getFechaNac(), u.getEmail(), u.getDireccion(), u.getSexo(), u.getTipoSector(), u.isAutenticado());
-		else
-			return null;
 	}
 	
 	//retorna el numero de constancias en este periodo no las constancias

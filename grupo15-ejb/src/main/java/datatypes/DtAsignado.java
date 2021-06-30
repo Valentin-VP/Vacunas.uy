@@ -33,6 +33,35 @@ public class DtAsignado implements Serializable{
 	public void setIdPuesto(String idPuesto) {
 		this.idPuesto = idPuesto;
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((fecha == null) ? 0 : fecha.hashCode());
+		result = prime * result + ((idPuesto == null) ? 0 : idPuesto.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DtAsignado other = (DtAsignado) obj;
+		if (fecha == null) {
+			if (other.fecha != null)
+				return false;
+		} else if (!fecha.equals(other.fecha))
+			return false;
+		if (idPuesto == null) {
+			if (other.idPuesto != null)
+				return false;
+		} else if (!idPuesto.equals(other.idPuesto))
+			return false;
+		return true;
+	}
 	
 	
 }

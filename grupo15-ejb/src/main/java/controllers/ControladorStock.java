@@ -97,7 +97,7 @@ public class ControladorStock implements IStockDaoLocal, IStockDaoRemote {
 	@Override
 	public void eliminarStock(String idVacunatorio, String idVacuna)
 			throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente {
-		Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorio);
+		/*Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorio);
 		if (vacunatorio == null) {
 			throw new VacunatorioNoCargadoException("No existe el vacunatorio con ID " + idVacunatorio);
 		}
@@ -112,7 +112,7 @@ public class ControladorStock implements IStockDaoLocal, IStockDaoRemote {
 			}
 		}
 		throw new StockVacunaVacunatorioInexistente(
-				String.format("No se encontro Stock de la Vacuna %s en el Vacunatorio %s", idVacuna, idVacunatorio));
+				String.format("No se encontro Stock de la Vacuna %s en el Vacunatorio %s", idVacuna, idVacunatorio));*/
 	}
 
 	@Override
@@ -141,7 +141,7 @@ public class ControladorStock implements IStockDaoLocal, IStockDaoRemote {
 
 	@Override
 	public List<DtStock> listarStock(String idVacunatorio) throws VacunatorioNoCargadoException {
-		Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorio);
+		/*Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorio);
 		List<DtStock> stockVacunatorio = new ArrayList<DtStock>();
 		if (vacunatorio == null) {
 			throw new VacunatorioNoCargadoException("No existe el vacunatorio con ID " + idVacunatorio);
@@ -161,7 +161,7 @@ public class ControladorStock implements IStockDaoLocal, IStockDaoRemote {
 			}
 			stockVacunatorio.add(dtStock);
 		}
-		return stockVacunatorio;
+		return stockVacunatorio;*/return null;
 	}
 
 	private String prepararQueryStockGlobalActual(String enfermedad, String vacuna, String vacunatorio){
