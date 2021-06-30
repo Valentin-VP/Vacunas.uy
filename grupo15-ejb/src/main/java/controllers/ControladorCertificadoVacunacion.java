@@ -107,7 +107,7 @@ public class ControladorCertificadoVacunacion implements ICertificadoVacunacionD
     				query.setParameter("nom", vac);
     				Vacuna v = (Vacuna) query.getSingleResult();
     				dtc.add(new DtConstancia(c.getIdConstVac(), c.getPeriodoInmunidad(), c.getDosisRecibidas(), c.getFechaUltimaDosis(), c.getVacuna(), 
-    						c.getReserva().getDtReserva(), v.getNombre()));
+    						c.getReserva().getDtReserva(), v.getEnfermedad().getNombre()));
     			}
     			DtCertificadoVac retorno = new DtCertificadoVac(temp.getIdCert(), dtc);
 
