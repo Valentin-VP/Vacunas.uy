@@ -12,6 +12,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.json.Json;
+import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.servlet.http.Cookie;
@@ -338,8 +339,13 @@ public class JSFAltaLoteDosisBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Crear:", message));
 			}
 		} catch (JSONException e) {
+			LOGGER.severe(e.getStackTrace()[0].getMethodName() + ": " + "##### "+e.getMessage()+ " #####");
 			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
+		} catch (JsonException e1) {
+			LOGGER.severe(e1.getStackTrace()[0].getMethodName() + ": " + "###############!!!! "+e1.getMessage()+ " !!!!###############");
+			LOGGER.severe("Ha ocurrido un error: " + e1.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e1.getMessage()));
 		}
 		cargaVacunas();
 		cargaVacunatorios();

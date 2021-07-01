@@ -217,10 +217,12 @@ public class GestionLoteDosisRWS {
 				cld.agregarLoteDosis(Integer.valueOf(lote.getString("idLote")), lote.getString("idVacunatorio"), lote.getString("idVacuna"), Integer.valueOf(lote.getString("cantidadTotal")));
 				cld.setTransportistaToLoteDosis(Integer.valueOf(lote.getString("idTransportista")), Integer.valueOf(lote.getString("idLote")), lote.getString("idVacunatorio"), lote.getString("idVacuna"));
 				return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha agregado el lote de dosis. Se debe modificarlo posteriormente para confirmarlo o cancelarlo.");
-			}catch (SOAPException | LoteRepetido | VacunatorioNoCargadoException | VacunaInexistente | TransportistaInexistente e) {
-				//e.printStackTrace();
-				//LOGGER.severe(e.getMessage());
+			}catch (LoteRepetido | VacunatorioNoCargadoException | VacunaInexistente | TransportistaInexistente e) {
+				//LOGGER.severe(e.getStackTrace()[0].getMethodName() + ": " + "¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿ who cares ???????????????");
 				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+			}catch (SOAPException se) {
+				LOGGER.severe(se.getStackTrace()[0].getMethodName() + ": " + "############### ERROR EN CONEXION SOAP CON SOCIO ###############");
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, se.getMessage());
 			}
 		} catch (JSONException | NumberFormatException /* | LoteRepetido | VacunatorioNoCargadoException | VacunaInexistente */ e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
@@ -390,11 +392,15 @@ public class GestionLoteDosisRWS {
 		} catch (Exception e) {
 			System.err.println(
 					"\nError occurred while sending SOAP Request to Server!\nMake sure you have the correct endpoint URL and SOAPAction!\n");
+			LOGGER.severe(e.getStackTrace()[0].getMethodName() + ": " + "############### "+e.getMessage()+ " ###############");
 			throw new SOAPException(e.getMessage());
 			// e.printStackTrace();
 		}
-		if (!error.equals(""))
+		if (!error.equals("")) {
+			LOGGER.severe(new Exception().getStackTrace()[0].getMethodName() + ": " + "¿¿¿ "+error+ " ???");
 			throw new SOAPException(error);
+		}
+			
 		return retorno;
 
 	}
@@ -486,8 +492,10 @@ public class GestionLoteDosisRWS {
 			throw new SOAPException(e.getMessage());
 			// e.printStackTrace();
 		}
-		if (!error.equals(""))
+		if (!error.equals("")) {
 			throw new SOAPException(error);
+		}
+			
 		return retorno;
 
 	}
