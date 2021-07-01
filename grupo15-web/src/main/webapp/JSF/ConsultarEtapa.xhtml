@@ -164,6 +164,7 @@
 
 					</ul>
 				</li>
+				<li><a class="nav-link" href="/grupo15-web/JSF/AgregarPuesto.xhtml">Agregar Puesto</a></li>
 			</ul>
 
 		</div>
@@ -184,8 +185,8 @@
 			<div>
 
 				<p:outputLabel style="width:40%">Seleccione Id de etapa: </p:outputLabel>
-				<p:selectOneMenu value="#{etapa.etapa}"  style="border-width: thin">
-					<f:selectItems value="#{etapa.etapas}" var="p" itemValue="#{p.id}" itemLabel="#{p.id}"/>
+				<p:selectOneMenu value="#{etapa.etapa}" style="border-width: thin">
+					<f:selectItems value="#{etapa.etapas}" var="p" itemValue="#{p.id}" itemLabel="#{p.id}" />
 					<p:ajax event="itemSelect" listener="#{etapa.mostrarEtapa}" />
 				</p:selectOneMenu>
 			</div>

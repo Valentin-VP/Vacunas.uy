@@ -1,183 +1,196 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html" 
-      xmlns:p="http://primefaces.org/ui"> 
-      
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui">
 
-<h:head> <link href="/grupo15-web/css/styles.css" type="text/css" rel="stylesheet" media="all" /> 
-<style type="text/css">
-			
-			* {
-				margin:0px;
-				padding:0px;
-			}
-			
-			#header {
-				margin:auto;
-				width: 200%;
-				font-family:Arial, Helvetica, sans-serif;
-			}
-			
-			ul, ol {
-				list-style:none;
-			}
-			
-			.nav > li {
-				float:left;
-				padding: 10px ;
-			}
-			
-			.nav-link {
-  display: block;
-  padding: 0.5rem 1rem;
-}
-.nav-link:hover, .nav-link:focus {
-  text-decoration: none;
-}
-.nav-link.disabled {
-  color: #6c757d;
-  pointer-events: none;
-  cursor: default;
-}
-			
-			.nav li a {
-				background-color: transparent;
-				color:#6c757d;
-				text-decoration:none;
-				padding:10px 12px;
-				display:block;
-			}
-			
-			.nav li a:hover {
-				color:#495057;
-			
-			}
-			.nav-tabs .nav-item {
-  margin-bottom: -0.125rem;
-}
-.nav-tabs .nav-link {
-  border: 0.125rem solid transparent;
-  border-top-left-radius: 0.5rem;
-  border-top-right-radius: 0.5rem;
-}
-			.nav li ul {
-				display:none;
-				position:absolute;
-				min-width:140px;
-			}
-			
-			.nav li:hover > ul {
-				display:block;
-			}
-			
-			.nav li ul li {
-				position:relative;
-			}
-			
-			.nav li ul li ul {
-				right:-140px;
-				top:0px;
-			}
-			
-		</style>
-	</h:head>
-	<body>
-	
+
+<h:head>
+	<link href="/grupo15-web/css/styles.css" type="text/css" rel="stylesheet" media="all" />
+	<style type="text/css">
+		* {
+			margin: 0px;
+			padding: 0px;
+		}
+
+		#header {
+			margin: auto;
+			width: 200%;
+			font-family: Arial, Helvetica, sans-serif;
+		}
+
+		ul,
+		ol {
+			list-style: none;
+		}
+
+		.nav>li {
+			float: left;
+			padding: 10px;
+		}
+
+		.nav-link {
+			display: block;
+			padding: 0.5rem 1rem;
+		}
+
+		.nav-link:hover,
+		.nav-link:focus {
+			text-decoration: none;
+		}
+
+		.nav-link.disabled {
+			color: #6c757d;
+			pointer-events: none;
+			cursor: default;
+		}
+
+		.nav li a {
+			background-color: transparent;
+			color: #6c757d;
+			text-decoration: none;
+			padding: 10px 12px;
+			display: block;
+		}
+
+		.nav li a:hover {
+			color: #495057;
+
+		}
+
+		.nav-tabs .nav-item {
+			margin-bottom: -0.125rem;
+		}
+
+		.nav-tabs .nav-link {
+			border: 0.125rem solid transparent;
+			border-top-left-radius: 0.5rem;
+			border-top-right-radius: 0.5rem;
+		}
+
+		.nav li ul {
+			display: none;
+			position: absolute;
+			min-width: 140px;
+		}
+
+		.nav li:hover>ul {
+			display: block;
+		}
+
+		.nav li ul li {
+			position: relative;
+		}
+
+		.nav li ul li ul {
+			right: -140px;
+			top: 0px;
+		}
+	</style>
+</h:head>
+
+<body>
+
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	  <a class="navbar-brand" href="/grupo15-web/html/menuAutoridad.html">Menú Autoridad</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+		<a class="navbar-brand" href="/grupo15-web/html/menuAutoridad.html">Menú Autoridad</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+			aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
 		<div id="header">
 			<ul class="nav">
 
-				
+
 				<li class="nav-item"><a href="">Laboratorio</a>
 					<ul>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/CrearLaboratorio.xhtml">Crear Laboratorio</a></li>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/BorrarLaboratorio.xhtml">Borrar Laboratorio</a></li>
-					
+						<li><a class="nav-link" href="/grupo15-web/JSF/CrearLaboratorio.xhtml">Crear Laboratorio</a>
+						</li>
+						<li><a class="nav-link" href="/grupo15-web/JSF/BorrarLaboratorio.xhtml">Borrar Laboratorio</a>
+						</li>
+
 					</ul>
 				</li>
-				
+
 				<li class="nav-item"><a href="">Enfermedad</a>
 					<ul>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/CrearEnfermedad.xhtml">Crear Enfermedad</a></li>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/BorrarEnfermedad.xhtml">Borrar Enfermedad</a></li>
+						<li><a class="nav-link" href="/grupo15-web/JSF/CrearEnfermedad.xhtml">Crear Enfermedad</a></li>
+						<li><a class="nav-link" href="/grupo15-web/JSF/BorrarEnfermedad.xhtml">Borrar Enfermedad</a>
+						</li>
 					</ul>
 				</li>
-				
+
 				<li class="nav-item"><a href="">Vacuna</a>
 					<ul>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/CrearVacuna.xhtml">Crear Vacuna</a></li>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/ModificarVacuna.xhtml">Modificar Vacuna</a></li>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/BorrarVacuna.xhtml">Borrar Vacuna</a></li>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/ConsultarVacuna.xhtml">Consultar Vacuna</a></li>
+						<li><a class="nav-link" href="/grupo15-web/JSF/CrearVacuna.xhtml">Crear Vacuna</a></li>
+						<li><a class="nav-link" href="/grupo15-web/JSF/ModificarVacuna.xhtml">Modificar Vacuna</a></li>
+						<li><a class="nav-link" href="/grupo15-web/JSF/BorrarVacuna.xhtml">Borrar Vacuna</a></li>
+						<li><a class="nav-link" href="/grupo15-web/JSF/ConsultarVacuna.xhtml">Consultar Vacuna</a></li>
 					</ul>
 				</li>
-				
+
 				<li><a href="">Plan de Vacunacion</a>
 					<ul>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/CrearPlanVacunacion.xhtml">Crear Plan</a></li>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/ModificarPlanVacunacion.xhtml">Modificar Plan</a></li>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/BorrarPlanVacunacion.xhtml">Borrar Plan</a></li>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/ConsultarPlanVacunacion.xhtml">Consultar Plan</a></li>
+						<li><a class="nav-link" href="/grupo15-web/JSF/CrearPlanVacunacion.xhtml">Crear Plan</a></li>
+						<li><a class="nav-link" href="/grupo15-web/JSF/ModificarPlanVacunacion.xhtml">Modificar Plan</a>
+						</li>
+						<li><a class="nav-link" href="/grupo15-web/JSF/BorrarPlanVacunacion.xhtml">Borrar Plan</a></li>
+						<li><a class="nav-link" href="/grupo15-web/JSF/ConsultarPlanVacunacion.xhtml">Consultar Plan</a>
+						</li>
 					</ul>
 				</li>
-				
+
 				<li><a href="">Etapa</a>
 					<ul>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/CrearEtapa.xhtml">Crear Etapa</a></li>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/ModificarEtapa.xhtml">Modificar Etapa</a></li>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/BorrarEtapa.xhtml">Borrar Etapa</a></li>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/ConsultarEtapa.xhtml">Consultar Etapa</a></li>
+						<li><a class="nav-link" href="/grupo15-web/JSF/CrearEtapa.xhtml">Crear Etapa</a></li>
+						<li><a class="nav-link" href="/grupo15-web/JSF/ModificarEtapa.xhtml">Modificar Etapa</a></li>
+						<li><a class="nav-link" href="/grupo15-web/JSF/BorrarEtapa.xhtml">Borrar Etapa</a></li>
+						<li><a class="nav-link" href="/grupo15-web/JSF/ConsultarEtapa.xhtml">Consultar Etapa</a></li>
 					</ul>
 				</li>
-				
+
 				<li><a href="">Lote Dosis</a>
 					<ul>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/AltaLoteDosis.xhtml">Crear Lote Dosis</a></li>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/ModificarLoteDosis.xhtml">Modificar Lote Dosis</a></li>
-				
+						<li><a class="nav-link" href="/grupo15-web/JSF/AltaLoteDosis.xhtml">Crear Lote Dosis</a></li>
+						<li><a class="nav-link" href="/grupo15-web/JSF/ModificarLoteDosis.xhtml">Modificar Lote
+								Dosis</a></li>
+
 					</ul>
 				</li>
-				
+
 				<li><a href="">Reportes</a>
 					<ul>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/ReporteActosVacunales.xhtml">Actos Vacunales</a></li>
-						<li><a class="nav-link"  href="/grupo15-web/JSF/ReporteStock.xhtml">Stock</a></li>
-				
+						<li><a class="nav-link" href="/grupo15-web/JSF/ReporteActosVacunales.xhtml">Actos Vacunales</a>
+						</li>
+						<li><a class="nav-link" href="/grupo15-web/JSF/ReporteStock.xhtml">Stock</a></li>
+
 					</ul>
 				</li>
-				</ul>
-				
-			 </div>
-          <div class="collapse navbar-collapse justify-content-between"></div>
-          <ul class="navbar-nav">
-          <li class="nav-right">
-            <a class="nav-link" href="/grupo15-services/rest/usuario/cerrarSesion">Cerrar Sesión</a>
-          </li>
-        </ul>
-      
-		</nav>
+				<li><a class="nav-link" href="/grupo15-web/JSF/AgregarPuesto.xhtml">Agregar Puesto</a></li>
+			</ul>
 
- <div class="formulario" style="width: 30%">
-<h:form>
+		</div>
+		<div class="collapse navbar-collapse justify-content-between"></div>
+		<ul class="navbar-nav">
+			<li class="nav-right">
+				<a class="nav-link" href="/grupo15-services/rest/usuario/cerrarSesion">Cerrar Sesión</a>
+			</li>
+		</ul>
+
+	</nav>
+
+	<div class="formulario" style="width: 30%">
+		<h:form>
 
 
-<div>
+			<div>
 
-<p:outputLabel style="width:40%" >Seleccione Vacuna:    </p:outputLabel>
- <p:selectOneMenu value="#{vacuna.vacuna}"  style="border-width: thin">
-	<f:selectItems value="#{vacuna.vacunas}" var="p" itemValue="#{p.nombre}" itemLabel="#{p.nombre}" />
-	<p:ajax event="itemSelect" listener="#{vacuna.mostrarVacuna}" />
-</p:selectOneMenu>
-</div>
+				<p:outputLabel style="width:40%">Seleccione Vacuna: </p:outputLabel>
+				<p:selectOneMenu value="#{vacuna.vacuna}" style="border-width: thin">
+					<f:selectItems value="#{vacuna.vacunas}" var="p" itemValue="#{p.nombre}" itemLabel="#{p.nombre}" />
+					<p:ajax event="itemSelect" listener="#{vacuna.mostrarVacuna}" />
+				</p:selectOneMenu>
+			</div>
 
-<p:divider />
+			<p:divider />
 
 			<div>
 				<p:outputLabel style="width:35%">ID: </p:outputLabel>
@@ -221,8 +234,9 @@
 				</p:outputLabel>
 			</div>
 
-</h:form>
- </div>
-	
-</body> 
+		</h:form>
+	</div>
+
+</body>
+
 </html>
