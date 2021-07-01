@@ -1,5 +1,6 @@
 package rest;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import org.codehaus.jettison.json.JSONObject;
 import datatypes.DtDireccion;
 import datatypes.DtHistoricoStock;
 import datatypes.DtPlanVacunacion;
+import datatypes.DtStock;
 import datatypes.DtVacuna;
 import datatypes.DtVacunatorio;
 import exceptions.AccionInvalida;
@@ -62,10 +64,11 @@ import rest.filter.ResponseBuilder;
 @Path("/carga")
 @Produces(MediaType.APPLICATION_JSON)
 public class CargaDatos {
-	
-	private static float PORCENTAJE_ADMINISTRADAS_POR_DIA = 0.1f; // 10%
-	private static float PORCENTAJE_DESCARTADAS_POR_DIA = 0.01f; // 1%
 
+	private static float PORCENTAJE_ADMINISTRADAS_POR_DIA = 0.01f; // 1%
+	private static float PORCENTAJE_DESCARTADAS_POR_DIA = 0.001f; // 0,1%
+	private static int DOSIS_INICIAL_POR_VACUNA_VACUNATORIO = 10000000;
+	private static int DIAS_HISTORICOS = 10;
 	// Controladores
 	@EJB
 	IEnfermedadLocal cEnfermedad;
@@ -332,23 +335,36 @@ public class CargaDatos {
 			for (DtVacunatorio vacunatorio : vacunatorios) {
 				for (DtVacuna vacuna : vacunas) {
 					// Dia Zero
-					LocalDate fecha_zero = LocalDate.now().minusDays(3);
-					int tope_zero = (int) Math.floor(Math.random() * (10000 - 101 + 1) + 101);
+					LocalDate fecha_zero = LocalDate.now().minusDays(DIAS_HISTORICOS);
+					int tope_zero = (int) Math.floor(Math.random() * (DOSIS_INICIAL_POR_VACUNA_VACUNATORIO - 101 + 1) + 101);
 					int descartadas_zero = (int) (tope_zero * PORCENTAJE_DESCARTADAS_POR_DIA);
 					int tope_minus_descartadas_zero = tope_zero - descartadas_zero;
-					int administradas_zero = (int) (Math.floor(Math.random() * (tope_minus_descartadas_zero - 0 + 1) + 0) * PORCENTAJE_ADMINISTRADAS_POR_DIA);
+					int administradas_zero = (int) (Math
+							.floor(Math.random() * (tope_minus_descartadas_zero - 0 + 1) + 0)
+							* PORCENTAJE_ADMINISTRADAS_POR_DIA);
 					int disponibles_zero = tope_minus_descartadas_zero - descartadas_zero - administradas_zero;
 					int cantidad_zero = disponibles_zero + descartadas_zero + administradas_zero;
 					cHistorico.persistirHistorico(fecha_zero, cantidad_zero, descartadas_zero, disponibles_zero,
 							administradas_zero, vacunatorio.getId(), vacuna.getNombre());
 					// Dias N
-					int disponibles = generarHistorico(disponibles_zero, LocalDate.now().minusDays(2), vacunatorio.getId(), vacuna.getNombre());
-					generarHistorico(disponibles, LocalDate.now().minusDays(1), vacunatorio.getId(), vacuna.getNombre());
+					int dias = DIAS_HISTORICOS - 1;
+					DtHistoricoStock dtHistorico = generarHistorico(disponibles_zero, LocalDate.now().minusDays(dias),
+							vacunatorio.getId(), vacuna.getNombre());
+					dias --;
+					while(dias > 0) {
+						dtHistorico = generarHistorico(dtHistorico.getDisponibles(), LocalDate.now().minusDays(dias),
+								vacunatorio.getId(), vacuna.getNombre());
+						dias --;
+					}					
+					//DtStock stockVacunatorioVacuna = cStock.obtenerStock(vacunatorio.getId(), vacuna.getNombre());
+					cStock.modificarStock(vacunatorio.getId(), vacuna.getNombre(), dtHistorico.getCantidad(),
+							dtHistorico.getDescartadas(), dtHistorico.getAdministradas(), dtHistorico.getDisponibles());
 				}
 			}
 			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
 			LOGGER.info("OK");
-		} catch (VacunatoriosNoCargadosException | VacunaInexistente | VacunatorioNoCargadoException | StockVacunaVacunatorioInexistente | JSONException e) {
+		} catch (VacunatoriosNoCargadosException | VacunaInexistente | VacunatorioNoCargadoException
+				| StockVacunaVacunatorioInexistente | JSONException e) {
 			try {
 				LOGGER.warning("Error");
 				this.resultados.put(e.getStackTrace()[0].getMethodName(), e.getMessage());
@@ -356,18 +372,20 @@ public class CargaDatos {
 				e1.printStackTrace();
 			}
 		}
-		
 
 	}
 
-	private int generarHistorico(int disponibles_anterior, LocalDate fecha, String vacunatorio, String vacuna) throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente {
+	private DtHistoricoStock generarHistorico(int disponibles_anterior, LocalDate fecha, String vacunatorio,
+			String vacuna) throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente {
 		int descartadas = (int) (disponibles_anterior * PORCENTAJE_DESCARTADAS_POR_DIA);
 		int disponibles_minus_descartadas = disponibles_anterior - descartadas;
-		int administradas = (int) (Math.floor(Math.random() * (disponibles_minus_descartadas - 0 + 1) + 0) * PORCENTAJE_ADMINISTRADAS_POR_DIA);
+		int administradas = (int) (Math.floor(Math.random() * (disponibles_minus_descartadas - 0 + 1) + 0)
+				* PORCENTAJE_ADMINISTRADAS_POR_DIA);
 		int disponibles = disponibles_anterior - descartadas - administradas;
 		int cantidad = disponibles + descartadas + administradas;
 		cHistorico.persistirHistorico(fecha, cantidad, descartadas, disponibles, administradas, vacunatorio, vacuna);
-		return disponibles;
+		return new DtHistoricoStock(fecha.toString(), cantidad, descartadas, disponibles, administradas, vacunatorio,
+				vacuna);
 	}
 
 	private void altaLoteDosis() {
