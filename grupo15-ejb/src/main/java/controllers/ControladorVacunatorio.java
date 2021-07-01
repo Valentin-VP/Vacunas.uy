@@ -96,7 +96,8 @@ public class ControladorVacunatorio implements IControladorVacunatorioLocal, ICo
 		if (vac == null) {
 			throw new VacunatorioNoCargadoException("El vacunatorio " + id + " no existe en el sistema");
 		} else {
-			if (vac.getReglasCupos() != null) {
+			ReglasCupos rc = em.find(ReglasCupos.class, id);
+			if (rc != null) {
 				throw new ReglasCuposCargadoException("La regla de cupo ya existe en el sistema");
 			} else {
 				ReglasCupos reglasNew = new ReglasCupos(id, duracionTurno, horaApertura, horaCierre);
