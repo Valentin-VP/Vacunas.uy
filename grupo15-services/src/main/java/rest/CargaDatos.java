@@ -1,11 +1,15 @@
 package rest;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
@@ -19,23 +23,36 @@ import javax.ws.rs.core.Response;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import datatypes.DtCiudadano;
 import datatypes.DtDireccion;
+import datatypes.DtEnfermedad;
+import datatypes.DtEtapa;
 import datatypes.DtHistoricoStock;
 import datatypes.DtPlanVacunacion;
-import datatypes.DtStock;
+import datatypes.DtUsuarioExterno;
 import datatypes.DtVacuna;
+import datatypes.DtVacunador;
 import datatypes.DtVacunatorio;
+import datatypes.Sexo;
 import exceptions.AccionInvalida;
 import exceptions.CantidadNula;
+import exceptions.CupoInexistente;
 import exceptions.EnfermedadInexistente;
 import exceptions.EnfermedadRepetida;
+import exceptions.EtapaInexistente;
 import exceptions.EtapaRepetida;
 import exceptions.LaboratorioInexistente;
 import exceptions.LaboratorioRepetido;
+import exceptions.LoteRepetido;
 import exceptions.PlanVacunacionInexistente;
+import exceptions.PuestoCargadoException;
 import exceptions.ReglasCuposCargadoException;
 import exceptions.StockVacunaVacunatorioExistente;
 import exceptions.StockVacunaVacunatorioInexistente;
+import exceptions.TransportistaInexistente;
+import exceptions.TransportistaRepetido;
+import exceptions.UsuarioExistente;
+import exceptions.UsuarioInexistente;
 import exceptions.VacunaInexistente;
 import exceptions.VacunaRepetida;
 import exceptions.VacunatorioCargadoException;
@@ -53,6 +70,7 @@ import interfaces.IEnfermedadLocal;
 import interfaces.IEtapaRemote;
 import interfaces.IHistoricoDaoLocal;
 import interfaces.ILaboratorioLocal;
+import interfaces.ILoteDosisDaoLocal;
 import interfaces.IPlanVacunacionLocal;
 import interfaces.IReservaDAOLocal;
 import interfaces.IStockDaoLocal;
@@ -67,8 +85,14 @@ public class CargaDatos {
 
 	private static float PORCENTAJE_ADMINISTRADAS_POR_DIA = 0.01f; // 1%
 	private static float PORCENTAJE_DESCARTADAS_POR_DIA = 0.001f; // 0,1%
-	private static int DOSIS_INICIAL_POR_VACUNA_VACUNATORIO = 10000000;
-	private static int DIAS_HISTORICOS = 10;
+	private static int DOSIS_INICIAL_POR_VACUNA_VACUNATORIO = 10000000; //10000000
+	private static int CANTIDAD_HISTORICOS = 10; //10
+	private static int CANTIDAD_PUESTOS_POR_VACUNATORIO = 4; //4
+	private static int CANTIDAD_LOTES_POR_VACUNA_VACUNATORIO = 5; //5
+	private static int CANTIDAD_VACUNADORES_RANDOM = 50; //50
+	private static int CANTIDAD_CIUDADANOS_RANDOM = 1000; //1000
+	private static int TOPE_RESERVAS_GLOBALES = 2000; //2000
+
 	// Controladores
 	@EJB
 	IEnfermedadLocal cEnfermedad;
@@ -104,9 +128,19 @@ public class CargaDatos {
 	IConstanciaVacunaDAOLocal cConstancia;
 	@EJB
 	ITransportistaDaoLocal cTransportista;
+	@EJB
+	ILoteDosisDaoLocal cLote;
 
 	private JSONObject resultados = new JSONObject();
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
+
+	ArrayList<Integer> ciVacunadoresOficiales = new ArrayList<Integer>();
+	ArrayList<Integer> ciCiudadanosOficiales = new ArrayList<Integer>();
+
+	ArrayList<Integer> idsVacunadoresRandom = new ArrayList<Integer>();
+	ArrayList<Integer> idsCiudadanosRandom = new ArrayList<Integer>();
+
+	private boolean estadoCarga = true;
 
 	public CargaDatos() {
 	}
@@ -121,9 +155,14 @@ public class CargaDatos {
 		altaPlanes();
 		altaEtapas();
 		altaVacunatorios();
+		altaPuestos();
 		altaStock();
 		altaHistorico();
-		altaLoteDosis();
+		// altaLoteDosis();
+		altaTransportista();
+		altaVacunador();
+		altaCiudadano();
+		altaReserva();
 		return resultadoFinal();
 
 	}
@@ -140,6 +179,7 @@ public class CargaDatos {
 			LOGGER.info("OK");
 		} catch (EnfermedadRepetida | JSONException e) {
 			try {
+				estadoCarga = false;
 				LOGGER.warning("Error");
 				this.resultados.put(e.getStackTrace()[0].getMethodName(), e.getMessage());
 			} catch (JSONException e1) {
@@ -161,6 +201,7 @@ public class CargaDatos {
 			LOGGER.info("OK");
 		} catch (LaboratorioRepetido | JSONException e) {
 			try {
+				estadoCarga = false;
 				LOGGER.warning("Error");
 				this.resultados.put(e.getStackTrace()[0].getMethodName(), e.getMessage());
 			} catch (JSONException e1) {
@@ -181,6 +222,7 @@ public class CargaDatos {
 			LOGGER.info("OK");
 		} catch (VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | JSONException e) {
 			try {
+				estadoCarga = false;
 				LOGGER.warning("Error");
 				this.resultados.put(e.getStackTrace()[0].getMethodName(), e.getMessage());
 			} catch (JSONException e1) {
@@ -201,6 +243,7 @@ public class CargaDatos {
 			LOGGER.info("OK");
 		} catch (EnfermedadInexistente | JSONException e) {
 			try {
+				estadoCarga = false;
 				LOGGER.warning("Error");
 				this.resultados.put(e.getStackTrace()[0].getMethodName(), e.getMessage());
 			} catch (JSONException e1) {
@@ -238,6 +281,7 @@ public class CargaDatos {
 			LOGGER.info("OK");
 		} catch (EtapaRepetida | PlanVacunacionInexistente | VacunaInexistente | AccionInvalida | JSONException e) {
 			try {
+				estadoCarga = false;
 				LOGGER.warning("Error");
 				this.resultados.put(e.getStackTrace()[0].getMethodName(), e.getMessage());
 			} catch (JSONException e1) {
@@ -291,12 +335,44 @@ public class CargaDatos {
 		} catch (VacunatorioCargadoException | JSONException | VacunatorioNoCargadoException
 				| ReglasCuposCargadoException | AccionInvalida e) {
 			try {
+				estadoCarga = false;
 				LOGGER.warning("Error");
 				this.resultados.put(e.getStackTrace()[0].getMethodName(), e.getMessage());
 			} catch (JSONException e1) {
 				e1.printStackTrace();
 			}
 		}
+	}
+
+	private void altaPuestos() {
+		try {
+			LOGGER.info("Cargando puestos");
+			ArrayList<DtVacunatorio> vacunatorios;
+			vacunatorios = cVacunatorio.listarVacunatorio();
+			List<Integer> rango = IntStream.rangeClosed(1, CANTIDAD_PUESTOS_POR_VACUNATORIO).boxed()
+					.collect(Collectors.toList());
+			LOGGER.info(String.format("Generando %d puestos por vacunatorio", rango.size()));
+			// IntStream.iterate(1, i -> i +
+			// 1).limit(CANTIDAD_PUESTOS_POR_VACUNATORIO).boxed()
+			// .collect(Collectors.toList());
+			for (DtVacunatorio vacunatorio : vacunatorios) {
+				for (Integer number : rango) {
+					cPuesto.agregarPuesto(String.format("%s-%d", vacunatorio.getId(), number), vacunatorio.getId());
+				}
+			}
+			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
+			LOGGER.info("OK");
+		} catch (VacunatoriosNoCargadosException | PuestoCargadoException | VacunatorioNoCargadoException
+				| JSONException e) {
+			try {
+				estadoCarga = false;
+				LOGGER.warning("Error");
+				this.resultados.put(e.getStackTrace()[0].getMethodName(), e.getMessage());
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+		}
+
 	}
 
 	private void altaStock() {
@@ -317,6 +393,7 @@ public class CargaDatos {
 		} catch (VacunatorioNoCargadoException | VacunaInexistente | CantidadNula | StockVacunaVacunatorioExistente
 				| VacunatoriosNoCargadosException | JSONException e) {
 			try {
+				estadoCarga = false;
 				LOGGER.warning("Error");
 				this.resultados.put(e.getStackTrace()[0].getMethodName(), e.getMessage());
 			} catch (JSONException e1) {
@@ -332,11 +409,14 @@ public class CargaDatos {
 			LOGGER.info("Recuperando vacunas");
 			ArrayList<DtVacuna> vacunas = cVacuna.listarVacunas();
 			LOGGER.info("Cargando historicos");
+			LOGGER.info(String.format("Generando %d historicos por vacuna y vacunatorio", CANTIDAD_HISTORICOS));
 			for (DtVacunatorio vacunatorio : vacunatorios) {
 				for (DtVacuna vacuna : vacunas) {
 					// Dia Zero
-					LocalDate fecha_zero = LocalDate.now().minusDays(DIAS_HISTORICOS);
-					int tope_zero = (int) Math.floor(Math.random() * (DOSIS_INICIAL_POR_VACUNA_VACUNATORIO - 101 + 1) + 101);
+					// LocalDate fecha_zero = LocalDate.now().minusDays(DIAS_HISTORICOS);
+					LocalDate fecha_zero = LocalDate.now().minusMonths(CANTIDAD_HISTORICOS);
+					int tope_zero = (int) Math
+							.floor(Math.random() * (DOSIS_INICIAL_POR_VACUNA_VACUNATORIO - 101 + 1) + 101);
 					int descartadas_zero = (int) (tope_zero * PORCENTAJE_DESCARTADAS_POR_DIA);
 					int tope_minus_descartadas_zero = tope_zero - descartadas_zero;
 					int administradas_zero = (int) (Math
@@ -347,16 +427,17 @@ public class CargaDatos {
 					cHistorico.persistirHistorico(fecha_zero, cantidad_zero, descartadas_zero, disponibles_zero,
 							administradas_zero, vacunatorio.getId(), vacuna.getNombre());
 					// Dias N
-					int dias = DIAS_HISTORICOS - 1;
-					DtHistoricoStock dtHistorico = generarHistorico(disponibles_zero, LocalDate.now().minusDays(dias),
+					int dias = CANTIDAD_HISTORICOS - 1;
+					DtHistoricoStock dtHistorico = generarHistorico(disponibles_zero, LocalDate.now().minusMonths(dias),
 							vacunatorio.getId(), vacuna.getNombre());
-					dias --;
-					while(dias > 0) {
-						dtHistorico = generarHistorico(dtHistorico.getDisponibles(), LocalDate.now().minusDays(dias),
+					dias--;
+					while (dias > 0) {
+						dtHistorico = generarHistorico(dtHistorico.getDisponibles(), LocalDate.now().minusMonths(dias),
 								vacunatorio.getId(), vacuna.getNombre());
-						dias --;
-					}					
-					//DtStock stockVacunatorioVacuna = cStock.obtenerStock(vacunatorio.getId(), vacuna.getNombre());
+						dias--;
+					}
+					// DtStock stockVacunatorioVacuna = cStock.obtenerStock(vacunatorio.getId(),
+					// vacuna.getNombre());
 					cStock.modificarStock(vacunatorio.getId(), vacuna.getNombre(), dtHistorico.getCantidad(),
 							dtHistorico.getDescartadas(), dtHistorico.getAdministradas(), dtHistorico.getDisponibles());
 				}
@@ -366,6 +447,7 @@ public class CargaDatos {
 		} catch (VacunatoriosNoCargadosException | VacunaInexistente | VacunatorioNoCargadoException
 				| StockVacunaVacunatorioInexistente | JSONException e) {
 			try {
+				estadoCarga = false;
 				LOGGER.warning("Error");
 				this.resultados.put(e.getStackTrace()[0].getMethodName(), e.getMessage());
 			} catch (JSONException e1) {
@@ -389,15 +471,421 @@ public class CargaDatos {
 	}
 
 	private void altaLoteDosis() {
+		try {
+			LOGGER.info("Recuperando vacunatorios");
+			ArrayList<DtVacunatorio> vacunatorios;
+			vacunatorios = cVacunatorio.listarVacunatorio();
+			LOGGER.info("Recuperando vacunas");
+			ArrayList<DtVacuna> vacunas = cVacuna.listarVacunas();
+			LOGGER.info("Cargando lotes dosis");
+			for (DtVacunatorio vacunatorio : vacunatorios) {
+				ArrayList<Integer> lotesCreados = new ArrayList<Integer>();
+				for (DtVacuna vacuna : vacunas) {
+					int lotes_qty = CANTIDAD_LOTES_POR_VACUNA_VACUNATORIO;
+					while (lotes_qty > 0) {
+						int random_id = (int) Math.floor(Math.random() * (99999999 - 10000000 + 1) + 10000000);
+						while (lotesCreados.contains(random_id)) {
+							random_id = (int) Math.floor(Math.random() * (99999999 - 10000000 + 1) + 10000000);
+						}
+						int random_qty = (int) Math.floor(Math.random() * (10000000 - 1 + 1) + 1);
+						cLote.agregarLoteDosis(random_id, vacunatorio.getId(), vacuna.getNombre(), random_qty);
+						lotesCreados.add(random_id);
+						lotes_qty--;
+					}
+
+				}
+			}
+			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
+			LOGGER.info("OK");
+		} catch (VacunatoriosNoCargadosException | VacunaInexistente | LoteRepetido | VacunatorioNoCargadoException
+				| JSONException e) {
+			try {
+				estadoCarga = false;
+				LOGGER.warning("Error");
+				this.resultados.put(e.getStackTrace()[0].getMethodName(), e.getMessage());
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+	}
+
+	private void altaTransportista() {
+		try {
+			LOGGER.info("Cargando tranpostistas");
+			cTransportista.agregarTransportista(1, "https://157.56.176.165:8443");
+			cTransportista.agregarTransportista(2, "https://40.87.98.55:8443/");
+			cTransportista.agregarTransportista(3, "");
+			cTransportista.agregarTransportista(4, "");
+			cTransportista.agregarTransportista(5, "");
+
+			LOGGER.info("Creando tokens de vacunatorios");
+			cTransportista.generarTokenTransportista(1);
+			cTransportista.generarTokenTransportista(2);
+			cTransportista.generarTokenTransportista(3);
+			cTransportista.generarTokenTransportista(4);
+			cTransportista.generarTokenTransportista(5);
+
+			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
+			LOGGER.info("OK");
+		} catch (TransportistaRepetido | TransportistaInexistente | AccionInvalida | JSONException e) {
+			try {
+				estadoCarga = false;
+				LOGGER.warning("Error");
+				this.resultados.put(e.getStackTrace()[0].getMethodName(), e.getMessage());
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+
+	private void altaVacunador() {
+		try {
+			LOGGER.info("Cargando vacunadores oficiales");
+			cUsuario.agregarUsuarioVacunador(45946590, "Rodrigo", "Castro", LocalDate.of(1994, 4, 3), "mail@devops.com",
+					new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Masculino);
+			cUsuario.agregarUsuarioVacunador(54657902, "Nicolas", "Mendez", LocalDate.of(1997, 8, 2), "mail@devops.com",
+					new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Masculino);
+			cUsuario.agregarUsuarioVacunador(48585559, "Nohelia", "Yanibelli", LocalDate.of(1989, 7, 29),
+					"mail@devops.com", new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Femenino);
+			cUsuario.agregarUsuarioVacunador(49457795, "Valentin", "Vasconcellos", LocalDate.of(1997, 7, 1),
+					"mail@devops.com", new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Masculino);
+			cUsuario.agregarUsuarioVacunador(50332570, "Jessica", "Gonzalez", LocalDate.of(1993, 7, 29),
+					"mail@devops.com", new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Femenino);
+
+			LOGGER.info("Recuperando vacunadores");
+			for (DtVacunador vacunador : cUsuario.listarVacunadores()) {
+				ciVacunadoresOficiales.add(vacunador.getIdUsuario());
+			}
+
+			LOGGER.info("Cargando vacunadores random");
+			String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+			int vacunadores_qty = CANTIDAD_VACUNADORES_RANDOM;
+			while (vacunadores_qty > 0) {
+				// Genera cifras random
+				int random_id = (int) Math.floor(Math.random() * (70000000 - 1000000 + 1) + 1000000);
+				while (ciVacunadoresOficiales.contains(random_id) || idsVacunadoresRandom.contains(random_id)) {
+					random_id = (int) Math.floor(Math.random() * (70000000 - 1000000 + 1) + 1000000);
+				}
+				int names_length = (int) Math.floor(Math.random() * (20 - 5 + 1) + 5);
+				int random_dob = (int) Math.floor(Math.random() * (28 - 1 + 1) + 1);
+				int random_mob = (int) Math.floor(Math.random() * (12 - 1 + 1) + 1);
+				int random_yob = (int) Math.floor(Math.random() * (2020 - 1920 + 1) + 1920);
+				// Genera nombre random
+				Random rnd = new Random();
+				StringBuilder sb = new StringBuilder(names_length);
+				for (int i = 0; i < names_length; i++)
+					sb.append(chars.charAt(rnd.nextInt(chars.length())));
+				String name = sb.toString();
+				// Genera apellido random
+				rnd = new Random();
+				sb = new StringBuilder(names_length);
+				for (int i = 0; i < names_length; i++)
+					sb.append(chars.charAt(rnd.nextInt(chars.length())));
+				String surname = sb.toString();
+				// Genera mail random
+				rnd = new Random();
+				sb = new StringBuilder(names_length);
+				for (int i = 0; i < names_length; i++)
+					sb.append(chars.charAt(rnd.nextInt(chars.length())));
+				sb.append("@");
+				for (int i = 0; i < names_length; i++)
+					sb.append(chars.charAt(rnd.nextInt(chars.length())));
+				String mail = sb.toString();
+				// Genera sexo random
+				Sexo[] sexos = Sexo.values();
+				rnd = new Random();
+				cUsuario.agregarUsuarioVacunador(random_id, name, surname,
+						LocalDate.of(random_yob, random_mob, random_dob), mail,
+						new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), sexos[rnd.nextInt(sexos.length)]);
+				idsVacunadoresRandom.add(random_id);
+				vacunadores_qty--;
+			}
+			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
+			LOGGER.info("OK");
+		} catch (UsuarioExistente | JSONException e) {
+			try {
+				estadoCarga = false;
+				LOGGER.warning("Error");
+				this.resultados.put(e.getStackTrace()[0].getMethodName(), e.getMessage());
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+	}
+
+	private void altaCiudadano() {
+		try {
+			LOGGER.info("Cargando ciudadanos oficiales");
+			cUsuario.agregarUsuarioCiudadano(45946590, "Rodrigo", "Castro", LocalDate.of(1994, 4, 3), "mail@devops.com",
+					new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Masculino, "", false);
+			cUsuario.agregarUsuarioCiudadano(54657902, "Nicolas", "Mendez", LocalDate.of(1997, 8, 2), "mail@devops.com",
+					new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Masculino, "", false);
+			cUsuario.agregarUsuarioCiudadano(48585559, "Nohelia", "Yanibelli", LocalDate.of(1989, 7, 29),
+					"mail@devops.com", new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Femenino, "",
+					false);
+			cUsuario.agregarUsuarioCiudadano(49457795, "Valentin", "Vasconcellos", LocalDate.of(1997, 7, 1),
+					"mail@devops.com", new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Masculino, "",
+					false);
+			cUsuario.agregarUsuarioCiudadano(50332570, "Jessica", "Gonzalez", LocalDate.of(1993, 7, 29),
+					"mail@devops.com", new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Femenino, "",
+					false);
+
+			LOGGER.info("Recuperando ciudadanos");
+			for (DtCiudadano ciudadano : cUsuario.listarCiudadanos()) {
+				ciCiudadanosOficiales.add(ciudadano.getIdUsuario());
+			}
+
+			LOGGER.info("Cargando ciudadanos random");
+			String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+			int ciudadanos_qty = CANTIDAD_CIUDADANOS_RANDOM;
+			while (ciudadanos_qty > 0) {
+				// Genera cifras random
+				int random_id = (int) Math.floor(Math.random() * (70000000 - 1000000 + 1) + 1000000);
+				while (ciCiudadanosOficiales.contains(random_id) || idsCiudadanosRandom.contains(random_id)) {
+					random_id = (int) Math.floor(Math.random() * (70000000 - 1000000 + 1) + 1000000);
+				}
+				int names_length = (int) Math.floor(Math.random() * (20 - 5 + 1) + 5);
+				int random_dob = (int) Math.floor(Math.random() * (28 - 1 + 1) + 1);
+				int random_mob = (int) Math.floor(Math.random() * (12 - 1 + 1) + 1);
+				int random_yob = (int) Math.floor(Math.random() * (2020 - 1920 + 1) + 1920);
+				// Genera nombre random
+				Random rnd = new Random();
+				StringBuilder sb = new StringBuilder(names_length);
+				for (int i = 0; i < names_length; i++)
+					sb.append(chars.charAt(rnd.nextInt(chars.length())));
+				String name = sb.toString();
+				// Genera apellido random
+				rnd = new Random();
+				sb = new StringBuilder(names_length);
+				for (int i = 0; i < names_length; i++)
+					sb.append(chars.charAt(rnd.nextInt(chars.length())));
+				String surname = sb.toString();
+				// Genera mail random
+				rnd = new Random();
+				sb = new StringBuilder(names_length);
+				for (int i = 0; i < names_length; i++)
+					sb.append(chars.charAt(rnd.nextInt(chars.length())));
+				sb.append("@");
+				for (int i = 0; i < names_length; i++)
+					sb.append(chars.charAt(rnd.nextInt(chars.length())));
+				String mail = sb.toString();
+				// Genera sexo random
+				Sexo[] sexos = Sexo.values();
+				rnd = new Random();
+				cUsuario.agregarUsuarioCiudadano(random_id, name, surname,
+						LocalDate.of(random_yob, random_mob, random_dob), mail,
+						new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), sexos[rnd.nextInt(sexos.length)], "",
+						false);
+				idsCiudadanosRandom.add(random_id);
+				ciudadanos_qty--;
+			}
+
+			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
+			LOGGER.info("OK");
+		} catch (UsuarioExistente | JSONException e) {
+			try {
+				estadoCarga = false;
+				LOGGER.warning("Error");
+				this.resultados.put(e.getStackTrace()[0].getMethodName(), e.getMessage());
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+
+	private void altaReserva() {
+		// saco diferencia de hora apertura y hora cierre ==> 7:00 - 22:59, uso 22-7=15
+		// divido duracion hora (60) obtenida entre duracion turno ==> cantidad de
+		// reservas por hora 60/15 = 4 * cant_horas
+		// con esa cant_reservas_por_puesto, multiplico por cant_puestos --> 60 * 10 =
+		// 600 reservas "seguras"
+		// tomando la cant_etapas, divido reservas_seguras entre cant_etapas para saber
+		// cuantas reservas por etapa hacer
+		// ==> luego
+
+		try {
+			LOGGER.info("Recuperando vacunatorios");
+			ArrayList<DtVacunatorio> vacunatorios;
+			vacunatorios = cVacunatorio.listarVacunatorio();
+
+			LOGGER.info("Recuperando enfermedades");
+			ArrayList<DtEnfermedad> enfermedades;
+			enfermedades = cEnfermedad.listarEnfermedades();
+
+			LOGGER.info("Recuperando planes");
+			ArrayList<DtPlanVacunacion> planes;
+			planes = cPlan.listarPlanesVacunacion();
+
+			LOGGER.info("Cargando reservas oficiales");
+
+			for (Integer ci : ciCiudadanosOficiales) {
+				DtCiudadano ciudadano;
+
+				ciudadano = cUsuario.buscarCiudadano(ci);
+				for (DtEnfermedad enfermedad : enfermedades) {
+					for (DtPlanVacunacion plan : planes) {
+						if (plan.getEnfermedad().equals(enfermedad.getNombre())) {
+							for (DtVacunatorio vacunatorio : vacunatorios) {
+								List<DtEtapa> etapas = plan.getEtapa();
+								for (DtEtapa etapa : etapas) {
+									// String ci, String fechaNac, String tipoSector, boolean enfermedadesPrevias
+									String[] temp = etapa.getCondicion().split("\\Q|\\E");
+									int edadInit = Integer.parseInt(temp[0]);
+									int edadFin = Integer.parseInt(temp[1]);
+									String sector = temp[2];
+									String permitidoEnf = temp[3]; // puede tener enfermedades previas?
+									boolean enfermedadesPrevias = true;
+									if (permitidoEnf.equals("si")) {
+										enfermedadesPrevias = false;
+									}
+									DtUsuarioExterno externo = new DtUsuarioExterno(ci.toString(),
+											ciudadano.getFechaNac().toString(), sector, enfermedadesPrevias);
+									try {
+										ArrayList<DtEtapa> etapasHabilitado = cReserva
+												.seleccionarPlanVacunacion(plan.getId(), ci, externo);
+									} catch (EtapaInexistente e) {
+										//LOGGER.warning(e.getMessage());
+										continue;
+									}
+									//LOGGER.info("Generando reserva");
+									Random rnd = new Random();
+									LocalDate fechaReserva = LocalDate
+											.parse(etapa.getFechaInicio(), DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+											.plusDays(rnd.nextInt(10));
+									while (!fechaReserva.isAfter(LocalDate.now())) {
+										fechaReserva = fechaReserva.plusDays(10);
+									}
+									String fin = etapa.getFechaFin();
+									ArrayList<String> horas = cReserva.seleccionarFecha(fechaReserva,
+											vacunatorio.getId(), plan.getId(), ci, externo);
+									LocalTime hora = LocalTime.parse(horas.get(rnd.nextInt(horas.size())));
+									try {
+										cReserva.confirmarReserva((int) ci, enfermedad.getNombre(), plan.getId(),
+												vacunatorio.getId(), fechaReserva, hora, externo);
+									}catch (CupoInexistente e) {
+										continue;
+									}
+									
+								}
+
+							}
+						}
+					}
+				}
+
+			}
+
+			LOGGER.info("Cargando reservas random");
+			int limiteReservas = TOPE_RESERVAS_GLOBALES;
+				
+				//for (Integer ci : idsCiudadanosRandom) {
+					while (limiteReservas > 0) {
+						Integer ci = null;
+						if (idsCiudadanosRandom.size() > 0)
+							ci = idsCiudadanosRandom.remove(0);
+						else
+							break;
+						LOGGER.info("Ciudadano: " + ci);
+						LOGGER.info("Limite: " + limiteReservas);
+						DtCiudadano ciudadano;
+						ciudadano = cUsuario.buscarCiudadano(ci);
+						for (DtEnfermedad enfermedad : enfermedades) {
+							//LOGGER.info("Enfermedad: " + enfermedad.getNombre());
+							for (DtPlanVacunacion plan : planes) {
+								//LOGGER.info("Plan: " + plan.getNombre());
+								if (plan.getEnfermedad().equals(enfermedad.getNombre())) {
+									for (DtVacunatorio vacunatorio : vacunatorios) {
+										//LOGGER.info("Vacunatorio: " + vacunatorio.getNombre());
+										List<DtEtapa> etapas = plan.getEtapa();
+										for (DtEtapa etapa : etapas) {
+											//LOGGER.info("Etapa: " + etapa.getId());
+											// String ci, String fechaNac, String tipoSector, boolean enfermedadesPrevias
+											String[] temp = etapa.getCondicion().split("\\Q|\\E");
+											int edadInit = Integer.parseInt(temp[0]);
+											int edadFin = Integer.parseInt(temp[1]);
+											String sector = temp[2];
+											String permitidoEnf = temp[3]; // puede tener enfermedades previas?
+											boolean enfermedadesPrevias = true;
+											if (permitidoEnf.equals("si")) {
+												enfermedadesPrevias = false;
+											}
+											DtUsuarioExterno externo = new DtUsuarioExterno(ci.toString(),
+													ciudadano.getFechaNac().toString(), sector, enfermedadesPrevias);
+											try {
+												ArrayList<DtEtapa> etapasHabilitado = cReserva
+														.seleccionarPlanVacunacion(plan.getId(), ci, externo);
+											} catch (EtapaInexistente e) {
+												//LOGGER.warning(e.getMessage());
+												continue;
+											}
+											//LOGGER.info("Generando reserva");
+											Random rnd = new Random();
+											LocalDate fechaReserva = LocalDate
+													.parse(etapa.getFechaInicio(),
+															DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+													.plusDays(rnd.nextInt(10));
+											while (!fechaReserva.isAfter(LocalDate.now())) {
+												fechaReserva = fechaReserva.plusDays(10);
+											}
+											String fin = etapa.getFechaFin();
+											ArrayList<String> horas = cReserva.seleccionarFecha(fechaReserva,
+													vacunatorio.getId(), plan.getId(), ci, externo);
+											LocalTime hora = LocalTime.parse(horas.get(rnd.nextInt(horas.size())));
+											try {
+												cReserva.confirmarReserva((int) ci, enfermedad.getNombre(), plan.getId(),
+														vacunatorio.getId(), fechaReserva, hora, externo);
+												limiteReservas--;
+											} catch (CupoInexistente e) {
+												continue;
+											}
+										}
+
+									}
+								}
+							}
+						}
+					}
+					
+					//break;
+				//}
+
+			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
+			LOGGER.info("OK");
+
+		} catch (JSONException | PlanVacunacionInexistente | UsuarioInexistente | VacunatoriosNoCargadosException
+				| EnfermedadInexistente | VacunatorioNoCargadoException | CupoInexistente | EtapaInexistente e) {
+			try {
+				estadoCarga = false;
+				LOGGER.warning("Error");
+				this.resultados.put(e.getStackTrace()[0].getMethodName(), e.getMessage());
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// cr.confirmarReserva(54657902, "virus1", 8, "vact1",
+		// LocalDate.now().plusDays(1), LocalTime.of(20, 00, 00), new
+		// DtUsuarioExterno("54657902", "", "industria", false));
 
 	}
 
 	private Response resultadoFinal() {
 		try {
-			JSONObject respuesta = new JSONObject();
-			respuesta.put("Estado", "Carga Exitosa");
-			respuesta.put("Resultados", resultados);
-			return ResponseBuilder.createResponse(Response.Status.OK, respuesta);
+
+			if (estadoCarga) {
+				JSONObject respuesta = new JSONObject();
+				respuesta.put("Estado", "Carga Exitosa");
+				respuesta.put("Resultados", resultados);
+				return ResponseBuilder.createResponse(Response.Status.OK, respuesta);
+			} else {
+				JSONObject respuesta = new JSONObject();
+				respuesta.put("Estado", "Carga con Errores");
+				respuesta.put("Resultados", resultados);
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, respuesta);
+			}
+
 		} catch (JSONException e) {
 			try {
 				LOGGER.warning("Error");

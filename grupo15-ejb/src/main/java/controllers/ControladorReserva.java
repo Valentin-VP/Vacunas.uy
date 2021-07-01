@@ -329,7 +329,7 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 								}
 								ArrayList<LocalTime> libres = calcularHorasLibresVacunatorio(a, v);*/
 								if (!contieneLocalTime(libresFinal, hora)) {
-									System.out.println("Corto por contieneLocalTime.");
+									//System.out.println("Corto por contieneLocalTime.");
 									throw new CupoInexistente("No hay cupos para esa hora.");
 								}
 								ArrayList<DtTareaNotificacion> retorno = new ArrayList<>();
@@ -758,12 +758,12 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 			int edad = Period.between(c.getFechaNac(), LocalDate.now()).getYears();
 			
 			if ((edad >= edadInit && edad <= edadFin)) { //cumple con la edad necesaria?
-				System.out.println("getEtapaHabilitadoDePlan: Edad: " + edad);
+				//System.out.println("getEtapaHabilitadoDePlan: Edad: " + edad);
 				if ( e.getFechaInicio().isBefore(LocalDate.now()) && e.getFechaFin().isAfter(LocalDate.now())){ //esta la etapa en un periodo activo?
-					System.out.println("getEtapaHabilitadoDePlan: Edad: " + edad);
+					//System.out.println("getEtapaHabilitadoDePlan: Edad: " + edad);
 					if (sector.equals("todos")  || datosExternosUsuario.getTipoSector().equals(sector)) { //es el ciudadano del sector correcto (si se requiere)?
-						System.out.println("getEtapaHabilitadoDePlan: Sector Ciudadano: " + datosExternosUsuario.getTipoSector() + " . El necesario es " + sector);
-						System.out.println("getEtapaHabilitadoDePlan: Previas Ciudadano: " + datosExternosUsuario.isEnfermedadesPrevias() + " . Puede? " + permitidoEnf);
+						//System.out.println("getEtapaHabilitadoDePlan: Sector Ciudadano: " + datosExternosUsuario.getTipoSector() + " . El necesario es " + sector);
+						//System.out.println("getEtapaHabilitadoDePlan: Previas Ciudadano: " + datosExternosUsuario.isEnfermedadesPrevias() + " . Puede? " + permitidoEnf);
 						if (permitidoEnf.equals("no")) { //si la etapa no permite enfermedades previas:_
 							if (!datosExternosUsuario.isEnfermedadesPrevias()) {                     //no tiene ese ciudadano enfermedades previas?
 								return e;	//si todo se cumple retorno esa etapa
