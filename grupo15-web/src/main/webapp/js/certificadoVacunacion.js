@@ -19,9 +19,6 @@ var vac = new Vue({
 
   methods: {
     setDatos() {
-
-      enfermedad = this.enfermedad;
-      console.log("enfermedad seleccionada:" + this.enfermedad);
       this.obtenerCertificado();
 
     },
@@ -55,8 +52,11 @@ var vac = new Vue({
 
 
       for (i in this.listConstancias) {
-        if (this.listConstancias[i].enfermedad = enfermedad){
-          this.idEnf = this.enfermedad;
+
+        if (this.listConstancias[i].enfermedad == this.enfermedad ){
+          
+   
+          this.idEnf = this.listConstancias[i].enfermedad;
           this.id= this.listConstancias[i].ci;
           this.inmunidad= this.listConstancias[i].pInmunidad;
           this.totalDosis=this.listConstancias[i].totalDosis;

@@ -36,7 +36,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/grupo15-web/html/eliminarReserva.html">Cancelar Reserva</a>
             </li>
-           <li class="nav-item">
+            <li class="nav-item">
               <a class="nav-link" href="/grupo15-web/html/certificadoVacunacion.html">Obtener Certificado</a>
             </li>
             <li class="nav-item">
@@ -66,76 +66,78 @@
         </select>
       </div>
 
-   
+
     </div>
 
-      <div class="formulario">
+    <div class="formulario">
 
 
       <label for="idVac" style="font-size: large; font-weight: bold;">Certificado de Vacunación</label>
       <div>
         <label for="enf" style="font-size: medium">Enfermedad: </label>
-        <label for="idEnf" v-model=idEnf style="font-size: medium"> {{idEnf}}</label>
-        
-   
+        <label for="idEnf" style="font-size: medium"> {{idEnf}}</label>
+      </div>
+
       <div>
         <label for="id" style="font-size: medium">Cédula: </label>
-        <label for="id" v-model=id style="font-size: medium"> {{id}}</label>
+        <label for="id"  style="font-size: medium"> {{id}}</label>
       </div>
       <div>
 
         <label for="inmunidad" style="font-size: medium">Período de Inmunidad: </label>
-        <label for="inmunidad" v-model=inmunidad style="font-size: medium"> {{inmunidad}}</label>
+        <label for="inmunidad" style="font-size: medium"> {{inmunidad}}</label>
       </div>
 
       <div>
         <label for="totalDosis" style="font-size: medium">Total de Dosis: </label>
-        <label for="totalDosis" v-model=totalDosis style="font-size: medium"> {{totalDosis}}</label>
+        <label for="totalDosis" style="font-size: medium"> {{totalDosis}}</label>
       </div>
       <div>
         <label for="ultimaDosis" style="font-size: medium">Ultima Dosis: </label>
-        <label for="ultimaDosis" v-model=ultimaDosis style="font-size: medium"> {{ultimaDosis}}</label>
+        <label for="ultimaDosis" style="font-size: medium"> {{ultimaDosis}}</label>
       </div>
       <div>
         <label for="vacuna" style="font-size: medium">Vacuna: </label>
-        <label for="vacuna" v-model=vacuna style="font-size: medium"> {{vacuna}}</label>
+        <label for="vacuna" style="font-size: medium"> {{vacuna}}</label>
       </div>
     </div>
 
- 
+
   </div>
 
 
 
-   <div class="formulario" style="background-image: url(/grupo15-web/media/mevacune.jpg); background-size:cover; height: 80%;">
+  <div class="formulario"
+    style="background-image: url(/grupo15-web/media/mevacune.jpg); background-size:cover; height: 80%;">
 
-      <div style="text-align: center; margin-top: 20%;">
-        <div class="fb-share-button" data-href="/grupo15-web/html/mevacune.html"
-          data-layout="button" data-size="large" style="text-align:center; padding-left: 0%;">
-          <a target="_blank" 
-            href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A8080%2Fgrupo15-web%2Fhtml%2Fmevacune.html&amp;src=sdkpreparse"
-            class="fb-xfbml-parse-ignore" >Compartir en Facebook</a>
-            </div>
+    <div style="text-align: center; margin-top: 20%;">
+      <div class="fb-share-button" data-href="/grupo15-web/html/mevacune.html" data-layout="button" data-size="large"
+        style="text-align:center; padding-left: 0%;">
+        <a target="_blank"
+          href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A8080%2Fgrupo15-web%2Fhtml%2Fmevacune.html&amp;src=sdkpreparse"
+          class="fb-xfbml-parse-ignore">Compartir en Facebook</a>
       </div>
-
-      <div style="text-align: center; margin-bottom: 35%;">
-        <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-size="large"
-          data-text="¡YO me vacuné!" data-url="/grupo15-web/html/mevacune.html" data-lang="es"
-          data-show-count="false">Tweet</a>
-        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-      </div>
-
     </div>
-     
 
-  
+    <div style="text-align: center; margin-bottom: 35%;">
+      <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-size="large"
+        data-text="¡YO me vacuné!" data-url="/grupo15-web/html/mevacune.html" data-lang="es"
+        data-show-count="false">Tweet</a>
+      <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </div>
+
+  </div>
+
+
+
   <!-- development version, includes helpful console warnings -->
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="/grupo15-web/js/certificadoVacunacion.js"></script>
+
   <div id="fb-root"></div>
   <script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_ES/sdk.js#xfbml=1&version=v11.0"
     nonce="RwxpCfIp"></script>
+    <script src="/grupo15-web/js/certificadoVacunacion.js"></script>
 </body>
 
 </html>
