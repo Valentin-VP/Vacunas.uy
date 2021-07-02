@@ -755,7 +755,7 @@ public class CargaDatos {
 			ArrayList<DtPlanVacunacion> planes;
 			planes = cPlan.listarPlanesVacunacion();
 
-			LOGGER.info("Cargando reservas oficiales");
+/*			LOGGER.info("Cargando reservas oficiales");
 
 			for (Integer ci : ciCiudadanosOficiales) {
 				DtCiudadano ciudadano;
@@ -809,7 +809,7 @@ public class CargaDatos {
 				}
 
 			}
-
+*/
 			LOGGER.info("Cargando reservas random");
 			int limiteReservas = TOPE_RESERVAS_GLOBALES;
 			ArrayList<Integer> copiaIdsCiudadanosRandom = new ArrayList<Integer>();
