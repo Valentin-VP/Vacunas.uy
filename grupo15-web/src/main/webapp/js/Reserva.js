@@ -87,6 +87,7 @@ var res = new Vue({
             console.log("GET planes: ", response.data)
             this.listaPlanes = response.data
             console.log("planes: " + this.listaPlanes.nombre);
+            this.ok200="";
             }))
       
           },
