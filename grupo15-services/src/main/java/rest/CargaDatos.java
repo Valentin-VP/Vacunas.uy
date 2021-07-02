@@ -915,8 +915,41 @@ public class CargaDatos {
 
 	private void altaConstancias() {
 		try {
-			LOGGER.info("Recuperando reservas");
+			LOGGER.info("Cargando constancias");
+			LOGGER.info("Recuperando reservas oficiales");
 			boolean shapeshifter = false;
+			for (Integer ci : ciCiudadanosOficiales) {
+				try {
+					ArrayList<DtReservaCompleto> reservas = cReserva.listarReservasCiudadano(ci);
+					for (DtReservaCompleto reserva : reservas) {
+						//EstadoReserva[] estados = EstadoReserva.values();
+						//Random rnd = new Random();
+						// cReserva.cambiarEstadoReserva((int) ci,
+						// LocalDateTime.parse(reserva.getFecha(),
+						// DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")),
+						// estados[rnd.nextInt(estados.length)]);
+						DtVacuna temp = cVacuna.obtenerVacuna(reserva.getVacuna());
+						
+						LocalDate fecha;
+						if(shapeshifter) {
+							int dob = (int) Math.floor(Math.random() * (28 - 1 + 1) + 1);
+							int mob = (int) Math.floor(Math.random() * (6 - 1 + 1) + 1);
+							int yob = (int) Math.floor(Math.random() * (2021 - 2021 + 1) + 2021);
+							fecha = LocalDate.of(yob, mob, dob);
+						}else {
+							fecha = LocalDate.now();
+						}
+						shapeshifter = !shapeshifter;
+						cConstancia.agregarConstanciaVacuna(reserva.getVacuna(), temp.getExpira(), temp.getCantDosis(),
+								fecha, (int) ci, Integer.valueOf(reserva.getIdEtapa()));
+					}
+				} catch (ReservaInexistente | UsuarioExistente | CertificadoInexistente | VacunaInexistente e) {
+					continue;
+				}
+			}
+			
+			LOGGER.info("Recuperando reservas random");
+			shapeshifter = false;
 			for (Integer ci : idsCiudadanosRandom) {
 				try {
 					ArrayList<DtReservaCompleto> reservas = cReserva.listarReservasCiudadano(ci);
