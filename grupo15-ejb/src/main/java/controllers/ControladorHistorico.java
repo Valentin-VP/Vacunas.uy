@@ -22,6 +22,8 @@ import exceptions.VacunaInexistente;
 import exceptions.VacunatorioNoCargadoException;
 import interfaces.IHistoricoDaoLocal;
 import interfaces.IHistoricoDaoRemote;
+import persistence.HistoricoID;
+import persistence.StockID;
 
 @Stateless
 public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRemote {
@@ -155,6 +157,12 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 
 	public DtHistoricoStock obtenerHistorico(LocalDate fecha, String idVacunatorioStock, String idVacunaStock)
 			throws VacunatorioNoCargadoException, VacunaInexistente, StockVacunaVacunatorioInexistente {
+		
+		Historico h = em.find(Historico.class, new HistoricoID(fecha, new StockID(idVacunatorioStock, idVacunaStock)));
+		if (h==null)
+			return null;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		return new DtHistoricoStock(fecha.format(formatter), h.getCantidad(), h.getDescartadas(), h.getDisponibles(), h.getAdministradas(), idVacunaStock, idVacunatorioStock);
 		/*Vacunatorio vacunatorio = em.find(Vacunatorio.class, idVacunatorioStock);
 		if (vacunatorio == null) {
 			throw new VacunatorioNoCargadoException("No existe el vacunatorio con ID " + idVacunatorioStock);
@@ -177,7 +185,7 @@ public class ControladorHistorico implements IHistoricoDaoLocal, IHistoricoDaoRe
 			}
 		}
 		throw new StockVacunaVacunatorioInexistente(String.format(
-				"No se encontro Stock de la Vacuna %s en el Vacunatorio %s", idVacunaStock, idVacunatorioStock));*/return null;
+				"No se encontro Stock de la Vacuna %s en el Vacunatorio %s", idVacunaStock, idVacunatorioStock));*/
 	}
 
 	@Override

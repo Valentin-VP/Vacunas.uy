@@ -26,11 +26,14 @@ import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.ResponseProcessingException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
@@ -236,9 +239,15 @@ public class AltaReservaRWS implements Serializable {
 			String url = "https://rcastro.pythonanywhere.com/api/usuarios/" + ci + "/";
 			LOGGER.info("Ejecutando call REST: " + url);
 			Client conexion = ClientBuilder.newClient();
-			DtUsuarioExterno externo = conexion.target(url)
+			DtUsuarioExterno externo;
+			try {
+				externo = conexion.target(url)
 					.request(MediaType.APPLICATION_JSON)
 					.get(DtUsuarioExterno.class);
+			}catch(ProcessingException | WebApplicationException e) {
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+						e.getMessage());
+			}
 			
 			return Response.ok(rs.seleccionarPlanVacunacion(plan, Integer.parseInt(ci), externo)).build();
 		} catch (PlanVacunacionInexistente | EtapaInexistente | UsuarioInexistente e) {
@@ -273,13 +282,20 @@ public class AltaReservaRWS implements Serializable {
 			String url = "https://rcastro.pythonanywhere.com/api/usuarios/" + ci + "/";
 			LOGGER.info("Ejecutando call REST: " + url);
 			Client conexion = ClientBuilder.newClient();
-			DtUsuarioExterno externo = conexion.target(url)
+			DtUsuarioExterno externo;
+			try {
+				externo = conexion.target(url)
 					.request(MediaType.APPLICATION_JSON)
 					.get(DtUsuarioExterno.class);
+			}catch(ProcessingException | WebApplicationException e) {
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+						e.getMessage());
+			}
 			
 			//LocalDate f = LocalDate.from(fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-			//Date nuevaFecha = Date.from(f.atStartOfDay(ZoneId.systemDefault()).toInstant());
-			return Response.ok(rs.seleccionarFecha(f, idVacunatorio, plan, Integer.parseInt(ci), externo)).build();
+				//Date nuevaFecha = Date.from(f.atStartOfDay(ZoneId.systemDefault()).toInstant());
+				return Response.ok(rs.seleccionarFecha(f, idVacunatorio, plan, Integer.parseInt(ci), externo)).build();
+			
 		} catch (DateTimeException | VacunatorioNoCargadoException | PlanVacunacionInexistente | UsuarioInexistente | EtapaInexistente | NumberFormatException | CupoInexistente e) {
 			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
 					e.getMessage());
@@ -314,9 +330,15 @@ public class AltaReservaRWS implements Serializable {
 			String url = "https://rcastro.pythonanywhere.com/api/usuarios/" + ci + "/";
 			LOGGER.info("Ejecutando call REST: " + url);
 			Client conexion = ClientBuilder.newClient();
-			DtUsuarioExterno externo = conexion.target(url)
+			DtUsuarioExterno externo;
+			try {
+				externo = conexion.target(url)
 					.request(MediaType.APPLICATION_JSON)
 					.get(DtUsuarioExterno.class);
+			}catch(ProcessingException | WebApplicationException e) {
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+						e.getMessage());
+			}
 			//Como puede haber vacunas que requieran de mas de una dosis, se puede generar potencialmente mas de una reserva, por lo que devuelve un arreglo de DT
 			ArrayList<DtTareaNotificacion> tasks = rs.confirmarReserva(Integer.parseInt(ci), dtr.getIdEnfermedad(), dtr.getIdPlan(), dtr.getIdVacunatorio(),
 					f,

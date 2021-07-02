@@ -74,6 +74,10 @@ public class DtEtapa implements Serializable {
 		return vacuna;
 	}
 
+	public void setVacuna(String vacuna) {
+		this.vacuna = vacuna;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -9,6 +9,7 @@ import javax.ejb.EJB;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
+import datatypes.DtHistoricoStock;
 import datatypes.DtReservaCompleto;
 import datatypes.DtStock;
 import datatypes.DtUsuarioSoap;
@@ -86,11 +87,16 @@ public class NodoVac {
 		if (!vact.isTokenCorrecto(idVacunatorio, token))
 			throw new AccionInvalida("Fallo al identificar nodo.");
 		try {
+			DtStock dt = cs.obtenerStock(idVacunatorio, idVacuna);
+			DtHistoricoStock dth = ch.obtenerHistorico(LocalDate.now(), idVacunatorio, idVacuna);
+			if (dth!=null)
+				ch.persistirHistorico(LocalDate.now(), cantidad-dt.getCantidad(), descartadas-dt.getDescartadas(), disponibles-dt.getDisponibles(), administradas-dt.getAdministradas(), idVacunatorio, idVacuna);
+			else
+				ch.persistirHistorico(LocalDate.now(), cantidad, descartadas-dt.getDescartadas(), disponibles, administradas-dt.getAdministradas(), idVacunatorio, idVacuna);
 			cs.modificarStock(idVacunatorio, idVacuna, cantidad, descartadas, administradas, disponibles);
 		}catch(VacunatorioNoCargadoException | VacunaInexistente | StockVacunaVacunatorioInexistente e) {
 			throw e;
 		}
-		ch.persistirHistorico(LocalDate.now(), cantidad, descartadas, disponibles, administradas, idVacunatorio, idVacuna);
 	}
 	
 	@WebMethod(action = "actualizar", operationName = "actualizarReserva")

@@ -140,21 +140,22 @@ public class GestionLoteDosisRWS {
 						Integer.valueOf(lote.getString("cantidadEntregada")), Integer.valueOf(lote.getString("cantidadDescartada")), lote.getString("estadoLote"),
 						Float.parseFloat(lote.getString("temperatura")), Integer.valueOf(lote.getString("transportista")));
 				if (lote.getString("estadoLote").equals("Recibido")) {
+					int cantTotal = Integer.valueOf(lote.getString("cantidadTotal"));
 					int entregados = Integer.valueOf(lote.getString("cantidadEntregada"));
 					int descartados = Integer.valueOf(lote.getString("cantidadDescartada"));
 					try {
-						cs.agregarStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"), entregados);
-						cs.modificarStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"), entregados, descartados, 0, entregados-descartados);
-						ch.persistirHistorico(LocalDate.now(), entregados, 0, entregados, 0, lote.getString("idVacunatorio"), lote.getString("idVacuna"));
+						cs.agregarStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"), cantTotal);
+						cs.modificarStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"), cantTotal, descartados, 0, entregados-descartados);
+						ch.persistirHistorico(LocalDate.now(), cantTotal, descartados, entregados-descartados, 0, lote.getString("idVacunatorio"), lote.getString("idVacuna"));
 						return ResponseBuilder.createResponse(Response.Status.CREATED, "Se ha modificado el lote de dosis. Se agregó el stock correspondiente.");
 					} catch (CantidadNula e) {
 						return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 					} catch (StockVacunaVacunatorioExistente | StockVacunaVacunatorioInexistente e) {
 						try {
 							DtStock dts = cs.obtenerStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"));
-							cs.modificarStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"), dts.getCantidad()+entregados,
+							cs.modificarStock(lote.getString("idVacunatorio"), lote.getString("idVacuna"), dts.getCantidad()+cantTotal,
 									dts.getDescartadas()+descartados, dts.getAdministradas(), dts.getDisponibles()+entregados-descartados);
-							ch.persistirHistorico(LocalDate.now(), dts.getCantidad()+entregados, dts.getDescartadas()+descartados, dts.getDisponibles()+entregados-descartados, dts.getAdministradas(), lote.getString("idVacunatorio"), lote.getString("idVacuna"));
+							ch.persistirHistorico(LocalDate.now(), cantTotal, descartados, entregados-descartados, 0, lote.getString("idVacunatorio"), lote.getString("idVacuna"));
 						} catch (StockVacunaVacunatorioInexistente e1) {
 							return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 						}

@@ -14,6 +14,16 @@ public class HistoricoID implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
+	
+	
+	public HistoricoID(LocalDate fecha, StockID stock) {
+		super();
+		this.fecha = fecha;
+		this.stock = stock;
+	}
+
+
+
 	public LocalDate getFecha() {
 		return fecha;
 	}
