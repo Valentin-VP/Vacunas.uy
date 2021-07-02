@@ -38,7 +38,7 @@ public class ConsultarAgendaPlanRWS implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	
-	@RolesAllowed({"ciudadano"})
+	@PermitAll
 	@GET
 	@Path("/vigente")
 	public Response listarAgendasAbiertas() {
@@ -49,7 +49,7 @@ public class ConsultarAgendaPlanRWS implements Serializable {
 		}
 	}
 	
-	@RolesAllowed({"ciudadano"})
+	@PermitAll
 	@GET
 	@Path("/proxima")
 	public Response listarAgendasProximas() {
