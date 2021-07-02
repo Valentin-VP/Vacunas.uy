@@ -793,10 +793,17 @@ public class CargaDatos {
 						ciudadano = cUsuario.buscarCiudadano(ci);
 						for (DtEnfermedad enfermedad : enfermedades) {
 							//LOGGER.info("Enfermedad: " + enfermedad.getNombre());
-							for (DtPlanVacunacion plan : planes) {
+							Random rnd = new Random();
+							DtPlanVacunacion plan = planes.get(rnd.nextInt(planes.size()));
+							while (!plan.getEnfermedad().equals(enfermedad.getNombre())) {
+								plan = planes.get(rnd.nextInt(planes.size()));
+							}
+							//for (DtPlanVacunacion plan : planes) {
 								//LOGGER.info("Plan: " + plan.getNombre());
-								if (plan.getEnfermedad().equals(enfermedad.getNombre())) {
-									for (DtVacunatorio vacunatorio : vacunatorios) {
+								//if (plan.getEnfermedad().equals(enfermedad.getNombre())) {
+							rnd = new Random();
+							DtVacunatorio vacunatorio = vacunatorios.get(rnd.nextInt(vacunatorios.size()));
+									//for (DtVacunatorio vacunatorio : vacunatorios) {
 										//LOGGER.info("Vacunatorio: " + vacunatorio.getNombre());
 										List<DtEtapa> etapas = plan.getEtapa();
 										for (DtEtapa etapa : etapas) {
@@ -821,7 +828,7 @@ public class CargaDatos {
 												continue;
 											}
 											//LOGGER.info("Generando reserva");
-											Random rnd = new Random();
+											rnd = new Random();
 											LocalDate fechaReserva = LocalDate
 													.parse(etapa.getFechaInicio(),
 															DateTimeFormatter.ofPattern("dd/MM/yyyy"))
@@ -842,9 +849,9 @@ public class CargaDatos {
 											}
 										}
 
-									}
-								}
-							}
+									//}
+								//}
+							//}
 						}
 					}
 					
