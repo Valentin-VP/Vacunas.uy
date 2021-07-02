@@ -183,8 +183,8 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 		    		if (fIni.isBefore(LocalDate.now()) && fFin.isAfter(LocalDate.now())) {
 		    			retorno.add(new DtPlanFecha(pV.getNombre(), pV.getDescripcion(), fIni.format(formatter) + " - " + fFin.format(formatter), pV.getEnfermedad().getNombre()));
 		    		}
-	    		}else {
-	    			throw new PlanVacunacionInexistente("No existen agendas abiertas.");
+	    		//}else {
+	    		//	throw new PlanVacunacionInexistente("No existen agendas abiertas.");
 	    		}
 	    	}
     		if (retorno.isEmpty())
@@ -219,8 +219,8 @@ public class ControladorPlanVacunacion implements IPlanVacunacionLocal, IPlanVac
 		    		if (fIni.isBefore(LocalDate.now().plusDays(30)) && fIni.isAfter(LocalDate.now()) && fFin.isAfter(fIni)) {
 		    			retorno.add(new DtPlanFecha(pV.getNombre(), pV.getDescripcion(), fIni.format(formatter) + " - " + fFin.format(formatter), pV.getEnfermedad().getNombre()));
 		    		}
-	    		}else {
-	    			throw new PlanVacunacionInexistente("No existen agendas proximas.");
+	    		//}else {
+	    		//	throw new PlanVacunacionInexistente("No existen agendas proximas.");
 	    		}
 	    	}
     		if (retorno.isEmpty())
