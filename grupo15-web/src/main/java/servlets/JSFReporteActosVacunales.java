@@ -65,6 +65,9 @@ public class JSFReporteActosVacunales implements Serializable {
    
     private PieChartModel pieModel1;
     
+    private int maxValueBar = 1;
+    private int maxValueLine = 1;
+    
     @PostConstruct
     public void init() {
         Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
@@ -152,23 +155,101 @@ public class JSFReporteActosVacunales implements Serializable {
   
     private LineChartModel initCategoryModel() {
         LineChartModel model = new LineChartModel();
-        ChartSeries meses = new ChartSeries();
-        meses.setLabel("meses");
-        meses.set("enero", Integer.valueOf(this.vacunadosMes.get("1")));
-        meses.set("febrero", Integer.valueOf(this.vacunadosMes.get("2")));
-        meses.set("marzo", Integer.valueOf(this.vacunadosMes.get("3")));
-        meses.set("abril", Integer.valueOf(this.vacunadosMes.get("4")));
-        meses.set("mayo", Integer.valueOf(this.vacunadosMes.get("5")));
-        meses.set("junio", Integer.valueOf(this.vacunadosMes.get("6")));
-        meses.set("julio", Integer.valueOf(this.vacunadosMes.get("7")));
-        meses.set("agosto", Integer.valueOf(this.vacunadosMes.get("8")));
-        meses.set("septiembre", Integer.valueOf(this.vacunadosMes.get("9")));
-        meses.set("octubre", Integer.valueOf(this.vacunadosMes.get("10")));
-        meses.set("noviembre", Integer.valueOf(this.vacunadosMes.get("11")));
-        meses.set("diciembre", Integer.valueOf(this.vacunadosMes.get("12")));
+        int tempMax = 1;
+        
+        if (this.vacunadosMes!=null) {
+	        ChartSeries meses = new ChartSeries();
+	        meses.setLabel("meses");
+	        if (this.vacunadosMes.get("1")!=null) {
+	        	meses.set("enero", Integer.valueOf(this.vacunadosMes.get("1")));
+	        	tempMax = Integer.valueOf(this.vacunadosMes.get("1"));
+	        }else {
+	        	meses.set("enero", 0);
+	        }
+	        if (this.vacunadosMes.get("2")!=null) {
+	        	meses.set("febrero", Integer.valueOf(this.vacunadosMes.get("2")));
+	        	if (tempMax < Integer.valueOf(this.vacunadosMes.get("2")))
+	        		tempMax = Integer.valueOf(this.vacunadosMes.get("2"));
+	        }else {
+	        	meses.set("febrero", 0);
+	        }
+	        if (this.vacunadosMes.get("3")!=null) {
+	        	meses.set("marzo", Integer.valueOf(this.vacunadosMes.get("3")));
+	        	if (tempMax < Integer.valueOf(this.vacunadosMes.get("3")))
+	        		tempMax = Integer.valueOf(this.vacunadosMes.get("3"));
+	        }else {
+	        	meses.set("marzo", 0);
+	        }
+	        if (this.vacunadosMes.get("4")!=null) {
+	        	meses.set("abril", Integer.valueOf(this.vacunadosMes.get("4")));
+	        	if (tempMax < Integer.valueOf(this.vacunadosMes.get("4")))
+	        		tempMax = Integer.valueOf(this.vacunadosMes.get("4"));
+	        }else {
+	        	meses.set("abril", 0);
+	        }
+	        if (this.vacunadosMes.get("5")!=null) {
+	        	meses.set("mayo", Integer.valueOf(this.vacunadosMes.get("5")));
+	        	if (tempMax < Integer.valueOf(this.vacunadosMes.get("5")))
+	        		tempMax = Integer.valueOf(this.vacunadosMes.get("5"));
+	        }else {
+	        	meses.set("mayo", 0);
+	        }
+	        if (this.vacunadosMes.get("6")!=null) {
+	        	meses.set("junio", Integer.valueOf(this.vacunadosMes.get("6")));
+	        	if (tempMax < Integer.valueOf(this.vacunadosMes.get("6")))
+	        		tempMax = Integer.valueOf(this.vacunadosMes.get("6"));
+	        }else {
+	        	meses.set("junio", 0);
+	        }
+	        if (this.vacunadosMes.get("7")!=null) {
+	        	meses.set("julio", Integer.valueOf(this.vacunadosMes.get("7")));
+	        	if (tempMax < Integer.valueOf(this.vacunadosMes.get("7")))
+	        		tempMax = Integer.valueOf(this.vacunadosMes.get("7"));
+	        }else {
+	        	meses.set("julio", 0);
+	        }
+	        if (this.vacunadosMes.get("8")!=null) {
+	        	meses.set("agosto", Integer.valueOf(this.vacunadosMes.get("8")));
+	        	if (tempMax < Integer.valueOf(this.vacunadosMes.get("8")))
+	        		tempMax = Integer.valueOf(this.vacunadosMes.get("8"));
+	        }else {
+	        	meses.set("agosto", 0);
+	        }
+	        if (this.vacunadosMes.get("9")!=null) {
+	        	meses.set("septiembre", Integer.valueOf(this.vacunadosMes.get("9")));
+	        	if (tempMax < Integer.valueOf(this.vacunadosMes.get("9")))
+	        		tempMax = Integer.valueOf(this.vacunadosMes.get("9"));
+	        }else {
+	        	meses.set("septiembre", 0);
+	        }
+	        if (this.vacunadosMes.get("10")!=null) {
+	        	meses.set("octubre", Integer.valueOf(this.vacunadosMes.get("10")));
+	        	if (tempMax < Integer.valueOf(this.vacunadosMes.get("10")))
+	        		tempMax = Integer.valueOf(this.vacunadosMes.get("10"));
+	        }else {
+	        	meses.set("octubre", 0);
+	        }
+	        if (this.vacunadosMes.get("11")!=null) {
+	        	meses.set("noviembre", Integer.valueOf(this.vacunadosMes.get("11")));
+	        	if (tempMax < Integer.valueOf(this.vacunadosMes.get("11")))
+	        		tempMax = Integer.valueOf(this.vacunadosMes.get("11"));
+	        }else {
+	        	meses.set("noviembre", 0);
+	        }
+	        if (this.vacunadosMes.get("12")!=null) {
+	        	meses.set("diciembre", Integer.valueOf(this.vacunadosMes.get("12")));
+	        	if (tempMax < Integer.valueOf(this.vacunadosMes.get("12")))
+	        		tempMax = Integer.valueOf(this.vacunadosMes.get("12"));
+	        }else {
+	        	meses.set("diciembre", 0);
+	        }
+	        
+	        model.addSeries(meses);
+        }
+        
         
 
-        model.addSeries(meses);
+        this.maxValueLine = tempMax;
 
         return model;
     }
@@ -184,7 +265,7 @@ public class JSFReporteActosVacunales implements Serializable {
         Axis yAxis = lineModel2.getAxis(AxisType.Y);
         yAxis.setLabel("Actos vacunales");
         yAxis.setMin(0);
-        yAxis.setMax(3000000);
+        yAxis.setMax(this.maxValueLine);
 
      
     }
@@ -193,17 +274,42 @@ public class JSFReporteActosVacunales implements Serializable {
 
     private BarChartModel initBarModel() {
         BarChartModel model = new BarChartModel();
-
-        ChartSeries edad = new ChartSeries();
-        edad.setLabel("Edad");
-        edad.set("Hasta 17", Integer.valueOf(this.vacunadosEdad.get("adolescentes")));
-        edad.set("18-45", Integer.valueOf(this.vacunadosEdad.get("jovenes")));
-        edad.set("45-60", Integer.valueOf(this.vacunadosEdad.get("adultos")));
-        edad.set("61+", Integer.valueOf(this.vacunadosEdad.get("mayores")));
-
-
-  
-        model.addSeries(edad);
+        int tempMax = 1;
+        if (this.vacunadosEdad!=null) {
+	        	ChartSeries edad = new ChartSeries();
+	        edad.setLabel("Edad");
+	        if (this.vacunadosEdad.get("adolescentes")!=null) {
+	        	edad.set("Hasta 17", Integer.valueOf(this.vacunadosEdad.get("adolescentes")));
+	        	tempMax = Integer.valueOf(this.vacunadosEdad.get("adolescentes"));
+	        }else {
+	        	edad.set("Hasta 17", 0);
+	        }
+	        if (this.vacunadosEdad.get("jovenes")!=null) {
+	        	edad.set("18-45", Integer.valueOf(this.vacunadosEdad.get("jovenes")));
+	        	if (tempMax<Integer.valueOf(this.vacunadosEdad.get("jovenes")))
+	        		tempMax = Integer.valueOf(this.vacunadosEdad.get("jovenes"));
+	        }else {
+	        	edad.set("18-45", 0);
+	        }
+	        if (this.vacunadosEdad.get("adultos")!=null) {
+	        	edad.set("45-60", Integer.valueOf(this.vacunadosEdad.get("adultos")));
+	        	if (tempMax<Integer.valueOf(this.vacunadosEdad.get("adultos")))
+	        		tempMax = Integer.valueOf(this.vacunadosEdad.get("adultos"));
+	        }else {
+	        	edad.set("45-60", 0);
+	        }
+	        if (this.vacunadosEdad.get("mayores")!=null) {
+	        	edad.set("61+", Integer.valueOf(this.vacunadosEdad.get("mayores")));
+	        	if (tempMax<Integer.valueOf(this.vacunadosEdad.get("mayores")))
+	        		tempMax = Integer.valueOf(this.vacunadosEdad.get("mayores"));
+	        }else {
+	        	edad.set("61+", 0);
+	        }
+	
+	        this.maxValueBar = tempMax;
+	        model.addSeries(edad);
+        }
+        
 
 
         return model;
@@ -226,7 +332,7 @@ public class JSFReporteActosVacunales implements Serializable {
         Axis yAxis = barModel.getAxis(AxisType.Y);
         yAxis.setLabel("Actos vacunales");
         yAxis.setMin(0);
-        yAxis.setMax(200);
+        yAxis.setMax(this.maxValueBar);
     }
 
   
@@ -254,9 +360,16 @@ public class JSFReporteActosVacunales implements Serializable {
     private void createPieModel1() {
         pieModel1 = new PieChartModel();
 
-        pieModel1.set("Masculino", Integer.valueOf(this.vacunadosSexo.get("masculino")));
-        pieModel1.set("Femenino", Integer.valueOf(this.vacunadosSexo.get("femenino")));
-        pieModel1.set("otro", Integer.valueOf(this.vacunadosSexo.get("otro")));
+        if (this.vacunadosSexo!=null) {
+        	pieModel1.set("Masculino", Integer.valueOf(this.vacunadosSexo.get("masculino")));
+        	pieModel1.set("Femenino", Integer.valueOf(this.vacunadosSexo.get("femenino")));
+        	pieModel1.set("otro", Integer.valueOf(this.vacunadosSexo.get("otro")));
+        }else {
+        	pieModel1.set("Masculino", 0);
+        	pieModel1.set("Femenino", 0);
+        	pieModel1.set("otro", 0);
+        }
+        
      
 
         pieModel1.setTitle("Actos Vacunales por sexo");

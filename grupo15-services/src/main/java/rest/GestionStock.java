@@ -41,8 +41,8 @@ public class GestionStock {
 	
 	public GestionStock() {}
 
-	//@RolesAllowed({"autoridad"}) 
-	@PermitAll
+	@RolesAllowed({"autoridad"}) 
+	//@PermitAll
 	@POST
 	@Path("/actual")
 	public Response getLotesActual(String datos) {
@@ -62,8 +62,8 @@ public class GestionStock {
 		}
 	}
 	
-	//@RolesAllowed({"autoridad"}) 
-	@PermitAll
+	@RolesAllowed({"autoridad"}) 
+	//@PermitAll
 	@POST
 	@Path("/historico")
 	public Response getLotesHistorico(String datos) {
@@ -84,8 +84,8 @@ public class GestionStock {
 		}
 	}
 	
-	//@RolesAllowed({"autoridad"}) 
-	@PermitAll
+	@RolesAllowed({"autoridad"}) 
+	//@PermitAll
 	@GET
 	@Path("/enf/{e}")
 	public Response seleccionarEnfermedad(@PathParam("e") String enfermedad){
