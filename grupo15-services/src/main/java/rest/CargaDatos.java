@@ -37,6 +37,7 @@ import datatypes.DtVacuna;
 import datatypes.DtVacunador;
 import datatypes.DtVacunatorio;
 import datatypes.EstadoReserva;
+import datatypes.Rol;
 import datatypes.Sexo;
 import exceptions.AccionInvalida;
 import exceptions.CantidadNula;
@@ -704,7 +705,31 @@ public class CargaDatos {
 	}
 	
 	private void altaInternos() {
-		LOGGER.info("Recuperando vacunatorios");
+		LOGGER.info("Cargando internos oficiales");
+		try {
+			cUsuario.agregarUsuarioInterno(45946590, "Rodrigo", "Castro", LocalDate.of(1994, 4, 3), "mail@devops.com",
+					new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Masculino, Rol.Administrador);
+			cUsuario.agregarUsuarioInterno(54657902, "Nicolas", "Mendez", LocalDate.of(1997, 8, 2), "mail@devops.com",
+					new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Masculino, Rol.Autoridad);
+			cUsuario.agregarUsuarioInterno(48585559, "Nohelia", "Yanibelli", LocalDate.of(1989, 7, 29),
+					"mail@devops.com", new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Femenino, Rol.Administrador);
+			cUsuario.agregarUsuarioInterno(49457795, "Valentin", "Vasconcellos", LocalDate.of(1997, 7, 1),
+					"mail@devops.com", new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Masculino, Rol.Autoridad);
+			cUsuario.agregarUsuarioInterno(50332570, "Jessica", "Gonzalez", LocalDate.of(1993, 7, 29),
+					"mail@devops.com", new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Femenino, Rol.Autoridad);
+			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
+			LOGGER.info("OK");
+		} catch (UsuarioExistente | JSONException e) {
+			try {
+				estadoCarga = false;
+				LOGGER.warning("Error");
+				this.resultados.put(e.getStackTrace()[0].getMethodName(), e.getMessage());
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+		}
+		
+		
 	}
 
 	private void altaReserva() {
@@ -744,8 +769,6 @@ public class CargaDatos {
 								for (DtEtapa etapa : etapas) {
 									// String ci, String fechaNac, String tipoSector, boolean enfermedadesPrevias
 									String[] temp = etapa.getCondicion().split("\\Q|\\E");
-									int edadInit = Integer.parseInt(temp[0]);
-									int edadFin = Integer.parseInt(temp[1]);
 									String sector = temp[2];
 									String permitidoEnf = temp[3]; // puede tener enfermedades previas?
 									boolean enfermedadesPrevias = true;
@@ -755,8 +778,7 @@ public class CargaDatos {
 									DtUsuarioExterno externo = new DtUsuarioExterno(ci.toString(),
 											ciudadano.getFechaNac().toString(), sector, enfermedadesPrevias);
 									try {
-										ArrayList<DtEtapa> etapasHabilitado = cReserva
-												.seleccionarPlanVacunacion(plan.getId(), ci, externo);
+										cReserva.seleccionarPlanVacunacion(plan.getId(), ci, externo);
 									} catch (EtapaInexistente e) {
 										// LOGGER.warning(e.getMessage());
 										continue;
@@ -769,7 +791,6 @@ public class CargaDatos {
 									while (!fechaReserva.isAfter(LocalDate.now())) {
 										fechaReserva = fechaReserva.plusDays(10);
 									}
-									String fin = etapa.getFechaFin();
 									ArrayList<String> horas = cReserva.seleccionarFecha(fechaReserva,
 											vacunatorio.getId(), plan.getId(), ci, externo);
 									LocalTime hora = LocalTime.parse(horas.get(rnd.nextInt(horas.size())));
@@ -825,8 +846,6 @@ public class CargaDatos {
 						// LOGGER.info("Etapa: " + etapa.getId());
 						// String ci, String fechaNac, String tipoSector, boolean enfermedadesPrevias
 						String[] temp = etapa.getCondicion().split("\\Q|\\E");
-						int edadInit = Integer.parseInt(temp[0]);
-						int edadFin = Integer.parseInt(temp[1]);
 						String sector = temp[2];
 						String permitidoEnf = temp[3]; // puede tener enfermedades previas?
 						boolean enfermedadesPrevias = true;
@@ -836,8 +855,7 @@ public class CargaDatos {
 						DtUsuarioExterno externo = new DtUsuarioExterno(ci.toString(),
 								ciudadano.getFechaNac().toString(), sector, enfermedadesPrevias);
 						try {
-							ArrayList<DtEtapa> etapasHabilitado = cReserva.seleccionarPlanVacunacion(plan.getId(), ci,
-									externo);
+							cReserva.seleccionarPlanVacunacion(plan.getId(), ci, externo);
 						} catch (EtapaInexistente e) {
 							// LOGGER.warning(e.getMessage());
 							continue;
@@ -850,7 +868,6 @@ public class CargaDatos {
 						while (!fechaReserva.isAfter(LocalDate.now())) {
 							fechaReserva = fechaReserva.plusDays(10);
 						}
-						String fin = etapa.getFechaFin();
 						ArrayList<String> horas = cReserva.seleccionarFecha(fechaReserva, vacunatorio.getId(),
 								plan.getId(), ci, externo);
 						LocalTime hora = LocalTime.parse(horas.get(rnd.nextInt(horas.size())));
@@ -897,13 +914,11 @@ public class CargaDatos {
 			LOGGER.info("Recuperando reservas");
 			boolean shapeshifter = false;
 			for (Integer ci : idsCiudadanosRandom) {
-				DtCiudadano ciudadano;
-				ciudadano = cUsuario.buscarCiudadano(ci);
 				try {
 					ArrayList<DtReservaCompleto> reservas = cReserva.listarReservasCiudadano(ci);
 					for (DtReservaCompleto reserva : reservas) {
-						EstadoReserva[] estados = EstadoReserva.values();
-						Random rnd = new Random();
+						//EstadoReserva[] estados = EstadoReserva.values();
+						//Random rnd = new Random();
 						// cReserva.cambiarEstadoReserva((int) ci,
 						// LocalDateTime.parse(reserva.getFecha(),
 						// DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")),
