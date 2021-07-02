@@ -277,8 +277,9 @@ public class MonitorVue {
 				String idPlan = id[0];
 				ArrayList<String> vacunas = new ArrayList<String>();
 				DtPlanVacunacion planVac = pv.obtenerPlanVacunacion(Integer.valueOf(idPlan));
-				for(DtEtapa dtEtp: planVac.getEtapa()) {			
-					vacunas.add(dtEtp.getVacuna());
+				for(DtEtapa dtEtp: planVac.getEtapa()) {
+					if (!vacunas.contains(dtEtp.getVacuna()))
+						vacunas.add(dtEtp.getVacuna());
 				}
 				return Response.ok(vacunas).build();
 			}
