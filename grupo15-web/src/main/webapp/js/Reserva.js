@@ -99,7 +99,7 @@ var res = new Vue({
             axios.get("/grupo15-services/rest/reservas/pv" + "?p="+ this.IdPlan.toString())
             .catch(error => {
               if (error.response.status === 400) {
-               this.ok200="Ya tiene reservas para este plan";
+               this.ok200=response.data.message;
            }
           });
       
