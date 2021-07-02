@@ -282,9 +282,13 @@ public class CargaDatos {
 					mapPlan.get("Matrix"), "batman");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 8, 1), LocalDate.of(2022, 3, 20), "5|18|todos|si",
 					mapPlan.get("Matrix"), "batman");
+			cEtapa.agregarEtapa(LocalDate.of(2021, 8, 1), LocalDate.of(2022, 3, 20), "0|100|todos|si",
+					mapPlan.get("Matrix"), "batman");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 2, 21), LocalDate.of(2021, 11, 1), "25|35|salud|no",
 					mapPlan.get("Leon"), "roadrunner");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "0|50|todos|no",
+					mapPlan.get("Leon"), "roadrunner");
+			cEtapa.agregarEtapa(LocalDate.of(2021, 8, 1), LocalDate.of(2022, 3, 20), "0|100|todos|si",
 					mapPlan.get("Leon"), "roadrunner");
 			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
 			LOGGER.info("OK");
@@ -755,7 +759,7 @@ public class CargaDatos {
 			ArrayList<DtPlanVacunacion> planes;
 			planes = cPlan.listarPlanesVacunacion();
 
-/*			LOGGER.info("Cargando reservas oficiales");
+			LOGGER.info("Cargando reservas oficiales");
 
 			for (Integer ci : ciCiudadanosOficiales) {
 				DtCiudadano ciudadano;
@@ -763,7 +767,7 @@ public class CargaDatos {
 				ciudadano = cUsuario.buscarCiudadano(ci);
 				for (DtEnfermedad enfermedad : enfermedades) {
 					for (DtPlanVacunacion plan : planes) {
-						if (plan.getEnfermedad().equals(enfermedad.getNombre())) {
+						if (plan.getEnfermedad().equals(enfermedad.getNombre()) && !enfermedad.getNombre().equals("lupus") && !enfermedad.getNombre().equals("covid")) {
 							for (DtVacunatorio vacunatorio : vacunatorios) {
 								List<DtEtapa> etapas = plan.getEtapa();
 								for (DtEtapa etapa : etapas) {
@@ -809,7 +813,7 @@ public class CargaDatos {
 				}
 
 			}
-*/
+
 			LOGGER.info("Cargando reservas random");
 			int limiteReservas = TOPE_RESERVAS_GLOBALES;
 			ArrayList<Integer> copiaIdsCiudadanosRandom = new ArrayList<Integer>();
