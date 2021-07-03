@@ -42,7 +42,7 @@ var res = new Vue({
 		getReservas() {
 
 
-			axios.get("/grupo15-services/rest/reservas/listar")
+			axios.get("/grupo15-services/rest/reservas/listarEliminar")
 				.then(response => {
 
 					console.log('lista Reservas: ', response.data)

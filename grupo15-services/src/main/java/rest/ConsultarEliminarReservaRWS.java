@@ -69,6 +69,29 @@ public class ConsultarEliminarReservaRWS {
 		}
 	}
 	
+	@RolesAllowed({"ciudadano"}) 
+	//@PermitAll
+	@GET
+	@Path("/listarEliminar")
+	public Response listarReservasAEliminar(@CookieParam("x-access-token") Cookie cookie) {
+		try {
+			String token = cookie.getValue();
+			String ci = null;
+			try {
+				ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
+			} catch (InvalidJwtException e) {
+				//e.printStackTrace();
+			}
+	        if( ci == null)
+	            throw new NotAuthorizedException("No se encuentra CI en token de Cookie - Unauthorized!");
+			LOGGER.info("Cedula obtenida en REST: " + ci);
+			return Response.ok(rs.listarReservasAEliminar(Integer.parseInt(ci))).build();
+		} catch (NumberFormatException | ReservaInexistente | UsuarioInexistente e) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST,
+					e.getMessage());
+		}
+	}
+	
 	/*@RolesAllowed({"ciudadano"}) 
 	@PermitAll
 	@GET

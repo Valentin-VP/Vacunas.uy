@@ -37,5 +37,7 @@ public interface IReservaDAOLocal {
 	public ArrayList<DtReservaCompleto> listarReservasCiudadano(int ciudadano) throws ReservaInexistente, UsuarioInexistente;
 	public void eliminarReserva(int ciudadano, LocalDateTime fecha, String enfermedad) throws ReservaInexistente, UsuarioInexistente, EnfermedadInexistente;
 	public void cambiarEstadoReserva(int idCiudadano, LocalDateTime fecha, EstadoReserva estado) throws AccionInvalida;
+
+	public ArrayList<DtReservaCompleto> listarReservasAEliminar(int ciudadano) throws ReservaInexistente, UsuarioInexistente;
 }
 
