@@ -179,11 +179,11 @@ public class CargaDatos {
 	private void altaEnfermedades() {
 		try {
 			LOGGER.info("Cargando enfermedades");
-			cEnfermedad.agregarEnfermedad("ebola");
-			cEnfermedad.agregarEnfermedad("virus-t");
+			cEnfermedad.agregarEnfermedad("tuberculosis");
+			cEnfermedad.agregarEnfermedad("hepatitis b");
 			cEnfermedad.agregarEnfermedad("covid");
 			cEnfermedad.agregarEnfermedad("gripe");
-			cEnfermedad.agregarEnfermedad("lupus");
+			cEnfermedad.agregarEnfermedad("VPH");
 			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
 			LOGGER.info("OK");
 		} catch (EnfermedadRepetida | JSONException e) {
@@ -201,11 +201,11 @@ public class CargaDatos {
 	private void altaLaboratorios() {
 		try {
 			LOGGER.info("Cargando laboratorios");
-			cLaboratorio.agregarLaboratorio("Dexter");
-			cLaboratorio.agregarLaboratorio("Umbrella");
-			cLaboratorio.agregarLaboratorio("Wuhan");
-			cLaboratorio.agregarLaboratorio("Oracle");
-			cLaboratorio.agregarLaboratorio("ACME");
+			cLaboratorio.agregarLaboratorio("Bayer");
+			cLaboratorio.agregarLaboratorio("ABBOTT");
+			cLaboratorio.agregarLaboratorio("Sinovac");
+			cLaboratorio.agregarLaboratorio("Oxford");
+			cLaboratorio.agregarLaboratorio("Biontech");
 			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
 			LOGGER.info("OK");
 		} catch (LaboratorioRepetido | JSONException e) {
@@ -222,11 +222,11 @@ public class CargaDatos {
 	private void altaVacunas() {
 		try {
 			LOGGER.info("Cargando vacunas");
-			cVacuna.agregarVacuna("mega-vac", 1, 0, 120, "Dexter", "ebola");
-			cVacuna.agregarVacuna("ashley", 2, 7, 120, "Umbrella", "virus-t");
-			cVacuna.agregarVacuna("batman", 1, 0, 60, "Wuhan", "covid");
-			cVacuna.agregarVacuna("SQL", 1, 0, 300, "Oracle", "gripe");
-			cVacuna.agregarVacuna("roadrunner", 3, 10, 240, "ACME", "lupus");
+			cVacuna.agregarVacuna("BCG", 1, 0, 120, "Bayer", "tuberculosis");
+			cVacuna.agregarVacuna("HEPB", 2, 7, 120, "ABBOTT", "hepatitis b");
+			cVacuna.agregarVacuna("pfizer", 1, 0, 60, "Sinovac", "covid");
+			cVacuna.agregarVacuna("chiroflu", 1, 0, 300, "Oxford", "gripe");
+			cVacuna.agregarVacuna("Cervarix", 3, 10, 240, "Biontech", "VPH");
 			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
 			LOGGER.info("OK");
 		} catch (VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | JSONException e) {
@@ -243,11 +243,11 @@ public class CargaDatos {
 	private void altaPlanes() {
 		try {
 			LOGGER.info("Cargando planes");
-			cPlan.agregarPlanVacunacion("ChauEbola", "planPrueba", "ebola");
-			cPlan.agregarPlanVacunacion("pepeJuancho", "pepeJuancho", "virus-t");
-			cPlan.agregarPlanVacunacion("Matrix", "Matrix", "covid");
-			cPlan.agregarPlanVacunacion("Winter", "Winter", "gripe");
-			cPlan.agregarPlanVacunacion("Leon", "Leon", "lupus");
+			cPlan.agregarPlanVacunacion("PlanTU", "planPrueba", "tuberculosis");
+			cPlan.agregarPlanVacunacion("PlanHep", "PlanHep", "hepatitis b");
+			cPlan.agregarPlanVacunacion("PlanPfi", "PlanPfi", "covid");
+			cPlan.agregarPlanVacunacion("PlanChf", "PlanChf", "gripe");
+			cPlan.agregarPlanVacunacion("PlanVPH", "PlanVPH", "VPH");
 			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
 			LOGGER.info("OK");
 		} catch (EnfermedadInexistente | JSONException e) {
@@ -271,25 +271,25 @@ public class CargaDatos {
 			}
 			LOGGER.info("Cargando etapas");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 5, 28), LocalDate.of(2021, 10, 1), "18|40|industria|si",
-					mapPlan.get("ChauEbola"), "mega-vac");
+					mapPlan.get("PlanTU"), "BCG");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 2, 3), LocalDate.of(2021, 5, 30), "75|90|todos|si",
-					mapPlan.get("ChauEbola"), "mega-vac");
+					mapPlan.get("PlanTU"), "BCG");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 6, 28), LocalDate.of(2022, 3, 1), "0|25|todos|si",
-					mapPlan.get("pepeJuancho"), "ashley");
+					mapPlan.get("PlanHep"), "HEPB");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 6, 1), LocalDate.of(2021, 9, 1), "0|70|todos|no",
-					mapPlan.get("pepeJuancho"), "ashley");
+					mapPlan.get("PlanHep"), "HEPB");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 4, 1), LocalDate.of(2021, 8, 25), "50|90|salud|si",
-					mapPlan.get("Matrix"), "batman");
+					mapPlan.get("PlanPfi"), "pfizer");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 8, 1), LocalDate.of(2022, 3, 20), "5|18|todos|si",
-					mapPlan.get("Matrix"), "batman");
+					mapPlan.get("PlanPfi"), "pfizer");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 8, 1), LocalDate.of(2022, 3, 20), "0|100|todos|si",
-					mapPlan.get("Matrix"), "batman");
+					mapPlan.get("PlanPfi"), "pfizer");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 2, 21), LocalDate.of(2021, 11, 1), "25|35|salud|no",
-					mapPlan.get("Leon"), "roadrunner");
+					mapPlan.get("PlanVPH"), "Cervarix");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "0|50|todos|no",
-					mapPlan.get("Leon"), "roadrunner");
+					mapPlan.get("PlanVPH"), "Cervarix");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 8, 1), LocalDate.of(2022, 3, 20), "0|100|todos|si",
-					mapPlan.get("Leon"), "roadrunner");
+					mapPlan.get("PlanVPH"), "Cervarix");
 			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
 			LOGGER.info("OK");
 		} catch (EtapaRepetida | PlanVacunacionInexistente | VacunaInexistente | AccionInvalida | JSONException e) {
@@ -767,7 +767,7 @@ public class CargaDatos {
 				ciudadano = cUsuario.buscarCiudadano(ci);
 				for (DtEnfermedad enfermedad : enfermedades) {
 					for (DtPlanVacunacion plan : planes) {
-						if (plan.getEnfermedad().equals(enfermedad.getNombre()) && !enfermedad.getNombre().equals("lupus") && !enfermedad.getNombre().equals("covid")) {
+						if (plan.getEnfermedad().equals(enfermedad.getNombre()) && !enfermedad.getNombre().equals("VPH") && !enfermedad.getNombre().equals("covid")) {
 							for (DtVacunatorio vacunatorio : vacunatorios) {
 								List<DtEtapa> etapas = plan.getEtapa();
 								for (DtEtapa etapa : etapas) {
