@@ -497,12 +497,12 @@ public class ControladorReserva implements IReservaDAORemote, IReservaDAOLocal {
 							}
 							if (!habiaConstancia) { //si no encontre constancia, es porque es la primera dosis, o es una sola dosis
 								if (r.getEtapa().getVacuna().getCantDosis()>1) { //si es de multiples dosis el tiempo de inmunidad es 0 meses
-									ConstanciaVacuna cv =new ConstanciaVacuna(0, 1, r.getFechaRegistro().toLocalDate(), r.getEtapa().getVacuna().getNombre(), null);
+									ConstanciaVacuna cv =new ConstanciaVacuna(0, 1, r.getFechaRegistro().toLocalDate(), r.getEtapa().getVacuna().getNombre(), r);
 									c.getCertificado().getConstancias().add(cv);
 									em.persist(cv);
 									em.merge(c.getCertificado());
 								}else {	//si es de una dosis, la inmunidad va directo de la vacuna
-									ConstanciaVacuna cv =new ConstanciaVacuna(r.getEtapa().getVacuna().getExpira(), 1, r.getFechaRegistro().toLocalDate(), r.getEtapa().getVacuna().getNombre(), null);
+									ConstanciaVacuna cv =new ConstanciaVacuna(r.getEtapa().getVacuna().getExpira(), 1, r.getFechaRegistro().toLocalDate(), r.getEtapa().getVacuna().getNombre(), r);
 									c.getCertificado().getConstancias().add(cv);
 									em.persist(cv);
 									em.merge(c.getCertificado());
