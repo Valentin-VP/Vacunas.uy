@@ -714,7 +714,7 @@ public class CargaDatos {
 			cUsuario.agregarUsuarioInterno(45946590, "Rodrigo", "Castro", LocalDate.of(1994, 4, 3), "mail@devops.com",
 					new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Masculino, Rol.Administrador);
 			cUsuario.agregarUsuarioInterno(54657902, "Nicolas", "Mendez", LocalDate.of(1997, 8, 2), "mail@devops.com",
-					new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Masculino, Rol.Autoridad);
+					new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Masculino, Rol.Administrador);
 			cUsuario.agregarUsuarioInterno(48585559, "Nohelia", "Yanibelli", LocalDate.of(1989, 7, 29),
 					"mail@devops.com", new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Femenino, Rol.Administrador);
 			cUsuario.agregarUsuarioInterno(49457795, "Valentin", "Vasconcellos", LocalDate.of(1997, 7, 1),
@@ -921,6 +921,7 @@ public class CargaDatos {
 			for (Integer ci : ciCiudadanosOficiales) {
 				try {
 					ArrayList<DtReservaCompleto> reservas = cReserva.listarReservasCiudadano(ci);
+					ArrayList <String> enfermedades = new ArrayList<String>();
 					for (DtReservaCompleto reserva : reservas) {
 						//EstadoReserva[] estados = EstadoReserva.values();
 						//Random rnd = new Random();
@@ -940,8 +941,12 @@ public class CargaDatos {
 							fecha = LocalDate.now();
 						}
 						shapeshifter = !shapeshifter;
-						cConstancia.agregarConstanciaVacuna(reserva.getVacuna(), temp.getExpira(), temp.getCantDosis(),
-								fecha, (int) ci, Integer.valueOf(reserva.getIdEtapa()));
+						if(!enfermedades.contains(reserva.getEnfermedad())) {
+							cConstancia.agregarConstanciaVacuna(reserva.getVacuna(), temp.getExpira(), temp.getCantDosis(),
+									fecha, (int) ci, Integer.valueOf(reserva.getIdEtapa()));
+							enfermedades.add(reserva.getEnfermedad());
+						}
+						
 					}
 				} catch (ReservaInexistente | UsuarioExistente | CertificadoInexistente | VacunaInexistente e) {
 					continue;
