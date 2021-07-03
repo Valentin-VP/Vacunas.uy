@@ -98,7 +98,7 @@ public class CargaDatos {
 	private static int CANTIDAD_LOTES_POR_VACUNA_VACUNATORIO = 5; // 5
 	private static int CANTIDAD_VACUNADORES_RANDOM = 50; // 50
 	private static int CANTIDAD_CIUDADANOS_RANDOM = 1000; // 1000
-	private static int TOPE_RESERVAS_GLOBALES = 2000; // 2000
+	private static int TOPE_RESERVAS_GLOBALES = 1000; // 2000
 
 	// Controladores
 	@EJB
@@ -282,13 +282,13 @@ public class CargaDatos {
 					mapPlan.get("PlanPfi"), "pfizer");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 8, 1), LocalDate.of(2022, 3, 20), "5|18|todos|si",
 					mapPlan.get("PlanPfi"), "pfizer");
-			cEtapa.agregarEtapa(LocalDate.of(2021, 8, 1), LocalDate.of(2022, 3, 20), "0|100|todos|si",
+			cEtapa.agregarEtapa(LocalDate.of(2021, 4, 1), LocalDate.of(2022, 3, 20), "0|100|todos|si",
 					mapPlan.get("PlanPfi"), "pfizer");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 2, 21), LocalDate.of(2021, 11, 1), "25|35|salud|no",
 					mapPlan.get("PlanVPH"), "Cervarix");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "0|50|todos|no",
 					mapPlan.get("PlanVPH"), "Cervarix");
-			cEtapa.agregarEtapa(LocalDate.of(2021, 8, 1), LocalDate.of(2022, 3, 20), "0|100|todos|si",
+			cEtapa.agregarEtapa(LocalDate.of(2021, 4, 1), LocalDate.of(2022, 3, 20), "0|100|todos|si",
 					mapPlan.get("PlanVPH"), "Cervarix");
 			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
 			LOGGER.info("OK");
@@ -314,9 +314,9 @@ public class CargaDatos {
 			dtDirecciones.add(new DtDireccion("Piedras 3699", "Aguada", "Durazno"));
 
 			LOGGER.info("Cargando vacunatorios");
-			cVacunatorio.agregarVacunatorio("deathstar", "Cosem", dtDirecciones.get(0), 26124571,
+			cVacunatorio.agregarVacunatorio("vact1", "Cosem", dtDirecciones.get(0), 26124571,
 					Float.parseFloat("-34.897206"), Float.parseFloat("-56.184912"), "https://13.92.125.186:8443/");
-			cVacunatorio.agregarVacunatorio("executor", "Medica Uruguaya", dtDirecciones.get(1), 26124571,
+			cVacunatorio.agregarVacunatorio("vact2", "Medica Uruguaya", dtDirecciones.get(1), 26124571,
 					Float.parseFloat("-34.873602"), Float.parseFloat("-55.1459742"), "https://40.114.44.10:8443/");
 			cVacunatorio.agregarVacunatorio("pereira", "Pereira Rossell", dtDirecciones.get(2), 47763289,
 					Float.parseFloat("-34.893906"), Float.parseFloat("-56.166912"), "https://pereira.uy/");
@@ -326,9 +326,9 @@ public class CargaDatos {
 					Float.parseFloat("-34.455678"), Float.parseFloat("-55.291278"), "https://casmu-durazno.uy/");
 
 			LOGGER.info("Cargando reglas cupos");
-			cVacunatorio.agregarReglasCupos("deathstar", "cosem_reglas", 15, LocalTime.of(8, 0, 0),
+			cVacunatorio.agregarReglasCupos("vact1", "cosem_reglas", 15, LocalTime.of(8, 0, 0),
 					LocalTime.of(21, 59, 59));
-			cVacunatorio.agregarReglasCupos("executor", "medica_uruguaya_reglas", 30, LocalTime.of(9, 0, 0),
+			cVacunatorio.agregarReglasCupos("vact2", "medica_uruguaya_reglas", 30, LocalTime.of(9, 0, 0),
 					LocalTime.of(19, 59, 59));
 			cVacunatorio.agregarReglasCupos("pereira", "pereira_rossell_reglas", 30, LocalTime.of(8, 0, 0),
 					LocalTime.of(22, 59, 59));
@@ -338,8 +338,8 @@ public class CargaDatos {
 					LocalTime.of(17, 59, 59));
 
 			LOGGER.info("Creando tokens de vacunatorios");
-			cVacunatorio.generarTokenVacunatorio("deathstar");
-			cVacunatorio.generarTokenVacunatorio("executor");
+			cVacunatorio.generarTokenVacunatorio("vact1");
+			cVacunatorio.generarTokenVacunatorio("vact2");
 			cVacunatorio.generarTokenVacunatorio("pereira");
 			cVacunatorio.generarTokenVacunatorio("asse-tbo");
 			cVacunatorio.generarTokenVacunatorio("casmu 35");
