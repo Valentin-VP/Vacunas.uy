@@ -98,7 +98,7 @@ public class CargaDatos {
 	private static int CANTIDAD_LOTES_POR_VACUNA_VACUNATORIO = 5; // 5
 	private static int CANTIDAD_VACUNADORES_RANDOM = 50; // 50
 	private static int CANTIDAD_CIUDADANOS_RANDOM = 1000; // 1000
-	private static int TOPE_RESERVAS_GLOBALES = 2000; // 2000
+	private static int TOPE_RESERVAS_GLOBALES = 1000; // 2000
 
 	// Controladores
 	@EJB
@@ -179,11 +179,11 @@ public class CargaDatos {
 	private void altaEnfermedades() {
 		try {
 			LOGGER.info("Cargando enfermedades");
-			cEnfermedad.agregarEnfermedad("ebola");
-			cEnfermedad.agregarEnfermedad("virus-t");
+			cEnfermedad.agregarEnfermedad("tuberculosis");
+			cEnfermedad.agregarEnfermedad("hepatitis b");
 			cEnfermedad.agregarEnfermedad("covid");
 			cEnfermedad.agregarEnfermedad("gripe");
-			cEnfermedad.agregarEnfermedad("lupus");
+			cEnfermedad.agregarEnfermedad("VPH");
 			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
 			LOGGER.info("OK");
 		} catch (EnfermedadRepetida | JSONException e) {
@@ -201,11 +201,11 @@ public class CargaDatos {
 	private void altaLaboratorios() {
 		try {
 			LOGGER.info("Cargando laboratorios");
-			cLaboratorio.agregarLaboratorio("Dexter");
-			cLaboratorio.agregarLaboratorio("Umbrella");
-			cLaboratorio.agregarLaboratorio("Wuhan");
-			cLaboratorio.agregarLaboratorio("Oracle");
-			cLaboratorio.agregarLaboratorio("ACME");
+			cLaboratorio.agregarLaboratorio("Bayer");
+			cLaboratorio.agregarLaboratorio("ABBOTT");
+			cLaboratorio.agregarLaboratorio("Sinovac");
+			cLaboratorio.agregarLaboratorio("Oxford");
+			cLaboratorio.agregarLaboratorio("Biontech");
 			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
 			LOGGER.info("OK");
 		} catch (LaboratorioRepetido | JSONException e) {
@@ -222,11 +222,11 @@ public class CargaDatos {
 	private void altaVacunas() {
 		try {
 			LOGGER.info("Cargando vacunas");
-			cVacuna.agregarVacuna("mega-vac", 1, 0, 120, "Dexter", "ebola");
-			cVacuna.agregarVacuna("ashley", 2, 7, 120, "Umbrella", "virus-t");
-			cVacuna.agregarVacuna("batman", 1, 0, 60, "Wuhan", "covid");
-			cVacuna.agregarVacuna("SQL", 1, 0, 300, "Oracle", "gripe");
-			cVacuna.agregarVacuna("roadrunner", 3, 10, 240, "ACME", "lupus");
+			cVacuna.agregarVacuna("BCG", 1, 0, 120, "Bayer", "tuberculosis");
+			cVacuna.agregarVacuna("HEPB", 2, 7, 120, "ABBOTT", "hepatitis b");
+			cVacuna.agregarVacuna("pfizer", 1, 0, 60, "Sinovac", "covid");
+			cVacuna.agregarVacuna("chiroflu", 1, 0, 300, "Oxford", "gripe");
+			cVacuna.agregarVacuna("Cervarix", 3, 10, 240, "Biontech", "VPH");
 			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
 			LOGGER.info("OK");
 		} catch (VacunaRepetida | LaboratorioInexistente | EnfermedadInexistente | JSONException e) {
@@ -243,11 +243,11 @@ public class CargaDatos {
 	private void altaPlanes() {
 		try {
 			LOGGER.info("Cargando planes");
-			cPlan.agregarPlanVacunacion("ChauEbola", "planPrueba", "ebola");
-			cPlan.agregarPlanVacunacion("pepeJuancho", "pepeJuancho", "virus-t");
-			cPlan.agregarPlanVacunacion("Matrix", "Matrix", "covid");
-			cPlan.agregarPlanVacunacion("Winter", "Winter", "gripe");
-			cPlan.agregarPlanVacunacion("Leon", "Leon", "lupus");
+			cPlan.agregarPlanVacunacion("PlanTU", "planPrueba", "tuberculosis");
+			cPlan.agregarPlanVacunacion("PlanHep", "PlanHep", "hepatitis b");
+			cPlan.agregarPlanVacunacion("PlanPfi", "PlanPfi", "covid");
+			cPlan.agregarPlanVacunacion("PlanChf", "PlanChf", "gripe");
+			cPlan.agregarPlanVacunacion("PlanVPH", "PlanVPH", "VPH");
 			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
 			LOGGER.info("OK");
 		} catch (EnfermedadInexistente | JSONException e) {
@@ -271,25 +271,25 @@ public class CargaDatos {
 			}
 			LOGGER.info("Cargando etapas");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 5, 28), LocalDate.of(2021, 10, 1), "18|40|industria|si",
-					mapPlan.get("ChauEbola"), "mega-vac");
+					mapPlan.get("PlanTU"), "BCG");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 2, 3), LocalDate.of(2021, 5, 30), "75|90|todos|si",
-					mapPlan.get("ChauEbola"), "mega-vac");
+					mapPlan.get("PlanTU"), "BCG");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 6, 28), LocalDate.of(2022, 3, 1), "0|25|todos|si",
-					mapPlan.get("pepeJuancho"), "ashley");
+					mapPlan.get("PlanHep"), "HEPB");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 6, 1), LocalDate.of(2021, 9, 1), "0|70|todos|no",
-					mapPlan.get("pepeJuancho"), "ashley");
+					mapPlan.get("PlanHep"), "HEPB");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 4, 1), LocalDate.of(2021, 8, 25), "50|90|salud|si",
-					mapPlan.get("Matrix"), "batman");
+					mapPlan.get("PlanPfi"), "pfizer");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 8, 1), LocalDate.of(2022, 3, 20), "5|18|todos|si",
-					mapPlan.get("Matrix"), "batman");
-			cEtapa.agregarEtapa(LocalDate.of(2021, 8, 1), LocalDate.of(2022, 3, 20), "0|100|todos|si",
-					mapPlan.get("Matrix"), "batman");
+					mapPlan.get("PlanPfi"), "pfizer");
+			cEtapa.agregarEtapa(LocalDate.of(2021, 4, 1), LocalDate.of(2022, 3, 20), "0|100|todos|si",
+					mapPlan.get("PlanPfi"), "pfizer");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 2, 21), LocalDate.of(2021, 11, 1), "25|35|salud|no",
-					mapPlan.get("Leon"), "roadrunner");
+					mapPlan.get("PlanVPH"), "Cervarix");
 			cEtapa.agregarEtapa(LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "0|50|todos|no",
-					mapPlan.get("Leon"), "roadrunner");
-			cEtapa.agregarEtapa(LocalDate.of(2021, 8, 1), LocalDate.of(2022, 3, 20), "0|100|todos|si",
-					mapPlan.get("Leon"), "roadrunner");
+					mapPlan.get("PlanVPH"), "Cervarix");
+			cEtapa.agregarEtapa(LocalDate.of(2021, 4, 1), LocalDate.of(2022, 3, 20), "0|100|todos|si",
+					mapPlan.get("PlanVPH"), "Cervarix");
 			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
 			LOGGER.info("OK");
 		} catch (EtapaRepetida | PlanVacunacionInexistente | VacunaInexistente | AccionInvalida | JSONException e) {
@@ -314,9 +314,9 @@ public class CargaDatos {
 			dtDirecciones.add(new DtDireccion("Piedras 3699", "Aguada", "Durazno"));
 
 			LOGGER.info("Cargando vacunatorios");
-			cVacunatorio.agregarVacunatorio("deathstar", "Cosem", dtDirecciones.get(0), 26124571,
+			cVacunatorio.agregarVacunatorio("vact1", "Cosem", dtDirecciones.get(0), 26124571,
 					Float.parseFloat("-34.897206"), Float.parseFloat("-56.184912"), "https://13.92.125.186:8443/");
-			cVacunatorio.agregarVacunatorio("executor", "Medica Uruguaya", dtDirecciones.get(1), 26124571,
+			cVacunatorio.agregarVacunatorio("vact2", "Medica Uruguaya", dtDirecciones.get(1), 26124571,
 					Float.parseFloat("-34.873602"), Float.parseFloat("-55.1459742"), "https://40.114.44.10:8443/");
 			cVacunatorio.agregarVacunatorio("pereira", "Pereira Rossell", dtDirecciones.get(2), 47763289,
 					Float.parseFloat("-34.893906"), Float.parseFloat("-56.166912"), "https://pereira.uy/");
@@ -326,9 +326,9 @@ public class CargaDatos {
 					Float.parseFloat("-34.455678"), Float.parseFloat("-55.291278"), "https://casmu-durazno.uy/");
 
 			LOGGER.info("Cargando reglas cupos");
-			cVacunatorio.agregarReglasCupos("deathstar", "cosem_reglas", 15, LocalTime.of(8, 0, 0),
+			cVacunatorio.agregarReglasCupos("vact1", "cosem_reglas", 15, LocalTime.of(8, 0, 0),
 					LocalTime.of(21, 59, 59));
-			cVacunatorio.agregarReglasCupos("executor", "medica_uruguaya_reglas", 30, LocalTime.of(9, 0, 0),
+			cVacunatorio.agregarReglasCupos("vact2", "medica_uruguaya_reglas", 30, LocalTime.of(9, 0, 0),
 					LocalTime.of(19, 59, 59));
 			cVacunatorio.agregarReglasCupos("pereira", "pereira_rossell_reglas", 30, LocalTime.of(8, 0, 0),
 					LocalTime.of(22, 59, 59));
@@ -338,8 +338,8 @@ public class CargaDatos {
 					LocalTime.of(17, 59, 59));
 
 			LOGGER.info("Creando tokens de vacunatorios");
-			cVacunatorio.generarTokenVacunatorio("deathstar");
-			cVacunatorio.generarTokenVacunatorio("executor");
+			cVacunatorio.generarTokenVacunatorio("vact1");
+			cVacunatorio.generarTokenVacunatorio("vact2");
 			cVacunatorio.generarTokenVacunatorio("pereira");
 			cVacunatorio.generarTokenVacunatorio("asse-tbo");
 			cVacunatorio.generarTokenVacunatorio("casmu 35");
@@ -767,7 +767,7 @@ public class CargaDatos {
 				ciudadano = cUsuario.buscarCiudadano(ci);
 				for (DtEnfermedad enfermedad : enfermedades) {
 					for (DtPlanVacunacion plan : planes) {
-						if (plan.getEnfermedad().equals(enfermedad.getNombre()) && !enfermedad.getNombre().equals("lupus") && !enfermedad.getNombre().equals("covid")) {
+						if (plan.getEnfermedad().equals(enfermedad.getNombre()) && !enfermedad.getNombre().equals("VPH") && !enfermedad.getNombre().equals("covid")) {
 							for (DtVacunatorio vacunatorio : vacunatorios) {
 								List<DtEtapa> etapas = plan.getEtapa();
 								for (DtEtapa etapa : etapas) {
@@ -915,8 +915,41 @@ public class CargaDatos {
 
 	private void altaConstancias() {
 		try {
-			LOGGER.info("Recuperando reservas");
+			LOGGER.info("Cargando constancias");
+			LOGGER.info("Recuperando reservas oficiales");
 			boolean shapeshifter = false;
+			for (Integer ci : ciCiudadanosOficiales) {
+				try {
+					ArrayList<DtReservaCompleto> reservas = cReserva.listarReservasCiudadano(ci);
+					for (DtReservaCompleto reserva : reservas) {
+						//EstadoReserva[] estados = EstadoReserva.values();
+						//Random rnd = new Random();
+						// cReserva.cambiarEstadoReserva((int) ci,
+						// LocalDateTime.parse(reserva.getFecha(),
+						// DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")),
+						// estados[rnd.nextInt(estados.length)]);
+						DtVacuna temp = cVacuna.obtenerVacuna(reserva.getVacuna());
+						
+						LocalDate fecha;
+						if(shapeshifter) {
+							int dob = (int) Math.floor(Math.random() * (28 - 1 + 1) + 1);
+							int mob = (int) Math.floor(Math.random() * (6 - 1 + 1) + 1);
+							int yob = (int) Math.floor(Math.random() * (2021 - 2021 + 1) + 2021);
+							fecha = LocalDate.of(yob, mob, dob);
+						}else {
+							fecha = LocalDate.now();
+						}
+						shapeshifter = !shapeshifter;
+						cConstancia.agregarConstanciaVacuna(reserva.getVacuna(), temp.getExpira(), temp.getCantDosis(),
+								fecha, (int) ci, Integer.valueOf(reserva.getIdEtapa()));
+					}
+				} catch (ReservaInexistente | UsuarioExistente | CertificadoInexistente | VacunaInexistente e) {
+					continue;
+				}
+			}
+			
+			LOGGER.info("Recuperando reservas random");
+			shapeshifter = false;
 			for (Integer ci : idsCiudadanosRandom) {
 				try {
 					ArrayList<DtReservaCompleto> reservas = cReserva.listarReservasCiudadano(ci);

@@ -53,7 +53,7 @@ public class GestionVacunatoriosRWS {
 
 	public GestionVacunatoriosRWS() {}
 	
-	@RolesAllowed({ "administrador", "autoridad" })
+	@RolesAllowed({ "administrador", "autoridad", "ciudadano" })
     @GET
     @Path("/listar")
     public Response listarVacunatorios() {
@@ -66,7 +66,7 @@ public class GestionVacunatoriosRWS {
         }
     }
 	
-	@RolesAllowed({ "administrador", "autoridad" })
+	@RolesAllowed({ "administrador", "autoridad", "ciudadano" })
 	@GET
 	@Path("/obtener")
 	public Response obtenerVacunatorio(@CookieParam("x-access-token") Cookie cookie, @QueryParam("vacunatorio") String vacunatorio) {
