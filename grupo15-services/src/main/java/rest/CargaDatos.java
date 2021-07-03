@@ -77,6 +77,7 @@ import interfaces.IEnfermedadLocal;
 import interfaces.IEtapaRemote;
 import interfaces.IHistoricoDaoLocal;
 import interfaces.ILaboratorioLocal;
+import interfaces.ILdapLocal;
 import interfaces.ILoteDosisDaoLocal;
 import interfaces.IPlanVacunacionLocal;
 import interfaces.IReservaDAOLocal;
@@ -137,6 +138,8 @@ public class CargaDatos {
 	ITransportistaDaoLocal cTransportista;
 	@EJB
 	ILoteDosisDaoLocal cLote;
+	@EJB
+	ILdapLocal cLDAP;
 
 	private JSONObject resultados = new JSONObject();
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
@@ -713,14 +716,19 @@ public class CargaDatos {
 		try {
 			cUsuario.agregarUsuarioInterno(45946590, "Rodrigo", "Castro", LocalDate.of(1994, 4, 3), "mail@devops.com",
 					new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Masculino, Rol.Administrador);
+			cLDAP.addUser("Castro", 45946590, "Rodrigo", "Administrador", "123");
 			cUsuario.agregarUsuarioInterno(54657902, "Nicolas", "Mendez", LocalDate.of(1997, 8, 2), "mail@devops.com",
-					new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Masculino, Rol.Administrador);
+					new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Masculino, Rol.Autoridad);
+			cLDAP.addUser("Mendez", 54657902, "Nicolas", "Autoridad", "123");
 			cUsuario.agregarUsuarioInterno(48585559, "Nohelia", "Yanibelli", LocalDate.of(1989, 7, 29),
 					"mail@devops.com", new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Femenino, Rol.Administrador);
+			cLDAP.addUser("Yanibelli", 48585559, "Nohelia", "Administrador", "123");
 			cUsuario.agregarUsuarioInterno(49457795, "Valentin", "Vasconcellos", LocalDate.of(1997, 7, 1),
 					"mail@devops.com", new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Masculino, Rol.Autoridad);
+			cLDAP.addUser("Vasconcellos", 49457795, "Valentin", "Autoridad", "123");
 			cUsuario.agregarUsuarioInterno(50332570, "Jessica", "Gonzalez", LocalDate.of(1993, 7, 29),
 					"mail@devops.com", new DtDireccion("Av. Vcd 1001", "Brooks", "Melbourne"), Sexo.Femenino, Rol.Autoridad);
+			cLDAP.addUser("Gonzalez", 50332570, "Jessica", "Autoridad", "123");
 			this.resultados.put(new Exception().getStackTrace()[0].getMethodName(), Response.Status.OK);
 			LOGGER.info("OK");
 		} catch (UsuarioExistente | JSONException e) {
