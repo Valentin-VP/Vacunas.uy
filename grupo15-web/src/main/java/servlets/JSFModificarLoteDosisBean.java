@@ -79,7 +79,7 @@ public class JSFModificarLoteDosisBean implements Serializable {
 			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 		}
 		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        String hostname = "https://" + origRequest.getServerName();
         LOGGER.info("El server name es: " + hostname);
 		Client conexion = ClientBuilder.newClient();
 		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunas/listar");
@@ -105,7 +105,7 @@ public class JSFModificarLoteDosisBean implements Serializable {
 			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 		}
 		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        String hostname = "https://" + origRequest.getServerName();
         LOGGER.info("El server name es: " + hostname);
 		Client conexion = ClientBuilder.newClient();
 		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunatorios/listar");
@@ -131,7 +131,7 @@ public class JSFModificarLoteDosisBean implements Serializable {
 			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 		}
 		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        String hostname = "https://" + origRequest.getServerName();
         LOGGER.info("El server name es: " + hostname);
 		Client conexion = ClientBuilder.newClient();
 		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/listarMensajes");
@@ -170,7 +170,7 @@ public class JSFModificarLoteDosisBean implements Serializable {
 			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 		}
 		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        String hostname = "https://" + origRequest.getServerName();
         LOGGER.info("El server name es: " + hostname);
 		Client conexion = ClientBuilder.newClient();
 		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/listar");//?idVacuna=" + this.vacuna + "&idVacunatorio=" + this.vacunatorio);
@@ -237,7 +237,7 @@ public class JSFModificarLoteDosisBean implements Serializable {
 			lote.put("temperatura", this.temperatura);
 			//LOGGER.info("Lote:" + this.lote + " Vacuna:" + this.vacuna + " Vacunatorio:" + this.vacunatorio + " estado:" + this.estado + " entr:" + this.cantEntregada + " desc:" + this.cantDescartada + " temp:" + this.temperatura);
 			HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+	        String hostname = "https://" + origRequest.getServerName();
 	        LOGGER.info("El server name es: " + hostname);
 			Client conexion = ClientBuilder.newClient();
 			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/modificar");
@@ -280,7 +280,7 @@ public class JSFModificarLoteDosisBean implements Serializable {
 		String[] temp;
 		temp = this.lote.split("\\Q|\\E");
 		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        String hostname = "https://" + origRequest.getServerName();
         LOGGER.info("El server name es: " + hostname);
 		Client conexion = ClientBuilder.newClient();
 		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/obtenerInfoLoteSocio?idLote=" + temp[0] + "&idVacuna=" + temp[2] + "&idVacunatorio=" + temp[1]);
@@ -315,7 +315,7 @@ public class JSFModificarLoteDosisBean implements Serializable {
 			}
 		}
 		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        String hostname = "https://" + origRequest.getServerName();
         LOGGER.info("El server name es: " + hostname);
 		Client conexion = ClientBuilder.newClient();
 		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/obtenerInfoTodosLotesSocio?idTransportista=" + dt.getTransportista());

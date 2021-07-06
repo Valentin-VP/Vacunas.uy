@@ -232,7 +232,7 @@ public class JSFCrearEtapaBean implements Serializable {
 				LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 			}
 			HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+	        String hostname = "https://" + origRequest.getServerName();
 	        LOGGER.info("El server name es: " + hostname);
 			Client conexion = ClientBuilder.newClient();
 			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/plan/listar");
@@ -267,7 +267,7 @@ public class JSFCrearEtapaBean implements Serializable {
 			}
 			LOGGER.info("Por solicitar los planes en Bean...");
 			origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-	        hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+	        hostname = "https://" + origRequest.getServerName();
 			conexion = ClientBuilder.newClient();
 			webTarget = conexion.target(hostname + "/grupo15-services/rest/usuario/sectores");
 			invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
@@ -303,7 +303,7 @@ public class JSFCrearEtapaBean implements Serializable {
 			return;
 		}
 		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        String hostname = "https://" + origRequest.getServerName();
         LOGGER.info("El server name es: " + hostname);
 		Client conexion = ClientBuilder.newClient();
 		conexion = ClientBuilder.newClient();
@@ -372,7 +372,7 @@ public class JSFCrearEtapaBean implements Serializable {
 			etapa.put("condicion", this.condicion);
 			
 			HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+	        String hostname = "https://" + origRequest.getServerName();
 	        LOGGER.info("El server name es: " + hostname);
 			Client conexion = ClientBuilder.newClient();
 			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/etapa/agregar");

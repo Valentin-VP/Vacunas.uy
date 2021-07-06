@@ -167,7 +167,7 @@ public class JSFAltaLoteDosisBean implements Serializable {
 			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 		}
 		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        String hostname = "https://" + origRequest.getServerName();
         LOGGER.info("El server name es: " + hostname);
 		Client conexion = ClientBuilder.newClient();
 		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunas/listar");
@@ -198,7 +198,7 @@ public class JSFAltaLoteDosisBean implements Serializable {
 			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 		}
 		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        String hostname = "https://" + origRequest.getServerName();
         LOGGER.info("El server name es: " + hostname);
 		Client conexion = ClientBuilder.newClient();
 		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunatorios/listar");
@@ -228,7 +228,7 @@ public class JSFAltaLoteDosisBean implements Serializable {
 			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 		}
 		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        String hostname = "https://" + origRequest.getServerName();
         LOGGER.info("El server name es: " + hostname);
 		Client conexion = ClientBuilder.newClient();
 		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/transportistas/listar");
@@ -315,7 +315,7 @@ public class JSFAltaLoteDosisBean implements Serializable {
 			lote.put("idLote", this.identificador);
 			lote.put("cantidadTotal", String.valueOf(this.cantTotal));
 			HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+	        String hostname = "https://" + origRequest.getServerName();
 	        LOGGER.info("El server name es: " + hostname);
 			Client conexion = ClientBuilder.newClient();
 			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/agregar");

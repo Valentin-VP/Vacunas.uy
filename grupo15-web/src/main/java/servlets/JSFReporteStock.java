@@ -89,7 +89,7 @@ public class JSFReporteStock implements Serializable {
         	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
         }
         HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        String hostname = "https://" + origRequest.getServerName();
 		Client conexion = ClientBuilder.newClient();
 		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/enfermedad/listar");
 		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
@@ -119,7 +119,7 @@ public class JSFReporteStock implements Serializable {
         	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
         }
         HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        String hostname = "https://" + origRequest.getServerName();
 		Client conexion = ClientBuilder.newClient();
 		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/stock/enf/"+enfermedad);
 		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
@@ -152,7 +152,7 @@ public class JSFReporteStock implements Serializable {
         	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
         }
         HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        String hostname = "https://" + origRequest.getServerName();
 		Client conexion = ClientBuilder.newClient();
 		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/stock/actual");
 		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildPost(Entity.entity(datos.toString(), MediaType.APPLICATION_JSON));
@@ -168,7 +168,7 @@ public class JSFReporteStock implements Serializable {
         	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
         }
         origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        hostname = "https://" + origRequest.getServerName();
 		conexion = ClientBuilder.newClient();
 		webTarget = conexion.target(hostname + "/grupo15-services/rest/stock/historico");
 		invocation = webTarget.request("application/json").cookie("x-access-token", token).buildPost(Entity.entity(datos.toString(), MediaType.APPLICATION_JSON));

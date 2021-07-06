@@ -76,7 +76,7 @@ public class JSFBorrarLaboratorioBean implements Serializable{
 	        	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 	        }
 	        HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+	        String hostname = "https://" + origRequest.getServerName();
 	        LOGGER.info("El server name es: " + hostname);
 			Client conexion = ClientBuilder.newClient();
 			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lab/listar");
@@ -115,7 +115,7 @@ public class JSFBorrarLaboratorioBean implements Serializable{
 	        }
 	        // http://omnifaces-fans.blogspot.com/2015/10/jax-rs-consume-restful-web-service-from.html
 	        HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+	        String hostname = "https://" + origRequest.getServerName();
 	        LOGGER.info("El server name es: " + hostname);
 			Client conexion = ClientBuilder.newClient();
 			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lab/eliminar").queryParam("lab", this.nombre);

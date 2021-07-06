@@ -74,7 +74,7 @@ private String url;
 			socio.put("url", this.getUrl());
 		
 			HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+	        String hostname = "https://" + origRequest.getServerName();
 	        LOGGER.info("El server name es: " + hostname);
 			Client conexion = ClientBuilder.newClient();
 			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/transportistas/agregar");
