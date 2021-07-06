@@ -91,7 +91,7 @@ public class RegistrarAppMobile {
 							
 							String origin = headers.getHeaderString("Origin");
 							if (origin == null || origin == "") 
-								origin = "http://localhost:8080";
+								origin = "https://localhost:8080";
 							String url = origin + "/grupo15-services/rest/firestore/notificacion";
 							URI uri = UriBuilder.fromPath(url).build();
 							LOGGER.severe("Uri para REST Firestore: " + uri.toString());
