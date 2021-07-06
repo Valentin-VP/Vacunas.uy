@@ -31,6 +31,7 @@ import datatypes.DtEnfermedad;
 import datatypes.DtEtapa;
 import datatypes.DtHistoricoStock;
 import datatypes.DtPlanVacunacion;
+import datatypes.DtReserva;
 import datatypes.DtReservaCompleto;
 import datatypes.DtUsuarioExterno;
 import datatypes.DtVacuna;
@@ -809,7 +810,10 @@ public class CargaDatos {
 									try {
 										cReserva.confirmarReserva((int) ci, enfermedad.getNombre(), plan.getId(),
 												vacunatorio.getId(), fechaReserva, hora, externo);
-									} catch (CupoInexistente e) {
+										if (cVacuna.obtenerVacuna(etapa.getVacuna()).getCantDosis() == 1) {
+											cReserva.cambiarEstadoReserva((int)ci, LocalDateTime.of(fechaReserva, hora), EstadoReserva.Completada);
+										}
+									} catch (CupoInexistente | VacunaInexistente | AccionInvalida e) {
 										continue;
 									}
 
@@ -928,6 +932,7 @@ public class CargaDatos {
 			boolean shapeshifter = false;
 			for (Integer ci : ciCiudadanosOficiales) {
 				try {
+					
 					ArrayList<DtReservaCompleto> reservas = cReserva.listarReservasCiudadano(ci);
 					ArrayList <String> enfermedades = new ArrayList<String>();
 					for (DtReservaCompleto reserva : reservas) {
@@ -948,13 +953,23 @@ public class CargaDatos {
 						}else {
 							fecha = LocalDate.now();
 						}
-						shapeshifter = !shapeshifter;
-						if(!enfermedades.contains(reserva.getEnfermedad())) {
-							cConstancia.agregarConstanciaVacuna(reserva.getVacuna(), temp.getExpira(), temp.getCantDosis(),
-									fecha, (int) ci, Integer.valueOf(reserva.getIdEtapa()));
-							enfermedades.add(reserva.getEnfermedad());
+						
+						for(DtReserva res: cUsuario.buscarCiudadano(ci).getReservas()) {
+							if ((reserva.getIdEtapa().equals(res.getEtapa())) && (reserva.getIdCiudadano().equals(res.getUsuario())) && (res.getEstado().equals(EstadoReserva.Completada))){
+								cConstancia.agregarConstanciaVacuna(reserva.getVacuna(), temp.getExpira(), temp.getCantDosis(),
+										fecha, (int) ci, Integer.valueOf(reserva.getIdEtapa()));
+								enfermedades.add(reserva.getEnfermedad());
+								shapeshifter = !shapeshifter;
+							}
 						}
 						
+//						if(!enfermedades.contains(reserva.getEnfermedad())) {
+//							
+//							cConstancia.agregarConstanciaVacuna(reserva.getVacuna(), temp.getExpira(), temp.getCantDosis(),
+//									fecha, (int) ci, Integer.valueOf(reserva.getIdEtapa()));
+//							enfermedades.add(reserva.getEnfermedad());							
+//						}
+//						shapeshifter = !shapeshifter;
 					}
 				} catch (ReservaInexistente | UsuarioExistente | CertificadoInexistente | VacunaInexistente e) {
 					continue;
