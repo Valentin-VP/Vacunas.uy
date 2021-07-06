@@ -346,8 +346,8 @@ public class AltaReservaRWS implements Serializable {
 			// Se agrega pedido de push notification en caso que el Ciudadano tenga la app instalada
 			if (IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci)).getMobileToken() != null) {
 				for (DtTareaNotificacion task: tasks) {
-					String origin = "https://" + headers.getHeaderString("Host");
-					//String origin = headers.getHeaderString("Origin");
+//					String origin = "https://" + headers.getHeaderString("Host");
+					String origin = headers.getHeaderString("Origin");
 					String firebaseUrl = origin + "/grupo15-services/rest/firestore/notificacion";
 					URI uri = UriBuilder.fromPath(firebaseUrl).build();
 					LOGGER.severe("Uri para REST Firestore: " + uri.toString());
