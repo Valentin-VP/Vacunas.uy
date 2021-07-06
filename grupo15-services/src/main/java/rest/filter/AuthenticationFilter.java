@@ -1,6 +1,7 @@
 package rest.filter;
 
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -20,7 +21,10 @@ import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.Priorities;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.ext.Provider;
 
 import org.jose4j.jwt.consumer.InvalidJwtException;
@@ -89,8 +93,13 @@ public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequ
 				LOGGER.severe("Claims recuperados: " + id + " y " + tipoUsuario);
 			} catch (InvalidJwtException e) {
 				LOGGER.warning("Invalid token provided!");
-				requestContext.abortWith(ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED,
-						"Token invalid. Please authenticate again!"));
+				String login = headers.get("Host").get(0) + "/grupo15-web/html/logins.html";
+				URI uri = UriBuilder.fromPath(login).build();
+				requestContext.abortWith(Response.status(302).location(uri).build());				
+				//requestContext.abortWith(Response.ok(login).build());				
+				//requestContext.setRequestUri(uri);
+				//requestContext.abortWith(ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED,
+					//	"Token invalid. Please authenticate again!"));
 				return;
 			}
 			LOGGER.info("Auth Filter id: " + id);
