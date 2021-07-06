@@ -108,7 +108,7 @@ public class JSFModificarInternoBean implements Serializable{
 	        datos.put("ci", this.ci);
 	        datos.put("barrio", this.getBarrio());
 	        datos.put("departamento", this.getDepartamento());
-	        datos.put("direccion", direccion);
+	        datos.put("direccion", this.direccion);
 	        datos.put("email", this.getEmail());
 	        HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
