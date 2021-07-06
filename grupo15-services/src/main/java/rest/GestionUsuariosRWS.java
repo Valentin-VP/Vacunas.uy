@@ -205,6 +205,7 @@ public class GestionUsuariosRWS {
 			ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
 			DtCiudadano ciudadano = IUsuarioLocal.buscarCiudadano(Integer.parseInt(ci));
 			JSONObject retorno = new JSONObject();
+			
 			retorno.put("direccion", ciudadano.getDireccion().getDireccion());
 			retorno.put("barrio", ciudadano.getDireccion().getBarrio());
 			retorno.put("departamento", ciudadano.getDireccion().getDepartamento());
@@ -307,25 +308,38 @@ public class GestionUsuariosRWS {
 	@RolesAllowed({"administrador", "autoridad" })
 	@POST
 	@Path("/interno/modificar")
-	public Response modificarInterno(@CookieParam("x-access-token") Cookie cookie, String datos) {
-		if (cookie != null) {
-			try {
-				JSONObject datosInterno = new JSONObject(datos);
-				String token = cookie.getValue();
-				String ci = TokenSecurity.getIdClaim(TokenSecurity.validateJwtToken(token));
-				DtUsuarioInterno interno = IUsuarioLocal.buscarUsuarioInterno(Integer.parseInt(ci));
-				//String nombre, String apellido, LocalDate fechaNac, int IdUsuario, String email, DtDireccion direccion, Sexo sexo
+	public Response modificarInterno(String datos) {
+		try {
+			JSONObject datosInterno = new JSONObject(datos);
+			String ci = datosInterno.getString("ci");
+			DtDireccion dir = new DtDireccion();
+			DtUsuarioInterno interno = IUsuarioLocal.buscarUsuarioInterno(Integer.parseInt(ci));
+			if(datosInterno.getString("email") != null && !datosInterno.getString("email").isEmpty())
 				interno.setEmail(datosInterno.getString("email"));
-				JSONObject jsonDir = datosInterno.getJSONObject("direccion");
-				DtDireccion dir = new DtDireccion(jsonDir.getString("direccion"), jsonDir.getString("barrio"), jsonDir.getString("departamento"));
-				interno.setDireccion(dir);
-				IUsuarioLocal.ModificarUsuarioInterno(interno);
-				return ResponseBuilder.createResponse(Response.Status.CREATED, "Se modifico el usuario correctamente");
-			} catch (JSONException | InvalidJwtException | NumberFormatException | UsuarioInexistente e) {
-				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+			//seteo direccion
+			if(datosInterno.getString("direccion") != null && !datosInterno.getString("direccion").isEmpty()) {
+				dir.setDireccion(datosInterno.getString("direccion"));
+			}else {
+				dir.setDireccion(interno.getDireccion().getDireccion());
 			}
+			//seteo barrio
+			if(datosInterno.getString("barrio") != null && !datosInterno.getString("barrio").isEmpty()) {
+				dir.setBarrio(datosInterno.getString("barrio"));
+			}else {
+				dir.setBarrio(interno.getDireccion().getBarrio());
+			}
+			//seteo departamento
+			if(datosInterno.getString("departamento") != null && !datosInterno.getString("departamento").isEmpty()) {
+				dir.setDepartamento(datosInterno.getString("departamento"));
+			}else {
+				dir.setDepartamento(interno.getDireccion().getDepartamento());
+			}
+			interno.setDireccion(dir);
+			IUsuarioLocal.ModificarUsuarioInterno(interno);
+			return ResponseBuilder.createResponse(Response.Status.CREATED, "Se modifico el usuario correctamente");
+		} catch (JSONException | NumberFormatException | UsuarioInexistente e) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
 		}
-		return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "No se ha seteado la Cookie");
 	}
 	
 	

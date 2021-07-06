@@ -150,6 +150,11 @@
 		<h:form>
 
 			<div>
+				<p:outputLabel style="width:30%">Cedula del usuario a modificar: </p:outputLabel>
+				<p:inputText id="ci" value="#{ModificarInterno.ci}" style="width:70%" required="true"
+					requiredMessage="No puede ser vacio"> </p:inputText>
+			</div>
+			<div>
 				<p:outputLabel style="width:30%">Email: </p:outputLabel>
 				<p:inputText id="email" value="#{ModificarInterno.email}" style="width:70%"> </p:inputText>
 

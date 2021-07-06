@@ -30,6 +30,7 @@ public class JSFModificarInternoBean implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
+	private String ci;
 	private String email;
 	private String departamento;
 	private String barrio;
@@ -39,6 +40,14 @@ public class JSFModificarInternoBean implements Serializable{
 
 	public JSFModificarInternoBean() {}
 
+	public String getCi() {
+		return ci;
+	}
+
+	public void setCi(String ci) {
+		this.ci = ci;
+	}
+	
 	public String getEmail() {
 		return email;
 	}
@@ -81,35 +90,11 @@ public class JSFModificarInternoBean implements Serializable{
 	
 	@PostConstruct
 	public void cargaInicial() {
-		try {
-			Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
-	        if (cookie != null) {
-	        	token = cookie.getValue();
-	        	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
-	        }
-	        HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
-	        LOGGER.info("El server name es: " + hostname);
-			Client conexion = ClientBuilder.newClient();
-			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/usuario/interno/buscar");
-			Invocation invocation = webTarget.request(MediaType.APPLICATION_JSON).cookie("x-access-token", token).buildGet();
-			Response response = invocation.invoke();
-			LOGGER.info("Respuesta: " + response.getStatus());
-			if (response.getStatus() == 200) {
-				String json = response.readEntity(String.class);
-				LOGGER.info("Leyendo json como string: " + json);
-				JSONObject interno = new JSONObject(json);
-				//Setear parametros iniciales
-				LOGGER.info("Leyendo respuesta: " + interno.toString());
-				this.setEmail(interno.getString("email"));
-				this.setBarrio(interno.getString("barrio"));
-				this.setDepartamento(interno.getString("departamento"));
-				this.setDireccion(interno.getString("direccion"));
-				LOGGER.info("Se han seteado los parametros");
-			}
-		} catch (Exception e) {
-			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
-		}
+		ci = "";
+		email = "";
+		departamento = "";
+		barrio = "";
+		direccion = "";
 	}
 	
 	public void modificarInterno() {
@@ -120,13 +105,11 @@ public class JSFModificarInternoBean implements Serializable{
 	        	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 	        }
 	        JSONObject datos = new JSONObject();
-	        JSONObject direccion = new JSONObject();
-	        direccion.put("direccion", this.getDireccion());
-	        direccion.put("barrio", this.getBarrio());
-	        direccion.put("departamento", this.getDepartamento());
+	        datos.put("ci", this.ci);
+	        datos.put("barrio", this.getBarrio());
+	        datos.put("departamento", this.getDepartamento());
 	        datos.put("direccion", direccion);
 	        datos.put("email", this.getEmail());
-	        // http://omnifaces-fans.blogspot.com/2015/10/jax-rs-consume-restful-web-service-from.html
 	        HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
 	        LOGGER.info("El server name es: " + hostname);
@@ -142,6 +125,7 @@ public class JSFModificarInternoBean implements Serializable{
 				JsonObject reply = jsonReader.readObject();
 				String message = reply.getString("message");
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Modificar:", message));
+				cargaInicial();
 			}
 			else {
 				String jsonString = response.readEntity(String.class);
@@ -150,10 +134,9 @@ public class JSFModificarInternoBean implements Serializable{
 				String message = reply.getString("message");
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Crear:", message));
 			}
-			cargaInicial();
 		} catch (Exception e) {
 			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
 		}
-	}
+	}	
 }
