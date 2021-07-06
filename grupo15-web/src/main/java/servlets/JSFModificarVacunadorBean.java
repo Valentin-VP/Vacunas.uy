@@ -30,6 +30,7 @@ public class JSFModificarVacunadorBean implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
+	private String ci;
 	private String email;
 	private String departamento;
 	private String barrio;
@@ -112,7 +113,7 @@ public class JSFModificarVacunadorBean implements Serializable{
 		}
 	}
 	
-	public void modificarInterno() {
+	public void modificarVacunador() {
 		try {
 			Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
 	        if (cookie != null) {
@@ -120,18 +121,17 @@ public class JSFModificarVacunadorBean implements Serializable{
 	        	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 	        }
 	        JSONObject datos = new JSONObject();
-	        JSONObject direccion = new JSONObject();
-	        direccion.put("direccion", this.getDireccion());
-	        direccion.put("barrio", this.getBarrio());
-	        direccion.put("departamento", this.getDepartamento());
-	        datos.put("direccion", direccion);
+	        datos.put("ci", this.ci);
+	        datos.put("direccion", this.getDireccion());
+	        datos.put("barrio", this.getBarrio());
+	        datos.put("departamento", this.getDepartamento());
 	        datos.put("email", this.getEmail());
 	        // http://omnifaces-fans.blogspot.com/2015/10/jax-rs-consume-restful-web-service-from.html
 	        HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 	        String hostname = origRequest.getScheme() + "://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
 	        LOGGER.info("El server name es: " + hostname);
 			Client conexion = ClientBuilder.newClient();
-			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/usuario/vacunador/modificar");
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/usuario/vacunador/modificarVAd");
 			LOGGER.severe("Conectando a : " + webTarget.getUri());
 			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildPost(Entity.entity(datos.toString(), MediaType.APPLICATION_JSON));
 			Response response = invocation.invoke();
@@ -155,5 +155,13 @@ public class JSFModificarVacunadorBean implements Serializable{
 			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
 		}
+	}
+
+	public String getCi() {
+		return ci;
+	}
+
+	public void setCi(String ci) {
+		this.ci = ci;
 	}
 }

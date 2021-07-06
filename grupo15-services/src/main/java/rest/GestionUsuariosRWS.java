@@ -368,9 +368,42 @@ public class GestionUsuariosRWS {
 		return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, "No se ha seteado la Cookie");
 	}
 	
-	
-	
-	
+	@RolesAllowed({"administrador"})
+	@POST
+	@Path("/vacunador/modificarVAd")
+	public Response modificarVacunadorAudministrador(String datos) {
+		try {
+			JSONObject datosInterno = new JSONObject(datos);
+			String ci = datosInterno.getString("ci");
+			DtDireccion dir = new DtDireccion();
+			DtVacunador vacunador = IUsuarioLocal.buscarVacunador(Integer.valueOf(ci));
+			if(datosInterno.getString("email") != null && !datosInterno.getString("email").isEmpty())
+				vacunador.setEmail(datosInterno.getString("email"));
+			//seteo direccion
+			if(datosInterno.getString("direccion") != null && !datosInterno.getString("direccion").isEmpty()) {
+				dir.setDireccion(datosInterno.getString("direccion"));
+			}else {
+				dir.setDireccion(vacunador.getDireccion().getDireccion());
+			}
+			//seteo barrio
+			if(datosInterno.getString("barrio") != null && !datosInterno.getString("barrio").isEmpty()) {
+				dir.setBarrio(datosInterno.getString("barrio"));
+			}else {
+				dir.setBarrio(vacunador.getDireccion().getBarrio());
+			}
+			//seteo departamento
+			if(datosInterno.getString("departamento") != null && !datosInterno.getString("departamento").isEmpty()) {
+				dir.setDepartamento(datosInterno.getString("departamento"));
+			}else {
+				dir.setDepartamento(vacunador.getDireccion().getDepartamento());
+			}
+			vacunador.setDireccion(dir);
+			IUsuarioLocal.ModificarVacunador(vacunador);
+			return ResponseBuilder.createResponse(Response.Status.CREATED, "Se modifico el usuario correctamente");
+		} catch (JSONException | NumberFormatException | UsuarioInexistente e) {
+			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+		}
+	}
 	
 	@RolesAllowed({ "vacunador", "ciudadano", "administrador", "autoridad" })
 	@GET
