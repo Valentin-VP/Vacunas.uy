@@ -166,28 +166,34 @@ public class JSFAltaLoteDosisBean implements Serializable {
 			token = cookie.getValue();
 			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 		}
-		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = "https://" + origRequest.getServerName();
-        LOGGER.info("El server name es: " + hostname);
-		Client conexion = ClientBuilder.newClient();
-		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunas/listar");
-		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
-		Response response = invocation.invoke();
-		LOGGER.info("Respuesta: " + response.getStatus());
-		if (response.getStatus() == 200) {
-			this.dtVacunas = response.readEntity(new GenericType<List<DtVacuna>>() {});
-			this.vacunas.clear();
-			for (DtVacuna dt : dtVacunas) {
-				this.vacunas.add(dt.getNombre());
+		try {
+			HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        String hostname = "https://" + origRequest.getServerName();
+	        LOGGER.info("El server name es: " + hostname);
+			Client conexion = ClientBuilder.newClient();
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunas/listar");
+			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
+			Response response = invocation.invoke();
+			LOGGER.info("Respuesta: " + response.getStatus());
+			if (response.getStatus() == 200) {
+				this.dtVacunas = response.readEntity(new GenericType<List<DtVacuna>>() {});
+				this.vacunas.clear();
+				for (DtVacuna dt : dtVacunas) {
+					this.vacunas.add(dt.getNombre());
+				}
+			}else{
+				String jsonString = response.readEntity(String.class);
+				System.out.println(jsonString);
+				JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+				JsonObject reply = jsonReader.readObject();
+				String message = reply.getString("message");
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Listar:", message));
 			}
-		}else{
-			String jsonString = response.readEntity(String.class);
-			System.out.println(jsonString);
-			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
-			JsonObject reply = jsonReader.readObject();
-			String message = reply.getString("message");
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Listar:", message));
+		}catch (JsonException e ) {
+			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
 		}
+		
 	}
 	
 	private void cargaVacunatorios() {
@@ -197,27 +203,33 @@ public class JSFAltaLoteDosisBean implements Serializable {
 			token = cookie.getValue();
 			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 		}
-		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = "https://" + origRequest.getServerName();
-        LOGGER.info("El server name es: " + hostname);
-		Client conexion = ClientBuilder.newClient();
-		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunatorios/listar");
-		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
-		Response response = invocation.invoke();
-		LOGGER.info("Respuesta: " + response.getStatus());
-		if (response.getStatus() == 200) {
-			this.dtVacunatorios = response.readEntity(new GenericType<List<DtVacunatorio>>() {});
-			this.vacunatorios.clear();
-			for (DtVacunatorio dt : dtVacunatorios) {
-				this.vacunatorios.add(dt.getId());
+		try {
+			HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        String hostname = "https://" + origRequest.getServerName();
+	        LOGGER.info("El server name es: " + hostname);
+			Client conexion = ClientBuilder.newClient();
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunatorios/listar");
+			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
+			Response response = invocation.invoke();
+			LOGGER.info("Respuesta: " + response.getStatus());
+			if (response.getStatus() == 200) {
+				this.dtVacunatorios = response.readEntity(new GenericType<List<DtVacunatorio>>() {});
+				this.vacunatorios.clear();
+				for (DtVacunatorio dt : dtVacunatorios) {
+					this.vacunatorios.add(dt.getId());
+				}
+			}else{
+				String jsonString = response.readEntity(String.class);
+				JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+				JsonObject reply = jsonReader.readObject();
+				String message = reply.getString("message");
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Listar:", message));
 			}
-		}else{
-			String jsonString = response.readEntity(String.class);
-			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
-			JsonObject reply = jsonReader.readObject();
-			String message = reply.getString("message");
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Listar:", message));
+		} catch (JsonException e ) {
+			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
 		}
+		
 	}
 	
 	private void cargaTransportistas() {
@@ -227,27 +239,33 @@ public class JSFAltaLoteDosisBean implements Serializable {
 			token = cookie.getValue();
 			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 		}
-		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = "https://" + origRequest.getServerName();
-        LOGGER.info("El server name es: " + hostname);
-		Client conexion = ClientBuilder.newClient();
-		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/transportistas/listar");
-		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
-		Response response = invocation.invoke();
-		LOGGER.info("Respuesta: " + response.getStatus());
-		if (response.getStatus() == 200) {
-			this.dtTransportistas = response.readEntity(new GenericType<List<DtTransportista>>() {});
-			this.transportistas.clear();
-			for (DtTransportista dt : dtTransportistas) {
-				this.transportistas.add(String.valueOf(dt.getId()));
+		try {
+			HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        String hostname = "https://" + origRequest.getServerName();
+	        LOGGER.info("El server name es: " + hostname);
+			Client conexion = ClientBuilder.newClient();
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/transportistas/listar");
+			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
+			Response response = invocation.invoke();
+			LOGGER.info("Respuesta: " + response.getStatus());
+			if (response.getStatus() == 200) {
+				this.dtTransportistas = response.readEntity(new GenericType<List<DtTransportista>>() {});
+				this.transportistas.clear();
+				for (DtTransportista dt : dtTransportistas) {
+					this.transportistas.add(String.valueOf(dt.getId()));
+				}
+			}else{
+				String jsonString = response.readEntity(String.class);
+				JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+				JsonObject reply = jsonReader.readObject();
+				String message = reply.getString("message");
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Listar:", message));
 			}
-		}else{
-			String jsonString = response.readEntity(String.class);
-			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
-			JsonObject reply = jsonReader.readObject();
-			String message = reply.getString("message");
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Listar:", message));
+		} catch (JsonException e ) {
+			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
 		}
+		
 	}
 	
 	public void altaLoteDosis() {

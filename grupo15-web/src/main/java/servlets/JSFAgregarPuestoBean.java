@@ -11,6 +11,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.json.Json;
+import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.servlet.http.Cookie;
@@ -107,26 +108,31 @@ public class JSFAgregarPuestoBean {
 			token = cookie.getValue();
 			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 		}
-		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = "https://" + origRequest.getServerName();
-        LOGGER.info("El server name es: " + hostname);
-		Client conexion = ClientBuilder.newClient();
-		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunatorios/listar");
-		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
-		Response response = invocation.invoke();
-		LOGGER.info("Respuesta: " + response.getStatus());
-		if (response.getStatus() == 200) {
-			this.dtVacunatorios = response.readEntity(new GenericType<List<DtVacunatorio>>() {});
-			this.vacunatorios.clear();
-			for (DtVacunatorio dt : dtVacunatorios) {
-				this.vacunatorios.add(dt.getId());
+		try {
+			HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        String hostname = "https://" + origRequest.getServerName();
+	        LOGGER.info("El server name es: " + hostname);
+			Client conexion = ClientBuilder.newClient();
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunatorios/listar");
+			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
+			Response response = invocation.invoke();
+			LOGGER.info("Respuesta: " + response.getStatus());
+			if (response.getStatus() == 200) {
+				this.dtVacunatorios = response.readEntity(new GenericType<List<DtVacunatorio>>() {});
+				this.vacunatorios.clear();
+				for (DtVacunatorio dt : dtVacunatorios) {
+					this.vacunatorios.add(dt.getId());
+				}
+			}else{
+				String jsonString = response.readEntity(String.class);
+				JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+				JsonObject reply = jsonReader.readObject();
+				String message = reply.getString("message");
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Listar:", message));
 			}
-		}else{
-			String jsonString = response.readEntity(String.class);
-			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
-			JsonObject reply = jsonReader.readObject();
-			String message = reply.getString("message");
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Listar:", message));
+		} catch (JsonException e ) {
+			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
 		}
 	}
 	
@@ -140,22 +146,27 @@ public class JSFAgregarPuestoBean {
 		if (this.vacunatorio == null) {
 			return;
 		}
-		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = "https://" + origRequest.getServerName();
-        LOGGER.info("El server name es: " + hostname);
-		Client conexion = ClientBuilder.newClient();
-		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunatorios/listarPuestos?idVacunatorio=" + this.vacunatorio);
-		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
-		Response response = invocation.invoke();
-		LOGGER.info("Respuesta: " + response.getStatus());
-		if (response.getStatus() == 200) {
-			this.dtPuestos = response.readEntity(new GenericType<List<String>>() {});
-		}else{
-			String jsonString = response.readEntity(String.class);
-			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
-			JsonObject reply = jsonReader.readObject();
-			String message = reply.getString("message");
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Listar:", message));
+		try {
+			HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        String hostname = "https://" + origRequest.getServerName();
+	        LOGGER.info("El server name es: " + hostname);
+			Client conexion = ClientBuilder.newClient();
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunatorios/listarPuestos?idVacunatorio=" + this.vacunatorio);
+			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
+			Response response = invocation.invoke();
+			LOGGER.info("Respuesta: " + response.getStatus());
+			if (response.getStatus() == 200) {
+				this.dtPuestos = response.readEntity(new GenericType<List<String>>() {});
+			}else{
+				String jsonString = response.readEntity(String.class);
+				JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+				JsonObject reply = jsonReader.readObject();
+				String message = reply.getString("message");
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Listar:", message));
+			}
+		} catch (JsonException e ) {
+			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
 		}
 	}
 	
@@ -212,6 +223,9 @@ public class JSFAgregarPuestoBean {
 		} catch (JSONException e) {
 			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
+		} catch (JsonException e1 ) {
+			LOGGER.severe("Ha ocurrido un error: " + e1.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e1.getMessage()));
 		}
 	}
 }

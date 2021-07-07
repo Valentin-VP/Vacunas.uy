@@ -13,6 +13,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.json.Json;
+import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.servlet.http.Cookie;
@@ -130,28 +131,34 @@ public class JSFModificarLoteDosisBean implements Serializable {
 			token = cookie.getValue();
 			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 		}
-		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = "https://" + origRequest.getServerName();
-        LOGGER.info("El server name es: " + hostname);
-		Client conexion = ClientBuilder.newClient();
-		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/listarMensajes");
-		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
-		Response response = invocation.invoke();
-		LOGGER.info("Respuesta: " + response.getStatus());
-		if (response.getStatus() == 200) {
-			this.mensajes.clear();
-			this.dtMensajes = response.readEntity(new GenericType<ArrayList<DtMensaje>>() {});
-			for (DtMensaje dt: this.dtMensajes) {
-				System.out.println(dt.getContenido());
-				this.mensajes.add(dt.getContenido());
+		try {
+			HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        String hostname = "https://" + origRequest.getServerName();
+	        LOGGER.info("El server name es: " + hostname);
+			Client conexion = ClientBuilder.newClient();
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/listarMensajes");
+			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
+			Response response = invocation.invoke();
+			LOGGER.info("Respuesta: " + response.getStatus());
+			if (response.getStatus() == 200) {
+				this.mensajes.clear();
+				this.dtMensajes = response.readEntity(new GenericType<ArrayList<DtMensaje>>() {});
+				for (DtMensaje dt: this.dtMensajes) {
+					System.out.println(dt.getContenido());
+					this.mensajes.add(dt.getContenido());
+				}
+			}else{
+				String jsonString = response.readEntity(String.class);
+				JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+				JsonObject reply = jsonReader.readObject();
+				String message = reply.getString("message");
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Listar:", message));
 			}
-		}else{
-			String jsonString = response.readEntity(String.class);
-			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
-			JsonObject reply = jsonReader.readObject();
-			String message = reply.getString("message");
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Listar:", message));
+		} catch (JsonException e ) {
+			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
 		}
+		
 	}
 	
 	public void cargaLotes() {
@@ -169,26 +176,32 @@ public class JSFModificarLoteDosisBean implements Serializable {
 			token = cookie.getValue();
 			LOGGER.severe("Guardando cookie en Managed Bean: " + token);
 		}
-		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = "https://" + origRequest.getServerName();
-        LOGGER.info("El server name es: " + hostname);
-		Client conexion = ClientBuilder.newClient();
-		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/listar");//?idVacuna=" + this.vacuna + "&idVacunatorio=" + this.vacunatorio);
-		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
-		Response response = invocation.invoke();
-		LOGGER.info("Respuesta: " + response.getStatus());
-		if (response.getStatus() == 200) {
-			System.out.println("entro al if de 200 status");
-			this.lotes = response.readEntity(new GenericType<List<DtLoteDosis>>() {});
-		}else{
-			System.out.println("entro al error");
-			String jsonString = response.readEntity(String.class);
-			System.out.println(jsonString);
-			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
-			JsonObject reply = jsonReader.readObject();
-			String message = reply.getString("message");
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Listar:", message));
+		try {
+			HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        String hostname = "https://" + origRequest.getServerName();
+	        LOGGER.info("El server name es: " + hostname);
+			Client conexion = ClientBuilder.newClient();
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/listar");//?idVacuna=" + this.vacuna + "&idVacunatorio=" + this.vacunatorio);
+			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
+			Response response = invocation.invoke();
+			LOGGER.info("Respuesta: " + response.getStatus());
+			if (response.getStatus() == 200) {
+				System.out.println("entro al if de 200 status");
+				this.lotes = response.readEntity(new GenericType<List<DtLoteDosis>>() {});
+			}else{
+				System.out.println("entro al error");
+				String jsonString = response.readEntity(String.class);
+				System.out.println(jsonString);
+				JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+				JsonObject reply = jsonReader.readObject();
+				String message = reply.getString("message");
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Listar:", message));
+			}
+		} catch (JsonException e ) {
+			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
 		}
+		
 	}
 	
 	
@@ -263,6 +276,9 @@ public class JSFModificarLoteDosisBean implements Serializable {
 		} catch (JSONException e) {
 			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
+		} catch (JsonException e ) {
+			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
 		}
 		cargaLotes();
 		cargaMensajes();
@@ -277,30 +293,36 @@ public class JSFModificarLoteDosisBean implements Serializable {
 		if (this.lote == null) {
 			return;
 		}
-		String[] temp;
-		temp = this.lote.split("\\Q|\\E");
-		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = "https://" + origRequest.getServerName();
-        LOGGER.info("El server name es: " + hostname);
-		Client conexion = ClientBuilder.newClient();
-		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/obtenerInfoLoteSocio?idLote=" + temp[0] + "&idVacuna=" + temp[2] + "&idVacunatorio=" + temp[1]);
-		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
-		Response response = invocation.invoke();
-		LOGGER.info("Respuesta: " + response.getStatus());
-		if (response.getStatus() == 200) {
-			DtMensaje m = response.readEntity(new GenericType<DtMensaje>() {});
-			this.dtMensajes.add(m);
-			this.mensajes.clear();
-			for (DtMensaje dt: this.dtMensajes) {
-				this.mensajes.add(dt.getContenido());
+		try {
+			String[] temp;
+			temp = this.lote.split("\\Q|\\E");
+			HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        String hostname = "https://" + origRequest.getServerName();
+	        LOGGER.info("El server name es: " + hostname);
+			Client conexion = ClientBuilder.newClient();
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/obtenerInfoLoteSocio?idLote=" + temp[0] + "&idVacuna=" + temp[2] + "&idVacunatorio=" + temp[1]);
+			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
+			Response response = invocation.invoke();
+			LOGGER.info("Respuesta: " + response.getStatus());
+			if (response.getStatus() == 200) {
+				DtMensaje m = response.readEntity(new GenericType<DtMensaje>() {});
+				this.dtMensajes.add(m);
+				this.mensajes.clear();
+				for (DtMensaje dt: this.dtMensajes) {
+					this.mensajes.add(dt.getContenido());
+				}
+			}else{
+				String jsonString = response.readEntity(String.class);
+				JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+				JsonObject reply = jsonReader.readObject();
+				String message = reply.getString("message");
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Listar:", message));
 			}
-		}else{
-			String jsonString = response.readEntity(String.class);
-			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
-			JsonObject reply = jsonReader.readObject();
-			String message = reply.getString("message");
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Listar:", message));
+		} catch (JsonException e ) {
+			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
 		}
+		
 	}
 	public void obtenerLogsLotesEnSocio() {
 		Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
@@ -314,27 +336,33 @@ public class JSFModificarLoteDosisBean implements Serializable {
 				break;
 			}
 		}
-		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = "https://" + origRequest.getServerName();
-        LOGGER.info("El server name es: " + hostname);
-		Client conexion = ClientBuilder.newClient();
-		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/obtenerInfoTodosLotesSocio?idTransportista=" + dt.getTransportista());
-		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
-		Response response = invocation.invoke();
-		LOGGER.info("Respuesta: " + response.getStatus());
-		if (response.getStatus() == 200) {
-			this.mensajes.clear();
-			this.dtMensajes = response.readEntity(new GenericType<ArrayList<DtMensaje>>() {});
-			for (DtMensaje d: this.dtMensajes) {
-				this.mensajes.add(d.getContenido());
+		try {
+			HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	        String hostname = "https://" + origRequest.getServerName();
+	        LOGGER.info("El server name es: " + hostname);
+			Client conexion = ClientBuilder.newClient();
+			WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/lotedosis/obtenerInfoTodosLotesSocio?idTransportista=" + dt.getTransportista());
+			Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
+			Response response = invocation.invoke();
+			LOGGER.info("Respuesta: " + response.getStatus());
+			if (response.getStatus() == 200) {
+				this.mensajes.clear();
+				this.dtMensajes = response.readEntity(new GenericType<ArrayList<DtMensaje>>() {});
+				for (DtMensaje d: this.dtMensajes) {
+					this.mensajes.add(d.getContenido());
+				}
+			}else{
+				String jsonString = response.readEntity(String.class);
+				JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+				JsonObject reply = jsonReader.readObject();
+				String message = reply.getString("message");
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Listar:", message));
 			}
-		}else{
-			String jsonString = response.readEntity(String.class);
-			JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
-			JsonObject reply = jsonReader.readObject();
-			String message = reply.getString("message");
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Listar:", message));
+		} catch (JsonException e ) {
+			LOGGER.severe("Ha ocurrido un error: " + e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error:", e.getMessage()));
 		}
+		
 	}
 
 
