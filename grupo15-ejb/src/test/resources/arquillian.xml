@@ -27,15 +27,15 @@
         <property name="deploymentExportPath">target/</property>
     </engine>-->
 
-    <!-- Example configuration for a managed WildFly / JBoss EAP instance -->
-    <container qualifier="managed">
+    <!-- Example configuration for a managed WildFly / JBoss EAP instance 
+    <container qualifier="managed">-->
         <!-- By default, Arquillian will use the JBOSS_HOME environment variable to find the WildFly / JBoss EAP installation.
              If you prefer not to define the JBOSS_HOME environment variable, alternatively you can uncomment the
-             following `jbossHome` property and replace EAP_HOME with the path to your WildFly / JBoss EAP installation. -->
+             following `jbossHome` property and replace EAP_HOME with the path to your WildFly / JBoss EAP installation. 
         <configuration>
             <property name="jbossHome">C:\wildfly-21.0.0.Final</property>
         </configuration> 
-    </container>
+    </container>-->
     
     <!-- Example configuration for a remote WildFly / JBoss EAP instance -->
     <container qualifier="remote" default="true">
