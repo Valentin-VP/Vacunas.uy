@@ -127,7 +127,7 @@ public class JSFModificarEtapa implements Serializable{
 		
 		
 		HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String hostname = "https://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        String hostname = "https://" + origRequest.getServerName();
 		Client conexion = ClientBuilder.newClient();
 		WebTarget webTarget = conexion.target(hostname + "/grupo15-services/rest/etapa/modificar");
 		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildPost(Entity.entity(datos.toString(), MediaType.APPLICATION_JSON));

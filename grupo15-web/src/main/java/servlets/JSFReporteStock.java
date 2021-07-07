@@ -101,7 +101,7 @@ public class JSFReporteStock implements Serializable {
 		
 		//cargo vacunatorios
 		origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        hostname = "https://" + origRequest.getServerName() + ":" + origRequest.getServerPort();
+        hostname = "https://" + origRequest.getServerName();
 		conexion = ClientBuilder.newClient();
 		webTarget = conexion.target(hostname + "/grupo15-services/rest/vacunatorios/listar");
 		invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
