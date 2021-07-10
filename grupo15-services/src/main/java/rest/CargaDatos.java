@@ -658,9 +658,9 @@ public class CargaDatos {
 			String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 			int ciudadanos_qty = CANTIDAD_CIUDADANOS_RANDOM;
 			while (ciudadanos_qty > 0) {
-				// Genera cifras random
+				// Genera cifras random asignarVacunadorAVacunatorio
 				int random_id = (int) Math.floor(Math.random() * (70000000 - 1000000 + 1) + 1000000);
-				while (ciCiudadanosOficiales.contains(random_id) || idsCiudadanosRandom.contains(random_id)) {
+				while (ciCiudadanosOficiales.contains(random_id) || idsCiudadanosRandom.contains(random_id) || random_id == 46010421) {
 					random_id = (int) Math.floor(Math.random() * (70000000 - 1000000 + 1) + 1000000);
 				}
 				int names_length = (int) Math.floor(Math.random() * (20 - 5 + 1) + 5);
