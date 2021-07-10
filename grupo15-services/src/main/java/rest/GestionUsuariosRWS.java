@@ -426,7 +426,13 @@ public class GestionUsuariosRWS {
 			System.out.println(url);
 			return Response.temporaryRedirect(url).build();
 		} catch (InvalidJwtException | NumberFormatException | UsuarioInexistente | URISyntaxException e) {
-			return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+			URI url;
+			try {
+				url = new URI("https://grupo15-vacunasuy-testing.web.elasticloud.uy/grupo15-services/rest/grupo15-vacunasuy-testing.web.elasticloud.uy/grupo15-web/html/index.html");
+				return Response.temporaryRedirect(url).build();
+			} catch (URISyntaxException e1) {
+				return ResponseBuilder.createResponse(Response.Status.BAD_REQUEST, e.getMessage());
+			}	
 		}
 	}
 	

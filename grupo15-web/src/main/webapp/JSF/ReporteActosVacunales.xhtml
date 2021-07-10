@@ -189,11 +189,11 @@
 				<p:dataTable id="rep" value="#{ReporteActosVacunales.vacunadosMes}" var="rep">
 					<p:column>
 						<f:facet name="header">Vacunados</f:facet>
-						#{rep.key}
+						#{rep.value}
 					</p:column>
 					<p:column>
 						<f:facet name="header">Edades</f:facet>
-						#{rep.value}
+						#{rep.key}
 					</p:column>
 
 				</p:dataTable>
@@ -219,11 +219,11 @@
 				<p:dataTable id="rep2" value="#{ReporteActosVacunales.vacunadosSexo}" var="rep2">
 					<p:column>
 						<f:facet name="header">Vacunados</f:facet>
-						#{rep2.key}
+						#{rep2.value}
 					</p:column>
 					<p:column>
 						<f:facet name="header">Sexo</f:facet>
-						#{rep2.value}
+						#{rep2.key}
 					</p:column>
 
 				</p:dataTable>
