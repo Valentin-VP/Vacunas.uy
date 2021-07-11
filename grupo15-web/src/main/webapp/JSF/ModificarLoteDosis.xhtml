@@ -229,19 +229,19 @@
 
 		</h:form>
 
-		<div class="card">
-			<h5 style="margin-top:0">Log: </h5>
-			<p:dataTable id="tabla" var="mensaje" value="#{ModificarLoteDosis.dtMensajes}" scrollable="true" scrollHeight="250">
-				<p:column headerText="Mensaje" footerText="Mensaje">
-					<h:outputText value="#{mensaje.idMensaje}" />
-				</p:column>
-				<p:column headerText="Mensaje" footerText="Mensaje">
-					<h:outputText value="#{mensaje.contenido}" />
-				</p:column>
-			</p:dataTable>
-			<p:commandButton id="cargarLogLocal" action="#{ModificarLoteDosis.cargaMensajes}" value="Actualizar" update="tabla"></p:commandButton>
-
-		</div>
+	</div>
+	
+	<div class="card">
+		<h5 style="margin-top:0">Log: </h5>
+		<p:dataTable id="tabla" var="mensaje" value="#{ModificarLoteDosis.dtMensajes}" scrollable="true" scrollHeight="250">
+			<p:column headerText="Mensaje" footerText="Mensaje">
+				<h:outputText value="#{mensaje.idMensaje}" />
+			</p:column>
+			<p:column headerText="Mensaje" footerText="Mensaje">
+				<h:outputText value="#{mensaje.contenido}" />
+			</p:column>
+		</p:dataTable>
+		<p:commandButton id="cargarLogLocal" action="#{ModificarLoteDosis.cargaMensajes}" value="Actualizar" update="tabla"></p:commandButton>
 	</div>
 
 </body>
