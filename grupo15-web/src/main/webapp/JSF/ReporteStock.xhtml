@@ -256,17 +256,6 @@
 		<p:chart id="grafica" type="line" model="#{ReporteStock.lineModel2}" style="height:600px; width:1300px" />
 
 	</div>
-	<h:form>
-		<div class="formulario">
-			<p:panel header="Para exportar los datos de la tabla anterior, haga click en el siguiente botón:"
-				style="text-align: center">
-				<h:commandLink>
-					<p:commandButton value="Descargar" />
-					<p:dataExporter type="pdf" target="rep2" fileName="ReporteStock" />
-				</h:commandLink>
-			</p:panel>
-		</div>
-	</h:form>
 </body>
 
 </html>
