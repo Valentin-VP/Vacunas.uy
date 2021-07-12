@@ -2,6 +2,7 @@ package servlets;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +58,7 @@ public class JSFReporteStock implements Serializable {
 	private final Logger LOGGER = Logger.getLogger(getClass().getName());
 	private String token; 
 	
-	private Map<String,Map<String,String>> historico = new HashMap<String,Map<String,String>>();
+	private Map<String,Map<String,String>> historico;
 	private Map<String,String> historicoMes = new HashMap<String,String>();
 	private List<DtStock> actual;
     private LineChartModel lineModel2;
@@ -77,7 +78,7 @@ public class JSFReporteStock implements Serializable {
     private int maxValue = 1;
     @PostConstruct
     public void init() {
-        createLineModels();
+    	createLineModels();
         this.periodos.put("Tres meses", "3");
         this.periodos.put("Seis meses", "6");
         this.periodos.put("Un año", "12");
@@ -129,7 +130,6 @@ public class JSFReporteStock implements Serializable {
 		if (response.getStatus() == 200) {
 			this.vacunas = response.readEntity(new GenericType<List<DtVacuna>>() {});
 		}
-		createLineModels();
     }
     
     
@@ -183,6 +183,114 @@ public class JSFReporteStock implements Serializable {
 		
     }
 
+//    @PostConstruct
+//    public void init() {
+//        //createLineModels();
+//        this.periodos.put("Tres meses", "3");
+//        this.periodos.put("Seis meses", "6");
+//        this.periodos.put("Un año", "12");
+//        
+//        //cargo enfermedades
+//        Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
+//        if (cookie != null) {
+//        	token = cookie.getValue();
+//        	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
+//        }
+//        HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+//        String hostname = "https://" + origRequest.getServerName();
+//		Client conexion = ClientBuilder.newClient();
+//		WebTarget webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/enfermedad/listar");
+//		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
+//		Response response = invocation.invoke();
+//		LOGGER.info("Respuesta: " + response.getStatus());
+//		if (response.getStatus() == 200) {
+//			this.enfermedades = response.readEntity(new GenericType<List<DtEnfermedad>>() {});
+//		}
+//		
+//		//cargo vacunatorios
+//		origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+//        hostname = "https://" + origRequest.getServerName();
+//		conexion = ClientBuilder.newClient();
+//		webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/vacunatorios/listar");
+//		invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
+//		response = invocation.invoke();
+//		LOGGER.info("Respuesta: " + response.getStatus());
+//		if (response.getStatus() == 200) {
+//			vacunatorios = response.readEntity(new GenericType<List<DtVacunatorio>>() {});
+//		}
+//		createLineModels();
+//    }
+//    
+//    public void cargarVacunas(){
+//    	Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
+//        if (cookie != null) {
+//        	token = cookie.getValue();
+//        	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
+//        }
+//        HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+//        String hostname = "https://" + origRequest.getServerName();
+//		Client conexion = ClientBuilder.newClient();
+//		WebTarget webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/stock/enf/"+enfermedad);
+//		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildGet();
+//		Response response = invocation.invoke();
+//		LOGGER.info(webTarget.getUri().toString());
+//		LOGGER.info("Respuesta: " + response.getStatus());
+//		if (response.getStatus() == 200) {
+//			this.vacunas = response.readEntity(new GenericType<List<DtVacuna>>() {});
+//		}
+//    }
+//    
+//    
+//    public void getStock() {
+//    	System.out.println(vacunatorio);
+//    	System.out.println(periodo);
+//    	JSONObject datos = new JSONObject();
+//    	
+//    	try {
+//    		datos.put("vacunatorio", vacunatorio);
+//			datos.put("enfermedad", enfermedad);
+//			datos.put("vacuna", vacuna);
+//			datos.put("periodo", periodo);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//    	Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
+//        if (cookie != null) {
+//        	token = cookie.getValue();
+//        	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
+//        }
+//        HttpServletRequest origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+//        String hostname = "https://" + origRequest.getServerName();
+//		Client conexion = ClientBuilder.newClient();
+//		WebTarget webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/stock/actual");
+//		Invocation invocation = webTarget.request("application/json").cookie("x-access-token", token).buildPost(Entity.entity(datos.toString(), MediaType.APPLICATION_JSON));
+//		Response response = invocation.invoke();
+//		LOGGER.info("Respuesta: " + response.getStatus());
+//		if (response.getStatus() == 200) {
+//			this.actual = response.readEntity(new GenericType<List<DtStock>>() {});
+//		}
+//		
+//		cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get("x-access-token");
+//        if (cookie != null) {
+//        	token = cookie.getValue();
+//        	LOGGER.severe("Guardando cookie en Managed Bean: " + token);
+//        }
+//        origRequest = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+//        hostname = "https://" + origRequest.getServerName();
+//		conexion = ClientBuilder.newClient();
+//		webTarget = conexion.target("http://localhost:8080/grupo15-services/rest/stock/historico");
+//		invocation = webTarget.request("application/json").cookie("x-access-token", token).buildPost(Entity.entity(datos.toString(), MediaType.APPLICATION_JSON));
+//		response = invocation.invoke();
+//		LOGGER.info("Respuesta: " + response.getStatus());
+//		if (response.getStatus() == 200) {
+//			this.historico = response.readEntity(new GenericType<Map<String,Map<String,String>>>() {});	
+//			createLineModels();
+//			System.out.println(historico);
+//		}
+//		
+//		
+//    }
+    
     public void itemSelect(ItemSelectEvent event) {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Item selected",
                 "Item Index: " + event.getItemIndex() + ", Series Index:" + event.getSeriesIndex());
@@ -195,125 +303,64 @@ public class JSFReporteStock implements Serializable {
     public LineChartModel getLineModel2() {
         return lineModel2;
     }
-
-
+    
+    private String getNombreMes(int mes) {
+    	if(mes==1)
+    		return "Enero";
+    	if(mes==2)
+    		return "Febrero";
+    	if(mes==3)
+    		return "Marzo";
+    	if(mes==4)
+    		return "Abril";
+    	if(mes==5)
+    		return "Mayo";
+    	if(mes==6)
+    		return "Junio";
+    	if(mes==7)
+    		return "Julio";
+    	if(mes==8)
+    		return "Agosto";
+    	if(mes==9)
+    		return "Septiembre";
+    	if(mes==10)
+    		return "Octubre";
+    	if(mes==11)
+    		return "Noviembre";
+    	if(mes==12)
+    		return "Diciembre";
+    	return "";
+    }
+    
+    private ChartSeries cargarMeses() {
+    	System.out.println("entro");
+		ChartSeries meses = new ChartSeries();
+		int tempMax = 1;
+		meses.setLabel("Meses");
+		LocalDate iterador = LocalDate.now().minusMonths(Integer.valueOf(this.periodo)-1);
+		LocalDate hasta = LocalDate.now();
+		while(iterador.isBefore(hasta) || iterador.isEqual(hasta)){
+			System.out.println("Antes de cambiarlos " + iterador);
+			System.out.println(this.historico.get(String.valueOf(iterador.getMonthValue())));
+			if(this.historico.get(String.valueOf(iterador.getMonthValue())) != null) {
+				if (tempMax < Integer.valueOf(this.historico.get(String.valueOf(iterador.getMonthValue())).get("cantDisp")))
+					tempMax = Integer.valueOf(this.historico.get(String.valueOf(iterador.getMonthValue())).get("cantDisp"));
+				meses.set(this.getNombreMes(iterador.getMonthValue()), Integer.valueOf(this.historico.get(String.valueOf(iterador.getMonthValue())).get("cantDisp")));
+			}else {
+				meses.set(this.getNombreMes(iterador.getMonthValue()), 0);
+			}
+			iterador = iterador.plusMonths(1);
+		}
+		this.maxValue = tempMax;
+		return meses;
+	}
+    
     private LineChartModel initCategoryModel() {
     	LineChartModel model = new LineChartModel();
-    	int tempMax = 1;
-        if(this.historico != null) {
-        	ChartSeries meses = new ChartSeries();
-            meses.setLabel("meses");  
-            if(this.historico.get("1") != null) {
-            	meses.set("Enero", Integer.valueOf(this.historico.get("1").get("cantDisp")));
-            	tempMax = Integer.valueOf(this.historico.get("1").get("cantDisp"));
-            }else {
-            	meses.set("Enero", 0);
-            }
-
-            if(this.historico.get("2") != null) {
-            	meses.set("Febrero", Integer.valueOf(this.historico.get("2").get("cantDisp")));
-            	if (tempMax < Integer.valueOf(this.historico.get("2").get("cantDisp"))) {
-            		tempMax = Integer.valueOf(this.historico.get("2").get("cantDisp"));
-            	}
-            }else {
-            	meses.set("Febrero", 0);
-            }
-
-            if(this.historico.get("3") != null) {
-            	meses.set("Marzo", Integer.valueOf(this.historico.get("3").get("cantDisp")));
-            	if (tempMax < Integer.valueOf(this.historico.get("3").get("cantDisp"))) {
-            		tempMax = Integer.valueOf(this.historico.get("3").get("cantDisp"));
-            	}
-            }else {
-            	meses.set("Marzo", 0);
-            }
-
-            if(this.historico.get("4") != null) {
-            	meses.set("Abril", Integer.valueOf(this.historico.get("4").get("cantDisp")));
-            	if (tempMax < Integer.valueOf(this.historico.get("4").get("cantDisp"))) {
-            		tempMax = Integer.valueOf(this.historico.get("4").get("cantDisp"));
-            	}
-            }else {
-            	meses.set("Abril", 0);
-            }
-
-            if(this.historico.get("5") != null) {
-            	meses.set("Mayo", Integer.valueOf(this.historico.get("5").get("cantDisp")));
-            	if (tempMax < Integer.valueOf(this.historico.get("5").get("cantDisp"))) {
-            		tempMax = Integer.valueOf(this.historico.get("5").get("cantDisp"));
-            	}
-            }else {
-            	meses.set("Mayo", 0);
-            }
-
-            if(this.historico.get("6") != null) {
-            	meses.set("Junio", Integer.valueOf(this.historico.get("6").get("cantDisp")));
-            	if (tempMax < Integer.valueOf(this.historico.get("6").get("cantDisp"))) {
-            		tempMax = Integer.valueOf(this.historico.get("6").get("cantDisp"));
-            	}
-            }else {
-            	meses.set("Junio", 0);
-            }
-
-            if(this.historico.get("7") != null) {
-            	meses.set("Julio", Integer.valueOf(this.historico.get("7").get("cantDisp")));
-            	if (tempMax < Integer.valueOf(this.historico.get("7").get("cantDisp"))) {
-            		tempMax = Integer.valueOf(this.historico.get("7").get("cantDisp"));
-            	}
-            }else {
-            	meses.set("Julio", 0);
-            }
-
-            if(this.historico.get("8") != null) {
-            	meses.set("Agosto", Integer.valueOf(this.historico.get("8").get("cantDisp")));
-            	if (tempMax < Integer.valueOf(this.historico.get("8").get("cantDisp"))) {
-            		tempMax = Integer.valueOf(this.historico.get("8").get("cantDisp"));
-            	}
-            }else {
-            	meses.set("Agosto", 0);
-            }
-
-            if(this.historico.get("9") != null) {
-            	meses.set("Septiembre", Integer.valueOf(this.historico.get("9").get("cantDisp")));
-            	if (tempMax < Integer.valueOf(this.historico.get("9").get("cantDisp"))) {
-            		tempMax = Integer.valueOf(this.historico.get("9").get("cantDisp"));
-            	}
-            }else {
-            	meses.set("Septiembre", 0);
-            }
-
-            if(this.historico.get("10") != null) {
-            	meses.set("Octumbre", Integer.valueOf(this.historico.get("10").get("cantDisp")));
-            	if (tempMax < Integer.valueOf(this.historico.get("10").get("cantDisp"))) {
-            		tempMax = Integer.valueOf(this.historico.get("10").get("cantDisp"));
-            	}
-            }else {
-            	meses.set("Octubre", 0);
-            }
-
-            if(this.historico.get("11") != null) {
-            	meses.set("Noviembre", Integer.valueOf(this.historico.get("11").get("cantDisp")));
-            	if (tempMax < Integer.valueOf(this.historico.get("11").get("cantDisp"))) {
-            		tempMax = Integer.valueOf(this.historico.get("11").get("cantDisp"));
-            	}
-            }else {
-            	meses.set("Noviembre", 0);
-            }
-
-            if(this.historico.get("12") != null) {
-            	meses.set("Diciembre", Integer.valueOf(this.historico.get("12").get("cantDisp")));
-            	if (tempMax < Integer.valueOf(this.historico.get("12").get("cantDisp"))) {
-            		tempMax = Integer.valueOf(this.historico.get("12").get("cantDisp"));
-            	}
-            }else {
-            	meses.set("Diciembre", 0);
-            }
-
-            this.maxValue = tempMax;
-            model.addSeries(meses);
-
-            
-        }
+    	if(this.historico != null) {
+	    	ChartSeries meses = cargarMeses();
+	        model.addSeries(meses);
+    	}
         return model;
     }
 
