@@ -118,10 +118,10 @@ public class InitTest {
 		try {
 			es.agregarEnfermedad("virus1");
 			es.agregarEnfermedad("virus2");
-			vact.agregarVacunatorio("vact1", "Nest1", new DtDireccion("Av. Italia 1111", "Brooks", "Melbourne"), 1555897235, 1.0f, 1.0f, "https://104.211.10.4:8443/");
+			vact.agregarVacunatorio("vact1", "Nest1", new DtDireccion("Av. Italia 1111", "Brooks", "Melbourne"), 1555897235, 1.0f, 1.0f, "https://13.92.125.186:8443/");
 			vact.agregarReglasCupos("vact1", "1", 15,  LocalTime.of(0, 0, 0),  LocalTime.of(23, 59, 59));
 			vact.generarTokenVacunatorio("vact1");
-			vact.agregarVacunatorio("vact2", "Nest2", new DtDireccion("Av. Italia 1112", "Brooks", "Melbourne"), 1555897235, 1.0f, 1.0f, "https://40.117.224.136:8443/");
+			vact.agregarVacunatorio("vact2", "Nest2", new DtDireccion("Av. Italia 1112", "Brooks", "Melbourne"), 1555897235, 1.0f, 1.0f, "https://40.114.44.10:8443/");
 			vact.agregarReglasCupos("vact2", "2", 30,  LocalTime.of(0, 0, 0),  LocalTime.of(23, 59, 59));
 			vact.generarTokenVacunatorio("vact2");
 			//vact.agregarVacunatorio("vact2", "Nest2", new DtDireccion("Av. Italia 1112", "Brooks", "Melbourne"), 1555897235, 1.0f, 1.0f);
@@ -151,9 +151,9 @@ public class InitTest {
 			uc.agregarUsuarioInterno(54657902, "Nicolás", "Méndez", LocalDate.of(1995, 1, 1), "nicolas@mendez", new DtDireccion("Av. Cdd NNNN", "Brooks", "Melbourne"), Sexo.Otro, Rol.Administrador);
 			lab.agregarLaboratorio("lab1");
 			lab.agregarLaboratorio("lab2");
-			trs.agregarTransportista(1, "https://137.117.56.192:8443/");
+			trs.agregarTransportista(1, "https://157.56.176.165:8443/");
 			trs.generarTokenTransportista(1);
-			trs.agregarTransportista(2, "https://137.117.57.56:8443/");
+			trs.agregarTransportista(2, "https://40.87.98.55:8443/");
 			trs.generarTokenTransportista(2);
 			vch.agregarVacuna("vacuna1Virus1", 1, 60, 12, "lab1", "virus1");
 			vch.agregarVacuna("vacuna2Virus1", 1, 60, 12, "lab2", "virus1");

@@ -319,9 +319,9 @@ public class CargaDatos {
 
 			LOGGER.info("Cargando vacunatorios");
 			cVacunatorio.agregarVacunatorio("vact1", "Cosem", dtDirecciones.get(0), 26124571,
-					Float.parseFloat("-34.897206"), Float.parseFloat("-56.184912"), "https://104.211.10.4:8443/");
+					Float.parseFloat("-34.897206"), Float.parseFloat("-56.184912"), "https://13.92.125.186:8443/");
 			cVacunatorio.agregarVacunatorio("vact2", "Medica Uruguaya", dtDirecciones.get(1), 26124571,
-					Float.parseFloat("-34.873602"), Float.parseFloat("-55.1459742"), "https://40.117.224.136:8443/");
+					Float.parseFloat("-34.873602"), Float.parseFloat("-55.1459742"), "https://40.114.44.10:8443/");
 			cVacunatorio.agregarVacunatorio("pereira", "Pereira Rossell", dtDirecciones.get(2), 47763289,
 					Float.parseFloat("-34.893906"), Float.parseFloat("-56.166912"), "https://pereira.uy/");
 			cVacunatorio.agregarVacunatorio("asse-tbo", "ASSE Tacuarembo", dtDirecciones.get(3), 42214659,
@@ -530,8 +530,8 @@ public class CargaDatos {
 	private void altaTransportista() {
 		try {
 			LOGGER.info("Cargando tranpostistas");
-			cTransportista.agregarTransportista(1, "https://137.117.56.192:8443/");
-			cTransportista.agregarTransportista(2, "https://137.117.57.56:8443/");
+			cTransportista.agregarTransportista(1, "https://157.56.176.165:8443/");
+			cTransportista.agregarTransportista(2, "https://40.87.98.55:8443/");
 			cTransportista.agregarTransportista(3, "");
 			cTransportista.agregarTransportista(4, "");
 			cTransportista.agregarTransportista(5, "");
