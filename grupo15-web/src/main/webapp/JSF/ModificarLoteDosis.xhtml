@@ -241,7 +241,7 @@
 				<h:outputText value="#{mensaje.contenido}" />
 			</p:column>
 		</p:dataTable>
-		<p:commandButton id="cargarLogLocal" action="#{ModificarLoteDosis.cargaMensajes}" value="Actualizar" update="tabla"></p:commandButton>
+		<p:commandButton id="cargarLogLocal" action="#{ModificarLoteDosis.cargaMensajes}" value="Actualizar" process="@this" update="tabla"></p:commandButton>
 	</div>
 
 </body>
