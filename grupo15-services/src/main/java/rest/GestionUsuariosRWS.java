@@ -418,7 +418,7 @@ public class GestionUsuariosRWS {
 			URI url;
 			System.out.println(tipoUser);
 			if(tipoUser.equals("ciudadano") || tipoUser.equals("vacunador")) {// si es de vue
-				url = new URI(host + "/grupo15-web/html/login.html");
+				url = new URI(host + "/grupo15-web/html/logins.html");
 			}else {//si es de interno
 				url = new URI(host + "/grupo15-web/html/loginInterno.html");
 				System.out.println("adentro de interno "+url);
