@@ -530,7 +530,7 @@ public class CargaDatos {
 	private void altaTransportista() {
 		try {
 			LOGGER.info("Cargando tranpostistas");
-			cTransportista.agregarTransportista(1, "https://157.56.176.165:8443");
+			cTransportista.agregarTransportista(1, "https://157.56.176.165:8443/");
 			cTransportista.agregarTransportista(2, "https://40.87.98.55:8443/");
 			cTransportista.agregarTransportista(3, "");
 			cTransportista.agregarTransportista(4, "");
