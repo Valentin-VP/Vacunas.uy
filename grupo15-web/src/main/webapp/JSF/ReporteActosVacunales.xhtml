@@ -186,7 +186,7 @@
 				<p:chart type="bar" model="#{ReporteActosVacunales.barModel}" style="height:600px; width:700px" />
 			</div>
 			<div class="formulario8">
-				<p:dataTable id="rep" value="#{ReporteActosVacunales.vacunadosMes}" var="rep">
+				<p:dataTable id="rep" value="#{ReporteActosVacunales.vacunadosEdad}" var="rep" style="text-align: center;">
 					<p:column>
 						<f:facet name="header">Vacunados</f:facet>
 						#{rep.value}
